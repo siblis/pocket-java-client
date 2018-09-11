@@ -10,7 +10,8 @@
     <HBox fx:id="loginPanel">
         <TextField fx:id="loginField" promptText="логин" HBox.hgrow="ALWAYS" onAction="#authorization"/>
         <PasswordField fx:id="passFiead" promptText="пароль" HBox.hgrow="ALWAYS" onAction="#authorization"/>
-        <Button text="Авторизоваться" onAction="#authorization"/>
+        <Button fx:id="buttonauth" text="Авторизоваться" onAction="#authorization"/>
+        <Button fx:id="buttonreg" text="Зарегистрироваться" onAction="#authorization"/>
     </HBox>
 
     <HBox VBox.vgrow="ALWAYS">
@@ -20,6 +21,6 @@
 
     <HBox fx:id="messagePanel" visible="false" managed="false">
         <TextField fx:id="msgField" promptText="Написать сообщение..." HBox.hgrow="ALWAYS" onAction="#sendMsg"/>
-        <Button text="Отправить" onAction="#sendMsg"/>
+        <Button fx:id="button" text="Отправить" onAction="#sendMsg"/>
     </HBox>
 </VBox>
