@@ -23,9 +23,4 @@
         <TextField fx:id="msgField" promptText="Написать сообщение..." HBox.hgrow="ALWAYS" onAction="#sendMsg"/>
         <Button fx:id="button" text="Отправить" onAction="#sendMsg"/>
     </HBox>
-
-    <HBox fx:id="messagePanel1" visible="true" managed="false">
-        <TextField fx:id="msgField1" promptText="Написать сообщение..." HBox.hgrow="ALWAYS" onAction="#sendMsg"/>
-        <Button fx:id="button1" text="Отправить" onAction="#sendMsg"/>
-    </HBox>
 </VBox>
