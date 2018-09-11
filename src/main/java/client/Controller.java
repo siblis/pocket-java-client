@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 import java.io.DataInputStream;
@@ -32,6 +33,11 @@ public class Controller implements Initializable {
     PasswordField passFiead;
     @FXML
     ListView clientsListArea;
+
+    @FXML
+    VBox regPanel;
+
+
     private ObservableList<String> clientsObsvList;
 
     private Socket socket;
@@ -56,6 +62,7 @@ public class Controller implements Initializable {
             myNick = "";
         }
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -183,4 +190,27 @@ public class Controller implements Initializable {
             msgField.selectEnd();
         }
     }
+
+    public void showRegistrPan(boolean registering) {
+        if (registering) {
+            loginPanel.setVisible(false);
+            loginPanel.setManaged(false);
+            regPanel.setVisible(true);
+            regPanel.setManaged(true);
+        } else {
+            loginPanel.setVisible(true);
+            loginPanel.setManaged(true);
+            regPanel.setVisible(false);
+            regPanel.setManaged(false);
+        }
+    }
+
+    public void onShowReg() {
+        showRegistrPan(true);
+    }
+
+    public void offShowReg() {
+        showRegistrPan(false);
+    }
+
 }
