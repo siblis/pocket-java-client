@@ -161,9 +161,9 @@ public class Controller implements Initializable {
     public void sendMsg() {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        String st = dateFormat.format(dateNow) + "   " + ": " + "\n" + "     " + msgField.getText() ;
+        String completeMessage = dateFormat.format(dateNow) + "   " + ": " + "\n" + "     " + msgField.getText() ;
         try {
-            out.writeUTF(st);
+            out.writeUTF(completeMessage);
             msgField.clear();
             msgField.requestFocus();
         } catch (IOException e) {
