@@ -20,22 +20,22 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
     @FXML
-    TextArea textArea;
+    private TextArea textArea;
     @FXML
-    TextField msgField;
+    private TextField msgField;
     @FXML
-    HBox loginPanel;
+    private HBox loginPanel;
     @FXML
-    HBox messagePanel;
+    private HBox messagePanel;
     @FXML
-    TextField loginField;
+    private TextField loginField;
     @FXML
-    PasswordField passFiead;
+    private PasswordField passFiead;
     @FXML
-    ListView clientsListArea;
+    private ListView clientsListArea;
 
     @FXML
-    VBox regPanel;
+    private VBox regPanel;
 
 
     private ObservableList<String> clientsObsvList;
