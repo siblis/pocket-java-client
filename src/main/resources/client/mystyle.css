@@ -1,16 +1,16 @@
 .list-cell:even{
     -fx-background-color: #ddffe2;
 }
-#button{
+#buttonSend{
     -fx-background-color: cyan;
 }
-#buttonauth{
+#buttonAuth{
     -fx-background-color: #aaddb2;
 }
-#buttonreg{
+#buttonReg{
     -fx-background-color: #ddffe2;
 }
-#regButtonreg{
+#okButtonReg{
     -fx-background-color: #ddffe2;
     -fx-border-color: #66ff77;
 }

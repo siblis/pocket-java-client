@@ -11,8 +11,8 @@
     <HBox fx:id="loginPanel">
         <TextField fx:id="loginField" promptText="логин" HBox.hgrow="ALWAYS" onAction="#authorization"/>
         <PasswordField fx:id="passFiead" promptText="пароль" HBox.hgrow="ALWAYS" onAction="#authorization"/>
-        <Button fx:id="buttonauth" text="Авторизоваться" onAction="#authorization"/>
-        <Button fx:id="buttonreg" text="Зарегистрироваться" onAction="#onShowReg"/>
+        <Button fx:id="buttonAuth" text="Авторизоваться" onAction="#authorization"/>
+        <Button fx:id="buttonReg" text="Зарегистрироваться" onAction="#onShowReg"/>
     </HBox>
 
     <VBox fx:id="regPanel" visible="false" managed="false">
@@ -24,7 +24,7 @@
         <PasswordField fx:id="regpassFiead2" promptText="пароль" HBox.hgrow="ALWAYS" onAction="#authorization"/>
         <Label text="Ваш email" />
         <TextField fx:id="regEmailField" promptText="email" HBox.hgrow="ALWAYS" onAction="#authorization"/>
-        <Button fx:id="regButtonreg" text="Зарегистрироваться" onAction="#offShowReg"/>
+        <Button fx:id="okButtonReg" text="Зарегистрироваться" onAction="#offShowReg"/>
     </VBox>
 
     <HBox VBox.vgrow="ALWAYS">
@@ -34,6 +34,6 @@
 
     <HBox fx:id="messagePanel" visible="false" managed="false">
         <TextField fx:id="msgField" promptText="Написать сообщение..." HBox.hgrow="ALWAYS" onAction="#sendMsg"/>
-        <Button fx:id="button" text="Отправить" onAction="#sendMsg"/>
+        <Button fx:id="buttonSend" text="Отправить" onAction="#sendMsg"/>
     </HBox>
 </VBox>
