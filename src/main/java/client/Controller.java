@@ -106,7 +106,8 @@ public class Controller implements Initializable {
                         () -> regLoginField.getText().length() == 0
                                 || regPassField.getText().length() == 0
                                 || regPassField2.getText().length() == 0
-                                || regEmailField.getText().length() == 0,
+                                || regEmailField.getText().length() == 0
+                                || !regPassField.getText().equals(regPassField2.getText()),
                         regLoginField.textProperty(),
                         regPassField.textProperty(),
                         regPassField2.textProperty(),
