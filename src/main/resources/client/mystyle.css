@@ -14,3 +14,7 @@
     -fx-background-color: #ddffe2;
     -fx-border-color: #66ff77;
 }
+#noButtonReg{
+     -fx-background-color: #ffcccc;
+     -fx-border-color: #ff6677;
+ }

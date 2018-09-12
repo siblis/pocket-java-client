@@ -24,7 +24,11 @@
         <PasswordField fx:id="regpassFiead2" promptText="пароль" HBox.hgrow="ALWAYS" onAction="#authorization"/>
         <Label text="Ваш email" />
         <TextField fx:id="regEmailField" promptText="email" HBox.hgrow="ALWAYS" onAction="#authorization"/>
-        <Button fx:id="okButtonReg" text="Зарегистрироваться" onAction="#offShowReg"/>
+        <HBox>
+            <Button fx:id="okButtonReg" text="Зарегистрироваться" onAction="#offShowReg"/>
+            <Button fx:id="noButtonReg" text="Передумал" onAction="#offShowReg"/>
+        </HBox>
+
     </VBox>
 
     <HBox VBox.vgrow="ALWAYS">
