@@ -15,6 +15,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -157,8 +159,11 @@ public class Controller implements Initializable {
     }
 
     public void sendMsg() {
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        String st = dateFormat.format(dateNow) + "   " + ": " + "\n" + "     " + msgField.getText() ;
         try {
-            out.writeUTF(msgField.getText());
+            out.writeUTF(st);
             msgField.clear();
             msgField.requestFocus();
         } catch (IOException e) {
