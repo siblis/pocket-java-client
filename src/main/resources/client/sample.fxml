@@ -17,11 +17,11 @@
 
     <VBox fx:id="regPanel" visible="false" managed="false">
         <Label text="Ваш логин" />
-        <TextField fx:id="regloginField" promptText="логин" HBox.hgrow="ALWAYS" onAction="#authorization"/>
+        <TextField fx:id="regLoginField" promptText="логин" HBox.hgrow="ALWAYS" onAction="#authorization"/>
         <Label text="Ваш пароль" />
-        <PasswordField fx:id="regpassFiead" promptText="пароль" HBox.hgrow="ALWAYS" onAction="#authorization"/>
+        <PasswordField fx:id="regPassField" promptText="пароль" HBox.hgrow="ALWAYS" onAction="#authorization"/>
         <Label text="Ваш пароль еще раз" />
-        <PasswordField fx:id="regpassFiead2" promptText="пароль" HBox.hgrow="ALWAYS" onAction="#authorization"/>
+        <PasswordField fx:id="regPassField2" promptText="пароль" HBox.hgrow="ALWAYS" onAction="#authorization"/>
         <Label text="Ваш email" />
         <TextField fx:id="regEmailField" promptText="email" HBox.hgrow="ALWAYS" onAction="#authorization"/>
         <HBox>

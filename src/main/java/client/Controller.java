@@ -1,6 +1,7 @@
 package client;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -36,7 +37,16 @@ public class Controller implements Initializable {
 
     @FXML
     private VBox regPanel;
-
+    @FXML
+    private Button okButtonReg;
+    @FXML
+    private TextField regLoginField;
+    @FXML
+    private TextField regPassField;
+    @FXML
+    private TextField regPassField2;
+    @FXML
+    private TextField regEmailField;
 
     private ObservableList<String> clientsObsvList;
 
@@ -90,6 +100,19 @@ public class Controller implements Initializable {
                 };
             }
         });
+
+        okButtonReg.disableProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> regLoginField.getText().length() == 0
+                                || regPassField.getText().length() == 0
+                                || regPassField2.getText().length() == 0
+                                || regEmailField.getText().length() == 0,
+                        regLoginField.textProperty(),
+                        regPassField.textProperty(),
+                        regPassField2.textProperty(),
+                        regEmailField.textProperty()));
+
+
     }
 
     public void connect() {
