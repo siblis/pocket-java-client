@@ -11,8 +11,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("JavaFX project Client");
-        primaryStage.setScene(new Scene(root, 550, 800));
+        primaryStage.setTitle("Pocket desktop Client");
+        primaryStage.setScene(new Scene(root, 750, 600));
         primaryStage.show();
     }
 
