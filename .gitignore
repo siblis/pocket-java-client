@@ -1,4 +1,4 @@
-/target/
-/.idea/
-/out/
+target/
+.idea/
+out/
 DesktopClient.iml
