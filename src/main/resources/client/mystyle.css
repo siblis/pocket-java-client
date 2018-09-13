@@ -1,3 +1,20 @@
 .list-cell:even{
     -fx-background-color: #ddffe2;
 }
+#buttonSend{
+    -fx-background-color: cyan;
+}
+#buttonAuth{
+    -fx-background-color: #aaddb2;
+}
+#buttonReg{
+    -fx-background-color: #ddffe2;
+}
+#okButtonReg{
+    -fx-background-color: #ddffe2;
+    -fx-border-color: #66ff77;
+}
+#noButtonReg{
+     -fx-background-color: #ffcccc;
+     -fx-border-color: #ff6677;
+ }
