@@ -1,6 +1,7 @@
 package client;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 import java.io.DataInputStream;
@@ -15,23 +17,39 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
     @FXML
-    TextArea textArea;
+    private TextArea textArea;
     @FXML
-    TextField msgField;
+    private TextField msgField;
     @FXML
-    HBox loginPanel;
+    private HBox loginPanel;
     @FXML
-    HBox messagePanel;
+    private HBox messagePanel;
     @FXML
-    TextField loginField;
+    private TextField loginField;
     @FXML
-    PasswordField passFiead;
+    private PasswordField passFiead;
     @FXML
-    ListView clientsListArea;
+    private ListView clientsListArea;
+
+    @FXML
+    private VBox regPanel;
+    @FXML
+    private Button okButtonReg;
+    @FXML
+    private TextField regLoginField;
+    @FXML
+    private TextField regPassField;
+    @FXML
+    private TextField regPassField2;
+    @FXML
+    private TextField regEmailField;
+
     private ObservableList<String> clientsObsvList;
 
     private Socket socket;
@@ -56,6 +74,7 @@ public class Controller implements Initializable {
             myNick = "";
         }
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -83,6 +102,20 @@ public class Controller implements Initializable {
                 };
             }
         });
+
+        okButtonReg.disableProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> regLoginField.getText().length() == 0
+                                || regPassField.getText().length() == 0
+                                || regPassField2.getText().length() == 0
+                                || regEmailField.getText().length() == 0
+                                || !regPassField.getText().equals(regPassField2.getText()),
+                        regLoginField.textProperty(),
+                        regPassField.textProperty(),
+                        regPassField2.textProperty(),
+                        regEmailField.textProperty()));
+
+
     }
 
     public void connect() {
@@ -157,8 +190,11 @@ public class Controller implements Initializable {
     }
 
     public void sendMsg() {
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        String completeMessage = dateFormat.format(dateNow) + "   " + ": " + "\n" + "     " + msgField.getText() ;
         try {
-            out.writeUTF(msgField.getText());
+            out.writeUTF(completeMessage);
             msgField.clear();
             msgField.requestFocus();
         } catch (IOException e) {
@@ -183,4 +219,27 @@ public class Controller implements Initializable {
             msgField.selectEnd();
         }
     }
+
+    public void showRegistrPan(boolean registering) {
+        if (registering) {
+            loginPanel.setVisible(false);
+            loginPanel.setManaged(false);
+            regPanel.setVisible(true);
+            regPanel.setManaged(true);
+        } else {
+            loginPanel.setVisible(true);
+            loginPanel.setManaged(true);
+            regPanel.setVisible(false);
+            regPanel.setManaged(false);
+        }
+    }
+
+    public void onShowReg() {
+        showRegistrPan(true);
+    }
+
+    public void offShowReg() {
+        showRegistrPan(false);
+    }
+
 }
