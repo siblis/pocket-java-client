@@ -6,7 +6,7 @@
 
     <groupId>ru.geekbrains</groupId>
     <artifactId>DesktopClient</artifactId>
-    <version>v.0.0.0.1</version>
+    <version>v.0.0.0.2</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,6 +38,17 @@
     <build>
         <finalName>${project.name}-${pom.version}</finalName>
         <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
 
             <plugin><!--плагин для формирования манифеста-->
                 <groupId>org.apache.maven.plugins</groupId>

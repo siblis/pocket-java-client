@@ -12,10 +12,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import javax.websocket.ContainerProvider;
+import javax.websocket.DeploymentException;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import java.io.IOException;
-import java.net.Socket;
+import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,17 +52,11 @@ public class Controller implements Initializable {
     @FXML
     private TextField regEmailField;
 
-    private ObservableList<String> clientsObsvList;
+    private Session session;
 
-    private Socket socket;
-    private DataOutputStream out;
-    private DataInputStream in;
     private String myNick;
 
-    final String SERVER_IP = "localhost";
-    final int SERVER_PORT = 8189;
-
-    public void setAutorized(boolean autorized) {
+    private void setAutorized(boolean autorized) {
         if (autorized) {
             loginPanel.setVisible(false);
             loginPanel.setManaged(false);
@@ -78,8 +74,8 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setAutorized(false);
-        clientsObsvList = FXCollections.observableArrayList();
+        setAutorized(false); // временно изменено на true
+        ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
         clientsListArea.setItems(clientsObsvList);
         clientsListArea.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
@@ -114,73 +110,34 @@ public class Controller implements Initializable {
                         regPassField.textProperty(),
                         regPassField2.textProperty(),
                         regEmailField.textProperty()));
-
-
     }
 
-    public void connect() {
+    private void connect() {
         try {
-            socket = new Socket(SERVER_IP, SERVER_PORT);
-            in = new DataInputStream(socket.getInputStream());
-            out = new DataOutputStream(socket.getOutputStream());
-
-            Thread t = new Thread(() -> {
-                try {
-                    while (true) {
-                        String s = in.readUTF();
-                        if (s.startsWith("/")) {
-                            if (s.startsWith("/authok")) {
-                                setAutorized(true);
-                                myNick = s.split("\\s")[1];
-                                textArea.appendText("успешная авторизация\n");
-                                break;
-                            }
-                            if (s.startsWith("/timeout")) {
-                                Platform.runLater(() -> showAlert("Соединение закрыто по таймауту"));
-                            }
-                            continue;
-                        }
-                        textArea.appendText(s + "\n");
-                    }
-                    while (true) {
-                        String msg = in.readUTF();
-                        if (msg.startsWith("/clients")) {
-                            String[] clientsString = msg.substring(9).split(" ");
-                            Platform.runLater(() -> {
-                                clientsObsvList.clear();
-                                clientsObsvList.addAll(clientsString);
-                            });
-                            continue;
-                        }
-                        textArea.appendText(msg + "\n");
-                    }
-                } catch (IOException e) {
-                    showAlert("Соединение с сервером разорвано.");
-                } finally {
-                    setAutorized(false);
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            t.setDaemon(true);
-            t.start();
-        } catch (IOException e) {
-            showAlert("Не удалось подключиться к серверу. Проверьте сетевое соединение.");
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            String uri = "ws://echo.websocket.org:80/";
+            System.out.println("Connecting to " + uri);
+            session = container.connectToServer(new MyClientEndpoint(this), URI.create(uri));
+        } catch (DeploymentException | IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public void authorization() {
+    public void authentication() {
         if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
-            if (socket == null || socket.isClosed()) connect();
-            try {
-                out.writeUTF("/auth " +
+            if (session == null || !(session.isOpen()))
+                connect();
+            try {   // имитация аутентификации
+                session.getBasicRemote().sendText("/auth " +
                         loginField.getText() + " " +
                         passFiead.getText());
                 loginField.clear();
                 passFiead.clear();
+
+                textArea.appendText("успешная авторизация\n");
+                setAutorized(true);
+                myNick = "MyNick";
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -189,12 +146,12 @@ public class Controller implements Initializable {
         }
     }
 
-    public void sendMsg() {
+    public void sendMessage() {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        String completeMessage = dateFormat.format(dateNow) + "   " + ": " + "\n" + "     " + msgField.getText() ;
+        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
         try {
-            out.writeUTF(completeMessage);
+            session.getBasicRemote().sendText(completeMessage);
             msgField.clear();
             msgField.requestFocus();
         } catch (IOException e) {
@@ -202,7 +159,11 @@ public class Controller implements Initializable {
         }
     }
 
-    public void showAlert(String message) {
+    void reciveMessage(String message){
+        textArea.appendText(message + "\n");
+    }
+
+    private void showAlert(String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Ой! Проблемка нарисавалася!");
@@ -212,7 +173,7 @@ public class Controller implements Initializable {
         });
     }
 
-    public void clientChoise(MouseEvent event) {
+    public void clientChoice(MouseEvent event) {
         if (event.getClickCount() == 2) {
             msgField.setText("/w " + clientsListArea.getSelectionModel().getSelectedItem() + " ");
             msgField.requestFocus();
@@ -220,7 +181,7 @@ public class Controller implements Initializable {
         }
     }
 
-    public void showRegistrPan(boolean registering) {
+    private void showRegisterPan(boolean registering) {
         if (registering) {
             loginPanel.setVisible(false);
             loginPanel.setManaged(false);
@@ -235,11 +196,11 @@ public class Controller implements Initializable {
     }
 
     public void onShowReg() {
-        showRegistrPan(true);
+        showRegisterPan(true);
     }
 
     public void offShowReg() {
-        showRegistrPan(false);
+        showRegisterPan(false);
     }
 
 }
