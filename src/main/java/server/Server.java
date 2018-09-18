@@ -21,7 +21,22 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             clientList = new Vector<>();
 
-            authService = new AuthService();
+            authService = new AuthService() {
+                @Override
+                public String getNick(String login, String pass) {
+                    return null;
+                }
+
+                @Override
+                public boolean login(String login, String pass) {
+                    return false;
+                }
+
+                @Override
+                public boolean contains(String userName) {
+                    return false;
+                }
+            };
             authService.connect();
 
             System.out.println("Server started...Waiting for clients");
