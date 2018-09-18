@@ -37,7 +37,7 @@ public class Controller implements Initializable {
     @FXML
     private PasswordField passFiead;
     @FXML
-    private ListView clientsListArea;
+    private ListView<String> clientsListArea;
 
     @FXML
     private VBox regPanel;
