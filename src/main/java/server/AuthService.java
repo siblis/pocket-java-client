@@ -2,7 +2,7 @@ package server;
 
 import java.sql.*;
 
-public class AuthService {
+public abstract class AuthService {
     private Connection connection;
     private Statement statement;
 
@@ -32,4 +32,10 @@ public class AuthService {
             e.printStackTrace();
         }
     }
+
+    public abstract String getNick(String login, String pass);
+
+    public abstract boolean login(String login, String pass);
+
+    public abstract boolean contains(String userName);
 }

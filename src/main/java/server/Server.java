@@ -10,6 +10,9 @@ public class Server {
     private Vector<ClientHandler> clientList;
     private AuthService authService;
 
+    public Server() {
+    }
+
     public AuthService getAuthService() {
         return authService;
     }

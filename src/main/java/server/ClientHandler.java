@@ -100,4 +100,17 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
+
+    public boolean isActive() {
+
+        return false;
+    }
+
+    public Object getSocket() {
+        return null;
+    }
+
+    public String getName() {
+        return null;
+    }
 }
