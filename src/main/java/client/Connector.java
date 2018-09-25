@@ -9,7 +9,6 @@ import javax.net.ssl.SSLSocketFactory;
 
 
 public class Connector {
-    public String mess="";
     WebSocketChatClient chatclient;
     public Connector(String token, Controller controller){
         try {
@@ -30,16 +29,6 @@ public class Connector {
 
 //        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-
-//        while (true) {
-//            if (!mess.equals("")) {
-//                if (mess.equals("close")) {
-//                    chatclient.close();
-//                } else {
-//                    chatclient.send(mess);
-//                }
-//            }
-//
 //            String line = reader.readLine();
 //            if (line.equals("close")) {
 //                chatclient.close();
