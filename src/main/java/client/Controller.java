@@ -46,9 +46,9 @@ public class Controller implements Initializable {
     @FXML
     private TextField regLoginField;
     @FXML
-    private TextField regPassField;
+    private TextField passFieldReg;
     @FXML
-    private TextField regPassField2;
+    private TextField passFieldRegDouble;
     @FXML
     private TextField regEmailField;
 
@@ -102,25 +102,25 @@ public class Controller implements Initializable {
         okButtonReg.disableProperty().bind(
                 Bindings.createBooleanBinding(
                         () -> regLoginField.getText().length() == 0
-                                || regPassField.getText().length() == 0
-                                || regPassField2.getText().length() == 0
+                                || passFieldReg.getText().length() == 0
+                                || passFieldRegDouble.getText().length() == 0
                                 || regEmailField.getText().length() == 0
-                                || !regPassField.getText().equals(regPassField2.getText()),
+                                || !passFieldReg.getText().equals(passFieldRegDouble.getText()),
                         regLoginField.textProperty(),
-                        regPassField.textProperty(),
-                        regPassField2.textProperty(),
+                        passFieldReg.textProperty(),
+                        passFieldRegDouble.textProperty(),
                         regEmailField.textProperty()));
     }
 
     private void connect() {
-        try {
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            String uri = "ws://echo.websocket.org:80/";
-            System.out.println("Connecting to " + uri);
-            session = container.connectToServer(new MyClientEndpoint(this), URI.create(uri));
-        } catch (DeploymentException | IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+//            String uri = "ws://echo.websocket.org:80/";
+//            System.out.println("Connecting to " + uri);
+//            session = container.connectToServer(new MyClientEndpoint(this), URI.create(uri));
+//        } catch (DeploymentException | IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void authentication() {
