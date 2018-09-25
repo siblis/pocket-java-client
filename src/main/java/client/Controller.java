@@ -141,6 +141,8 @@ public class Controller implements Initializable {
                 msgField.getText()+"\" }";
         System.out.println(mess);
         conn.chatclient.send(mess);
+        reciveMessage(msgField.getText());
+        msgField.clear();
 
 //        Date dateNow = new Date();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
