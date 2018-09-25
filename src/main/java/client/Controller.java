@@ -158,7 +158,9 @@ public class Controller implements Initializable {
         String mess = "{ \"receiver\":\"2\", \"message\":\"+" +
                 msgField.getText()+"\" }";
         conn.chatclient.send(mess);
-
+        mess = "{ \"receiver\":\"3\", \"message\":\"+" +
+                msgField.getText()+"\" }";
+        conn.chatclient.send(mess);
 //        Date dateNow = new Date();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 //        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
