@@ -137,7 +137,7 @@ public class Controller implements Initializable {
         String adres = myNick.equals("2")?"3":"2";
         String mess = "{ \"receiver\":\"" +
                 adres +
-                "\", \"message\":\"" +
+                "\", \"message\":\"" +myNick+" :  "+
                 msgField.getText()+"\" }";
         System.out.println(mess);
         conn.chatclient.send(mess);
