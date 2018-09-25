@@ -12,12 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
-import javax.websocket.ContainerProvider;
-import javax.websocket.DeploymentException;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,13 +45,6 @@ public class Controller implements Initializable {
     private TextField passFieldRegDouble;
     @FXML
     private TextField regEmailField;
-
-//    @FXML
-//    private Button buttonClient2;
-//    @FXML
-//    private Button buttonClient3;
-
-    private Session session;
 
     private String myNick;
 
@@ -121,14 +108,6 @@ public class Controller implements Initializable {
 
     private void connect(String token) {
         conn = new Connector(token,this);
-//        try {
-//            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-//            String uri = "ws://echo.websocket.org:80/";
-//            System.out.println("Connecting to " + uri);
-//            session = container.connectToServer(new MyClientEndpoint(this), URI.create(uri));
-//        } catch (DeploymentException | IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void authentication() {

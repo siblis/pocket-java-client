@@ -38,8 +38,9 @@ class WebSocketChatClient extends WebSocketClient {
 
     @Override
     public void onMessage( String message ) {
-//        System.out.println( "got: " + message );
-        controller.reciveMessage(message);
+        System.out.println( "got: " + message );
+        if(!message.startsWith("{")){
+        controller.reciveMessage(message);}
     }
 
     @Override
