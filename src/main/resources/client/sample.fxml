@@ -13,6 +13,8 @@
         <PasswordField fx:id="passFiead" promptText="пароль" HBox.hgrow="ALWAYS" onAction="#authentication"/>
         <Button fx:id="buttonAuth" text="Авторизоваться" onAction="#authentication"/>
         <Button fx:id="buttonReg" text="Зарегистрироваться" onAction="#onShowReg"/>
+        <Button fx:id="buttonClient2" text="C-2" onAction="#conn2"/>
+        <Button fx:id="buttonClient3" text="C-3" onAction="#conn3"/>
     </HBox>
 
     <VBox fx:id="regPanel" visible="false" managed="false">

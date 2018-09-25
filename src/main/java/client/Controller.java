@@ -52,9 +52,16 @@ public class Controller implements Initializable {
     @FXML
     private TextField regEmailField;
 
+//    @FXML
+//    private Button buttonClient2;
+//    @FXML
+//    private Button buttonClient3;
+
     private Session session;
 
     private String myNick;
+
+    Connector conn = null;
 
     private void setAutorized(boolean autorized) {
         if (autorized) {
@@ -112,7 +119,8 @@ public class Controller implements Initializable {
                         regEmailField.textProperty()));
     }
 
-    private void connect() {
+    private void connect(String token) {
+        conn = new Connector(token,this);
 //        try {
 //            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 //            String uri = "ws://echo.websocket.org:80/";
@@ -124,42 +132,45 @@ public class Controller implements Initializable {
     }
 
     public void authentication() {
-        if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
-            if (session == null || !(session.isOpen()))
-                connect();
-            try {   // имитация аутентификации
-                session.getBasicRemote().sendText("/auth " +
-                        loginField.getText() + " " +
-                        passFiead.getText());
-                loginField.clear();
-                passFiead.clear();
-
-                textArea.appendText("успешная авторизация\n");
-                setAutorized(true);
-                myNick = "MyNick";
-                
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            showAlert("Неполные данные для авторизации!");
-        }
+//        if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
+//            if (session == null || !(session.isOpen()))
+//                connect();
+//            try {   // имитация аутентификации
+//                session.getBasicRemote().sendText("/auth " +
+//                        loginField.getText() + " " +
+//                        passFiead.getText());
+//                loginField.clear();
+//                passFiead.clear();
+//
+//                textArea.appendText("успешная авторизация\n");
+//                setAutorized(true);
+//                myNick = "MyNick";
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            showAlert("Неполные данные для авторизации!");
+//        }
     }
 
     public void sendMessage() {
-        Date dateNow = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
-        try {
-            session.getBasicRemote().sendText(completeMessage);
-            msgField.clear();
-            msgField.requestFocus();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+        String mess = "{ \"receiver\":\"2\", \"message\":\"+" +
+                msgField.getText()+"\" }";
+        conn.chatclient.send(mess);
 
-    void reciveMessage(String message){
+//        Date dateNow = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+//        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
+//        try {
+//            session.getBasicRemote().sendText(completeMessage);
+//            msgField.clear();
+//            msgField.requestFocus();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+    public void reciveMessage(String message){
         textArea.appendText(message + "\n");
     }
 
@@ -203,4 +214,12 @@ public class Controller implements Initializable {
         showRegisterPan(false);
     }
 
-}
+    public void conn2() {
+        setAutorized(true);
+        connect("2d1ea610bc493d76");
+    }
+    public void conn3() {
+        setAutorized(true);
+        connect("f5b7c119e858b9f3");
+    }
+    }
