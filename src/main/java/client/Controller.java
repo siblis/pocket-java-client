@@ -155,12 +155,14 @@ public class Controller implements Initializable {
     }
 
     public void sendMessage() {
-        String mess = "{ \"receiver\":\"2\", \"message\":\"+" +
+        String adres = myNick.equals("2")?"3":"2";
+        String mess = "{ \"receiver\":\"" +
+                adres +
+                "\", \"message\":\"" +
                 msgField.getText()+"\" }";
+        System.out.println(mess);
         conn.chatclient.send(mess);
-        mess = "{ \"receiver\":\"3\", \"message\":\"+" +
-                msgField.getText()+"\" }";
-        conn.chatclient.send(mess);
+
 //        Date dateNow = new Date();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 //        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
@@ -219,9 +221,11 @@ public class Controller implements Initializable {
     public void conn2() {
         setAutorized(true);
         connect("2d1ea610bc493d76");
+        myNick ="2";
     }
     public void conn3() {
         setAutorized(true);
         connect("f5b7c119e858b9f3");
+        myNick= "3";
     }
     }
