@@ -209,4 +209,9 @@ public class Controller implements Initializable {
         connect("f5b7c119e858b9f3");
         myNick= "3";
     }
+    public void exit() {
+        setAutorized(false);
+        conn.chatclient.close();
+
+    }
     }

@@ -41,5 +41,6 @@
     <HBox fx:id="messagePanel" visible="false" managed="false">
         <TextField fx:id="msgField" promptText="Написать сообщение..." HBox.hgrow="ALWAYS" onAction="#sendMessage"/>
         <Button fx:id="buttonSend" text="Отправить" onAction="#sendMessage"/>
+        <Button fx:id="buttonExit" text="Выход" onAction="#exit"/>
     </HBox>
 </VBox>
