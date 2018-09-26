@@ -134,19 +134,25 @@ public class Controller implements Initializable {
     }
 
     public void sendMessage() {
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+//        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
+
         String adres = myNick.equals("2")?"3":"2";
         String mess = "{ \"receiver\":\"" +
                 adres +
-                "\", \"message\":\"" +myNick+" :  "+
+                "\", \"message\":\"" +
+                "["+dateFormat.format(dateNow)+"] "+ myNick+" :  "+
                 msgField.getText()+"\" }";
         System.out.println(mess);
         conn.chatclient.send(mess);
-        reciveMessage(msgField.getText());
+        reciveMessage("["+dateFormat.format(dateNow)+"] "+ msgField.getText());
         msgField.clear();
 
-//        Date dateNow = new Date();
+//          Date dateNow = new Date();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 //        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
+//
 //        try {
 //            session.getBasicRemote().sendText(completeMessage);
 //            msgField.clear();
