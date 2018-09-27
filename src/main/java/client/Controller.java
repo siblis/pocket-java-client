@@ -189,10 +189,10 @@ public class Controller implements Initializable {
         textArea.appendText(message + "\n");
     }
 
-    private void showAlert(String message) {
+    private void showAlert(String message , String title) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ой! Проблемка нарисавалася!");
+            alert.setTitle(title);
             alert.setHeaderText(null);
             alert.setContentText(message);
             alert.showAndWait();
@@ -256,5 +256,6 @@ public class Controller implements Initializable {
             e.printStackTrace();
         }
         offShowReg();
+        showAlert("Вы успешно зарегистрированы","Результат");
     }
     }
