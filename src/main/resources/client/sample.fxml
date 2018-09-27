@@ -27,7 +27,7 @@
         <Label text="Ваш email" />
         <TextField fx:id="regEmailField" promptText="email" HBox.hgrow="ALWAYS" onAction="#authentication"/>
         <HBox>
-            <Button fx:id="okButtonReg" text="Зарегистрироваться" onAction="#offShowReg"/>
+            <Button fx:id="okButtonReg" text="Зарегистрироваться" onAction="#registration"/>
             <Button fx:id="noButtonReg" text="Передумал" onAction="#offShowReg"/>
         </HBox>
 

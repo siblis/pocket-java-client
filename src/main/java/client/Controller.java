@@ -242,6 +242,19 @@ public class Controller implements Initializable {
     public void exit() {
         setAutorized(false);
         conn.chatclient.close();
+    }
 
+    public void registration(){
+        String requestJSON  = "{" +
+                "\"account_name\": \""+  regLoginField.getText()  +"\"," +
+                "\"email\": \""+  regEmailField.getText()  +"\"," +
+                "\"password\": \""+  passFieldReg.getText()  +"\"" +
+                "}";
+        try {
+            HTTPSRequest.registration(requestJSON);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        offShowReg();
     }
     }
