@@ -65,7 +65,6 @@ public class Controller implements Initializable {
         }
     }
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setAutorized(false); // временно изменено на true
@@ -132,28 +131,9 @@ public class Controller implements Initializable {
                 myNick = loginField.getText();
 
             }
+        } else {
+            showAlert("Неполные данные для авторизации!", "Результат");
         }
-
-//        if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
-//            if (session == null || !(session.isOpen()))
-//                connect();
-//            try {   // имитация аутентификации
-//                session.getBasicRemote().sendText("/auth " +
-//                        loginField.getText() + " " +
-//                        passFiead.getText());
-//                loginField.clear();
-//                passFiead.clear();
-//
-//                textArea.appendText("успешная авторизация\n");
-//                setAutorized(true);
-//                myNick = "MyNick";
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            showAlert("Неполные данные для авторизации!");
-//        }
     }
 
     public void sendMessage() {
@@ -185,7 +165,7 @@ public class Controller implements Initializable {
 //        }
     }
 
-    public void reciveMessage(String message) {
+    void reciveMessage(String message) {
         textArea.appendText(message + "\n");
     }
 

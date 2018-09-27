@@ -4,9 +4,9 @@ import java.net.URL;
 import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
 
-public class HTTPSRequest {
+class HTTPSRequest {
 
-    public static int registration(String requestJSON) throws Exception {
+    static int registration(String requestJSON) throws Exception {
         String url = "https://pocketmsg.ru:8888/v1/users/";
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
@@ -37,7 +37,7 @@ public class HTTPSRequest {
             //print result
             System.out.println(response.toString());
         } catch (IOException e) {
-            System.out.println("Ошибка регистрации, код: " + responseCode);
+            System.out.println("Ошибка, код: " + responseCode);
             e.printStackTrace();
             return responseCode;
         }
@@ -45,17 +45,12 @@ public class HTTPSRequest {
         return responseCode;
     }
 
-    public static String avtorization(String requestJSON) throws Exception {
+    static String avtorization(String requestJSON) throws Exception {
         String url = "https://pocketmsg.ru:8888/v1/auth/";
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
         con.setRequestMethod("PUT");
-
-//        String requestJSON = "{" +
-////                "\"user\": \"OzzyFrost\"," +
-////                "\"password\": \"12345\"" +
-////                "}";
 
         // Send request
         con.setDoOutput(true);
@@ -69,23 +64,21 @@ public class HTTPSRequest {
         System.out.println("Put parameters : " + requestJSON);
         System.out.println("Response Code : " + responseCode);
 
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
+        StringBuilder response = new StringBuilder();
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+
+            //print result
+            System.out.println(response.toString());
         } catch (IOException e) {
+            System.out.println("Ошибка, код: " + responseCode);
             e.printStackTrace();
         }
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        //print result
-        System.out.println(response.toString());
 
         return response.toString();
     }
