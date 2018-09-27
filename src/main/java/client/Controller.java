@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import jdk.nashorn.internal.parser.JSONParser;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -111,6 +112,29 @@ public class Controller implements Initializable {
     }
 
     public void authentication() {
+        if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
+            String token;
+            String answer = "0";
+            String reqJSON ="{" +
+                "\"user\": \""+ loginField.getText() +"\"," +
+                "\"password\": \""+ passFiead.getText() +"\"" +
+                "}";
+            try {
+                answer = HTTPSRequest.avtorization(reqJSON);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (answer.contains("token")){
+                //тут надо обработать JSON по нармальному
+                token = answer.substring(answer.indexOf("token")+9,answer.indexOf(",")-1);
+                System.out.println("TOKEN "+token);
+                setAutorized(true);
+                connect(token);
+                myNick= loginField.getText() ;
+
+            }
+        }
+
 //        if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
 //            if (session == null || !(session.isOpen()))
 //                connect();
