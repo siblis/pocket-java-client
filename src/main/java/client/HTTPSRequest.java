@@ -6,47 +6,46 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class HTTPSRequest {
 
-    public static void registration(String requestJSON ) throws Exception {
+    public static int registration(String requestJSON) throws Exception {
         String url = "https://pocketmsg.ru:8888/v1/users/";
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
         con.setRequestMethod("POST");
 
-//        String requestJSON  = "{" +
-//                "\"account_name\": \"OzzyFrost\"," +
-//                "\"email\": \"5kla@mail.ru\"," +
-//                "\"password\": \"12345\"" +
-//                "}";
-
         // Send post request
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(requestJSON );
+        wr.writeBytes(requestJSON);
         wr.flush();
         wr.close();
 
         int responseCode = con.getResponseCode();
         System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + requestJSON );
+        System.out.println("Post parameters : " + requestJSON);
         System.out.println("Response Code : " + responseCode);
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()))) {
+            StringBuilder response = new StringBuilder();
+            String inputLine;
 
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+
+            //print result
+            System.out.println(response.toString());
+        } catch (IOException e) {
+            System.out.println("Ошибка регистрации, код: " + responseCode);
+            e.printStackTrace();
+            return responseCode;
         }
-        in.close();
 
-        //print result
-        System.out.println(response.toString());
-
+        return responseCode;
     }
 
-    public static String avtorization(String requestJSON ) throws Exception {
+    public static String avtorization(String requestJSON) throws Exception {
         String url = "https://pocketmsg.ru:8888/v1/auth/";
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
@@ -70,10 +69,15 @@ public class HTTPSRequest {
         System.out.println("Put parameters : " + requestJSON);
         System.out.println("Response Code : " + responseCode);
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         String inputLine;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
