@@ -152,17 +152,6 @@ public class Controller implements Initializable {
         reciveMessage("[" + dateFormat.format(dateNow) + "] " + msgField.getText());
         msgField.clear();
 
-//          Date dateNow = new Date();
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-//        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
-//
-//        try {
-//            session.getBasicRemote().sendText(completeMessage);
-//            msgField.clear();
-//            msgField.requestFocus();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     void reciveMessage(String message) {
