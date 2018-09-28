@@ -15,4 +15,5 @@ public class User {
         groupsList = new ArrayList<Group>();
         contactList.add(this); // не уверен что нужно и что в этом месте
     }
+
 }

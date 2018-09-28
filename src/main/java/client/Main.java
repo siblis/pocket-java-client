@@ -30,3 +30,5 @@ public class Main extends Application {
         launch(args);
     }
 }
+//Post parameters : {"account_name": "alg","email": "hontsa","password": "12345"}
+// {"token": "baaaa053fddd51f6"}

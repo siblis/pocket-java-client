@@ -46,6 +46,8 @@ public class Controller implements Initializable {
     private TextField passFieldRegDouble;
     @FXML
     private TextField regEmailField;
+    @FXML
+    Button buttonAdd;
 
     private String myNick;
 
@@ -258,4 +260,18 @@ public class Controller implements Initializable {
         offShowReg();
         showAlert("Вы успешно зарегистрированы","Результат");
     }
+
+    public void addContact(){
+        String e_mail = "hontsa";
+        String token = "2d1ea610bc493d76";
+        String requestJSON  = "header: " + token + "{" +
+                "\"contact\": " + e_mail +
+                "}";
+        try {
+            HTTPSRequest.addContact(requestJSON);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+}
