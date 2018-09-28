@@ -226,6 +226,8 @@ public class Controller implements Initializable {
             if (responseCode == 201) {
                 offShowReg();
                 showAlert("Вы успешно зарегистрированы", "Результат");
+                loginField.setText(regLoginField.getText());
+                passFiead.setText(passFieldReg.getText());
             } else
                 showAlert("Ошибка регистрации, код: " + responseCode, "Результат");
         } catch (Exception e) {
