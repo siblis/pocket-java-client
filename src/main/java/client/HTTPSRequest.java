@@ -16,6 +16,8 @@ class HTTPSRequest {
         answerRequest(con);
 
         return responseCode;
+        // мне кажется надо вернуть JSON, а ошибки responseCode надо
+//        обрабатывать тут
     }
 
     static String avtorization(String requestJSON) throws Exception {

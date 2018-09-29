@@ -139,11 +139,10 @@ public class Controller implements Initializable {
     public void sendMessage() {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-//        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
 
-        String adres = myNick.equals("2") ? "3" : "2";
+        String recipient = myNick.equals("2") ? "3" : "2";
         String mess = "{ \"receiver\":\"" +
-                adres +
+                recipient +
                 "\", \"message\":\"" +
                 "[" + dateFormat.format(dateNow) + "] " + myNick + " :  " +
                 msgField.getText() + "\" }";
