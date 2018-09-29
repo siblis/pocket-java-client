@@ -140,9 +140,9 @@ public class Controller implements Initializable {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-        String recipient = myNick.equals("2") ? "3" : "2";
+        String receiver = myNick.equals("2") ? "3" : "2";
         String mess = "{ \"receiver\":\"" +
-                recipient +
+                receiver +
                 "\", \"message\":\"" +
                 "[" + dateFormat.format(dateNow) + "] " + myNick + " :  " +
                 msgField.getText() + "\" }";
