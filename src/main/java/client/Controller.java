@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+    private static String token;
     @FXML
     private TextArea textArea;
     @FXML
@@ -33,7 +34,8 @@ public class Controller implements Initializable {
     private PasswordField passFiead;
     @FXML
     private ListView<String> clientsListArea;
-
+    @FXML
+    private TextField addContact;
     @FXML
     private VBox regPanel;
     @FXML
@@ -115,10 +117,10 @@ public class Controller implements Initializable {
 
     public void authentication() {
         if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
-            String token;
+            //String token;
             String answer = "0";
             String reqJSON ="{" +
-                "\"user\": \""+ loginField.getText() +"\"," +
+                "\"account_name\": \""+ loginField.getText() +"\"," +
                 "\"password\": \""+ passFiead.getText() +"\"" +
                 "}";
             try {
@@ -263,12 +265,12 @@ public class Controller implements Initializable {
 
     public void addContact(){
         String e_mail = "hontsa";
-        String token = "2d1ea610bc493d76";
-        String requestJSON  = "header: " + token + "{" +
-                "\"contact\": " + e_mail +
+        //String token = "77b7ff9e1cb49d0f";
+        String requestJSON  = "{" +
+                "\"contact\": " + addContact.getText() +
                 "}";
         try {
-            HTTPSRequest.addContact(requestJSON);
+            HTTPSRequest.addContact(requestJSON, token);
         } catch (Exception e) {
             e.printStackTrace();
         }

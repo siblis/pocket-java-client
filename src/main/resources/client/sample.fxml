@@ -43,5 +43,6 @@
         <Button fx:id="buttonSend" text="Отправить" onAction="#sendMessage"/>
         <Button fx:id="buttonExit" text="Выход" onAction="#exit"/>
         <Button fx:id="buttonAdd" text="добавить" onAction="#addContact"/>
+        <TextField fx:id="addContact" promptText="контакт для добавления..."/>
     </HBox>
 </VBox>
