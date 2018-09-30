@@ -267,7 +267,7 @@ public class Controller implements Initializable {
         String e_mail = "hontsa";
         //String token = "77b7ff9e1cb49d0f";
         String requestJSON  = "{" +
-                "\"contact\": " + addContact.getText() +
+                "\"contact\": " + "\"" + addContact.getText() +"\"" +
                 "}";
         try {
             HTTPSRequest.addContact(requestJSON, token);
