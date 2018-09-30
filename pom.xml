@@ -6,7 +6,7 @@
 
     <groupId>ru.geekbrains</groupId>
     <artifactId>DesktopClient</artifactId>
-    <version>v.0.0.0.2</version>
+    <version>v.0.0.1.9</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,7 +26,7 @@
     </dependencies>
 
     <build>
-        <finalName>${project.name}-${pom.version}</finalName>
+        <finalName>${project.name}-${project.version}</finalName>
         <plugins>
 
             <plugin>
