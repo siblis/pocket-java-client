@@ -144,8 +144,7 @@ public class Controller implements Initializable {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-        String receiver = "1";
-//                myNick.equals("tester2") ? "OzzyFrost" : "tester2";
+        String receiver = myNick.equals("tester2") ? "25" : "24";
         String mess = "{ \"receiver\":\"" +
                 receiver +
                 "\", \"message\":\"" +
@@ -203,6 +202,7 @@ public class Controller implements Initializable {
     }
 
     public void conn2() {
+        // id = 24
         myNick = "tester2";
         loginField.setText("tester2");
         passFiead.setText("123");
@@ -210,6 +210,7 @@ public class Controller implements Initializable {
     }
 
     public void conn3() {
+        //id = 25
         myNick = "tester3";
         loginField.setText("tester3");
         passFiead.setText("123");
