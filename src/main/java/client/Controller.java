@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -45,6 +47,8 @@ public class Controller implements Initializable {
     private TextField passFieldRegDouble;
     @FXML
     private TextField regEmailField;
+    @FXML
+    private WebView webView =null;
 
     private String myNick;
 
@@ -114,7 +118,7 @@ public class Controller implements Initializable {
             String token;
             String answer = "0";
             String reqJSON = "{" +
-                    "\"user\": \"" + loginField.getText() + "\"," +
+                    "\"account_name\": \"" + loginField.getText() + "\"," +
                     "\"password\": \"" + passFiead.getText() + "\"" +
                     "}";
             try {
@@ -140,7 +144,8 @@ public class Controller implements Initializable {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-        String receiver = myNick.equals("2") ? "3" : "2";
+        String receiver = "1";
+//                myNick.equals("tester2") ? "OzzyFrost" : "tester2";
         String mess = "{ \"receiver\":\"" +
                 receiver +
                 "\", \"message\":\"" +
@@ -198,15 +203,17 @@ public class Controller implements Initializable {
     }
 
     public void conn2() {
-        setAutorized(true);
-        connect("2d1ea610bc493d76");
-        myNick = "2";
+        myNick = "tester2";
+        loginField.setText("tester2");
+        passFiead.setText("123");
+        authentication();
     }
 
     public void conn3() {
-        setAutorized(true);
-        connect("f5b7c119e858b9f3");
-        myNick = "3";
+        myNick = "tester3";
+        loginField.setText("tester3");
+        passFiead.setText("123");
+        authentication();
     }
 
     public void exit() {
@@ -232,5 +239,12 @@ public class Controller implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // для будщего, пока не функционирует,
+    private void webtest(){
+        webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+        webEngine.load("http://www.oracle.com/products/index.html");
     }
 }
