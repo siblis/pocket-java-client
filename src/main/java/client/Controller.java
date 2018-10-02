@@ -1,4 +1,4 @@
-﻿package client;
+package client;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -13,6 +13,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
