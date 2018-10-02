@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+    private static String token;
     @FXML
     private TextArea textArea;
     @FXML
@@ -34,7 +35,8 @@ public class Controller implements Initializable {
     private PasswordField passFiead;
     @FXML
     private ListView<String> clientsListArea;
-
+    @FXML
+    private TextField addContact;
     @FXML
     private VBox regPanel;
     @FXML
@@ -47,6 +49,8 @@ public class Controller implements Initializable {
     private TextField passFieldRegDouble;
     @FXML
     private TextField regEmailField;
+    @FXML
+    Button buttonAdd;
     @FXML
     private WebView webView =null;
 
@@ -115,12 +119,12 @@ public class Controller implements Initializable {
 
     public void authentication() {
         if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
-            String token;
+            //String token;
             String answer = "0";
-            String reqJSON = "{" +
-                    "\"account_name\": \"" + loginField.getText() + "\"," +
-                    "\"password\": \"" + passFiead.getText() + "\"" +
-                    "}";
+            String reqJSON ="{" +
+                "\"account_name\": \""+ loginField.getText() +"\"," +
+                "\"password\": \""+ passFiead.getText() +"\"" +
+                "}";
             try {
                 answer = HTTPSRequest.avtorization(reqJSON);
             } catch (Exception e) {
@@ -242,10 +246,26 @@ public class Controller implements Initializable {
         }
     }
 
+
+    public void addContact(){
+        String e_mail = "hontsa";
+        //String token = "77b7ff9e1cb49d0f";
+        String requestJSON  = "{" +
+                "\"contact\": " + "\"" + addContact.getText() +"\"" +
+                "}";
+        try {
+            HTTPSRequest.addContact(requestJSON, token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     // для будщего, пока не функционирует,
     private void webtest(){
         webView = new WebView();
         WebEngine webEngine = webView.getEngine();
         webEngine.load("http://www.oracle.com/products/index.html");
     }
+
 }
