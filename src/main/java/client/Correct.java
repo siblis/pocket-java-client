@@ -1,6 +1,5 @@
 package client;
 
-import java.lang.Object;
 
 public class Correct {
 
@@ -31,5 +30,20 @@ public class Correct {
         // Description: 0 - restricted password; 1 - very weak; 2 - weak; 3 - normal; 4 - strong
         return index;
 
+    }
+
+    //Check if e-mail adress is valid based on
+    //https://stackoverflow.com/questions/624581/what-is-the-best-java-email-address-validation-method
+    //and
+    //https://www.geeksforgeeks.org/check-email-address-valid-not-java/
+    static boolean isValidEmail(String email){
+        //The regular expression is used from the second link
+        String ePattern = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                          "[a-zA-Z0-9_+&*-]+)*@" +
+                          "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                          "A-Z]{2,7}$";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(email);
+        return m.matches();
     }
 }
