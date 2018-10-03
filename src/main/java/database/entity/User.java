@@ -1,9 +1,8 @@
 package database.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -18,13 +17,31 @@ public class User {
     @Column
     private String email;
 
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> sentMess;
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> receivedMess;
+
+    public User() {}
+
     public User(int id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
+        sentMess = new ArrayList<>();
+        receivedMess = new ArrayList<>();
     }
 
-    public User() {}
+    public void addReceivedMessage(Message message) {
+        message.setReceiver(this);
+        receivedMess.add(message);
+    }
+
+    public void addSentMessage(Message message) {
+        message.setSender(this);
+        sentMess.add(message);
+    }
 
     public int getId() {
         return id;

@@ -1,62 +1,60 @@
-package database.repository;
+package database.dao;
 
 import database.HibernateUtil;
-import database.entity.User;
+import database.entity.Message;
 import org.hibernate.Session;
 
 import java.util.List;
 
-public class UserRepository {
+public class MessageDAO {
 
-    public static void insert(User user){
+    public static void insert(Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        session.persist(user);
+        session.persist(message);
 
         session.getTransaction().commit();
     }
 
-    public static void update(User user){
+    public static void update(Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        session.saveOrUpdate(user);
+        session.saveOrUpdate(message);
 
         session.getTransaction().commit();
     }
 
-    public static void delete(int id){
+    public static void delete(int id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        User user = (User) session.get(User.class, id);
-        session.delete(user);
+        Message message = (Message) session.get(Message.class, id);
+        session.delete(message);
 
         session.getTransaction().commit();
     }
 
-    public static User get(int id){
+    public static Message get(int id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        User user = session.get(User.class, id);
+        Message message = session.get(Message.class, id);
 
         session.getTransaction().commit();
 
-        return user;
+        return message;
     }
 
-    public static List<User> get(){
+    public static List<Message> get() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        List<User> list = (List<User>) session.createQuery("FROM User").list();
+        List<Message> list = (List<Message>) session.createQuery("FROM Message").list();
 
         session.getTransaction().commit();
 
         return list;
     }
-
-
 }

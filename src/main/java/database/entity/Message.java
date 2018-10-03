@@ -3,7 +3,7 @@ package database.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "MESSAGES")
+@Table(name = "messages")
 public class Message {
 
     @Id
@@ -13,19 +13,31 @@ public class Message {
     private String text;
 
     @Column
+    private String time;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id")
     private User sender;
 
-    @Column
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_id")
     private User receiver;
 
-    public Message(int id, String text, User sender, User receiver) {
+    public Message() {}
+
+    public Message(int id, String text, String time, User sender, User receiver) {
         this.id = id;
         this.text = text;
+        this.time = time;
         this.sender = sender;
         this.receiver = receiver;
     }
 
-    public Message() {}
+    public Message(int id, String text, String time) {
+        this.id = id;
+        this.text = text;
+        this.time = time;
+    }
 
     public int getId() {
         return id;
@@ -41,6 +53,14 @@ public class Message {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public User getSender() {
