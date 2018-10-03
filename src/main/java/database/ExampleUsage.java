@@ -15,7 +15,7 @@ public class ExampleUsage {
 
         clearBase(userService);
 
-        /*User user1 = new User(567364, "Stormcoder", "st_mail");
+        User user1 = new User(567364, "Stormcoder", "st_mail");
         userService.insertUser(user1);
         User user2 = new User(674832, "OzzyFrost", "of_mail");
         userService.insertUser(user2);
@@ -38,7 +38,7 @@ public class ExampleUsage {
         user2.addReceivedMessage(message2);
 
         userService.updateUser(user2);
-        userService.updateUser(user1);*/
+        userService.updateUser(user1);
     }
 
     private static void clearBase(UserService userService) {
