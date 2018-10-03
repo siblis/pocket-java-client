@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -18,6 +20,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+    private static String token;
     @FXML
     private TextArea textArea;
     @FXML
@@ -32,7 +35,8 @@ public class Controller implements Initializable {
     private PasswordField passFiead;
     @FXML
     private ListView<String> clientsListArea;
-
+    @FXML
+    private TextField addContact;
     @FXML
     private VBox regPanel;
     @FXML
@@ -45,6 +49,10 @@ public class Controller implements Initializable {
     private TextField passFieldRegDouble;
     @FXML
     private TextField regEmailField;
+    @FXML
+    Button buttonAdd;
+    @FXML
+    private WebView webView =null;
 
     private String myNick;
 
@@ -111,12 +119,12 @@ public class Controller implements Initializable {
 
     public void authentication() {
         if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
-            String token;
+            //String token;
             String answer = "0";
-            String reqJSON = "{" +
-                    "\"user\": \"" + loginField.getText() + "\"," +
-                    "\"password\": \"" + passFiead.getText() + "\"" +
-                    "}";
+            String reqJSON ="{" +
+                "\"account_name\": \""+ loginField.getText() +"\"," +
+                "\"password\": \""+ passFiead.getText() +"\"" +
+                "}";
             try {
                 answer = HTTPSRequest.avtorization(reqJSON);
             } catch (Exception e) {
@@ -139,11 +147,10 @@ public class Controller implements Initializable {
     public void sendMessage() {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-//        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
 
-        String adres = myNick.equals("2") ? "3" : "2";
+        String receiver = myNick.equals("tester2") ? "25" : "24";
         String mess = "{ \"receiver\":\"" +
-                adres +
+                receiver +
                 "\", \"message\":\"" +
                 "[" + dateFormat.format(dateNow) + "] " + myNick + " :  " +
                 msgField.getText() + "\" }";
@@ -152,17 +159,6 @@ public class Controller implements Initializable {
         reciveMessage("[" + dateFormat.format(dateNow) + "] " + msgField.getText());
         msgField.clear();
 
-//          Date dateNow = new Date();
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-//        String completeMessage = dateFormat.format(dateNow) + " : " + msgField.getText();
-//
-//        try {
-//            session.getBasicRemote().sendText(completeMessage);
-//            msgField.clear();
-//            msgField.requestFocus();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     void reciveMessage(String message) {
@@ -210,15 +206,19 @@ public class Controller implements Initializable {
     }
 
     public void conn2() {
-        setAutorized(true);
-        connect("2d1ea610bc493d76");
-        myNick = "2";
+        // id = 24
+        myNick = "tester2";
+        loginField.setText("tester2");
+        passFiead.setText("123");
+        authentication();
     }
 
     public void conn3() {
-        setAutorized(true);
-        connect("f5b7c119e858b9f3");
-        myNick = "3";
+        //id = 25
+        myNick = "tester3";
+        loginField.setText("tester3");
+        passFiead.setText("123");
+        authentication();
     }
 
     public void exit() {
@@ -237,10 +237,35 @@ public class Controller implements Initializable {
             if (responseCode == 201) {
                 offShowReg();
                 showAlert("Вы успешно зарегистрированы", "Результат");
+                loginField.setText(regLoginField.getText());
+                passFiead.setText(passFieldReg.getText());
             } else
                 showAlert("Ошибка регистрации, код: " + responseCode, "Результат");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+    public void addContact(){
+        String e_mail = "hontsa";
+        //String token = "77b7ff9e1cb49d0f";
+        String requestJSON  = "{" +
+                "\"contact\": " + "\"" + addContact.getText() +"\"" +
+                "}";
+        try {
+            HTTPSRequest.addContact(requestJSON, token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // для будщего, пока не функционирует,
+    private void webtest(){
+        webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+        webEngine.load("http://www.oracle.com/products/index.html");
+    }
+
 }
