@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
     private static String token;
+    private static ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
     @FXML
     private TextArea textArea;
     @FXML
@@ -76,8 +77,9 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setAutorized(false); // временно изменено на true
-        ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
+        //ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
         clientsListArea.setItems(clientsObsvList);
+
         clientsListArea.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> param) {
@@ -248,8 +250,6 @@ public class Controller implements Initializable {
 
 
     public void addContact(){
-        String e_mail = "hontsa";
-        //String token = "77b7ff9e1cb49d0f";
         String requestJSON  = "{" +
                 "\"contact\": " + "\"" + addContact.getText() +"\"" +
                 "}";
@@ -258,6 +258,11 @@ public class Controller implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void addToList(int uid){
+        String id = String.valueOf(uid);
+        clientsObsvList.add(id);
     }
 
 
