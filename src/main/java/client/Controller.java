@@ -1,6 +1,7 @@
 package client;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,41 +9,57 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+    private static String token;
+    private static ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
     @FXML
-    TextArea textArea;
+    private TextArea textArea;
     @FXML
-    TextField msgField;
+    private TextField msgField;
     @FXML
-    HBox loginPanel;
+    private HBox loginPanel;
     @FXML
-    HBox messagePanel;
+    private HBox messagePanel;
     @FXML
-    TextField loginField;
+    private TextField loginField;
     @FXML
-    PasswordField passFiead;
+    private PasswordField passFiead;
     @FXML
-    ListView clientsListArea;
-    private ObservableList<String> clientsObsvList;
+    private ListView<String> clientsListArea;
+    @FXML
+    private TextField addContact;
+    @FXML
+    private VBox regPanel;
+    @FXML
+    private Button okButtonReg;
+    @FXML
+    private TextField regLoginField;
+    @FXML
+    private TextField passFieldReg;
+    @FXML
+    private TextField passFieldRegDouble;
+    @FXML
+    private TextField regEmailField;
+    @FXML
+    Button buttonAdd;
+    @FXML
+    private WebView webView =null;
 
-    private Socket socket;
-    private DataOutputStream out;
-    private DataInputStream in;
     private String myNick;
 
-    final String SERVER_IP = "localhost";
-    final int SERVER_PORT = 8189;
+    private Connector conn = null;
 
-    public void setAutorized(boolean autorized) {
+    private void setAutorized(boolean autorized) {
         if (autorized) {
             loginPanel.setVisible(false);
             loginPanel.setManaged(false);
@@ -59,9 +76,10 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setAutorized(false);
-        clientsObsvList = FXCollections.observableArrayList();
+        setAutorized(false); // временно изменено на true
+        //ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
         clientsListArea.setItems(clientsObsvList);
+
         clientsListArea.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> param) {
@@ -83,104 +101,176 @@ public class Controller implements Initializable {
                 };
             }
         });
+
+        okButtonReg.disableProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> regLoginField.getText().length() == 0
+                                || passFieldReg.getText().length() == 0
+                                || passFieldRegDouble.getText().length() == 0
+                                || regEmailField.getText().length() == 0
+                                || !passFieldReg.getText().equals(passFieldRegDouble.getText()),
+                        regLoginField.textProperty(),
+                        passFieldReg.textProperty(),
+                        passFieldRegDouble.textProperty(),
+                        regEmailField.textProperty()));
     }
 
-    public void connect() {
-        try {
-            socket = new Socket(SERVER_IP, SERVER_PORT);
-            in = new DataInputStream(socket.getInputStream());
-            out = new DataOutputStream(socket.getOutputStream());
-
-            Thread t = new Thread(() -> {
-                try {
-                    while (true) {
-                        String s = in.readUTF();
-                        if (s.startsWith("/")) {
-                            if (s.startsWith("/authok")) {
-                                setAutorized(true);
-                                myNick = s.split("\\s")[1];
-                                textArea.appendText("успешная авторизация\n");
-                                break;
-                            }
-                            if (s.startsWith("/timeout")) {
-                                Platform.runLater(() -> showAlert("Соединение закрыто по таймауту"));
-                            }
-                            continue;
-                        }
-                        textArea.appendText(s + "\n");
-                    }
-                    while (true) {
-                        String msg = in.readUTF();
-                        if (msg.startsWith("/clients")) {
-                            String[] clientsString = msg.substring(9).split(" ");
-                            Platform.runLater(() -> {
-                                clientsObsvList.clear();
-                                clientsObsvList.addAll(clientsString);
-                            });
-                            continue;
-                        }
-                        textArea.appendText(msg + "\n");
-                    }
-                } catch (IOException e) {
-                    showAlert("Соединение с сервером разорвано.");
-                } finally {
-                    setAutorized(false);
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            t.setDaemon(true);
-            t.start();
-        } catch (IOException e) {
-            showAlert("Не удалось подключиться к серверу. Проверьте сетевое соединение.");
-        }
+    private void connect(String token) {
+        conn = new Connector(token, this);
     }
 
-    public void authorization() {
+    public void authentication() {
         if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
-            if (socket == null || socket.isClosed()) connect();
+            //String token;
+            String answer = "0";
+            String reqJSON ="{" +
+                "\"account_name\": \""+ loginField.getText() +"\"," +
+                "\"password\": \""+ passFiead.getText() +"\"" +
+                "}";
             try {
-                out.writeUTF("/auth " +
-                        loginField.getText() + " " +
-                        passFiead.getText());
-                loginField.clear();
-                passFiead.clear();
-            } catch (IOException e) {
+                answer = HTTPSRequest.avtorization(reqJSON);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+            if (answer.contains("token")) {
+                //тут надо обработать JSON по нармальному
+                token = answer.substring(answer.indexOf("token") + 9, answer.indexOf(",") - 1);
+                System.out.println("TOKEN " + token);
+                setAutorized(true);
+                connect(token);
+                myNick = loginField.getText();
+
+            }
         } else {
-            showAlert("Неполные данные для авторизации!");
+            showAlert("Неполные данные для авторизации!", "Результат");
         }
     }
 
-    public void sendMsg() {
-        try {
-            out.writeUTF(msgField.getText());
-            msgField.clear();
-            msgField.requestFocus();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void sendMessage() {
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        String receiver = myNick.equals("tester2") ? "25" : "24";
+        String mess = "{ \"receiver\":\"" +
+                receiver +
+                "\", \"message\":\"" +
+                "[" + dateFormat.format(dateNow) + "] " + myNick + " :  " +
+                msgField.getText() + "\" }";
+        System.out.println(mess);
+        conn.chatclient.send(mess);
+        reciveMessage("[" + dateFormat.format(dateNow) + "] " + msgField.getText());
+        msgField.clear();
+
     }
 
-    public void showAlert(String message) {
+    void reciveMessage(String message) {
+        textArea.appendText(message + "\n");
+    }
+
+    private void showAlert(String message, String title) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ой! Проблемка нарисавалася!");
+            alert.setTitle(title);
             alert.setHeaderText(null);
             alert.setContentText(message);
             alert.showAndWait();
         });
     }
 
-    public void clientChoise(MouseEvent event) {
+    public void clientChoice(MouseEvent event) {
         if (event.getClickCount() == 2) {
             msgField.setText("/w " + clientsListArea.getSelectionModel().getSelectedItem() + " ");
             msgField.requestFocus();
             msgField.selectEnd();
         }
     }
+
+    private void showRegisterPan(boolean registering) {
+        if (registering) {
+            loginPanel.setVisible(false);
+            loginPanel.setManaged(false);
+            regPanel.setVisible(true);
+            regPanel.setManaged(true);
+        } else {
+            loginPanel.setVisible(true);
+            loginPanel.setManaged(true);
+            regPanel.setVisible(false);
+            regPanel.setManaged(false);
+        }
+    }
+
+    public void onShowReg() {
+        showRegisterPan(true);
+    }
+
+    public void offShowReg() {
+        showRegisterPan(false);
+    }
+
+    public void conn2() {
+        // id = 24
+        myNick = "tester2";
+        loginField.setText("tester2");
+        passFiead.setText("123");
+        authentication();
+    }
+
+    public void conn3() {
+        //id = 25
+        myNick = "tester3";
+        loginField.setText("tester3");
+        passFiead.setText("123");
+        authentication();
+    }
+
+    public void exit() {
+        setAutorized(false);
+        conn.chatclient.close();
+    }
+
+    public void registration() {
+        String requestJSON = "{" +
+                "\"account_name\": \"" + regLoginField.getText() + "\"," +
+                "\"email\": \"" + regEmailField.getText() + "\"," +
+                "\"password\": \"" + passFieldReg.getText() + "\"" +
+                "}";
+        try {
+            int responseCode = HTTPSRequest.registration(requestJSON);
+            if (responseCode == 201) {
+                offShowReg();
+                showAlert("Вы успешно зарегистрированы", "Результат");
+                loginField.setText(regLoginField.getText());
+                passFiead.setText(passFieldReg.getText());
+            } else
+                showAlert("Ошибка регистрации, код: " + responseCode, "Результат");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void addContact(){
+        String requestJSON  = "{" +
+                "\"contact\": " + "\"" + addContact.getText() +"\"" +
+                "}";
+        try {
+            HTTPSRequest.addContact(requestJSON, token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addToList(int uid){
+        String id = String.valueOf(uid);
+        clientsObsvList.add(id);
+    }
+
+
+    // для будщего, пока не функционирует,
+    private void webtest(){
+        webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+        webEngine.load("http://www.oracle.com/products/index.html");
+    }
+
 }
