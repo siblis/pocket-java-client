@@ -66,6 +66,8 @@ class HTTPSRequest {
         con.setRequestProperty("Token", token);
 
         sendRequest(con,requestJSON);
-        answerRequest(con);
+        String uid = answerRequest(con);
+        int id = Integer.parseInt(uid.substring(uid.indexOf("token") + 17, uid.indexOf(",") ));
+        Controller.addToList(id);
     }
 }
