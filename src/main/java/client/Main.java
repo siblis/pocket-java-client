@@ -26,9 +26,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) {launch(args);}
 }
 //Post parameters : {"account_name": "alg","email": "hontsa","password": "12345"}
 // {"token": "baaaa053fddd51f6"}
