@@ -15,8 +15,8 @@ public class ExampleUsage2 {
 
 //        clearBase(userService);
 
-        User user1 = userService.findUser(674832); //OzzyFrost
-        User user2 = userService.findUser(567364); //Stormcoder
+        User user1 = userService.getUser(674832); //OzzyFrost
+        User user2 = userService.getUser(567364); //Stormcoder
 //        user1.clearMessages();
 //        user2.clearMessages();
 

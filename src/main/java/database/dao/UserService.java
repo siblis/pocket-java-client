@@ -21,10 +21,6 @@ public class UserService {
     public UserService() {
     }
 
-    public User findUser(int id) {
-        return usersDao.findById(id);
-    }
-
     public void insertUser(User user) {
         usersDao.insert(user);
     }
@@ -35,6 +31,10 @@ public class UserService {
 
     public void updateUser(User user) {
         usersDao.update(user);
+    }
+
+    public User getUser(int id) {
+        return usersDao.get(id);
     }
 
     public List<User> getAllUsers() {

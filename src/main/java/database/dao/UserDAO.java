@@ -67,16 +67,6 @@ public class UserDAO {
         return list;
     }
 
-    public User findById(int id) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        User user = session.get(User.class, id);
-
-        session.getTransaction().commit();
-        return user;
-    }
-
     public Message findAutoById(int id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
