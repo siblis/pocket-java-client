@@ -53,7 +53,7 @@ public class Controller implements Initializable {
     @FXML
     Button buttonAdd;
     @FXML
-    private WebView webView =null;
+    private WebView webView = null;
 
     private String myNick;
 
@@ -123,10 +123,10 @@ public class Controller implements Initializable {
         if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
             //String token;
             String answer = "0";
-            String reqJSON ="{" +
-                "\"account_name\": \""+ loginField.getText() +"\"," +
-                "\"password\": \""+ passFiead.getText() +"\"" +
-                "}";
+            String reqJSON = "{" +
+                    "\"account_name\": \"" + loginField.getText() + "\"," +
+                    "\"password\": \"" + passFiead.getText() + "\"" +
+                    "}";
             try {
                 answer = HTTPSRequest.avtorization(reqJSON);
             } catch (Exception e) {
@@ -249,25 +249,38 @@ public class Controller implements Initializable {
     }
 
 
-    public void addContact(){
-        String requestJSON  = "{" +
-                "\"contact\": " + "\"" + addContact.getText() +"\"" +
+    public void addContact() {
+        String requestJSON = "{" +
+                "\"contact\": " + "\"" + addContact.getText() + "\"" +
                 "}";
         try {
-            HTTPSRequest.addContact(requestJSON, token);
+            int userId = HTTPSRequest.addContact(requestJSON, token);
+            if (userId != -1) {
+                addToList(userId);
+            }else{
+                showAlert("Пользователь с email: "+addContact.getText()+
+                        " не найден","Ошибка добавления контакта");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void addToList(int uid){
+    public void addToList(int uid) {
         String id = String.valueOf(uid);
-        clientsObsvList.add(id);
+//         в дальнейшем будет добавлен User , а не id юзера
+        if (!clientsObsvList.contains(id)) {
+            clientsObsvList.add(id);
+            showAlert("Контакт "+id+" успешно добавлен","Добавление контакта");
+        }else{
+            showAlert("Пользователь "+ id+" уже есть в списке ваших контактов","Ошибка добавления контакта");
+        }
     }
 
 
     // для будщего, пока не функционирует,
-    private void webtest(){
+    private void webtest() {
         webView = new WebView();
         WebEngine webEngine = webView.getEngine();
         webEngine.load("http://www.oracle.com/products/index.html");
