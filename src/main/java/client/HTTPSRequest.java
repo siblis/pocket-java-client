@@ -5,14 +5,14 @@ import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
 
 class HTTPSRequest {
-    private static final String serverURL = "https://pocketmsg.ru:8888";
+    private static String serverURL = "https://pocketmsg.ru:8888";
 
     static int registration(String requestJSON) throws Exception {
-        URL obj = new URL(serverURL+"/v1/users/");
+        URL obj = new URL(serverURL + "/v1/users/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
 
-        int responseCode = sendRequest(con,requestJSON);
+        int responseCode = sendRequest(con, requestJSON);
         answerRequest(con);
 
         return responseCode;
@@ -21,10 +21,10 @@ class HTTPSRequest {
     }
 
     static String avtorization(String requestJSON) throws Exception {
-        URL obj = new URL(serverURL+"/v1/auth/");
+        URL obj = new URL(serverURL + "/v1/auth/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("PUT");
-        sendRequest(con,requestJSON);
+        sendRequest(con, requestJSON);
         return answerRequest(con);
     }
 
@@ -36,14 +36,14 @@ class HTTPSRequest {
         wr.close();
 
         int responseCode = con.getResponseCode();
-        System.out.println("\nSending "+con.getRequestMethod()+" request to URL : " + con.getURL());
+        System.out.println("\nSending " + con.getRequestMethod() + " request to URL : " + con.getURL());
         System.out.println("Put parameters : " + requestJSON);
         System.out.println("Response Code : " + responseCode);
 
         return responseCode;
     }
 
-    private static String answerRequest(HttpsURLConnection con){
+    private static String answerRequest(HttpsURLConnection con) {
         StringBuilder response = new StringBuilder();
         try (BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()))) {
@@ -59,13 +59,21 @@ class HTTPSRequest {
         }
         return response.toString();
     }
-    public static void addContact (String requestJSON, String token)throws Exception{
-        URL obj = new URL(serverURL+"/v1/users/");
+
+    public static int addContact(String requestJSON, String token) throws Exception {
+        URL obj = new URL(serverURL + "/v1/users/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("PUT");
         con.setRequestProperty("Token", token);
-
-        sendRequest(con,requestJSON);
-        answerRequest(con);
+        int responseCode = sendRequest(con, requestJSON);
+        int id = -1;
+        if (responseCode == 200) {
+            String uid = answerRequest(con);
+            id = Integer.parseInt(uid.substring(16, uid.indexOf(",")));
+        }
+//    возможно тут надо будет вернуть user ,когда сервер сделает чтобы
+//         одинаковые контакты не добавлялись
+//        Если конечно на запрос на добавление контакта вернет все поля юзера
+        return id;
     }
 }
