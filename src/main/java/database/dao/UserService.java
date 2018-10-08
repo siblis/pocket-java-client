@@ -41,7 +41,15 @@ public class UserService {
         return usersDao.get();
     }
 
+    public void addSentMessage(User user, Message message) {
+        usersDao.addSentMessage(user, message);
+    }
+
+    public void addReceivedMessage(User user, Message message) {
+        usersDao.addReceivedMessage(user, message);
+    }
+
     public Message findMessageById(int id) {
-        return usersDao.findAutoById(id);
+        return usersDao.findMessageById(id);
     }
 }

@@ -3,7 +3,9 @@ package database.dao;
 import database.HibernateUtil;
 import database.entity.Message;
 import database.entity.User;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
 
@@ -14,11 +16,10 @@ import java.util.List;
  * ни за что. Достать данные из БД, обновить данные, удалить данные - и все.
  * Однако, мы не будем создавать DAO напрямую и вызывать его методы в нашем
  * приложении. Вся логика будет помещена в класс UserService.
- *
  */
 public class UserDAO {
 
-    public void insert(User user){
+    public void insert(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -27,7 +28,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public void update(User user){
+    public void update(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -36,7 +37,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public void delete(User user){
+    public void delete(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -45,7 +46,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public User get(int id){
+    public User get(int id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -56,7 +57,7 @@ public class UserDAO {
         return user;
     }
 
-    public List<User> get(){
+    public List<User> get() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -67,7 +68,20 @@ public class UserDAO {
         return list;
     }
 
-    public Message findAutoById(int id) {
+    public <T> T initializeAndUnproxy(T entity) {
+        if (entity == null) {
+            throw new NullPointerException("Entity passed for initialization is null");
+        }
+
+        Hibernate.initialize(entity);
+        if (entity instanceof HibernateProxy) {
+            entity = (T) ((HibernateProxy) entity).getHibernateLazyInitializer()
+                    .getImplementation();
+        }
+        return entity;
+    }
+
+    public Message findMessageById(int id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -75,5 +89,23 @@ public class UserDAO {
 
         session.getTransaction().commit();
         return message;
+    }
+
+    public void addSentMessage(User user, Message message) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.getTransaction().begin();
+
+        user.addSentMessage(message);
+
+        session.getTransaction().commit();
+    }
+
+    public void addReceivedMessage(User user, Message message) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.getTransaction().begin();
+
+        user.addReceivedMessage(message);
+
+        session.getTransaction().commit();
     }
 }

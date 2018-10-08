@@ -21,12 +21,12 @@ public class ExampleUsage2 {
 //        user2.clearMessages();
 
         Message message1 = new Message(1453675, "Я делаю сервер", "03.10.18 19:41:42", user1, user2);
-        user1.addSentMessage(message1);
-        user2.addReceivedMessage(message1);
+        userService.addSentMessage(user1, message1);
+        userService.addReceivedMessage(user2, message1);
 
         Message message2 = new Message(1453676, "Отлично, когда потестим", "03.10.18 19:45:27", user2, user1);
-        user2.addSentMessage(message2);
-        user1.addReceivedMessage(message2);
+        userService.addSentMessage(user1, message2);
+        userService.addReceivedMessage(user2, message2);
 
         userService.updateUser(user2);
         userService.updateUser(user1);
