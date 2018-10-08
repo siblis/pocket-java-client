@@ -53,9 +53,10 @@ public class Controller implements Initializable {
     @FXML
     Button buttonAdd;
     @FXML
-    private WebView webView =null;
+    private WebView webView = null;
 
     private String myNick;
+    private String receiver = "24";
 
     private Connector conn = null;
 
@@ -123,10 +124,10 @@ public class Controller implements Initializable {
         if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
             //String token;
             String answer = "0";
-            String reqJSON ="{" +
-                "\"account_name\": \""+ loginField.getText() +"\"," +
-                "\"password\": \""+ passFiead.getText() +"\"" +
-                "}";
+            String reqJSON = "{" +
+                    "\"account_name\": \"" + loginField.getText() + "\"," +
+                    "\"password\": \"" + passFiead.getText() + "\"" +
+                    "}";
             try {
                 answer = HTTPSRequest.avtorization(reqJSON);
             } catch (Exception e) {
@@ -135,7 +136,6 @@ public class Controller implements Initializable {
             if (answer.contains("token")) {
                 //тут надо обработать JSON по нармальному
                 token = answer.substring(answer.indexOf("token") + 9, answer.indexOf(",") - 1);
-                System.out.println("TOKEN " + token);
                 setAutorized(true);
                 connect(token);
                 myNick = loginField.getText();
@@ -150,7 +150,7 @@ public class Controller implements Initializable {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-        String receiver = myNick.equals("tester2") ? "25" : "24";
+//        String receiver = myNick.equals("tester2") ? "25" : "24";
         String mess = "{ \"receiver\":\"" +
                 receiver +
                 "\", \"message\":\"" +
@@ -178,8 +178,11 @@ public class Controller implements Initializable {
     }
 
     public void clientChoice(MouseEvent event) {
-        if (event.getClickCount() == 2) {
-            msgField.setText("/w " + clientsListArea.getSelectionModel().getSelectedItem() + " ");
+        if (event.getClickCount() == 1) {
+//            msgField.setText("/w " + clientsListArea.getSelectionModel().getSelectedItem() + " ");
+            receiver = clientsListArea.getSelectionModel().getSelectedItem();
+            showAlert("Сообщения будут отправляться контакту \n"
+                    +receiver,"Временное решение");
             msgField.requestFocus();
             msgField.selectEnd();
         }
@@ -213,6 +216,7 @@ public class Controller implements Initializable {
         loginField.setText("tester2");
         passFiead.setText("123");
         authentication();
+        receiver ="25";
     }
 
     public void conn3() {
@@ -221,6 +225,7 @@ public class Controller implements Initializable {
         loginField.setText("tester3");
         passFiead.setText("123");
         authentication();
+        receiver ="24";
     }
 
     public void exit() {
@@ -249,25 +254,38 @@ public class Controller implements Initializable {
     }
 
 
-    public void addContact(){
-        String requestJSON  = "{" +
-                "\"contact\": " + "\"" + addContact.getText() +"\"" +
+    public void addContact() {
+        String requestJSON = "{" +
+                "\"contact\": " + "\"" + addContact.getText() + "\"" +
                 "}";
         try {
-            HTTPSRequest.addContact(requestJSON, token);
+            int userId = HTTPSRequest.addContact(requestJSON, token);
+            if (userId != -1) {
+                addToList(userId);
+            } else {
+                showAlert("Пользователь с email: " + addContact.getText() +
+                        " не найден", "Ошибка добавления контакта");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void addToList(int uid){
+    public void addToList(int uid) {
         String id = String.valueOf(uid);
-        clientsObsvList.add(id);
+//         в дальнейшем будет добавлен User , а не id юзера
+        if (!clientsObsvList.contains(id)) {
+            clientsObsvList.add(id);
+            showAlert("Контакт " + id + " успешно добавлен", "Добавление контакта");
+        } else {
+            showAlert("Пользователь " + id + " уже есть в списке ваших контактов", "Ошибка добавления контакта");
+        }
     }
 
 
     // для будщего, пока не функционирует,
-    private void webtest(){
+    private void webtest() {
         webView = new WebView();
         WebEngine webEngine = webView.getEngine();
         webEngine.load("http://www.oracle.com/products/index.html");
