@@ -6,7 +6,7 @@
 
     <groupId>ru.geekbrains</groupId>
     <artifactId>DesktopClient</artifactId>
-    <version>v.0.0.1.9</version>
+    <version>v.1.1.1.9</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
