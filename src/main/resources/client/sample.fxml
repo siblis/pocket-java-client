@@ -7,7 +7,8 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.web.WebView?>
-<VBox fx:controller="client.Controller"
+
+<VBox prefHeight="400.0" prefWidth="750.0" fx:controller="client.Controller"
       xmlns:fx="http://javafx.com/fxml" stylesheets="@mystyle.css">
     <HBox fx:id="loginPanel">
         <TextField fx:id="loginField" promptText="логин" HBox.hgrow="ALWAYS" onAction="#authentication"/>
