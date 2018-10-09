@@ -41,12 +41,12 @@ public class UserService {
         return usersDao.get();
     }
 
-    public void addSentMessage(User user, Message message) {
-        usersDao.addSentMessage(user, message);
+    public void addSentMessage(int userId, Message message) {
+        usersDao.addSentMessage(userId, message);
     }
 
-    public void addReceivedMessage(User user, Message message) {
-        usersDao.addReceivedMessage(user, message);
+    public void addReceivedMessage(int userId, Message message) {
+        usersDao.addReceivedMessage(userId, message);
     }
 
     public Message findMessageById(int id) {

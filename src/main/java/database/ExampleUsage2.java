@@ -15,21 +15,19 @@ public class ExampleUsage2 {
 
 //        clearBase(userService);
 
-        User user1 = userService.getUser(674832); //OzzyFrost
-        User user2 = userService.getUser(567364); //Stormcoder
-//        user1.clearMessages();
-//        user2.clearMessages();
-
+        User user1 = userService.getUser(674832);
+        User user2 = userService.getUser(567364);
         Message message1 = new Message(1453675, "Я делаю сервер", "03.10.18 19:41:42", user1, user2);
-        userService.addSentMessage(user1, message1);
-        userService.addReceivedMessage(user2, message1);
+
+        userService.addSentMessage(user1.getId(), message1);
+        userService.addReceivedMessage(user2.getId(), message1);
 
         Message message2 = new Message(1453676, "Отлично, когда потестим", "03.10.18 19:45:27", user2, user1);
-        userService.addSentMessage(user1, message2);
-        userService.addReceivedMessage(user2, message2);
 
-        userService.updateUser(user2);
-        userService.updateUser(user1);
+        userService.addSentMessage(user1.getId(), message2);
+        userService.addReceivedMessage(user2.getId(), message2);
+
+        HibernateUtil.shutdown();
     }
 
     private static void clearBase(UserService userService) {

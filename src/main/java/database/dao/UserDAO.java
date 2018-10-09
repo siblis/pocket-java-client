@@ -91,20 +91,24 @@ public class UserDAO {
         return message;
     }
 
-    public void addSentMessage(User user, Message message) {
+    public void addSentMessage(int userId, Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
+        User user = session.get(User.class, userId);
         user.addSentMessage(message);
+        session.saveOrUpdate(user);
 
         session.getTransaction().commit();
     }
 
-    public void addReceivedMessage(User user, Message message) {
+    public void addReceivedMessage(int userId, Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
+        User user = session.get(User.class, userId);
         user.addReceivedMessage(message);
+        session.saveOrUpdate(user);
 
         session.getTransaction().commit();
     }
