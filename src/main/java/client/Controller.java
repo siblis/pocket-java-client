@@ -239,23 +239,18 @@ public class Controller implements Initializable {
                 "\"email\": \"" + regEmailField.getText() + "\"," +
                 "\"password\": \"" + passFieldReg.getText() + "\"" +
                 "}";
-        if (Correct.isValidEmail(regEmailField.getText()) && Correct.pswCheck(passFieldRegDouble.getText())){
-            try {
-                int responseCode = HTTPSRequest.registration(requestJSON);
-                if (responseCode == 201) {
-                    offShowReg();
-                    showAlert("Вы успешно зарегистрированы", "Результат");
-                    loginField.setText(regLoginField.getText());
-                    passFiead.setText(passFieldReg.getText());
-                } else
-                    showAlert("Ошибка регистрации, код: " + responseCode, "Результат");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else {
-            showAlert("Неверный формат Email или пароль", "Ошибка");
+        try {
+            int responseCode = HTTPSRequest.registration(requestJSON);
+            if (responseCode == 201) {
+                offShowReg();
+                showAlert("Вы успешно зарегистрированы", "Результат");
+                loginField.setText(regLoginField.getText());
+                passFiead.setText(passFieldReg.getText());
+            } else
+                showAlert("Ошибка регистрации, код: " + responseCode, "Результат");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
 
@@ -263,23 +258,18 @@ public class Controller implements Initializable {
         String requestJSON = "{" +
                 "\"contact\": " + "\"" + addContact.getText() + "\"" +
                 "}";
-        if (Correct.isValidEmail(addContact.getText())){
-            try {
-                int userId = HTTPSRequest.addContact(requestJSON, token);
-                if (userId != -1) {
-                    addToList(userId);
-                } else {
-                    showAlert("Пользователь с email: " + addContact.getText() +
-                            " не найден", "Ошибка добавления контакта");
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            int userId = HTTPSRequest.addContact(requestJSON, token);
+            if (userId != -1) {
+                addToList(userId);
+            } else {
+                showAlert("Пользователь с email: " + addContact.getText() +
+                        " не найден", "Ошибка добавления контакта");
             }
-        }else {
-            showAlert("Неверный формат Email", "Ошибка");
-        }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void addToList(int uid) {
