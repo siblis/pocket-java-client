@@ -15,7 +15,7 @@ import java.util.List;
  * приложении слой, который отвечает только за доступ к данным, и больше
  * ни за что. Достать данные из БД, обновить данные, удалить данные - и все.
  * Однако, мы не будем создавать DAO напрямую и вызывать его методы в нашем
- * приложении. Вся логика будет помещена в класс UserService.
+ * приложении. Вся логика будет помещена в класс DataBaseService.
  */
 public class UserDAO {
 
@@ -68,19 +68,6 @@ public class UserDAO {
         return list;
     }
 
-    public <T> T initializeAndUnproxy(T entity) {
-        if (entity == null) {
-            throw new NullPointerException("Entity passed for initialization is null");
-        }
-
-        Hibernate.initialize(entity);
-        if (entity instanceof HibernateProxy) {
-            entity = (T) ((HibernateProxy) entity).getHibernateLazyInitializer()
-                    .getImplementation();
-        }
-        return entity;
-    }
-
     public Message findMessageById(int id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
@@ -111,5 +98,9 @@ public class UserDAO {
         session.saveOrUpdate(user);
 
         session.getTransaction().commit();
+    }
+
+    public void close(){
+        HibernateUtil.shutdown();
     }
 }

@@ -1,5 +1,6 @@
 package client;
 
+import database.dao.DataBaseService;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -21,7 +22,6 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
     private static String token;
-    private static ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
     @FXML
     private TextArea textArea;
     @FXML
@@ -53,6 +53,10 @@ public class Controller implements Initializable {
     @FXML
     Button buttonAdd;
     @FXML
+
+    private DataBaseService dbService;
+    private ObservableList<String> contactsObservList;
+
     private WebView webView = null;
 
     private String myNick;
@@ -66,6 +70,7 @@ public class Controller implements Initializable {
             loginPanel.setManaged(false);
             messagePanel.setVisible(true);
             messagePanel.setManaged(true);
+            fillContactList();
         } else {
             loginPanel.setVisible(true);
             loginPanel.setManaged(true);
@@ -77,9 +82,25 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setAutorized(false); // временно изменено на true
-        ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
-        contactList.setItems(clientsObsvList);
+        setAutorized(false);
+        dbService = new DataBaseService();
+
+        okButtonReg.disableProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> regLoginField.getText().length() == 0
+                                || passFieldReg.getText().length() == 0
+                                || passFieldRegDouble.getText().length() == 0
+                                || regEmailField.getText().length() == 0
+                                || !passFieldReg.getText().equals(passFieldRegDouble.getText()),
+                        regLoginField.textProperty(),
+                        passFieldReg.textProperty(),
+                        passFieldRegDouble.textProperty(),
+                        regEmailField.textProperty()));
+    }
+
+    private void fillContactList() {
+        contactsObservList = FXCollections.observableArrayList();
+        contactList.setItems(contactsObservList);
 
         contactList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
@@ -103,17 +124,8 @@ public class Controller implements Initializable {
             }
         });
 
-        okButtonReg.disableProperty().bind(
-                Bindings.createBooleanBinding(
-                        () -> regLoginField.getText().length() == 0
-                                || passFieldReg.getText().length() == 0
-                                || passFieldRegDouble.getText().length() == 0
-                                || regEmailField.getText().length() == 0
-                                || !passFieldReg.getText().equals(passFieldRegDouble.getText()),
-                        regLoginField.textProperty(),
-                        passFieldReg.textProperty(),
-                        passFieldRegDouble.textProperty(),
-                        regEmailField.textProperty()));
+        contactsObservList.clear();
+        contactsObservList.addAll(dbService.getAllUserNames());
     }
 
     private void connect(String token) {
@@ -231,6 +243,7 @@ public class Controller implements Initializable {
     public void exit() {
         setAutorized(false);
         conn.chatclient.close();
+        dbService.close();
     }
 
     public void registration() {
@@ -272,11 +285,11 @@ public class Controller implements Initializable {
         }
     }
 
-    public void addToList(int uid) {
+    private void addToList(int uid) {
         String id = String.valueOf(uid);
 //         в дальнейшем будет добавлен User , а не id юзера
-        if (!clientsObsvList.contains(id)) {
-            clientsObsvList.add(id);
+        if (!contactsObservList.contains(id)) {
+            contactsObservList.add(id);
             showAlert("Контакт " + id + " успешно добавлен", "Добавление контакта");
         } else {
             showAlert("Пользователь " + id + " уже есть в списке ваших контактов", "Ошибка добавления контакта");
