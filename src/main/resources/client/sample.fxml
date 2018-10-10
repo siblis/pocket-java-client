@@ -38,7 +38,7 @@
     <HBox VBox.vgrow="ALWAYS">
         <TextArea fx:id="textArea" editable="false"/>
         <!--<WebView fx:id="webView" />-->
-        <ListView fx:id="clientsListArea" onMouseClicked="#clientChoice"/>
+        <ListView fx:id="contactList" onMouseClicked="#clientChoice"/>
     </HBox>
 
     <HBox fx:id="messagePanel" visible="false" managed="false">

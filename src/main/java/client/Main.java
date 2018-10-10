@@ -1,10 +1,8 @@
 package client;
 
-import client.controller.RootLayoutController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -14,7 +12,9 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    public static void main(String[] args) {launch(args);}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     private Stage primaryStage;
     private BorderPane rootLayout;
@@ -30,39 +30,29 @@ public class Main extends Application {
         //показываем общий вид
         showOverview();
 
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-//        primaryStage.setTitle("Pocket desktop Client");
-//        // курсор в виде руки на кнопках
-//        Scene scene = new Scene(root,750,400);
-//        Cursor cursor = Cursor.cursor("HAND");
-//        scene.setCursor(cursor);
-//        primaryStage.setScene(scene);
-//
-//        primaryStage.setOnCloseRequest(event -> {
-//            event.consume();
-//            primaryStage.setTitle("Закрывайте через кнопку Выход");
-//        });
-//        primaryStage.show();
+        primaryStage.setOnCloseRequest(event -> {
+            event.consume();
+            primaryStage.setTitle("Закрывайте через кнопку Выход");
+        });
     }
 
-    public void showOverview() {
+    private void showOverview() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("sample.fxml"));
-            VBox overview = (VBox) loader.load();
+            VBox overview = loader.load();
 
             rootLayout.setCenter(overview);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public void initRootLayout() {
+    private void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
+            rootLayout = loader.load();
 
             Scene scene = new Scene(rootLayout);
 
@@ -75,8 +65,5 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
 }
