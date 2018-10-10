@@ -3,6 +3,7 @@ package database.dao;
 import database.entity.Message;
 import database.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,11 +15,12 @@ import java.util.List;
  * огромные преимущества (это good practice").
  *
  */
-public class UserService {
+public class DataBaseService {
 
-    private UserDAO usersDao = new UserDAO();
+    private UserDAO usersDao;
 
-    public UserService() {
+    public DataBaseService() {
+        usersDao = new UserDAO();
     }
 
     public void insertUser(User user) {
@@ -41,6 +43,14 @@ public class UserService {
         return usersDao.get();
     }
 
+    public List<String> getAllUserNames() {
+        List<String> names = new ArrayList<>();
+        for (User user : usersDao.get()) {
+            names.add(user.getName());
+        }
+        return names;
+    }
+
     public void addSentMessage(int userId, Message message) {
         usersDao.addSentMessage(userId, message);
     }
@@ -51,5 +61,9 @@ public class UserService {
 
     public Message findMessageById(int id) {
         return usersDao.findMessageById(id);
+    }
+
+    public void close(){
+        usersDao.close();
     }
 }
