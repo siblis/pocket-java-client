@@ -43,6 +43,11 @@ public class User {
         sentMess.add(message);
     }
 
+    public void clearMessages(){
+        sentMess.clear();
+        receivedMess.clear();
+    }
+
     public int getId() {
         return id;
     }
