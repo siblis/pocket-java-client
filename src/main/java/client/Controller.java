@@ -35,7 +35,7 @@ public class Controller implements Initializable {
     @FXML
     private PasswordField passFiead;
     @FXML
-    private ListView<String> clientsListArea;
+    private ListView<String> contactList;
     @FXML
     private TextField addContact;
     @FXML
@@ -78,10 +78,10 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setAutorized(false); // временно изменено на true
-        //ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
-        clientsListArea.setItems(clientsObsvList);
+        ObservableList<String> clientsObsvList = FXCollections.observableArrayList();
+        contactList.setItems(clientsObsvList);
 
-        clientsListArea.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        contactList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> param) {
                 return new ListCell<String>() {
@@ -179,8 +179,8 @@ public class Controller implements Initializable {
 
     public void clientChoice(MouseEvent event) {
         if (event.getClickCount() == 1) {
-//            msgField.setText("/w " + clientsListArea.getSelectionModel().getSelectedItem() + " ");
-            receiver = clientsListArea.getSelectionModel().getSelectedItem();
+//            msgField.setText("/w " + contactList.getSelectionModel().getSelectedItem() + " ");
+            receiver = contactList.getSelectionModel().getSelectedItem();
             showAlert("Сообщения будут отправляться контакту \n"
                     +receiver,"Временное решение");
             msgField.requestFocus();
