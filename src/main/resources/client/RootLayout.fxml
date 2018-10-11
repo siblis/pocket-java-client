@@ -15,7 +15,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Меню">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Профиль"/>
+                        <MenuItem mnemonicParsing="false" text="Профиль" onAction="#handleProfile"/>
                         <MenuItem mnemonicParsing="false" text="Настройки связи"/>
                         <MenuItem mnemonicParsing="false" text="Настройки внешнего вида"/>
                         <MenuItem mnemonicParsing="false" text="Выход"/>
