@@ -36,7 +36,7 @@
     </VBox>
 
     <HBox fx:id="centerPanel" visible="false" managed="false" VBox.vgrow="ALWAYS">
-        <WebView fx:id="webView" HBox.hgrow="ALWAYS"/>
+        <WebView fx:id="messageView" HBox.hgrow="ALWAYS"/>
         <ListView fx:id="contactList" onMouseClicked="#clientChoice" minWidth="200"/>
     </HBox>
 

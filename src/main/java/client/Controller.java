@@ -58,7 +58,7 @@ public class Controller implements Initializable {
     private ObservableList<String> contactsObservList;
 
     @FXML
-    private WebView webView = null;
+    private WebView messageView = null;
     private WebEngine webEngine = null;
 
     private String myNick;
@@ -311,13 +311,11 @@ public class Controller implements Initializable {
             showAlert("Пользователь " + id + " уже есть в списке ваших контактов", "Ошибка добавления контакта");
         }
     }
-
-
-    // для будщего, пока не функционирует,
+    
     private void webtest() {
-        webView = new WebView();
-        webEngine = webView.getEngine();
-        centerPanel.getChildren().add(0, webView);
+        messageView = new WebView();
+        webEngine = messageView.getEngine();
+        centerPanel.getChildren().add(0, messageView);
     }
 
 }
