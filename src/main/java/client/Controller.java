@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
     private static String token;
     @FXML
-    private TextArea textArea;
+    private HBox centerPanel;
     @FXML
     private TextField msgField;
     @FXML
@@ -57,9 +57,12 @@ public class Controller implements Initializable {
     private DataBaseService dbService;
     private ObservableList<String> contactsObservList;
 
+    @FXML
     private WebView webView = null;
+    private WebEngine webEngine = null;
 
     private String myNick;
+    private String msgArea = "";
     private String receiver = "24";
 
     private Connector conn = null;
@@ -70,7 +73,10 @@ public class Controller implements Initializable {
             loginPanel.setManaged(false);
             messagePanel.setVisible(true);
             messagePanel.setManaged(true);
+            centerPanel.setVisible(true);
+            centerPanel.setManaged(true);
             fillContactList();
+            webtest();
         } else {
             loginPanel.setVisible(true);
             loginPanel.setManaged(true);
@@ -166,17 +172,27 @@ public class Controller implements Initializable {
         String mess = "{ \"receiver\":\"" +
                 receiver +
                 "\", \"message\":\"" +
-                "[" + dateFormat.format(dateNow) + "] " + myNick + " :  " +
+                myNick + " [" + dateFormat.format(dateNow) + "]: " +
                 msgField.getText() + "\" }";
         System.out.println(mess);
         conn.chatclient.send(mess);
-        reciveMessage("[" + dateFormat.format(dateNow) + "] " + msgField.getText());
+        reciveMessage(myNick + " [" + dateFormat.format(dateNow) + "]: " + msgField.getText());
         msgField.clear();
 
     }
 
     void reciveMessage(String message) {
-        textArea.appendText(message + "\n");
+        msgArea += message + "<br>";
+        webEngine.loadContent(  "<html>" +
+                                    "<body>" +
+                                        "<p style=\"font-size: 16px\">" +
+                                            msgArea +
+                                            "<script>" +
+                                                "javascript:scroll(0,10000)" +
+                                            "</script>"+
+                                        "</p>" +
+                                    "<body>" +
+                                "</html>");
     }
 
     private void showAlert(String message, String title) {
@@ -300,8 +316,8 @@ public class Controller implements Initializable {
     // для будщего, пока не функционирует,
     private void webtest() {
         webView = new WebView();
-        WebEngine webEngine = webView.getEngine();
-        webEngine.load("http://www.oracle.com/products/index.html");
+        webEngine = webView.getEngine();
+        centerPanel.getChildren().add(0, webView);
     }
 
 }
