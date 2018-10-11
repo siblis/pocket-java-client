@@ -2,6 +2,7 @@ package client;
 
 
 
+import javafx.application.Platform;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -40,7 +41,8 @@ class WebSocketChatClient extends WebSocketClient {
     public void onMessage( String message ) {
         System.out.println( "got: " + message );
         if(!message.startsWith("{")){
-        controller.reciveMessage(message);}
+            Platform.runLater(() -> controller.reciveMessage(message));
+        }
     }
 
     @Override
