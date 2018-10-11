@@ -15,4 +15,21 @@ public class RootLayoutController {
     private void handleProfile() {
         System.out.println("заполняем профиль....");
     }
+
+    @FXML
+    private void handleConnectingSettings() {
+        System.out.println("настраиваем связь....");
+    }
+
+    @FXML
+    private void handleViewSettings() {
+        System.out.println("настраиваем внешний вид....");
+    }
+
+    @FXML
+    private void handleExit() {
+        //setAutorized(false);
+        //conn.chatclient.close();
+        System.exit(0);
+    }
 }
