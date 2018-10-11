@@ -1,0 +1,8 @@
+<root>
+    <item name='javax.persistence.CascadeType'>
+        <annotation name='java.lang.Deprecated'/>
+    </item>
+    <item name='javax.persistence.CascadeType ALL'>
+        <annotation name='org.jetbrains.annotations.Nullable'/>
+    </item>
+</root>
