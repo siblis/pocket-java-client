@@ -42,7 +42,7 @@
                   <Insets left="30.0" />
                </GridPane.margin>
             </Label>
-            <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#autentification"/>
+            <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#autentification"/>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
               <buttons>
                   <Button mnemonicParsing="false" text="Autorise" onAction="#autentification"/>
@@ -55,7 +55,7 @@
                   <Button mnemonicParsing="false" text="Guest C3" onAction="#handleGuestC3"/>
               </buttons>
             </ButtonBar>
-            <TextField GridPane.columnIndex="1" onAction="#autentification"/>
+            <TextField fx:id="loginField" GridPane.columnIndex="1" onAction="#autentification"/>
          </children>
       </GridPane>
         </children>
@@ -98,14 +98,14 @@
             </Label>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                 <buttons>
-                    <Button mnemonicParsing="false" text="Register" />
+                    <Button fx:id="okRegisterButton" mnemonicParsing="false" text="Register" onAction="#handleRegister"/>
                     <Button mnemonicParsing="false" text="Cansel" onAction="#offShowReg"/>
                 </buttons>
             </ButtonBar>
-            <TextField GridPane.columnIndex="1" />
-            <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="regLoginField" GridPane.columnIndex="1" onAction="#autentification"/>
+            <PasswordField fx:id="regPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#autentification"/>
+            <PasswordField fx:id="regPasswordFieldDouble" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#autentification"/>
+            <TextField fx:id="regEmailField" GridPane.columnIndex="1" GridPane.rowIndex="3" onAction="#autentification"/>
         </children>
     </GridPane>
     </children>
@@ -121,12 +121,12 @@
                                 <items>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                         <children>
-                                            <WebView layoutX="97.0" layoutY="38.0" prefHeight="275.0" prefWidth="531.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                            <WebView fx:id="messageWebView" layoutX="97.0" layoutY="38.0" prefHeight="275.0" prefWidth="531.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                         </children>
                                     </AnchorPane>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                         <children>
-                                            <ListView layoutX="-25.0" layoutY="38.0" prefHeight="275.0" prefWidth="209.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                            <ListView fx:id="contactList" onMouseClicked="#clientChoice" layoutX="-25.0" layoutY="38.0" prefHeight="275.0" prefWidth="209.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                         </children>
                                     </AnchorPane>
                                 </items>
@@ -141,11 +141,11 @@
                                         <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                 <children>
-                                                    <TextField prefHeight="25.0" prefWidth="506.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
+                                                    <TextField fx:id="messageField" prefHeight="25.0" prefWidth="506.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
                                                     <ButtonBar layoutX="15.0" layoutY="43.0" prefHeight="40.0" prefWidth="145.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="543.0">
                                                         <buttons>
-                                                            <Button contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Send" />
-                                                            <Button mnemonicParsing="false" prefHeight="25.0" text="Exit" />
+                                                            <Button contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Send" onAction="#handleSendMessage"/>
+                                                            <Button mnemonicParsing="false" prefHeight="25.0" text="Exit" onAction="#exit"/>
                                                         </buttons>
                                                         <padding>
                                                             <Insets right="10.0" />
@@ -159,8 +159,8 @@
                                         <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                 <children>
-                                                    <TextField prefHeight="25.0" prefWidth="660.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="315.0" AnchorPane.topAnchor="15.0" />
-                                                    <Button layoutX="636.0" layoutY="47.0" mnemonicParsing="false" text="Add Contact" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                                                    <TextField fx:id="addContact" prefHeight="25.0" prefWidth="660.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="315.0" AnchorPane.topAnchor="15.0" />
+                                                    <Button onAction="#addContact" layoutX="636.0" layoutY="47.0" mnemonicParsing="false" text="Add Contact" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
                                                 </children>
                                             </AnchorPane>
                                         </content>
