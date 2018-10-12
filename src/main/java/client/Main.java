@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -39,8 +40,8 @@ public class Main extends Application {
     private void showOverview() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("sample.fxml"));
-            VBox overview = loader.load();
+            loader.setLocation(Main.class.getResource("TestEnterView.fxml"));
+            AnchorPane overview = loader.load();
 
             rootLayout.setCenter(overview);
         } catch (IOException e) {
