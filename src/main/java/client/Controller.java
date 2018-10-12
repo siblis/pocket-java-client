@@ -135,7 +135,7 @@ public class Controller implements Initializable {
     }
 
     private void connect(String token) {
-        conn = new Connector(token, this);
+        //conn = new Connector(token, this);
     }
 
     public void authentication() {
