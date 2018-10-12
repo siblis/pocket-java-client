@@ -268,7 +268,7 @@ public class TestEnterViewController implements Initializable {
         messageField.clear();
     }
 
-    void reciveMessage(String message) {
+    public void reciveMessage(String message) {
         msgArea += message + "<br>";
         webEngine.loadContent(  "<html>" +
                 "<body>" +
