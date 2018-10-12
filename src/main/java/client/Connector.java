@@ -1,5 +1,6 @@
 package client;
 
+import client.WebSocketChatClient;
 import client.controller.TestEnterViewController;
 
 import java.net.URI;
@@ -9,7 +10,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 
 public class Connector {
-    WebSocketChatClient chatclient;
+    public WebSocketChatClient chatclient;
     public Connector(String token, TestEnterViewController controller){
         try {
             connect(token,controller);

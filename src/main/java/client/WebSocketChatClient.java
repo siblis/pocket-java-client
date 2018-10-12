@@ -9,6 +9,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import javax.net.SocketFactory;
 import java.net.URI;
+import java.nio.channels.NotYetConnectedException;
 import java.util.Map;
 
 import java.net.URI;
@@ -16,7 +17,7 @@ import java.net.URI;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
-class WebSocketChatClient extends WebSocketClient {
+public class WebSocketChatClient extends WebSocketClient {
     private SocketFactory socketFactory = null;
     private Controller controller = null;
 
@@ -61,6 +62,7 @@ class WebSocketChatClient extends WebSocketClient {
     void setSocketFactory(SocketFactory socketFactory) {
         this.socketFactory = socketFactory;
     }
+
 }
 
 
