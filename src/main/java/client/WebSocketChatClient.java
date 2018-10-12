@@ -2,6 +2,7 @@ package client;
 
 
 
+import client.controller.TestEnterViewController;
 import javafx.application.Platform;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -19,7 +20,7 @@ class WebSocketChatClient extends WebSocketClient {
     private SocketFactory socketFactory = null;
     private Controller controller = null;
 
-    public WebSocketChatClient( URI serverUri ) {
+    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, TestEnterViewController controller) {
         super( serverUri );
     }
 
