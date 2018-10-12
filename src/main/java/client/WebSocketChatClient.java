@@ -19,16 +19,19 @@ import org.java_websocket.handshake.ServerHandshake;
 
 public class WebSocketChatClient extends WebSocketClient {
     private SocketFactory socketFactory = null;
-    private Controller controller = null;
+    private TestEnterViewController controller = null;
 
-    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, TestEnterViewController controller) {
-        super( serverUri );
-    }
+//    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, TestEnterViewController controller) {
+//        super( serverUri );
+//        controller = controller;
+//    }
 
     public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders) {
         super(serverUri, httpHeaders);
     }
-    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, Controller conn) {
+
+
+    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, TestEnterViewController conn) {
         super(serverUri, httpHeaders);
         controller = conn;
     }
