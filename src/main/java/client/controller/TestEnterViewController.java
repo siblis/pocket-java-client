@@ -2,20 +2,24 @@ package client.controller;
 
 import client.Connector;
 import client.HTTPSRequest;
+import client.Main;
 import database.dao.DataBaseService;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,6 +51,8 @@ public class TestEnterViewController implements Initializable {
     @FXML
     private AnchorPane messagePanel;
     @FXML
+    private AnchorPane webViewPane;
+    @FXML
     private WebView messageWebView = null;
     @FXML
     private ListView<String> contactList;
@@ -65,6 +71,8 @@ public class TestEnterViewController implements Initializable {
     private String receiver = "24";
 
     private Connector conn = null;
+
+    private Main main;
 
     public TestEnterViewController() {
     }
@@ -91,10 +99,10 @@ public class TestEnterViewController implements Initializable {
         if (autorized) {
             loginPanel.setVisible(false);
             loginPanel.setManaged(false);
+            //loginPanel.getChildren().remove(0);
+            //regPanel.getChildren().remove(0);
             messagePanel.setVisible(true);
             messagePanel.setManaged(true);
-            //centerPanel.setVisible(true);
-            //centerPanel.setManaged(true);
             fillContactList();
             webtest();
         } else {
@@ -110,7 +118,10 @@ public class TestEnterViewController implements Initializable {
     private void webtest() {
         messageWebView = new WebView();
         webEngine = messageWebView.getEngine();
-        messagePanel.getChildren().add(0, messageWebView);
+        webEngine.setJavaScriptEnabled(true);
+        webViewPane.getChildren().setAll(messageWebView);
+
+        //messagePanel.getChildren().add(0, messageWebView);
     }
 
     private void fillContactList() {
@@ -261,25 +272,30 @@ public class TestEnterViewController implements Initializable {
                 receiver +
                 "\", \"message\":\"" +
                 myNick + " [" + dateFormat.format(dateNow) + "]: " +
+                "<b><font color = blue>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " +
                 messageField.getText() + "\" }";
         System.out.println(mess);
         conn.chatclient.send(mess);
         reciveMessage(myNick + " [" + dateFormat.format(dateNow) + "]: " + messageField.getText());
+        reciveMessage("<b><font color = green>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " + messageField.getText());
         messageField.clear();
     }
 
     public void reciveMessage(String message) {
         msgArea += message + "<br>";
         webEngine.loadContent(  "<html>" +
-                "<body>" +
-                "<p style=\"font-size: 16px\">" +
-                msgArea +
-                "<script>" +
-                "javascript:scroll(0,10000)" +
-                "</script>"+
-                "</p>" +
-                "<body>" +
-                "</html>");
+                                    "<body>" +
+                                        "<p>" +
+                                            "<style>" +
+                                                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+                                            "</style>" +
+                                            msgArea +
+                                            "<script>" +
+                                                "javascript:scroll(0,10000)" +
+                                            "</script>"+
+                                        "</p>" +
+                                    "<body>" +
+                                "</html>");
     }
 
     public void clientChoice(MouseEvent event) {
