@@ -172,11 +172,11 @@ public class Controller implements Initializable {
         String mess = "{ \"receiver\":\"" +
                 receiver +
                 "\", \"message\":\"" +
-                myNick + " [" + dateFormat.format(dateNow) + "]: " +
+                "<b><font color = blue>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " +
                 msgField.getText() + "\" }";
         System.out.println(mess);
         conn.chatclient.send(mess);
-        reciveMessage(myNick + " [" + dateFormat.format(dateNow) + "]: " + msgField.getText());
+        reciveMessage("<b><font color = green>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " + msgField.getText());
         msgField.clear();
 
     }
@@ -185,8 +185,11 @@ public class Controller implements Initializable {
         msgArea += message + "<br>";
         webEngine.loadContent(  "<html>" +
                                     "<body>" +
-                                        "<p style=\"font-size: 16px\">" +
-                                            msgArea +
+                                        "<p>" +
+                                            "<style>" +
+                                                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+                                            "</style>" +
+                                                msgArea +
                                             "<script>" +
                                                 "javascript:scroll(0,10000)" +
                                             "</script>"+
@@ -311,10 +314,11 @@ public class Controller implements Initializable {
             showAlert("Пользователь " + id + " уже есть в списке ваших контактов", "Ошибка добавления контакта");
         }
     }
-    
+
     private void webtest() {
         messageView = new WebView();
         webEngine = messageView.getEngine();
+        webEngine.setJavaScriptEnabled(true);
         centerPanel.getChildren().add(0, messageView);
     }
 
