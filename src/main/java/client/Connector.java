@@ -1,5 +1,8 @@
 package client;
 
+import client.WebSocketChatClient;
+import client.controller.TestEnterViewController;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,15 +10,15 @@ import javax.net.ssl.SSLSocketFactory;
 
 
 public class Connector {
-    WebSocketChatClient chatclient;
-    public Connector(String token, Controller controller){
+    public WebSocketChatClient chatclient;
+    public Connector(String token, TestEnterViewController controller){
         try {
             connect(token,controller);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void connect(String token, Controller controller) throws Exception {
+    public void connect(String token, TestEnterViewController controller) throws Exception {
         Map<String,String> httpHeaders = new HashMap<String, String>();
 //        httpHeaders.put("Token","f5b7c119e858b9f3");
         httpHeaders.put("Token",token);

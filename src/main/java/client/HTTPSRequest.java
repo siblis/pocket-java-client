@@ -4,10 +4,10 @@ import java.net.URL;
 import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
 
-class HTTPSRequest {
+public class HTTPSRequest {
     private static String serverURL = "https://pocketmsg.ru:8888";
 
-    static int registration(String requestJSON) throws Exception {
+    public static int registration(String requestJSON) throws Exception {
         URL obj = new URL(serverURL + "/v1/users/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
@@ -20,7 +20,7 @@ class HTTPSRequest {
 //        обрабатывать тут
     }
 
-    static String avtorization(String requestJSON) throws Exception {
+    public static String avtorization(String requestJSON) throws Exception {
         URL obj = new URL(serverURL + "/v1/auth/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("PUT");
