@@ -140,7 +140,7 @@
                                         <content>
                                             <AnchorPane>
                                                 <children>
-                                                    <TextField fx:id="messageField" prefHeight="25.0" prefWidth="506.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="315.0" AnchorPane.topAnchor="15.0" />
+                                                    <TextField fx:id="messageField" prefHeight="25.0" prefWidth="506.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="315.0" AnchorPane.topAnchor="15.0" onAction="#handleSendMessage"/>
                                                     <ButtonBar layoutX="15.0" layoutY="43.0" prefHeight="40.0" prefWidth="145.0" AnchorPane.bottomAnchor="15.0">
                                                         <buttons>
                                                             <Button contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="89.0" text="Send" />
