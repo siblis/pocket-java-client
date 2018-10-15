@@ -22,3 +22,7 @@
      -fx-background-color: #ff8888;
      -fx-border-color: #ff6677;
 }
+
+#parentPane {
+    -fx-background-color: #009E8E;
+}
