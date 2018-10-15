@@ -1,6 +1,7 @@
 package client.controller;
 
 import client.Connector;
+import client.Correct;
 import client.HTTPSRequest;
 import client.Main;
 import database.dao.DataBaseService;
@@ -92,7 +93,8 @@ public class TestEnterViewController implements Initializable {
                                 || regPasswordField.getText().length() == 0
                                 || regPasswordFieldDouble.getText().length() == 0
                                 || regEmailField.getText().length() == 0
-                                || !regPasswordField.getText().equals(regPasswordFieldDouble.getText()),
+                                || !regPasswordField.getText().equals(regPasswordFieldDouble.getText())
+                                || !Correct.isValidEmail(regEmailField.getText()),
                         regLoginField.textProperty(),
                         regPasswordField.textProperty(),
                         regPasswordFieldDouble.textProperty(),
