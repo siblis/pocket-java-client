@@ -1,6 +1,7 @@
 package client.controller;
 
 import client.Connector;
+import client.Correct;
 import client.HTTPSRequest;
 import client.Main;
 import database.dao.DataBaseService;
@@ -15,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
@@ -27,6 +29,9 @@ import java.util.ResourceBundle;
 
 public class TestEnterViewController implements Initializable {
     private static String token;
+
+    @FXML
+    private AnchorPane parentPane;
     //панель входа
     @FXML
     private AnchorPane loginPanel;
@@ -88,7 +93,8 @@ public class TestEnterViewController implements Initializable {
                                 || regPasswordField.getText().length() == 0
                                 || regPasswordFieldDouble.getText().length() == 0
                                 || regEmailField.getText().length() == 0
-                                || !regPasswordField.getText().equals(regPasswordFieldDouble.getText()),
+                                || !regPasswordField.getText().equals(regPasswordFieldDouble.getText())
+                                || !Correct.isValidEmail(regEmailField.getText()),
                         regLoginField.textProperty(),
                         regPasswordField.textProperty(),
                         regPasswordFieldDouble.textProperty(),
@@ -99,10 +105,11 @@ public class TestEnterViewController implements Initializable {
         if (autorized) {
             loginPanel.setVisible(false);
             loginPanel.setManaged(false);
-            //loginPanel.getChildren().remove(0);
-            //regPanel.getChildren().remove(0);
+            //parentPane.getChildren().removeAll(loginPanel);
+            //parentPane.getChildren().removeAll(regPanel);
             messagePanel.setVisible(true);
             messagePanel.setManaged(true);
+
             fillContactList();
             webtest();
         } else {
@@ -276,7 +283,7 @@ public class TestEnterViewController implements Initializable {
                 messageField.getText() + "\" }";
         System.out.println(mess);
         conn.chatclient.send(mess);
-        reciveMessage(myNick + " [" + dateFormat.format(dateNow) + "]: " + messageField.getText());
+        //reciveMessage(myNick + " [" + dateFormat.format(dateNow) + "]: " + messageField.getText());
         reciveMessage("<b><font color = green>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " + messageField.getText());
         messageField.clear();
     }
