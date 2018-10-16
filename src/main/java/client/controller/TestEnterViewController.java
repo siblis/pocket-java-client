@@ -105,8 +105,7 @@ public class TestEnterViewController implements Initializable {
         if (autorized) {
             loginPanel.setVisible(false);
             loginPanel.setManaged(false);
-            //parentPane.getChildren().removeAll(loginPanel);
-            //parentPane.getChildren().removeAll(regPanel);
+
             messagePanel.setVisible(true);
             messagePanel.setManaged(true);
 
