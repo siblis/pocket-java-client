@@ -36,7 +36,7 @@ public class Correct {
     //https://stackoverflow.com/questions/624581/what-is-the-best-java-email-address-validation-method
     //and
     //https://www.geeksforgeeks.org/check-email-address-valid-not-java/
-    static boolean isValidEmail(String email){
+    public static boolean isValidEmail(String email){
         //The regular expression is used from the second link
         String ePattern = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                           "[a-zA-Z0-9_+&*-]+)*@" +
