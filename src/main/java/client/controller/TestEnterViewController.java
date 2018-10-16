@@ -1,83 +1,85 @@
-package client;
+package client.controller;
 
+import client.Connector;
+import client.Correct;
+import client.HTTPSRequest;
+import client.Main;
 import database.dao.DataBaseService;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable {
+public class TestEnterViewController implements Initializable {
     private static String token;
+
     @FXML
-    private TextArea textArea;
+    private AnchorPane parentPane;
+    //панель входа
     @FXML
-    private TextField msgField;
-    @FXML
-    private HBox loginPanel;
-    @FXML
-    private HBox messagePanel;
+    private AnchorPane loginPanel;
     @FXML
     private TextField loginField;
     @FXML
-    private PasswordField passFiead;
+    private PasswordField passwordField;
+    //панель регистрации
     @FXML
-    private ListView<String> contactList;
-    @FXML
-    private TextField addContact;
-    @FXML
-    private VBox regPanel;
-    @FXML
-    private Button okButtonReg;
+    private AnchorPane regPanel;
     @FXML
     private TextField regLoginField;
     @FXML
-    private TextField passFieldReg;
+    private PasswordField regPasswordField;
     @FXML
-    private TextField passFieldRegDouble;
+    private PasswordField regPasswordFieldDouble;
     @FXML
     private TextField regEmailField;
     @FXML
-    Button buttonAdd;
+    private Button okRegisterButton;
+    //панель сообщений
     @FXML
+    private AnchorPane messagePanel;
+    @FXML
+    private AnchorPane webViewPane;
+    @FXML
+    private WebView messageWebView = null;
+    @FXML
+    private ListView<String> contactList;
+    @FXML
+    private TextField messageField;
+    @FXML
+    private TextField addContact;
+
+    private WebEngine webEngine = null;
 
     private DataBaseService dbService;
     private ObservableList<String> contactsObservList;
 
-    private WebView webView = null;
-
     private String myNick;
+    private String msgArea = "";
     private String receiver = "24";
 
     private Connector conn = null;
 
-    private void setAutorized(boolean autorized) {
-        if (autorized) {
-            loginPanel.setVisible(false);
-            loginPanel.setManaged(false);
-            messagePanel.setVisible(true);
-            messagePanel.setManaged(true);
-            fillContactList();
-        } else {
-            loginPanel.setVisible(true);
-            loginPanel.setManaged(true);
-            messagePanel.setVisible(false);
-            messagePanel.setManaged(false);
-            myNick = "";
-        }
+    private Main main;
+
+    public TestEnterViewController() {
     }
 
     @Override
@@ -85,17 +87,48 @@ public class Controller implements Initializable {
         setAutorized(false);
         dbService = new DataBaseService();
 
-        okButtonReg.disableProperty().bind(
+        okRegisterButton.disableProperty().bind(
                 Bindings.createBooleanBinding(
                         () -> regLoginField.getText().length() == 0
-                                || passFieldReg.getText().length() == 0
-                                || passFieldRegDouble.getText().length() == 0
+                                || regPasswordField.getText().length() == 0
+                                || regPasswordFieldDouble.getText().length() == 0
                                 || regEmailField.getText().length() == 0
-                                || !passFieldReg.getText().equals(passFieldRegDouble.getText()),
+                                || !regPasswordField.getText().equals(regPasswordFieldDouble.getText())
+                                || !Correct.isValidEmail(regEmailField.getText()),
                         regLoginField.textProperty(),
-                        passFieldReg.textProperty(),
-                        passFieldRegDouble.textProperty(),
+                        regPasswordField.textProperty(),
+                        regPasswordFieldDouble.textProperty(),
                         regEmailField.textProperty()));
+    }
+
+    private void setAutorized(boolean autorized) {
+        if (autorized) {
+            loginPanel.setVisible(false);
+            loginPanel.setManaged(false);
+            //parentPane.getChildren().removeAll(loginPanel);
+            //parentPane.getChildren().removeAll(regPanel);
+            messagePanel.setVisible(true);
+            messagePanel.setManaged(true);
+
+            fillContactList();
+            webtest();
+        } else {
+            loginPanel.setVisible(true);
+            loginPanel.setManaged(true);
+            messagePanel.setVisible(false);
+            messagePanel.setManaged(false);
+            myNick = "";
+        }
+
+    }
+
+    private void webtest() {
+        messageWebView = new WebView();
+        webEngine = messageWebView.getEngine();
+        webEngine.setJavaScriptEnabled(true);
+        webViewPane.getChildren().setAll(messageWebView);
+
+        //messagePanel.getChildren().add(0, messageWebView);
     }
 
     private void fillContactList() {
@@ -129,16 +162,18 @@ public class Controller implements Initializable {
     }
 
     private void connect(String token) {
-        conn = new Connector(token, this);
+        conn = new Connector(token,this);
     }
 
-    public void authentication() {
-        if (!loginField.getText().isEmpty() && !passFiead.getText().isEmpty()) {
+    //методы, обрабатывающие нажатие на кнопки
+    @FXML
+    private void autentification() {
+        if (!loginField.getText().isEmpty() && !passwordField.getText().isEmpty()) {
             //String token;
             String answer = "0";
             String reqJSON = "{" +
                     "\"account_name\": \"" + loginField.getText() + "\"," +
-                    "\"password\": \"" + passFiead.getText() + "\"" +
+                    "\"password\": \"" + passwordField.getText() + "\"" +
                     "}";
             try {
                 answer = HTTPSRequest.avtorization(reqJSON);
@@ -156,27 +191,7 @@ public class Controller implements Initializable {
         } else {
             showAlert("Неполные данные для авторизации!", "Результат");
         }
-    }
 
-    public void sendMessage() {
-        Date dateNow = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-//        String receiver = myNick.equals("tester2") ? "25" : "24";
-        String mess = "{ \"receiver\":\"" +
-                receiver +
-                "\", \"message\":\"" +
-                "[" + dateFormat.format(dateNow) + "] " + myNick + " :  " +
-                msgField.getText() + "\" }";
-        System.out.println(mess);
-        conn.chatclient.send(mess);
-        reciveMessage("[" + dateFormat.format(dateNow) + "] " + msgField.getText());
-        msgField.clear();
-
-    }
-
-    void reciveMessage(String message) {
-        textArea.appendText(message + "\n");
     }
 
     private void showAlert(String message, String title) {
@@ -187,17 +202,6 @@ public class Controller implements Initializable {
             alert.setContentText(message);
             alert.showAndWait();
         });
-    }
-
-    public void clientChoice(MouseEvent event) {
-        if (event.getClickCount() == 1) {
-//            msgField.setText("/w " + contactList.getSelectionModel().getSelectedItem() + " ");
-            receiver = contactList.getSelectionModel().getSelectedItem();
-            showAlert("Сообщения будут отправляться контакту \n"
-                    +receiver,"Временное решение");
-            msgField.requestFocus();
-            msgField.selectEnd();
-        }
     }
 
     private void showRegisterPan(boolean registering) {
@@ -214,43 +218,42 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
     public void onShowReg() {
         showRegisterPan(true);
     }
-
+    @FXML
     public void offShowReg() {
         showRegisterPan(false);
     }
 
-    public void conn2() {
+    @FXML
+    private void handleGuestC2() {
         // id = 24
         myNick = "tester2";
         loginField.setText("tester2");
-        passFiead.setText("123");
-        authentication();
+        passwordField.setText("123");
+        autentification();
         receiver ="25";
-    }
 
-    public void conn3() {
+    }
+    @FXML
+    private void handleGuestC3() {
         //id = 25
         myNick = "tester3";
         loginField.setText("tester3");
-        passFiead.setText("123");
-        authentication();
+        passwordField.setText("123");
+        autentification();
         receiver ="24";
+
     }
 
-    public void exit() {
-        setAutorized(false);
-        conn.chatclient.close();
-        dbService.close();
-    }
-
-    public void registration() {
+    @FXML
+    private void handleRegister() {
         String requestJSON = "{" +
                 "\"account_name\": \"" + regLoginField.getText() + "\"," +
                 "\"email\": \"" + regEmailField.getText() + "\"," +
-                "\"password\": \"" + passFieldReg.getText() + "\"" +
+                "\"password\": \"" + regPasswordField.getText() + "\"" +
                 "}";
         try {
             int responseCode = HTTPSRequest.registration(requestJSON);
@@ -258,7 +261,7 @@ public class Controller implements Initializable {
                 offShowReg();
                 showAlert("Вы успешно зарегистрированы", "Результат");
                 loginField.setText(regLoginField.getText());
-                passFiead.setText(passFieldReg.getText());
+                passwordField.setText(regPasswordField.getText());
             } else
                 showAlert("Ошибка регистрации, код: " + responseCode, "Результат");
         } catch (Exception e) {
@@ -266,6 +269,59 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
+    private void handleSendMessage() {
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+//        String receiver = myNick.equals("tester2") ? "25" : "24";
+        String mess = "{ \"receiver\":\"" +
+                receiver +
+                "\", \"message\":\"" +
+                myNick + " [" + dateFormat.format(dateNow) + "]: " +
+                "<b><font color = blue>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " +
+                messageField.getText() + "\" }";
+        System.out.println(mess);
+        conn.chatclient.send(mess);
+        //reciveMessage(myNick + " [" + dateFormat.format(dateNow) + "]: " + messageField.getText());
+        reciveMessage("<b><font color = green>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " + messageField.getText());
+        messageField.clear();
+    }
+
+    public void reciveMessage(String message) {
+        msgArea += message + "<br>";
+        webEngine.loadContent(  "<html>" +
+                                    "<body>" +
+                                        "<p>" +
+                                            "<style>" +
+                                                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+                                            "</style>" +
+                                            msgArea +
+                                            "<script>" +
+                                                "javascript:scroll(0,10000)" +
+                                            "</script>"+
+                                        "</p>" +
+                                    "<body>" +
+                                "</html>");
+    }
+
+    public void clientChoice(MouseEvent event) {
+        if (event.getClickCount() == 1) {
+//            msgField.setText("/w " + contactList.getSelectionModel().getSelectedItem() + " ");
+            receiver = contactList.getSelectionModel().getSelectedItem();
+            showAlert("Сообщения будут отправляться контакту \n"
+                    +receiver,"Временное решение");
+            messageField.requestFocus();
+            messageField.selectEnd();
+        }
+    }
+
+    @FXML
+    public void exit() {
+        setAutorized(false);
+        conn.chatclient.close();
+        dbService.close();
+    }
 
     public void addContact() {
         String requestJSON = "{" +
@@ -296,12 +352,5 @@ public class Controller implements Initializable {
         }
     }
 
-
-    // для будщего, пока не функционирует,
-    private void webtest() {
-        webView = new WebView();
-        WebEngine webEngine = webView.getEngine();
-        webEngine.load("http://www.oracle.com/products/index.html");
-    }
 
 }

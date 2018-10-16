@@ -15,10 +15,15 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Меню">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Профиль"/>
-                        <MenuItem mnemonicParsing="false" text="Настройки связи"/>
-                        <MenuItem mnemonicParsing="false" text="Настройки внешнего вида"/>
-                        <MenuItem mnemonicParsing="false" text="Выход"/>
+                        <MenuItem mnemonicParsing="false" text="Профиль" onAction="#handleProfile"/>
+                        <MenuItem mnemonicParsing="false" text="Настройки связи" onAction="#handleConnectingSettings"/>
+                        <MenuItem mnemonicParsing="false" text="Настройки внешнего вида" onAction="#handleViewSettings"/>
+                        <MenuItem mnemonicParsing="false" text="Выход" onAction="#handleExit"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Contacts">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Add Contact" onAction="#handleAddContact"/>
                     </items>
                 </Menu>
             </menus>
