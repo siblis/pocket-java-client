@@ -21,6 +21,11 @@
                         <MenuItem mnemonicParsing="false" text="Выход" onAction="#handleExit"/>
                     </items>
                 </Menu>
+                <Menu mnemonicParsing="false" text="Contacts">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Add Contact" onAction="#handleAddContact"/>
+                    </items>
+                </Menu>
             </menus>
         </MenuBar>
     </top>
