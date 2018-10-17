@@ -14,9 +14,10 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane fx:id="parentPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="750.0" stylesheets="@mystyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.TestEnterViewController">
+<AnchorPane fx:id="parentPane" minHeight="350.0" minWidth="700.0" prefHeight="400.0" prefWidth="750.0" stylesheets="@mystyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.TestEnterViewController">
     <AnchorPane fx:id="loginPanel">
         <children>
             <GridPane layoutX="219.0" layoutY="89.0" prefHeight="200.0" prefWidth="550.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0">
@@ -140,16 +141,20 @@
                                         <content>
                                             <AnchorPane>
                                                 <children>
-                                                    <TextField fx:id="messageField" prefHeight="25.0" prefWidth="506.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="315.0" AnchorPane.topAnchor="15.0" onAction="#handleSendMessage"/>
-                                                    <ButtonBar layoutX="15.0" layoutY="43.0" prefHeight="40.0" prefWidth="145.0" AnchorPane.bottomAnchor="15.0">
-                                                        <buttons>
-                                                            <Button contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="89.0" text="Send" />
-                                                            <Button mnemonicParsing="false" onAction="#exit" prefHeight="25.0" text="Exit" />
-                                                        </buttons>
-                                                        <padding>
-                                                            <Insets right="10.0" />
-                                                        </padding>
-                                                    </ButtonBar>
+                                       <VBox prefHeight="200.0" prefWidth="190.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                          <children>
+                                                          <TextField fx:id="messageField" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="506.0" />
+                                                          <ButtonBar prefHeight="40.0" prefWidth="145.0">
+                                                              <buttons>
+                                                                  <Button contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="89.0" text="Send" />
+                                                                  <Button mnemonicParsing="false" onAction="#exit" prefHeight="25.0" text="Exit" />
+                                                              </buttons>
+                                                              <padding>
+                                                                  <Insets right="10.0" />
+                                                              </padding>
+                                                          </ButtonBar>
+                                          </children>
+                                       </VBox>
                                                 </children>
                                             </AnchorPane>
                                         </content>
