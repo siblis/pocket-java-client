@@ -4,6 +4,10 @@ import client.Connector;
 import client.Correct;
 import client.HTTPSRequest;
 import client.Main;
+import client.formatMsgWithServer.AuthFromServer;
+import client.formatMsgWithServer.AuthToServer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import database.dao.DataBaseService;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -162,27 +166,28 @@ public class TestEnterViewController implements Initializable {
     }
 
     private void connect(String token) {
-        conn = new Connector(token,this);
+        conn = new Connector(token, this);
     }
 
     //методы, обрабатывающие нажатие на кнопки
     @FXML
     private void autentification() {
         if (!loginField.getText().isEmpty() && !passwordField.getText().isEmpty()) {
-            //String token;
             String answer = "0";
-            String reqJSON = "{" +
-                    "\"account_name\": \"" + loginField.getText() + "\"," +
-                    "\"password\": \"" + passwordField.getText() + "\"" +
-                    "}";
+            AuthToServer ATS = new AuthToServer(loginField.getText(), passwordField.getText());
+            String reqJSON = new Gson().toJson(ATS);
             try {
                 answer = HTTPSRequest.avtorization(reqJSON);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             if (answer.contains("token")) {
-                //тут надо обработать JSON по нармальному
-                token = answer.substring(answer.indexOf("token") + 9, answer.indexOf(",") - 1);
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+
+                AuthFromServer AFS = gson.fromJson(answer, AuthFromServer.class);
+                System.out.println(" answer server " + AFS.token);
+                token = AFS.token;
                 setAutorized(true);
                 connect(token);
                 myNick = loginField.getText();
@@ -222,6 +227,7 @@ public class TestEnterViewController implements Initializable {
     public void onShowReg() {
         showRegisterPan(true);
     }
+
     @FXML
     public void offShowReg() {
         showRegisterPan(false);
@@ -234,9 +240,10 @@ public class TestEnterViewController implements Initializable {
         loginField.setText("tester2");
         passwordField.setText("123");
         autentification();
-        receiver ="25";
+        receiver = "25";
 
     }
+
     @FXML
     private void handleGuestC3() {
         //id = 25
@@ -244,7 +251,7 @@ public class TestEnterViewController implements Initializable {
         loginField.setText("tester3");
         passwordField.setText("123");
         autentification();
-        receiver ="24";
+        receiver = "24";
 
     }
 
@@ -290,19 +297,19 @@ public class TestEnterViewController implements Initializable {
 
     public void reciveMessage(String message) {
         msgArea += message + "<br>";
-        webEngine.loadContent(  "<html>" +
-                                    "<body>" +
-                                        "<p>" +
-                                            "<style>" +
-                                                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
-                                            "</style>" +
-                                            msgArea +
-                                            "<script>" +
-                                                "javascript:scroll(0,10000)" +
-                                            "</script>"+
-                                        "</p>" +
-                                    "<body>" +
-                                "</html>");
+        webEngine.loadContent("<html>" +
+                "<body>" +
+                "<p>" +
+                "<style>" +
+                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+                "</style>" +
+                msgArea +
+                "<script>" +
+                "javascript:scroll(0,10000)" +
+                "</script>" +
+                "</p>" +
+                "<body>" +
+                "</html>");
     }
 
     public void clientChoice(MouseEvent event) {
@@ -310,7 +317,7 @@ public class TestEnterViewController implements Initializable {
 //            msgField.setText("/w " + contactList.getSelectionModel().getSelectedItem() + " ");
             receiver = contactList.getSelectionModel().getSelectedItem();
             showAlert("Сообщения будут отправляться контакту \n"
-                    +receiver,"Временное решение");
+                    + receiver, "Временное решение");
             messageField.requestFocus();
             messageField.selectEnd();
         }
