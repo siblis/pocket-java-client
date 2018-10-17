@@ -6,6 +6,8 @@ import client.HTTPSRequest;
 import client.Main;
 import client.formatMsgWithServer.AuthFromServer;
 import client.formatMsgWithServer.AuthToServer;
+import client.formatMsgWithServer.MessageFromServer;
+import client.formatMsgWithServer.MessageToServer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import database.dao.DataBaseService;
@@ -281,22 +283,27 @@ public class TestEnterViewController implements Initializable {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-//        String receiver = myNick.equals("tester2") ? "25" : "24";
-        String mess = "{ \"receiver\":\"" +
-                receiver +
-                "\", \"message\":\"" +
-                myNick + " [" + dateFormat.format(dateNow) + "]: " +
-                "<b><font color = blue>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " +
-                messageField.getText() + "\" }";
-        System.out.println(mess);
-        conn.chatclient.send(mess);
-        //reciveMessage(myNick + " [" + dateFormat.format(dateNow) + "]: " + messageField.getText());
-        reciveMessage("<b><font color = green>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " + messageField.getText());
+        String mess = " [" + dateFormat.format(dateNow) + "]: " + messageField.getText();
+        MessageToServer MTS = new MessageToServer(receiver, mess);
+
+        System.out.println(new Gson().toJson(MTS));
+        conn.chatclient.send(new Gson().toJson(MTS));
+
+//        reciveMessage("<b><font color = green>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " + messageField.getText());
+        reciveMessage(myNick, " [" + dateFormat.format(dateNow) + "]: " + messageField.getText());
         messageField.clear();
     }
 
-    public void reciveMessage(String message) {
-        msgArea += message + "<br>";
+    public void convertMFStoMessage(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        MessageFromServer MFS = gson.fromJson(jsonText, MessageFromServer.class);
+        reciveMessage(MFS.sender_name, MFS.message);
+    }
+
+    public void reciveMessage(String sender_name, String message) {
+
+        msgArea += sender_name + "  " + message + "<br>";
         webEngine.loadContent("<html>" +
                 "<body>" +
                 "<p>" +
