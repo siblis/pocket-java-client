@@ -289,7 +289,6 @@ public class TestEnterViewController implements Initializable {
         System.out.println(new Gson().toJson(MTS));
         conn.chatclient.send(new Gson().toJson(MTS));
 
-//        reciveMessage("<b><font color = green>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " + messageField.getText());
         reciveMessage(myNick, " [" + dateFormat.format(dateNow) + "]: " + messageField.getText());
         messageField.clear();
     }
@@ -302,8 +301,11 @@ public class TestEnterViewController implements Initializable {
     }
 
     public void reciveMessage(String sender_name, String message) {
+        String formatSender = "<b><font color = " + (myNick.equals(sender_name) ? "green" : "red") + ">"
+                + sender_name
+                +"</font></b>";
 
-        msgArea += sender_name + "  " + message + "<br>";
+        msgArea += formatSender + message + "<br>";
         webEngine.loadContent("<html>" +
                 "<body>" +
                 "<p>" +
@@ -321,7 +323,6 @@ public class TestEnterViewController implements Initializable {
 
     public void clientChoice(MouseEvent event) {
         if (event.getClickCount() == 1) {
-//            msgField.setText("/w " + contactList.getSelectionModel().getSelectedItem() + " ");
             receiver = contactList.getSelectionModel().getSelectedItem();
             showAlert("Сообщения будут отправляться контакту \n"
                     + receiver, "Временное решение");
