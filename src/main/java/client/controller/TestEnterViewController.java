@@ -1,9 +1,6 @@
 package client.controller;
 
-import client.Connector;
-import client.Correct;
-import client.HTTPSRequest;
-import client.Main;
+import client.*;
 import client.formatMsgWithServer.AuthFromServer;
 import client.formatMsgWithServer.AuthToServer;
 import client.formatMsgWithServer.MessageFromServer;
@@ -192,8 +189,41 @@ public class TestEnterViewController implements Initializable {
         } else {
             showAlert("Неполные данные для авторизации!", "Результат");
         }
-
     }
+
+    public void addContact() {
+
+        User user = new User(addContact.getText()); // (Временно) получатель tester2 т.к. не вижу способа получить id
+        String requestJSON = new Gson().toJson(user);
+        try {
+            int answer = HTTPSRequest.addContact(requestJSON, token);
+            if (answer == 201) {
+                addToList(user.contact);
+            } else {
+                showAlert("Пользователь с email: " + addContact.getText() +
+                        " не найден", "Ошибка добавления контакта");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        String requestJSON = "{" +
+//                "\"contact\": " + "\"" + addContact.getText() + "\"" +
+//                "}";
+//        try {
+//            int userId = HTTPSRequest.addContact(requestJSON, token);
+//            if (userId != -1) {
+//                addToList(userId);
+//            } else {
+//                showAlert("Пользователь с email: " + addContact.getText() +
+//                        " не найден", "Ошибка добавления контакта");
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
 
     private void showAlert(String message, String title) {
         Platform.runLater(() -> {
@@ -332,32 +362,14 @@ public class TestEnterViewController implements Initializable {
         dbService.close();
     }
 
-    public void addContact() {
-        String requestJSON = "{" +
-                "\"contact\": " + "\"" + addContact.getText() + "\"" +
-                "}";
-        try {
-            int userId = HTTPSRequest.addContact(requestJSON, token);
-            if (userId != -1) {
-                addToList(userId);
-            } else {
-                showAlert("Пользователь с email: " + addContact.getText() +
-                        " не найден", "Ошибка добавления контакта");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addToList(int uid) {
-        String id = String.valueOf(uid);
+    private void addToList(String uid) {
+        //String id = String.valueOf(uid);
 //         в дальнейшем будет добавлен User , а не id юзера
-        if (!contactsObservList.contains(id)) {
-            contactsObservList.add(id);
-            showAlert("Контакт " + id + " успешно добавлен", "Добавление контакта");
+        if (!contactsObservList.contains(uid)) {
+            contactsObservList.add(uid);
+            showAlert("Контакт " + uid + " успешно добавлен", "Добавление контакта");
         } else {
-            showAlert("Пользователь " + id + " уже есть в списке ваших контактов", "Ошибка добавления контакта");
+            showAlert("Пользователь " + uid + " уже есть в списке ваших контактов", "Ошибка добавления контакта");
         }
     }
 

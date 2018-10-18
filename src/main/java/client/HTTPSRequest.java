@@ -66,14 +66,14 @@ public class HTTPSRequest {
         con.setRequestMethod("PUT");
         con.setRequestProperty("Token", token);
         int responseCode = sendRequest(con, requestJSON);
-        int id = -1;
-        if (responseCode == 200) {
-            String uid = answerRequest(con);
-            id = Integer.parseInt(uid.substring(16, uid.indexOf(",")));
-        }
+//        int id = -1;
+//        if (responseCode == 201) {
+//            String uid = answerRequest(con);
+//            id = Integer.parseInt(uid.substring(16, uid.indexOf(",")));
+//        }
 //    возможно тут надо будет вернуть user ,когда сервер сделает чтобы
 //         одинаковые контакты не добавлялись
 //        Если конечно на запрос на добавление контакта вернет все поля юзера
-        return id;
+        return responseCode;
     }
 }
