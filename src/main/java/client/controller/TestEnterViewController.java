@@ -16,18 +16,14 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
-import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,8 +32,6 @@ import java.util.ResourceBundle;
 public class TestEnterViewController implements Initializable {
     private static String token;
 
-    @FXML
-    private AnchorPane parentPane;
     //панель входа
     @FXML
     private AnchorPane loginPanel;
@@ -111,8 +105,7 @@ public class TestEnterViewController implements Initializable {
         if (autorized) {
             loginPanel.setVisible(false);
             loginPanel.setManaged(false);
-            //parentPane.getChildren().removeAll(loginPanel);
-            //parentPane.getChildren().removeAll(regPanel);
+
             messagePanel.setVisible(true);
             messagePanel.setManaged(true);
 

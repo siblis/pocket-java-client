@@ -9,7 +9,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="client.controller.RootLayoutController"
-            prefHeight="450.0" prefWidth="750.0">
+            prefHeight="450.0" prefWidth="750.0" stylesheets="@MyTheme.css">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
