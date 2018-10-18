@@ -206,22 +206,6 @@ public class TestEnterViewController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-//        String requestJSON = "{" +
-//                "\"contact\": " + "\"" + addContact.getText() + "\"" +
-//                "}";
-//        try {
-//            int userId = HTTPSRequest.addContact(requestJSON, token);
-//            if (userId != -1) {
-//                addToList(userId);
-//            } else {
-//                showAlert("Пользователь с email: " + addContact.getText() +
-//                        " не найден", "Ошибка добавления контакта");
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
 
