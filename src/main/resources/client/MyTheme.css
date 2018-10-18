@@ -1,5 +1,10 @@
-.background {
+
+.anchor-pane {
     -fx-background-color: #009E8E;
+}
+
+.list-cell:even{
+    -fx-background-color: #ddffe2;
 }
 
 .label {
@@ -23,44 +28,20 @@
     -fx-opacity: 1;
 }
 
-.table-view {
-    -fx-base: #00675C;
-    -fx-control-inner-background: #5DCFC2;
-    -fx-background-color: #34CFBE;
-    -fx-table-cell-border-color: transparent;
-    -fx-table-header-border-color: transparent;
-    -fx-padding: 5;
+.tab-pane {
+    -fx-background-color: transparent, derive(#1E796A,20%);
 }
 
-.table-view .column-header-background {
-    -fx-background-color: transparent;
-}
-
-.table-view .column-header, .table-view .filler {
-    -fx-size: 35;
-    -fx-border-width: 0 0 1 0;
-    -fx-background-color: transparent;
-    -fx-border-color:
-        transparent
-        transparent
-        derive(-fx-base, 80%)
-        transparent;
-    -fx-border-insets: 0 10 1 0;
-}
-
-.table-view .column-header .label {
-    -fx-font-size: 10pt;
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: white;
-    -fx-alignment: center-left;
-    -fx-opacity: 1;
-}
-
-.table-view:focused .table-row-cell:filled:focused:selected {
-    -fx-background-color: -fx-focus-color;
+.tab {
+    -fx-background-color: #009E8E;
 }
 
 .split-pane:horizontal > .split-pane-divider {
+    -fx-border-color: transparent #00675C transparent #00675C;
+    -fx-background-color: transparent, derive(#1E796A,20%);
+}
+
+.split-pane:vertical > .split-pane-divider {
     -fx-border-color: transparent #00675C transparent #00675C;
     -fx-background-color: transparent, derive(#1E796A,20%);
 }
