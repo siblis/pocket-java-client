@@ -193,7 +193,7 @@ public class TestEnterViewController implements Initializable {
 
     public void addContact() {
 
-        User user = new User(addContact.getText()); // (Временно) получатель tester2 т.к. не вижу способа получить id
+        User user = new User(addContact.getText());
         String requestJSON = new Gson().toJson(user);
         try {
             int answer = HTTPSRequest.addContact(requestJSON, token);
