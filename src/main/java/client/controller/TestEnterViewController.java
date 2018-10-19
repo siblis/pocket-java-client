@@ -198,7 +198,7 @@ public class TestEnterViewController implements Initializable {
         try {
             int answer = HTTPSRequest.addContact(requestJSON, token);
             if (answer == 201) {
-                addToList(user.email);
+                addToList(user.contact);
             } else {
                 showAlert("Пользователь с email: " + addContact.getText() +
                         " не найден", "Ошибка добавления контакта");
