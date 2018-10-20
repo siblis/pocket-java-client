@@ -1,4 +1,4 @@
-package client.model.formatMsgWithServer;
+package client.formatMsgWithServer;
 
 public class AuthToServer {
     public String account_name;
