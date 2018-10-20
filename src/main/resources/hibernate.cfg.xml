@@ -9,6 +9,7 @@
         <property name="hibernate.connection.url">jdbc:sqlite:client.db</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.SQLiteDialect</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
         <mapping class="database.entity.User"/>
         <mapping class="database.entity.Message"/>
