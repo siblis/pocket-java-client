@@ -6,7 +6,7 @@
 
     <groupId>ru.geekbrains</groupId>
     <artifactId>DesktopClient</artifactId>
-    <version>v.0.0.2.11</version>
+    <version>v.0.0.2.10</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -112,6 +112,15 @@
                             <mainClass>client.Main</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <executable>java</executable>
+                    <mainClass>client.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>

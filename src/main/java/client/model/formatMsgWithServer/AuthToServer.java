@@ -1,4 +1,4 @@
-package client.formatMsgWithServer;
+package client.model.formatMsgWithServer;
 
 public class AuthToServer {
     public String account_name;
@@ -8,7 +8,7 @@ public class AuthToServer {
 
     }
     public AuthToServer(String account_name,String password ){
-        this.account_name =account_name;
+        this.account_name = account_name;
         this.password = password;
     }
 }

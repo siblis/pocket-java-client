@@ -1,9 +1,9 @@
-package client;
+package client.model;
 
 import java.util.ArrayList;
 
 public class User {
-    public String contact;
+    private String contact;
     public String uid;
     public String account_name;
     public ArrayList<User> contactList;
@@ -14,9 +14,13 @@ public class User {
     }
 
     public User(String contact, String uid, String account_name) {
-        this.contact =contact;
+        this.contact = contact;
         this.uid = uid;
         this.account_name = account_name;
         contactList = new ArrayList<User>();
+    }
+
+    public String getContact() {
+        return contact;
     }
 }
