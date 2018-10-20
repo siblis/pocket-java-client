@@ -14,60 +14,61 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane fx:id="parentPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="750.0" stylesheets="@mystyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.TestEnterViewController">
+<AnchorPane minHeight="350.0" minWidth="700.0" prefHeight="400.0" prefWidth="750.0" styleClass="anchor-pane" stylesheets="@MyTheme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.TestEnterViewController">
     <AnchorPane fx:id="loginPanel">
         <children>
             <GridPane layoutX="219.0" layoutY="89.0" prefHeight="200.0" prefWidth="550.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.0" minWidth="10.0" prefWidth="114.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="436.0" minWidth="10.0" prefWidth="436.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label text="Login">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.0" minWidth="10.0" prefWidth="114.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="436.0" minWidth="10.0" prefWidth="436.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <Label text="Login">
                <GridPane.margin>
                   <Insets left="30.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Password" GridPane.rowIndex="1">
+                    <Label text="Password" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="30.0" />
                </GridPane.margin>
             </Label>
-            <PasswordField fx:id="passwordField" onAction="#autentification" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-              <buttons>
-                  <Button mnemonicParsing="false" onAction="#autentification" text="Autorise" />
-                  <Button mnemonicParsing="false" onAction="#onShowReg" text="Registered" />
+                    <PasswordField fx:id="passwordField" onAction="#autentification" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <buttons>
+                  <Button mnemonicParsing="false" onAction="#autentification" prefWidth="120.0" text="Autorise" />
+                  <Button mnemonicParsing="false" onAction="#onShowReg" prefWidth="120.0" text="Registered" />
               </buttons>
-            </ButtonBar>
-            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-              <buttons>
-                <Button mnemonicParsing="false" onAction="#handleGuestC2" text="Guest C-2" />
-                  <Button mnemonicParsing="false" onAction="#handleGuestC3" text="Guest C3" />
+                    </ButtonBar>
+                    <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <buttons>
+                <Button mnemonicParsing="false" onAction="#handleGuestC2" prefWidth="120.0" text="Guest C2" />
+                  <Button mnemonicParsing="false" onAction="#handleGuestC3" prefWidth="120.0" text="Guest C3" />
               </buttons>
-            </ButtonBar>
-            <TextField fx:id="loginField" onAction="#autentification" GridPane.columnIndex="1" />
-         </children>
-      </GridPane>
+                    </ButtonBar>
+                    <TextField fx:id="loginField" onAction="#autentification" GridPane.columnIndex="1" />
+                </children>
+            </GridPane>
         </children>
     </AnchorPane>
 
     <AnchorPane fx:id="regPanel" managed="false" visible="false">
-    <children>
-        <GridPane layoutX="86.0" layoutY="29.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0">
-        <columnConstraints>
+        <children>
+            <GridPane layoutX="86.0" layoutY="29.0" prefHeight="300.0" prefWidth="550.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
+                <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.0" minWidth="10.0" prefWidth="183.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.0" minWidth="10.0" prefWidth="367.0" />
         </columnConstraints>
-        <rowConstraints>
+                <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -107,12 +108,12 @@
             <TextField fx:id="regEmailField" onAction="#autentification" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         </children>
     </GridPane>
-    </children>
-</AnchorPane>
+        </children>
+    </AnchorPane>
 
     <AnchorPane fx:id="messagePanel" managed="false" prefHeight="400.0" prefWidth="750.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
-            <SplitPane dividerPositions="0.7035175879396985" layoutX="146.0" layoutY="159.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <SplitPane dividerPositions="0.6" layoutX="146.0" layoutY="159.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <items>
                     <AnchorPane>
                         <children>
@@ -140,16 +141,26 @@
                                         <content>
                                             <AnchorPane>
                                                 <children>
-                                                    <TextField fx:id="messageField" prefHeight="25.0" prefWidth="506.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="315.0" AnchorPane.topAnchor="15.0" onAction="#handleSendMessage"/>
-                                                    <ButtonBar layoutX="15.0" layoutY="43.0" prefHeight="40.0" prefWidth="145.0" AnchorPane.bottomAnchor="15.0">
-                                                        <buttons>
-                                                            <Button contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="89.0" text="Send" />
-                                                            <Button mnemonicParsing="false" onAction="#exit" prefHeight="25.0" text="Exit" />
-                                                        </buttons>
-                                                        <padding>
-                                                            <Insets right="10.0" />
-                                                        </padding>
-                                                    </ButtonBar>
+                                       <VBox prefHeight="200.0" prefWidth="190.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                          <children>
+                                                          <TextField fx:id="messageField" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="506.0">
+                                                <VBox.margin>
+                                                   <Insets top="15.0" />
+                                                </VBox.margin></TextField>
+                                                          <ButtonBar prefHeight="40.0" prefWidth="145.0">
+                                                              <buttons>
+                                                                  <Button contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="90.0" text="Send" />
+                                                                  <Button mnemonicParsing="false" onAction="#exit" prefHeight="25.0" text="Exit" />
+                                                              </buttons>
+                                                              <padding>
+                                                                  <Insets right="10.0" />
+                                                              </padding>
+                                                <VBox.margin>
+                                                   <Insets top="15.0" />
+                                                </VBox.margin>
+                                                          </ButtonBar>
+                                          </children>
+                                       </VBox>
                                                 </children>
                                             </AnchorPane>
                                         </content>

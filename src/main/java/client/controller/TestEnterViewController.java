@@ -1,27 +1,26 @@
 package client.controller;
 
-import client.Connector;
-import client.Correct;
-import client.HTTPSRequest;
-import client.Main;
+import client.*;
+import client.formatMsgWithServer.AuthFromServer;
+import client.formatMsgWithServer.AuthToServer;
+import client.formatMsgWithServer.MessageFromServer;
+import client.formatMsgWithServer.MessageToServer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import database.dao.DataBaseService;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
-import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,8 +29,6 @@ import java.util.ResourceBundle;
 public class TestEnterViewController implements Initializable {
     private static String token;
 
-    @FXML
-    private AnchorPane parentPane;
     //панель входа
     @FXML
     private AnchorPane loginPanel;
@@ -162,27 +159,28 @@ public class TestEnterViewController implements Initializable {
     }
 
     private void connect(String token) {
-        conn = new Connector(token,this);
+        conn = new Connector(token, this);
     }
 
     //методы, обрабатывающие нажатие на кнопки
     @FXML
     private void autentification() {
         if (!loginField.getText().isEmpty() && !passwordField.getText().isEmpty()) {
-            //String token;
             String answer = "0";
-            String reqJSON = "{" +
-                    "\"account_name\": \"" + loginField.getText() + "\"," +
-                    "\"password\": \"" + passwordField.getText() + "\"" +
-                    "}";
+            AuthToServer ATS = new AuthToServer(loginField.getText(), passwordField.getText());
+            String reqJSON = new Gson().toJson(ATS);
             try {
                 answer = HTTPSRequest.avtorization(reqJSON);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             if (answer.contains("token")) {
-                //тут надо обработать JSON по нармальному
-                token = answer.substring(answer.indexOf("token") + 9, answer.indexOf(",") - 1);
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+
+                AuthFromServer AFS = gson.fromJson(answer, AuthFromServer.class);
+                System.out.println(" answer server " + AFS.token);
+                token = AFS.token;
                 setAutorized(true);
                 connect(token);
                 myNick = loginField.getText();
@@ -191,8 +189,25 @@ public class TestEnterViewController implements Initializable {
         } else {
             showAlert("Неполные данные для авторизации!", "Результат");
         }
-
     }
+
+    public void addContact() {
+
+        User user = new User(addContact.getText());
+        String requestJSON = new Gson().toJson(user);
+        try {
+            int answer = HTTPSRequest.addContact(requestJSON, token);
+            if (answer == 201) {
+                addToList(user.contact);
+            } else {
+                showAlert("Пользователь с email: " + addContact.getText() +
+                        " не найден", "Ошибка добавления контакта");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void showAlert(String message, String title) {
         Platform.runLater(() -> {
@@ -222,6 +237,7 @@ public class TestEnterViewController implements Initializable {
     public void onShowReg() {
         showRegisterPan(true);
     }
+
     @FXML
     public void offShowReg() {
         showRegisterPan(false);
@@ -234,9 +250,10 @@ public class TestEnterViewController implements Initializable {
         loginField.setText("tester2");
         passwordField.setText("123");
         autentification();
-        receiver ="25";
+        receiver = "25";
 
     }
+
     @FXML
     private void handleGuestC3() {
         //id = 25
@@ -244,7 +261,7 @@ public class TestEnterViewController implements Initializable {
         loginField.setText("tester3");
         passwordField.setText("123");
         autentification();
-        receiver ="24";
+        receiver = "24";
 
     }
 
@@ -274,43 +291,49 @@ public class TestEnterViewController implements Initializable {
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-//        String receiver = myNick.equals("tester2") ? "25" : "24";
-        String mess = "{ \"receiver\":\"" +
-                receiver +
-                "\", \"message\":\"" +
-                myNick + " [" + dateFormat.format(dateNow) + "]: " +
-                "<b><font color = blue>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " +
-                messageField.getText() + "\" }";
-        System.out.println(mess);
-        conn.chatclient.send(mess);
-        //reciveMessage(myNick + " [" + dateFormat.format(dateNow) + "]: " + messageField.getText());
-        reciveMessage("<b><font color = green>" + myNick + " [" + dateFormat.format(dateNow) + "]:</font></b> " + messageField.getText());
+        String mess = " [" + dateFormat.format(dateNow) + "]: " + messageField.getText();
+        MessageToServer MTS = new MessageToServer(receiver, mess);
+
+        System.out.println(new Gson().toJson(MTS));
+        conn.chatclient.send(new Gson().toJson(MTS));
+
+        reciveMessage(myNick, " [" + dateFormat.format(dateNow) + "]: " + messageField.getText());
         messageField.clear();
     }
 
-    public void reciveMessage(String message) {
-        msgArea += message + "<br>";
-        webEngine.loadContent(  "<html>" +
-                                    "<body>" +
-                                        "<p>" +
-                                            "<style>" +
-                                                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
-                                            "</style>" +
-                                            msgArea +
-                                            "<script>" +
-                                                "javascript:scroll(0,10000)" +
-                                            "</script>"+
-                                        "</p>" +
-                                    "<body>" +
-                                "</html>");
+    public void convertMFStoMessage(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        MessageFromServer MFS = gson.fromJson(jsonText, MessageFromServer.class);
+        reciveMessage(MFS.sender_name, MFS.message);
+    }
+
+    public void reciveMessage(String sender_name, String message) {
+        String formatSender = "<b><font color = " + (myNick.equals(sender_name) ? "green" : "red") + ">"
+                + sender_name
+                +"</font></b>";
+
+        msgArea += formatSender + message + "<br>";
+        webEngine.loadContent("<html>" +
+                "<body>" +
+                "<p>" +
+                "<style>" +
+                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+                "</style>" +
+                msgArea +
+                "<script>" +
+                "javascript:scroll(0,10000)" +
+                "</script>" +
+                "</p>" +
+                "<body>" +
+                "</html>");
     }
 
     public void clientChoice(MouseEvent event) {
         if (event.getClickCount() == 1) {
-//            msgField.setText("/w " + contactList.getSelectionModel().getSelectedItem() + " ");
             receiver = contactList.getSelectionModel().getSelectedItem();
             showAlert("Сообщения будут отправляться контакту \n"
-                    +receiver,"Временное решение");
+                    + receiver, "Временное решение");
             messageField.requestFocus();
             messageField.selectEnd();
         }
@@ -323,32 +346,14 @@ public class TestEnterViewController implements Initializable {
         dbService.close();
     }
 
-    public void addContact() {
-        String requestJSON = "{" +
-                "\"contact\": " + "\"" + addContact.getText() + "\"" +
-                "}";
-        try {
-            int userId = HTTPSRequest.addContact(requestJSON, token);
-            if (userId != -1) {
-                addToList(userId);
-            } else {
-                showAlert("Пользователь с email: " + addContact.getText() +
-                        " не найден", "Ошибка добавления контакта");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addToList(int uid) {
-        String id = String.valueOf(uid);
+    private void addToList(String uid) {
+        //String id = String.valueOf(uid);
 //         в дальнейшем будет добавлен User , а не id юзера
-        if (!contactsObservList.contains(id)) {
-            contactsObservList.add(id);
-            showAlert("Контакт " + id + " успешно добавлен", "Добавление контакта");
+        if (!contactsObservList.contains(uid)) {
+            contactsObservList.add(uid);
+            showAlert("Контакт " + uid + " успешно добавлен", "Добавление контакта");
         } else {
-            showAlert("Пользователь " + id + " уже есть в списке ваших контактов", "Ошибка добавления контакта");
+            showAlert("Пользователь " + uid + " уже есть в списке ваших контактов", "Ошибка добавления контакта");
         }
     }
 
