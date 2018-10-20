@@ -22,6 +22,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.setMinHeight(430.0);
+        primaryStage.setMinWidth(700.0);
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Pocket desktop Client");
 
