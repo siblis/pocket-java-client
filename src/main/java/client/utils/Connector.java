@@ -1,32 +1,36 @@
-package client;
+package client.utils;
 
-import client.WebSocketChatClient;
-import client.controller.TestEnterViewController;
+import client.controller.ClientController;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import javax.net.ssl.SSLSocketFactory;
 
-
 public class Connector {
-    public WebSocketChatClient chatclient;
-    public Connector(String token, TestEnterViewController controller){
+    private WebSocketChatClient chatClient;
+
+    public Connector(String token, ClientController controller){
         try {
             connect(token,controller);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void connect(String token, TestEnterViewController controller) throws Exception {
+
+    public WebSocketChatClient getChatClient() {
+        return chatClient;
+    }
+
+    public void connect(String token, ClientController controller) throws Exception {
         Map<String,String> httpHeaders = new HashMap<String, String>();
 //        httpHeaders.put("Token","f5b7c119e858b9f3");
         httpHeaders.put("Token",token);
-        chatclient = new WebSocketChatClient(
+        chatClient = new WebSocketChatClient(
                 new URI("wss://pocketmsg.ru:8888/v1/ws/"),httpHeaders,controller);
         SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-        chatclient.setSocketFactory(factory);
-        chatclient.connectBlocking();
+        chatClient.setSocketFactory(factory);
+        chatClient.connectBlocking();
 
 //        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 

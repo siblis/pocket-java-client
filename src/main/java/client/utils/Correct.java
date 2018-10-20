@@ -1,4 +1,4 @@
-package client;
+package client.utils;
 
 
 public class Correct {
@@ -20,12 +20,12 @@ public class Correct {
         if (psw.matches(partialRegexChecks[0]) || psw.matches(partialRegexChecks[1]))
             index = Math.round((float)index/2);
         else if (psw.matches(partialRegexChecks[2]) || psw.matches(partialRegexChecks[3]) ||
-                 psw.matches(partialRegexChecks[4]))
-                    index = Math.round((float)(index+1)/2);
+                psw.matches(partialRegexChecks[4]))
+            index = Math.round((float)(index+1)/2);
         else if (psw.matches(partialRegexChecks[2]) && psw.matches(partialRegexChecks[3]) ||
-                 psw.matches(partialRegexChecks[2]) && psw.matches(partialRegexChecks[4]) ||
-                 psw.matches(partialRegexChecks[3]) && psw.matches(partialRegexChecks[4]))
-                    index = Math.round((float)(index+3)/2);
+                psw.matches(partialRegexChecks[2]) && psw.matches(partialRegexChecks[4]) ||
+                psw.matches(partialRegexChecks[3]) && psw.matches(partialRegexChecks[4]))
+            index = Math.round((float)(index+3)/2);
         else index = Math.round((float)(index+4)/2);
         // Description: 0 - restricted password; 1 - very weak; 2 - weak; 3 - normal; 4 - strong
         return index;
@@ -39,9 +39,9 @@ public class Correct {
     public static boolean isValidEmail(String email){
         //The regular expression is used from the second link
         String ePattern = "^[a-zA-Z0-9_+&*-]+(?:\\."+
-                          "[a-zA-Z0-9_+&*-]+)*@" +
-                          "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                          "A-Z]{2,7}$";
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
         java.util.regex.Matcher m = p.matcher(email);
         return m.matches();
