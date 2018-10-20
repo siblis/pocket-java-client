@@ -1,4 +1,4 @@
-package client.model.formatMsgWithServer;
+package client.formatMsgWithServer;
 
 public class MessageToServer {
     public String receiver;

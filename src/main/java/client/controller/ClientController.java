@@ -1,10 +1,10 @@
 package client.controller;
 
 import client.model.User;
-import client.model.formatMsgWithServer.AuthFromServer;
-import client.model.formatMsgWithServer.AuthToServer;
-import client.model.formatMsgWithServer.MessageFromServer;
-import client.model.formatMsgWithServer.MessageToServer;
+import client.formatMsgWithServer.AuthFromServer;
+import client.formatMsgWithServer.AuthToServer;
+import client.formatMsgWithServer.MessageFromServer;
+import client.formatMsgWithServer.MessageToServer;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
