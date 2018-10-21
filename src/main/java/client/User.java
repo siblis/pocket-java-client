@@ -3,9 +3,9 @@ package client;
 import java.util.ArrayList;
 
 public class User {
-    private String contact;// email
-    private String id;
-    private String name;
+    public String contact;
+    public String uid;
+    public String account_name;
     public ArrayList<User> contactList;
     //private ArrayList<Group> groupsList;
 
@@ -13,10 +13,10 @@ public class User {
         this.contact = contact;
     }
 
-    public User(String contact, String id, String name) {
-        this.contact = contact;
-        this.id = id;
-        this.name = name;
+    public User(String contact, String uid, String account_name) {
+        this.contact =contact;
+        this.uid = uid;
+        this.account_name = account_name;
         contactList = new ArrayList<User>();
     }
 }
