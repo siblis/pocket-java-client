@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
-<AnchorPane minHeight="350.0" minWidth="700.0" prefHeight="400.0" prefWidth="750.0" styleClass="anchor-pane" stylesheets="/client/styles/MyTheme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.LogonViewController">
+<AnchorPane minHeight="350.0" minWidth="700.0" prefHeight="400.0" prefWidth="750.0" styleClass="anchor-pane" stylesheets="/client/styles/R.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.LogonViewController">
     <AnchorPane fx:id="loginPanel">
         <children>
             <GridPane layoutX="219.0" layoutY="89.0" prefHeight="200.0" prefWidth="550.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0">
