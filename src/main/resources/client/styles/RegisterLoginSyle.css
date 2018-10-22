@@ -1,14 +1,39 @@
 .anchor-pane {
     -fx-background-image: url("../images/clement-h-544786-unsplash.jpg");
     -fx-background-repeat: stretch;
-    -fx-background-position: absolute;
 }
 
 #loginPanel {
-    -fx-background-position: absolute;
     -fx-background-color: rgba(255, 255, 255, 0.16);
 }
 
+.menu-bar {
+    -fx-background-image: url("../images/clement-h-544786-unsplash.jpg");
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+}
+
+.context-menu {
+    -fx-background-image: url("../images/clement-h-544786-unsplash.jpg");
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+}
+
+.menu-bar.label {
+    -fx-font-size: 14pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: white;
+}
+#menu:focused {
+    -fx-background-image: url("../images/clement-h-544786-unsplash.jpg");
+
+}
+#menu:hover {
+    -fx-background-image: url("../images/clement-h-544786-unsplash.jpg");
+
+}
+.menu-item:focused {
+    -fx-background-image: url("../images/clement-h-544786-unsplash.jpg");
+
+}
 
 .label {
     -fx-font-size: 11pt;
@@ -57,13 +82,12 @@
 
 .button {
     -fx-padding: 5 22 5 22;
-    -fx-border-color: #e2e2e2;
-    -fx-border-width: 2;
-    -fx-background-radius: 0;
-    -fx-background-color: #00675C;
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 11pt;
-    -fx-text-fill: #d8d8d8;
+
+    -fx-background-radius: 16;
+    -fx-background-color: #F8D57D;
+    -fx-font-family: "Roboto", Helvetica, Arial, bold;
+    -fx-font-size: 14pt;
+    -fx-text-fill: #34495E;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
 
