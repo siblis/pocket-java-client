@@ -1,10 +1,17 @@
 .anchor-pane {
     -fx-background-image: url("../images/clement-h-544786-unsplash.jpg");
     -fx-background-repeat: stretch;
+    -fx-background-position: center center;
 }
 
 #loginPanel {
-    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-background-color: rgba(132, 219, 255, 0.2);
+
+}
+#ellipse {
+    -fx-background-image: url("../images/Ellipse.png");
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
 }
 
 .menu-bar {
@@ -43,17 +50,18 @@
 }
 
 .label-bright {
-    -fx-font-size: 11pt;
-    -fx-font-family: "Segoe UI Semibold";
-    -fx-text-fill: white;
-    -fx-opacity: 1;
+   -fx-font-size: 11pt;
+   -fx-font-family: "Roboto";
+   -fx-font-style: Regular;
+   -fx-text-fill: #004F70;
 }
 
 .label-header {
-    -fx-font-size: 32pt;
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: white;
-    -fx-opacity: 1;
+    -fx-font-size: 30pt;
+    -fx-font-family: "Roboto";
+    -fx-font-style: Thin;
+    -fx-text-fill: #004F70;
+
 }
 
 .menu-bar {
@@ -82,7 +90,6 @@
 
 .button {
     -fx-padding: 5 22 5 22;
-
     -fx-background-radius: 16;
     -fx-background-color: #F8D57D;
     -fx-font-family: "Roboto", Helvetica, Arial, bold;
