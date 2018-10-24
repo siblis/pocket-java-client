@@ -1,5 +1,6 @@
 package database.entity;
 
+
 import javax.persistence.*;
 
 @Entity
@@ -7,7 +8,8 @@ import javax.persistence.*;
 public class Message {
 
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column
     private String text;
@@ -25,7 +27,7 @@ public class Message {
 
     public Message() {}
 
-    public Message(int id, String text, String time, User sender, User receiver) {
+    public Message(long id, String text, String time, User sender, User receiver) {
         this.id = id;
         this.text = text;
         this.time = time;
@@ -33,17 +35,17 @@ public class Message {
         this.receiver = receiver;
     }
 
-    public Message(int id, String text, String time) {
+    public Message(long id, String text, String time) {
         this.id = id;
         this.text = text;
         this.time = time;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
