@@ -65,11 +65,11 @@
 }
 
 .menu-bar {
-    -fx-background-color: derive(#00675C,20%);
+    -fx-background-color: derive(#FFE684,20%);
 }
 
 .context-menu {
-    -fx-background-color: derive(#1E776D,50%);
+    -fx-background-color: derive(#FFE684,50%);
 }
 
 .menu-bar .label {
@@ -89,17 +89,17 @@
 }
 
 .button {
-    -fx-padding: 5 22 5 22;
-    -fx-background-radius: 16;
-    -fx-background-color: #F8D57D;
+    //-fx-padding: 5 22 5 22;
+    -fx-background-radius: 8;
+    -fx-background-color: #FFE684;
     -fx-font-family: "Roboto", Helvetica, Arial, bold;
-    -fx-font-size: 14pt;
-    -fx-text-fill: #34495E;
-    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+    -fx-font-size: 16pt;
+    -fx-text-fill: #004F70;
+    //-fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
 
 .button:hover {
-    -fx-background-color: #1E776D;
+    -fx-background-color: derive(#FFE674,15%);
 }
 
 .button:pressed, .button:default:hover:pressed {
