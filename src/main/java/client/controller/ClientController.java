@@ -26,6 +26,7 @@ public class ClientController{
     private static ClientController instance;
     private static String token;
     public WebEngine webEngine;
+    private String msgArea = "";
     private ObservableList<String> contactsObservList;
     private String myNick;
     private String sender;
@@ -119,7 +120,7 @@ public class ClientController{
                 + senderName
                 +"</font></b>";
 
-        String msgArea = formatSender + message + "<br>";
+        msgArea += formatSender + message + "<br>";
         webEngine.loadContent("<html>" +
                 "<body>" +
                 "<p>" +
