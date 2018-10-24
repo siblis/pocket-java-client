@@ -37,7 +37,7 @@
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
-                    <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" text="Пароль" GridPane.rowIndex="1">
+                    <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="1">
                   <GridPane.margin>
                      <Insets bottom="20.0" />
                   </GridPane.margin></PasswordField>
@@ -51,7 +51,7 @@
                             <!--<Button mnemonicParsing="false" onAction="#handleGuestC3Button" prefWidth="120.0" text="Guest C3" />-->
                         <!--</buttons>-->
                     <!--</ButtonBar>-->
-                    <TextField fx:id="loginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" text="E-mail" />
+                    <TextField fx:id="loginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" promptText="E-mail" />
                     <Label prefWidth="120.0" text="Нет аккаутна?" GridPane.rowIndex="3">
                   <GridPane.margin>
                      <Insets />

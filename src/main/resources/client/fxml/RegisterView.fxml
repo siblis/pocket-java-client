@@ -39,10 +39,10 @@
                <RowConstraints maxHeight="31.0" minHeight="9.0" prefHeight="11.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-               <TextField fx:id="regLoginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="232.0" text="Ваш никнейм" />
-               <PasswordField fx:id="regPasswordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="232.0" text="Подтвердите пароль" GridPane.rowIndex="3" />
-               <PasswordField fx:id="regPasswordFieldDouble" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="232.0" text="Пароль" GridPane.rowIndex="2" />
-               <TextField fx:id="regEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="232.0" text="E-mail" GridPane.rowIndex="1" />
+               <TextField fx:id="regLoginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="232.0" promptText="Ваш никнейм" />
+               <PasswordField fx:id="regPasswordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="232.0" promptText="Подтвердите пароль" GridPane.rowIndex="3" />
+               <PasswordField fx:id="regPasswordFieldDouble" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="2" />
+               <TextField fx:id="regEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="232.0" promptText="E-mail" GridPane.rowIndex="1" />
                <Label fx:id="cancelRegisterButton" maxWidth="120.0" mnemonicParsing="false" onMouseClicked="#handleCancelRegisterButton" prefHeight="25.0" prefWidth="120.0" styleClass="active-label" text="Cancel" GridPane.rowIndex="5">
                   <GridPane.margin>
                      <Insets />
