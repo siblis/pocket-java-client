@@ -46,7 +46,7 @@ public class Main extends Application {
             Cursor cursor = Cursor.cursor("HAND");
             scene.setCursor(cursor);
             primaryStage.setScene(scene);
-
+            primaryStage.setResizable(false);
             //RootLayoutController controller = loader.getController();
             primaryStage.show();
         } catch (IOException e) {
