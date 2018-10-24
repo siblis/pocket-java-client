@@ -4,9 +4,8 @@
     -fx-background-position: center center;
 }
 
-#loginPanel {
+.opacityClass {
     -fx-background-color: rgba(132, 219, 255, 0.2);
-
 }
 #ellipse {
     -fx-background-image: url("../images/Ellipse.png");
