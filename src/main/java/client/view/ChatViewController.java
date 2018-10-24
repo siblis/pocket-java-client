@@ -2,7 +2,6 @@ package client.view;
 
 import client.Main;
 import client.controller.ClientController;
-import database.dao.DataBaseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -40,18 +39,16 @@ public class ChatViewController implements Initializable {
     @FXML
     private TextField messageField;
 
-    private DataBaseService dbService;
     private static ObservableList<String> contactsObservList;
 
-    private ClientController controller;
+    private ClientController clientController;
 
     public ChatViewController() {
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        controller = ClientController.getInstance();
-        dbService = new DataBaseService();
+        clientController = ClientController.getInstance();
         contactsObservList = FXCollections.observableArrayList();
         fillContactListView();
         webtest();
@@ -63,8 +60,8 @@ public class ChatViewController implements Initializable {
 
     private void webtest() {
         messageWebView = new WebView();
-        controller.webEngine = messageWebView.getEngine();
-        controller.webEngine.setJavaScriptEnabled(true);
+        clientController.webEngine = messageWebView.getEngine();
+        clientController.webEngine.setJavaScriptEnabled(true);
         webViewPane.getChildren().setAll(messageWebView);
     }
 
@@ -79,7 +76,7 @@ public class ChatViewController implements Initializable {
                         super.updateItem(item, empty);
                         if (!empty) {
                             setText(item);
-                            if (item.equals(controller.getMyNick())) {
+                            if (item.equals(clientController.getMyNick())) {
                                 setStyle("-fx-font-weight: bold;" +
                                         " -fx-background-color: #ffead4");
                             }
@@ -92,7 +89,7 @@ public class ChatViewController implements Initializable {
             }
         });
         contactsObservList.clear();
-        contactsObservList.addAll(dbService.getAllUserNames());
+        contactsObservList.addAll(clientController.getAllUserNames());
     }
 
     @FXML
@@ -105,21 +102,21 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleExit() {
-        dbService.close();
-        controller.disconnect();
+        clientController.dbServiceClose();
+        clientController.disconnect();
         System.exit(0);
     }
 
     @FXML
     private void handleSendMessage() {
-        controller.sendMessage(controller.getSender(), controller.getReceiver(), messageField.getText());
+        clientController.sendMessage(clientController.getSender(), clientController.getReceiver(), messageField.getText());
         messageField.clear();
         messageField.requestFocus();
     }
 
     @FXML
     private void handleClientChoice(MouseEvent event) {
-        controller.clientChoice(this.contactListView, event);
+        clientController.clientChoice(this.contactListView, event);
         messageField.requestFocus();
         messageField.selectEnd();
     }
