@@ -1,25 +1,17 @@
-package client;
+package client.utils;
 
-
-
-import client.controller.TestEnterViewController;
+import client.controller.ClientController;
 import javafx.application.Platform;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import javax.net.SocketFactory;
 import java.net.URI;
-import java.nio.channels.NotYetConnectedException;
 import java.util.Map;
-
-import java.net.URI;
-
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 
 public class WebSocketChatClient extends WebSocketClient {
     private SocketFactory socketFactory = null;
-    private TestEnterViewController controller = null;
+    private ClientController controller = null;
 
 //    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, TestEnterViewController controller) {
 //        super( serverUri );
@@ -31,7 +23,7 @@ public class WebSocketChatClient extends WebSocketClient {
     }
 
 
-    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, TestEnterViewController conn) {
+    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, ClientController conn) {
         super(serverUri, httpHeaders);
         controller = conn;
     }
@@ -46,8 +38,8 @@ public class WebSocketChatClient extends WebSocketClient {
     public void onMessage( String message ) {
         System.out.println( "got: " + message );
 //        if(!message.startsWith("{")){
-         if (message.contains("receiver")){
-             Platform.runLater(() -> controller.convertMFStoMessage(message));
+        if (message.contains("receiver")){
+            Platform.runLater(() -> controller.convertMFStoMessage(message));
 //            Platform.runLater(() -> controller.reciveMessage(message));
         }
     }
@@ -69,5 +61,6 @@ public class WebSocketChatClient extends WebSocketClient {
     }
 
 }
+
 
 

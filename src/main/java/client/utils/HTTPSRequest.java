@@ -1,4 +1,4 @@
-package client;
+package client.utils;
 
 import java.net.URL;
 import java.io.*;
@@ -20,7 +20,7 @@ public class HTTPSRequest {
 //        обрабатывать тут
     }
 
-    public static String avtorization(String requestJSON) throws Exception {
+    public static String authorization(String requestJSON) throws Exception {
         URL obj = new URL(serverURL + "/v1/auth/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("PUT");
