@@ -38,7 +38,7 @@ public class WebSocketChatClient extends WebSocketClient {
     public void onMessage( String message ) {
         System.out.println( "got: " + message );
         if (message.contains("receiver")){
-            Platform.runLater(() -> controller.reciveMessage(message));
+            Platform.runLater(() -> controller.receiveMessage(message));
         }
     }
 
