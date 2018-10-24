@@ -1,10 +1,7 @@
 package client.controller;
 
 import client.model.User;
-import client.model.formatMsgWithServer.AuthFromServer;
-import client.model.formatMsgWithServer.AuthToServer;
-import client.model.formatMsgWithServer.MessageFromServer;
-import client.model.formatMsgWithServer.MessageToServer;
+import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
@@ -15,13 +12,15 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static client.utils.Common.showAlert;
 
-public class ClientController{
+public class ClientController {
 
     private static ClientController instance;
     private static String token;
@@ -32,11 +31,13 @@ public class ClientController{
     private String sender;
     private String receiver = "24";
     private Connector conn = null;
+    private List<Long> contactList;
 
     private DataBaseService dbService;
 
     private ClientController() {
         dbService = new DataBaseService();
+        contactList = dbService.getAllUserId();
     }
 
     public static ClientController getInstance() {
@@ -106,6 +107,9 @@ public class ClientController{
 
     public void receiveMessage(String message) {
         MessageFromServer mfs = convertMessageToMFS(message);
+        if (!contactList.contains(mfs.sender_name)) {
+
+        }
         showMessage(mfs.sender_name, mfs.message);
     }
 
@@ -118,7 +122,7 @@ public class ClientController{
     private void showMessage(String senderName, String message) {
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
-                +"</font></b>";
+                + "</font></b>";
 
         msgArea += formatSender + message + "<br>";
         webEngine.loadContent("<html>" +
@@ -163,28 +167,28 @@ public class ClientController{
     }
 
     public void addContact(String contact) {
-        User user = new User(contact);
-        String requestJSON = new Gson().toJson(user);
+        ContactToServer cts = new ContactToServer(contact);
+        String requestJSON = new Gson().toJson(cts);
+        Integer responseCode = 0;
+
         try {
-            int answer = HTTPSRequest.addContact(requestJSON, token);
-            if (answer == 201) {
-                addToList(user.getContact());
-            } else {
-                showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+            String responseJson = HTTPSRequest.addContact(requestJSON, token, responseCode);
+            switch (responseCode) {
+                case 201:
+                    showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
+
+                    break;
+                case 404:
+                    showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+                    break;
+                case 409:
+                    showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    System.out.println("Общая ошибка");
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private void addToList(String uid) {
-//         в дальнейшем будет добавлен User , а не id юзера
-        contactsObservList = ChatViewController.getContactList();
-        if (!contactsObservList.contains(uid)) {
-            contactsObservList.add(uid);
-            showAlert("Контакт " + uid + " успешно добавлен", Alert.AlertType.INFORMATION);
-        } else {
-            showAlert("Пользователь " + uid + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
         }
     }
 
