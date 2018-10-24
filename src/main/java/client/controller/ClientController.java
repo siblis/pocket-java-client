@@ -73,7 +73,7 @@ public class ClientController{
         this.sender = sender;
     }
 
-    private boolean authentification(String login, String password) {
+    private boolean authentication(String login, String password) {
         if (!login.isEmpty() && !password.isEmpty()) {
             setSender(login);
             String answer = "0";
@@ -205,7 +205,7 @@ public class ClientController{
     }
 
     public boolean proceedLogIn(String login, String password) {
-        return authentification(login, password);
+        return authentication(login, password);
     }
 
 
