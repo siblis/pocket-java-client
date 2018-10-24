@@ -7,6 +7,7 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -31,7 +32,7 @@ public class RegisterViewController implements Initializable {
     private Button okRegisterButton;
 
     @FXML
-    private Button cancelRegisterButton;
+    private Label cancelRegisterButton;
 
     private ClientController controller;
 
