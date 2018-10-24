@@ -101,6 +101,7 @@
     -fx-font-style: italic;
     -fx-alignment: center-left;
     -fx-text-fill: rgba(0, 0, 0, 0.48);
+    -fx-prompt-text-fill: rgba(0, 0, 0, 0.48);
     -fx-background-color: #B8C5CB;
     -fx-background-radius: 8;
     -fx-border-color: #FFE684;
