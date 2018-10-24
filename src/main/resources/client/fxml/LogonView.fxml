@@ -37,11 +37,11 @@
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
-                    <PasswordField fx:id="passwordField" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" text="Пароль" GridPane.rowIndex="1">
+                    <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" text="Пароль" GridPane.rowIndex="1">
                   <GridPane.margin>
                      <Insets bottom="20.0" />
                   </GridPane.margin></PasswordField>
-                    <Label styleClass="active-label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleRememberPassword" text="Забыли пароль?" GridPane.rowIndex="1">
+                    <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleRememberPassword" styleClass="active-label" text="Забыли пароль?" GridPane.rowIndex="1">
                   <GridPane.margin>
                      <Insets top="35.0" />
                   </GridPane.margin></Label>
@@ -51,22 +51,22 @@
                             <!--<Button mnemonicParsing="false" onAction="#handleGuestC3Button" prefWidth="120.0" text="Guest C3" />-->
                         <!--</buttons>-->
                     <!--</ButtonBar>-->
-                    <TextField fx:id="loginField" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" text="E-mail" />
+                    <TextField fx:id="loginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" text="E-mail" />
                     <Label prefWidth="120.0" text="Нет аккаутна?" GridPane.rowIndex="3">
                   <GridPane.margin>
                      <Insets />
                   </GridPane.margin></Label>
-                    <Label styleClass="active-label" onMouseClicked="#handleRegisterButton" prefWidth="120.0" text="Регистрация" GridPane.rowIndex="3">
+                    <Label onMouseClicked="#handleRegisterButton" prefWidth="120.0" styleClass="active-label" text="Регистрация" GridPane.rowIndex="3">
                   <GridPane.margin>
                      <Insets left="100.0" />
                   </GridPane.margin></Label>
-                    <Label styleClass="active-label" onMouseClicked="#handleGuestC2Button" prefWidth="120.0" text="Guest C2" GridPane.rowIndex="4" />
-                    <Label styleClass="active-label" alignment="CENTER_RIGHT" onMouseClicked="#handleGuestC3Button" prefWidth="120.0" text="Guest C3" GridPane.rowIndex="4">
+                    <Label onMouseClicked="#handleGuestC2Button" prefWidth="120.0" styleClass="active-label" text="Guest C2" GridPane.rowIndex="4" />
+                    <Label alignment="CENTER_RIGHT" onMouseClicked="#handleGuestC3Button" prefWidth="120.0" styleClass="active-label" text="Guest C3" GridPane.rowIndex="4">
                   <GridPane.margin>
                      <Insets left="60.0" />
                   </GridPane.margin></Label>
                       <!--<Button mnemonicParsing="false" onAction="#handleRegisterButton" prefWidth="120.0" text="Register" GridPane.rowIndex="3" />-->
-                      <Button fx:id="logInButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLogInButton" prefHeight="40.0" prefWidth="242.0" text="Войти" textAlignment="JUSTIFY" GridPane.rowIndex="2" />
+                      <Button fx:id="logInButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLogInButton" prefHeight="40.0" prefWidth="232.0" text="Войти" textAlignment="JUSTIFY" GridPane.rowIndex="2" />
                 </children>
             </GridPane>
         </children>
