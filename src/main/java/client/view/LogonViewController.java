@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -88,5 +89,10 @@ public class LogonViewController implements Initializable {
         stage.setResizable(false);
         stage.setScene(new Scene(root));
         stage.show();
+    }
+
+    //метод для вспоминания пароля
+    public void handleRememberPassword(MouseEvent mouseEvent) {
+        System.out.println("вспоминаем пароль");
     }
 }
