@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.23.1</version>
+            <version>3.25.2</version>
         </dependency>
 
     </dependencies>
@@ -112,6 +112,15 @@
                             <mainClass>client.Main</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <executable>java</executable>
+                    <mainClass>client.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
