@@ -52,7 +52,8 @@ public class ChatViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         controller = ClientController.getInstance();
         dbService = new DataBaseService();
-        fillContactList();
+        contactsObservList = FXCollections.observableArrayList();
+        fillContactListView();
         webtest();
     }
 
@@ -67,8 +68,7 @@ public class ChatViewController implements Initializable {
         webViewPane.getChildren().setAll(messageWebView);
     }
 
-    private void fillContactList() {
-        contactsObservList = FXCollections.observableArrayList();
+    private void fillContactListView() {
         contactListView.setItems(contactsObservList);
         contactListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
