@@ -35,7 +35,7 @@ public class ChatViewController implements Initializable {
     private WebView messageWebView = null;
 
     @FXML
-    private ListView<String> contactList;
+    private ListView<String> contactListView;
 
     @FXML
     private TextField messageField;
@@ -69,8 +69,8 @@ public class ChatViewController implements Initializable {
 
     private void fillContactList() {
         contactsObservList = FXCollections.observableArrayList();
-        contactList.setItems(contactsObservList);
-        contactList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        contactListView.setItems(contactsObservList);
+        contactListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> param) {
                 return new ListCell<String>() {
@@ -119,7 +119,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleClientChoice(MouseEvent event) {
-        controller.clientChoice(this.contactList, event);
+        controller.clientChoice(this.contactListView, event);
         messageField.requestFocus();
         messageField.selectEnd();
     }
