@@ -12,19 +12,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import database.dao.DataBaseService;
 import javafx.collections.ObservableList;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import static client.utils.Common.showAlert;
 
-public class ClientController implements Initializable {
+public class ClientController{
 
     private static ClientController instance;
     private static String token;
@@ -38,6 +35,7 @@ public class ClientController implements Initializable {
     private DataBaseService dbService;
 
     private ClientController() {
+        dbService = new DataBaseService();
     }
 
     public static ClientController getInstance() {
@@ -45,11 +43,6 @@ public class ClientController implements Initializable {
             instance = new ClientController();
         }
         return instance;
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        dbService = new DataBaseService();
     }
 
     private void connect(String token) {
