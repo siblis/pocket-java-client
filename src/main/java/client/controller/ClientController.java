@@ -10,6 +10,7 @@ import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import database.dao.DataBaseService;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -18,6 +19,7 @@ import javafx.scene.web.WebEngine;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static client.utils.Common.showAlert;
@@ -27,12 +29,13 @@ public class ClientController implements Initializable {
     private static ClientController instance;
     private static String token;
     public WebEngine webEngine;
-    private String msgArea;
     private ObservableList<String> contactsObservList;
     private String myNick;
     private String sender;
     private String receiver = "24";
     private Connector conn = null;
+
+    private DataBaseService dbService;
 
     private ClientController() {
     }
@@ -46,7 +49,7 @@ public class ClientController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO
+        dbService = new DataBaseService();
     }
 
     private void connect(String token) {
@@ -107,33 +110,23 @@ public class ClientController implements Initializable {
         return false;
     }
 
-    public void convertMFStoMessage(String jsonText) {
+    public void receiveMessage(String message) {
+        MessageFromServer mfs = convertMessageToMFS(message);
+        showMessage(mfs.sender_name, mfs.message);
+    }
+
+    private MessageFromServer convertMessageToMFS(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        MessageFromServer MFS = gson.fromJson(jsonText, MessageFromServer.class);
-        reciveMessage(MFS.sender_name, MFS.message);
+        return gson.fromJson(jsonText, MessageFromServer.class);
     }
 
-    public void sendMessage(String sender, String receiver, String message) {
-        setSender(sender);
-        Date dateNow = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        String mess = " [" + dateFormat.format(dateNow) + "]: " + message;
-        MessageToServer MTS = new MessageToServer(receiver, mess);
-
-        System.out.println(new Gson().toJson(MTS));
-        conn.getChatClient().send(new Gson().toJson(MTS));
-
-        reciveMessage(sender, " [" + dateFormat.format(dateNow) + "]: " + message);
-    }
-
-    private void reciveMessage(String senderName, String message) {
+    private void showMessage(String senderName, String message) {
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
                 +"</font></b>";
 
-        msgArea += formatSender + message + "<br>";
+        String msgArea = formatSender + message + "<br>";
         webEngine.loadContent("<html>" +
                 "<body>" +
                 "<p>" +
@@ -147,6 +140,20 @@ public class ClientController implements Initializable {
                 "</p>" +
                 "</body>" +
                 "</html>");
+    }
+
+    public void sendMessage(String sender, String receiver, String message) {
+        setSender(sender);
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        String mess = " [" + dateFormat.format(dateNow) + "]: " + message;
+        MessageToServer MTS = new MessageToServer(receiver, mess);
+
+        System.out.println(new Gson().toJson(MTS));
+        conn.getChatClient().send(new Gson().toJson(MTS));
+
+        showMessage(sender, " [" + dateFormat.format(dateNow) + "]: " + message);
     }
 
     public void clientChoice(ListView<String> contactList, MouseEvent event) {
@@ -209,4 +216,11 @@ public class ClientController implements Initializable {
     }
 
 
+    public List<String> getAllUserNames() {
+        return dbService.getAllUserNames();
+    }
+
+    public void dbServiceClose() {
+        dbService.close();
+    }
 }
