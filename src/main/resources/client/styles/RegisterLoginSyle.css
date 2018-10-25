@@ -34,7 +34,6 @@
 }
 #menu:hover {
     -fx-background-image: url("../images/clement-h-544786-unsplash.jpg");
-
 }
 .menu-item:focused {
     -fx-background-image: url("../images/clement-h-544786-unsplash.jpg");
@@ -42,9 +41,11 @@
 }
 
 .label {
-    -fx-font-size: 11pt;
+    -fx-font-size: 10pt;
     -fx-font-family: "Roboto";
-    -fx-text-fill: white;
+    -fx-text-fill: #B8C5CB;
+    -fx-letter-spacing: 0.01;
+    -fx-graphic-text-gap: 1;
 }
 
 .label-bright {
@@ -103,16 +104,15 @@
     -fx-text-fill: rgba(0, 0, 0, 0.48);
     -fx-prompt-text-fill: rgba(0, 0, 0, 0.48);
     -fx-background-color: #B8C5CB;
-    -fx-background-radius: 8;
+    -fx-background-radius: 10;
     -fx-border-color: #FFE684;
-    -fx-border-radius: 8;
+    -fx-border-radius: 10;
 }
 
 .button {
-    -fx-padding: 5 22 5 22;
-    -fx-background-radius: 8;
+    -fx-background-radius: 10;
     -fx-background-color: #FFE684;
-    -fx-font-family: "Roboto", Helvetica, Arial, bold;
+    -fx-font-family: "Roboto";
     -fx-font-size: 16pt;
     -fx-text-fill: #004F70;
     //-fx-background-insets: 0 0 0 0, 0, 1, 2;
