@@ -32,7 +32,7 @@ public class RegisterViewController implements Initializable {
     private Button okRegisterButton;
 
     @FXML
-    private Label cancelRegisterButton;
+    private Button cancelRegisterButton;
 
     private ClientController controller;
 
