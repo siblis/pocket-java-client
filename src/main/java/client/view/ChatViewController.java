@@ -19,6 +19,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,7 +41,7 @@ public class ChatViewController implements Initializable {
     @FXML
     private TextField messageField;
 
-    private static ObservableList<String> contactsObservList;
+    private ObservableList<String> contactsObservList;
 
     private ClientController clientController;
 
@@ -50,13 +51,10 @@ public class ChatViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         clientController = ClientController.getInstance();
+        clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableArrayList();
         fillContactListView();
         webtest();
-    }
-
-    public static ObservableList<String> getContactList() {
-        return contactsObservList;
     }
 
     private void webtest() {
@@ -66,7 +64,7 @@ public class ChatViewController implements Initializable {
         webViewPane.getChildren().setAll(messageWebView);
     }
 
-    private void fillContactListView() {
+    public void fillContactListView() {
         contactListView.setItems(contactsObservList);
         contactListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
@@ -132,7 +130,5 @@ public class ChatViewController implements Initializable {
         stage.setResizable(false);
         stage.setScene(new Scene(root));
         stage.show();
-
-        fillContactListView();
     }
 }

@@ -25,6 +25,7 @@ public class ClientController {
 
     private static ClientController instance;
     private static String token;
+    private ChatViewController chatViewController;
     public WebEngine webEngine;
     private String msgArea = "";
     private ObservableList<String> contactsObservList;
@@ -35,6 +36,10 @@ public class ClientController {
     private List<Long> contactList;
 
     private DataBaseService dbService;
+
+    public void setChatViewController(ChatViewController chatViewController) {
+        this.chatViewController = chatViewController;
+    }
 
     private ClientController() {
         dbService = new DataBaseService();
@@ -179,6 +184,7 @@ public class ClientController {
                     GsonBuilder builder = new GsonBuilder();
                     Gson gson = builder.create();
                     addContactToDB(gson.fromJson(response.getResponseJson(), ContactFromServer.class));
+                    if (chatViewController != null) chatViewController.fillContactListView();
                     break;
                 case 404:
                     showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
