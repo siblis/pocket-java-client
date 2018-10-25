@@ -9,13 +9,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import database.dao.DataBaseService;
 import database.entity.User;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +26,6 @@ public class ClientController {
     private ChatViewController chatViewController;
     public WebEngine webEngine;
     private String msgArea = "";
-    private ObservableList<String> contactsObservList;
     private String myNick;
     private String sender;
     private String receiver = "24";
@@ -113,8 +110,20 @@ public class ClientController {
 
     public void receiveMessage(String message) {
         MessageFromServer mfs = convertMessageToMFS(message);
-        if (!contactList.contains(mfs.sender_name)) {
-
+        if (!contactList.contains(mfs.senderid)) {
+            try {
+                ServerResponse response = HTTPSRequest.getUser(mfs.senderid, token);
+                switch (response.getResponseCode()) {
+                    case 200:
+                        addContact(convertContactToCFS(response.getResponseJson()).getEmail());
+                    case 404:
+                        showAlert("Пользователь с id: " + mfs.senderid + " не найден", Alert.AlertType.ERROR);
+                    default:
+                        showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         showMessage(mfs.sender_name, mfs.message);
     }
@@ -172,6 +181,12 @@ public class ClientController {
             conn.getChatClient().close();
     }
 
+    private ContactFromServer convertContactToCFS(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.fromJson(jsonText, ContactFromServer.class);
+    }
+
     public void addContact(String contact) {
         ContactToServer cts = new ContactToServer(contact);
         String requestJSON = new Gson().toJson(cts);
@@ -181,9 +196,7 @@ public class ClientController {
             switch (response.getResponseCode()) {
                 case 201:
                     showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
-                    GsonBuilder builder = new GsonBuilder();
-                    Gson gson = builder.create();
-                    addContactToDB(gson.fromJson(response.getResponseJson(), ContactFromServer.class));
+                    addContactToDB(convertContactToCFS(response.getResponseJson()));
                     if (chatViewController != null) chatViewController.fillContactListView();
                     break;
                 case 404:
@@ -193,7 +206,7 @@ public class ClientController {
                     showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
                     break;
                 default:
-                    System.out.println("Общая ошибка");
+                    showAlert("Общая ошибка!", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
             e.printStackTrace();
