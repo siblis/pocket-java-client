@@ -6,10 +6,17 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.stage.Stage;
+
+import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -51,6 +58,11 @@ public class RegisterViewController implements Initializable {
                         regPasswordField.textProperty(),
                         regPasswordFieldDouble.textProperty(),
                         regEmailField.textProperty()));
+        regPasswordFieldDouble.disableProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> Correct.checkPasswordStrength(regPasswordField.getText()) <2,
+                        regPasswordField.textProperty()));
+
     }
 
     @FXML
