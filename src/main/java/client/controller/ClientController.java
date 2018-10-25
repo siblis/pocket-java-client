@@ -1,6 +1,6 @@
 package client.controller;
 
-import client.model.User;
+import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
@@ -8,6 +8,7 @@ import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import database.dao.DataBaseService;
+import database.entity.User;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -169,14 +170,15 @@ public class ClientController {
     public void addContact(String contact) {
         ContactToServer cts = new ContactToServer(contact);
         String requestJSON = new Gson().toJson(cts);
-        Integer responseCode = 0;
 
         try {
-            String responseJson = HTTPSRequest.addContact(requestJSON, token, responseCode);
-            switch (responseCode) {
+            ServerResponse response = HTTPSRequest.addContact(requestJSON, token);
+            switch (response.getResponseCode()) {
                 case 201:
                     showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
-
+                    GsonBuilder builder = new GsonBuilder();
+                    Gson gson = builder.create();
+                    addContactToDB(gson.fromJson(response.getResponseJson(), ContactFromServer.class));
                     break;
                 case 404:
                     showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
@@ -190,6 +192,11 @@ public class ClientController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void addContactToDB(ContactFromServer contact) {
+        dbService.insertUser(new User(contact.getUid(), contact.getAccount_name(), contact.getEmail()));
+        contactList.add(contact.getUid());
     }
 
     public void proceedRegister(String login, String password, String email) {
