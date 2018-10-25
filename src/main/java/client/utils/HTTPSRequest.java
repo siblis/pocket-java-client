@@ -1,5 +1,7 @@
 package client.utils;
 
+import client.model.ServerResponse;
+
 import java.net.URL;
 import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
@@ -26,6 +28,19 @@ public class HTTPSRequest {
         con.setRequestMethod("PUT");
         sendRequest(con, requestJSON);
         return answerRequest(con);
+    }
+
+    public static ServerResponse addContact(String requestJSON, String token) throws Exception {
+        URL obj = new URL(serverURL + "/v1/users/contacts/");
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Token", token);
+
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setResponseCode(sendRequest(con, requestJSON));
+        serverResponse.setResponseJson(answerRequest(con));
+
+        return serverResponse;
     }
 
     private static int sendRequest(HttpsURLConnection con, String requestJSON) throws Exception {
@@ -58,17 +73,5 @@ public class HTTPSRequest {
             e.printStackTrace();
         }
         return response.toString();
-    }
-
-    public static int addContact(String requestJSON, String token) throws Exception {
-        URL obj = new URL(serverURL + "/v1/users/");
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("PUT");
-        con.setRequestProperty("Token", token);
-        int responseCode = sendRequest(con, requestJSON);
-//    возможно тут надо будет вернуть user ,когда сервер сделает чтобы
-//         одинаковые контакты не добавлялись
-//        Если конечно на запрос на добавление контакта вернет все поля юзера
-        return responseCode;
     }
 }
