@@ -30,9 +30,22 @@ public class HTTPSRequest {
         return answerRequest(con);
     }
 
+    public static ServerResponse getUser(long id, String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/users/" + id);
+        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Token", token);
+
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setResponseCode(sendRequest(con, ""));
+        serverResponse.setResponseJson(answerRequest(con));
+
+        return serverResponse;
+    }
+
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
-        URL obj = new URL(serverURL + "/v1/users/contacts/");
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        URL url = new URL(serverURL + "/v1/users/contacts/");
+        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Token", token);
 
