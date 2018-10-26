@@ -32,36 +32,50 @@ public class HTTPSRequest {
 
     public static ServerResponse getUser(long id, String token) throws Exception {
         URL url = new URL(serverURL + "/v1/users/" + id);
-        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Token", token);
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Token", token);
 
         ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(con, ""));
-        serverResponse.setResponseJson(answerRequest(con));
+        serverResponse.setResponseCode(sendRequest(connection, null));
+        serverResponse.setResponseJson(answerRequest(connection));
 
         return serverResponse;
     }
 
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
         URL url = new URL(serverURL + "/v1/users/contacts/");
-        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Token", token);
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Token", token);
 
         ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(con, requestJSON));
-        serverResponse.setResponseJson(answerRequest(con));
+        serverResponse.setResponseCode(sendRequest(connection, requestJSON));
+        serverResponse.setResponseJson(answerRequest(connection));
 
         return serverResponse;
     }
 
+    public static ServerResponse getContacts(String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/users/contacts/");
+        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Token", token);
+
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setResponseCode(sendRequest(connection, null));
+        serverResponse.setResponseJson(answerRequest(connection));
+        return serverResponse;
+    }
+
     private static int sendRequest(HttpsURLConnection con, String requestJSON) throws Exception {
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(requestJSON);
-        wr.flush();
-        wr.close();
+        if (requestJSON != null) {
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(requestJSON);
+            wr.flush();
+            wr.close();
+        }
 
         int responseCode = con.getResponseCode();
         System.out.println("\nSending " + con.getRequestMethod() + " request to URL : " + con.getURL());
