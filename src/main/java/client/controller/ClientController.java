@@ -39,8 +39,6 @@ public class ClientController {
     }
 
     private ClientController() {
-        dbService = new DataBaseService();
-        contactList = dbService.getAllUserId();
     }
 
     public static ClientController getInstance() {
@@ -97,6 +95,9 @@ public class ClientController {
                 token = AFS.token;
                 connect(token);
                 myNick = login;
+
+                synchronizeContactList();
+
                 return true;
             } else {
                 showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
@@ -116,8 +117,10 @@ public class ClientController {
                 switch (response.getResponseCode()) {
                     case 200:
                         addContact(convertContactToCFS(response.getResponseJson()).getEmail());
+                        break;
                     case 404:
                         showAlert("Пользователь с id: " + mfs.senderid + " не найден", Alert.AlertType.ERROR);
+                        break;
                     default:
                         showAlert("Общая ошибка!", Alert.AlertType.ERROR);
                 }
@@ -185,6 +188,21 @@ public class ClientController {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(jsonText, ContactFromServer.class);
+    }
+
+    private void synchronizeContactList(){
+        dbService = new DataBaseService();
+        contactList = dbService.getAllUserId();
+
+        try {
+            ServerResponse response = HTTPSRequest.getContacts(token);
+            if (response != null) {
+                System.out.println(response.getResponseJson());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void addContact(String contact) {
