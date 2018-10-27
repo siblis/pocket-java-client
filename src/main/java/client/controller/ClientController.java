@@ -164,7 +164,6 @@ public class ClientController implements Initializable {
         AddContactToServer ACTS = new AddContactToServer(contact);
         String requestJSON = new Gson().toJson(ACTS);
         try {
-//            int answer = HTTPSRequest.addContact(requestJSON, token);
             String answer = HTTPSRequest.addContact(requestJSON, token);
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
@@ -175,8 +174,9 @@ public class ClientController implements Initializable {
                 showAlert("Пользователь с email: " + contact + " Уже в Вашем списке", Alert.AlertType.ERROR);
             } else {
                 User user = gson.fromJson(answer, User.class);
-//                addToList(user.getUid()+" "+ user.getAccount_name());
                 addToList(user);
+                showAlert("Контакт " + user.getAccount_name() + " успешно добавлен", Alert.AlertType.INFORMATION);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,13 +184,9 @@ public class ClientController implements Initializable {
     }
 
     private void addToList(User user) {
-//         в дальнейшем будет добавлен User , а не id юзера
         contactsObservList = ChatViewController.getContactList();
         if (!contactsObservList.contains(user.getUid()+" "+ user.getAccount_name())) {
             contactsObservList.add(user.getUid()+" "+ user.getAccount_name());
-            showAlert("Контакт " + user.getAccount_name() + " успешно добавлен", Alert.AlertType.INFORMATION);
-        } else {
-            showAlert("Пользователь " + user.getAccount_name() + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
         }
     }
 
