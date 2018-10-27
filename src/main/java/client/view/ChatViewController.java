@@ -2,6 +2,7 @@ package client.view;
 
 import client.Main;
 import client.controller.ClientController;
+import client.utils.HTTPSRequest;
 import database.dao.DataBaseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -135,5 +136,11 @@ public class ChatViewController implements Initializable {
         stage.setResizable(false);
         stage.setScene(new Scene(root));
         stage.show();
+    }
+
+    @FXML
+    private void updateContactList() {
+        ClientController.getInstance().updateContactList();
+
     }
 }
