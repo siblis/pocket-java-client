@@ -1,10 +1,7 @@
 package client.controller;
 
 import client.model.User;
-import client.model.formatMsgWithServer.AuthFromServer;
-import client.model.formatMsgWithServer.AuthToServer;
-import client.model.formatMsgWithServer.MessageFromServer;
-import client.model.formatMsgWithServer.MessageToServer;
+import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
@@ -15,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
+
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -131,7 +129,7 @@ public class ClientController implements Initializable {
     private void reciveMessage(String senderName, String message) {
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
-                +"</font></b>";
+                + "</font></b>";
 
         msgArea += formatSender + message + "<br>";
         webEngine.loadContent("<html>" +
@@ -162,14 +160,22 @@ public class ClientController implements Initializable {
     }
 
     public void addContact(String contact) {
-        User user = new User(contact);
-        String requestJSON = new Gson().toJson(user);
+//        User user = new User(contact);
+        AddContactToServer ACTS = new AddContactToServer(contact);
+        String requestJSON = new Gson().toJson(ACTS);
         try {
-            int answer = HTTPSRequest.addContact(requestJSON, token);
-            if (answer == 201) {
-                addToList(user.getContact());
-            } else {
+//            int answer = HTTPSRequest.addContact(requestJSON, token);
+            String answer = HTTPSRequest.addContact(requestJSON, token);
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+
+            if (answer.equals("404")) {
                 showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+            } else if (answer.equals("409")) {
+                showAlert("Пользователь с email: " + contact + " Уже в Вашем списке", Alert.AlertType.ERROR);
+            } else {
+                User user = gson.fromJson(answer, User.class);
+                addToList(user.getUid()+" "+ user.getAccount_name());
             }
         } catch (Exception e) {
             e.printStackTrace();
