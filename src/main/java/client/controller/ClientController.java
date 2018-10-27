@@ -175,21 +175,22 @@ public class ClientController implements Initializable {
                 showAlert("Пользователь с email: " + contact + " Уже в Вашем списке", Alert.AlertType.ERROR);
             } else {
                 User user = gson.fromJson(answer, User.class);
-                addToList(user.getUid()+" "+ user.getAccount_name());
+//                addToList(user.getUid()+" "+ user.getAccount_name());
+                addToList(user);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void addToList(String uid) {
+    private void addToList(User user) {
 //         в дальнейшем будет добавлен User , а не id юзера
         contactsObservList = ChatViewController.getContactList();
-        if (!contactsObservList.contains(uid)) {
-            contactsObservList.add(uid);
-            showAlert("Контакт " + uid + " успешно добавлен", Alert.AlertType.INFORMATION);
+        if (!contactsObservList.contains(user.getUid()+" "+ user.getAccount_name())) {
+            contactsObservList.add(user.getUid()+" "+ user.getAccount_name());
+            showAlert("Контакт " + user.getAccount_name() + " успешно добавлен", Alert.AlertType.INFORMATION);
         } else {
-            showAlert("Пользователь " + uid + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+            showAlert("Пользователь " + user.getAccount_name() + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
         }
     }
 
