@@ -149,7 +149,7 @@ public class ClientController implements Initializable {
 
     public void clientChoice(ListView<String> contactList, MouseEvent event) {
         if (event.getClickCount() == 1) {
-            receiver = contactList.getSelectionModel().getSelectedItem();
+            receiver = contactList.getSelectionModel().getSelectedItem().split(" ")[0];
             showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
         }
     }
