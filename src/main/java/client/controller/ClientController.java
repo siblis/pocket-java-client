@@ -185,19 +185,17 @@ public class ClientController implements Initializable {
 
     private void addToList(User user) {
         contactsObservList = ChatViewController.getContactList();
-        if (!contactsObservList.contains(user.getUid()+" "+ user.getAccount_name())) {
-            contactsObservList.add(user.getUid()+" "+ user.getAccount_name());
+        if (!contactsObservList.contains(user.getUid() + " " + user.getAccount_name())) {
+            contactsObservList.add(user.getUid() + " " + user.getAccount_name());
         }
     }
 
     public void proceedRegister(String login, String password, String email) {
-        String requestJSON = "{" +
-                "\"account_name\": \"" + login + "\"," +
-                "\"email\": \"" + email + "\"," +
-                "\"password\": \"" + password + "\"" +
-                "}";
+        RegToServer RTS = new RegToServer(login, email, password);
+        String reqJSON = new Gson().toJson(RTS);
+
         try {
-            int responseCode = HTTPSRequest.registration(requestJSON);
+            int responseCode = HTTPSRequest.registration(reqJSON);
             if (responseCode == 201) {
                 showAlert("Вы успешно зарегистрированы", Alert.AlertType.INFORMATION);
             } else
