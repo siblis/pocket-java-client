@@ -1,9 +1,9 @@
 package client.model.formatMsgWithServer;
 
 public class RegToServer {
-    public String account_name;
-    public String email;
-    public String password;
+    private String account_name;
+    private String email;
+    private String password;
 
     public RegToServer(String account_name, String email, String password) {
         this.account_name = account_name;

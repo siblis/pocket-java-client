@@ -1,8 +1,8 @@
 package client.model.formatMsgWithServer;
 
 public class AuthToServer {
-    public String account_name;
-    public String password;
+    private String account_name;
+    private String password;
 
     public AuthToServer() {
 

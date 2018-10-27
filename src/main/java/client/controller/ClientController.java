@@ -90,8 +90,8 @@ public class ClientController implements Initializable {
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder.create();
                 AuthFromServer AFS = gson.fromJson(answer, AuthFromServer.class);
-                System.out.println(" answer server " + AFS.token);
-                token = AFS.token;
+                System.out.println(" answer server " + AFS.getToken());
+                token = AFS.getToken();
                 connect(token);
                 myNick = login;
                 return true;
@@ -109,7 +109,7 @@ public class ClientController implements Initializable {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         MessageFromServer MFS = gson.fromJson(jsonText, MessageFromServer.class);
-        reciveMessage(MFS.sender_name, MFS.message);
+        reciveMessage(MFS.getSender_name(), MFS.getMessage());
     }
 
     public void sendMessage(String sender, String receiver, String message) {
