@@ -7,16 +7,17 @@ import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static client.utils.Common.showAlert;
 
@@ -209,5 +210,26 @@ public class ClientController implements Initializable {
         return authentification(login, password);
     }
 
+    public void updateContactList() {
+        String jsonContacts = "{}";
+        try {
+            jsonContacts = HTTPSRequest.getContact(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonContacts);
 
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+        Type itemsMapType = new TypeToken<Map<String, GetUserListFromServer>>() {}.getType();
+        Map<String, GetUserListFromServer> mapItemsDes = new Gson().fromJson(jsonContacts, itemsMapType);
+        System.out.println(mapItemsDes.toString());
+
+        for (GetUserListFromServer GULFS : mapItemsDes.values()
+        ) {
+            System.out.println(GULFS.getId()+" "+ GULFS.getName());
+            addToList(new User(GULFS.getId(),GULFS.getName()));
+        }
+    }
 }

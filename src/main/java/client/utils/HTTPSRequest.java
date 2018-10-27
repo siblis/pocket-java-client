@@ -70,8 +70,17 @@ public class HTTPSRequest {
 //         одинаковые контакты не добавлялись
 //        Если конечно на запрос на добавление контакта вернет все поля юзера
         if (responseCode != 201) {
-            return ""+responseCode;
+            return "" + responseCode;
         }
+        return answerRequest(con);
+    }
+
+    public static String getContact(String token)throws Exception {
+        URL obj = new URL(serverURL + "/v1/users/contacts/");
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Token", token);
+        int responseCode = con.getResponseCode();
         return answerRequest(con);
     }
 }
