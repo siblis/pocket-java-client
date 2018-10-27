@@ -53,22 +53,34 @@ public class HTTPSRequest {
                 response.append(inputLine);
             }
 
-            System.out.println(response.toString());
+            System.out.println("response " + response.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return response.toString();
     }
 
-    public static int addContact(String requestJSON, String token) throws Exception {
-        URL obj = new URL(serverURL + "/v1/users/");
+    public static String addContact(String requestJSON, String token) throws Exception {
+        URL obj = new URL(serverURL + "/v1/users/contacts/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("PUT");
+        con.setRequestMethod("POST");
         con.setRequestProperty("Token", token);
         int responseCode = sendRequest(con, requestJSON);
 //    возможно тут надо будет вернуть user ,когда сервер сделает чтобы
 //         одинаковые контакты не добавлялись
 //        Если конечно на запрос на добавление контакта вернет все поля юзера
-        return responseCode;
+        if (responseCode != 201) {
+            return "" + responseCode;
+        }
+        return answerRequest(con);
+    }
+
+    public static String getContact(String token)throws Exception {
+        URL obj = new URL(serverURL + "/v1/users/contacts/");
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Token", token);
+        int responseCode = con.getResponseCode();
+        return answerRequest(con);
     }
 }

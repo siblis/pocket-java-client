@@ -1,24 +1,23 @@
 package client.controller;
 
 import client.model.User;
-import client.model.formatMsgWithServer.AuthFromServer;
-import client.model.formatMsgWithServer.AuthToServer;
-import client.model.formatMsgWithServer.MessageFromServer;
-import client.model.formatMsgWithServer.MessageToServer;
+import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
+
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static client.utils.Common.showAlert;
 
@@ -92,8 +91,8 @@ public class ClientController implements Initializable {
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder.create();
                 AuthFromServer AFS = gson.fromJson(answer, AuthFromServer.class);
-                System.out.println(" answer server " + AFS.token);
-                token = AFS.token;
+                System.out.println(" answer server " + AFS.getToken());
+                token = AFS.getToken();
                 connect(token);
                 myNick = login;
                 return true;
@@ -111,7 +110,7 @@ public class ClientController implements Initializable {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         MessageFromServer MFS = gson.fromJson(jsonText, MessageFromServer.class);
-        reciveMessage(MFS.sender_name, MFS.message);
+        reciveMessage(MFS.getSender_name(), MFS.getMessage());
     }
 
     public void sendMessage(String sender, String receiver, String message) {
@@ -131,7 +130,7 @@ public class ClientController implements Initializable {
     private void reciveMessage(String senderName, String message) {
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
-                +"</font></b>";
+                + "</font></b>";
 
         msgArea += formatSender + message + "<br>";
         webEngine.loadContent("<html>" +
@@ -151,7 +150,7 @@ public class ClientController implements Initializable {
 
     public void clientChoice(ListView<String> contactList, MouseEvent event) {
         if (event.getClickCount() == 1) {
-            receiver = contactList.getSelectionModel().getSelectedItem();
+            receiver = contactList.getSelectionModel().getSelectedItem().split(" ")[0];
             showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
         }
     }
@@ -162,39 +161,42 @@ public class ClientController implements Initializable {
     }
 
     public void addContact(String contact) {
-        User user = new User(contact);
-        String requestJSON = new Gson().toJson(user);
+//        User user = new User(contact);
+        AddContactToServer ACTS = new AddContactToServer(contact);
+        String requestJSON = new Gson().toJson(ACTS);
         try {
-            int answer = HTTPSRequest.addContact(requestJSON, token);
-            if (answer == 201) {
-                addToList(user.getContact());
-            } else {
+            String answer = HTTPSRequest.addContact(requestJSON, token);
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+
+            if (answer.equals("404")) {
                 showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+            } else if (answer.equals("409")) {
+                showAlert("Пользователь с email: " + contact + " Уже в Вашем списке", Alert.AlertType.ERROR);
+            } else {
+                User user = gson.fromJson(answer, User.class);
+                addToList(user);
+                showAlert("Контакт " + user.getAccount_name() + " успешно добавлен", Alert.AlertType.INFORMATION);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void addToList(String uid) {
-//         в дальнейшем будет добавлен User , а не id юзера
+    private void addToList(User user) {
         contactsObservList = ChatViewController.getContactList();
-        if (!contactsObservList.contains(uid)) {
-            contactsObservList.add(uid);
-            showAlert("Контакт " + uid + " успешно добавлен", Alert.AlertType.INFORMATION);
-        } else {
-            showAlert("Пользователь " + uid + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+        if (!contactsObservList.contains(user.getUid() + " " + user.getAccount_name())) {
+            contactsObservList.add(user.getUid() + " " + user.getAccount_name());
         }
     }
 
     public void proceedRegister(String login, String password, String email) {
-        String requestJSON = "{" +
-                "\"account_name\": \"" + login + "\"," +
-                "\"email\": \"" + email + "\"," +
-                "\"password\": \"" + password + "\"" +
-                "}";
+        RegToServer RTS = new RegToServer(login, email, password);
+        String reqJSON = new Gson().toJson(RTS);
+
         try {
-            int responseCode = HTTPSRequest.registration(requestJSON);
+            int responseCode = HTTPSRequest.registration(reqJSON);
             if (responseCode == 201) {
                 showAlert("Вы успешно зарегистрированы", Alert.AlertType.INFORMATION);
             } else
@@ -208,5 +210,26 @@ public class ClientController implements Initializable {
         return authentification(login, password);
     }
 
+    public void updateContactList() {
+        String jsonContacts = "{}";
+        try {
+            jsonContacts = HTTPSRequest.getContact(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonContacts);
 
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+        Type itemsMapType = new TypeToken<Map<String, GetUserListFromServer>>() {}.getType();
+        Map<String, GetUserListFromServer> mapItemsDes = new Gson().fromJson(jsonContacts, itemsMapType);
+        System.out.println(mapItemsDes.toString());
+
+        for (GetUserListFromServer GULFS : mapItemsDes.values()
+        ) {
+            System.out.println(GULFS.getId()+" "+ GULFS.getName());
+            addToList(new User(GULFS.getId(),GULFS.getName()));
+        }
+    }
 }

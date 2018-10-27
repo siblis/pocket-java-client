@@ -1,8 +1,8 @@
 package client.model.formatMsgWithServer;
 
 public class MessageToServer {
-    public String receiver;
-    public String message;
+    private String receiver;
+    private String message;
 
     public MessageToServer(){
 

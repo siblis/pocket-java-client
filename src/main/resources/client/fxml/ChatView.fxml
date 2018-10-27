@@ -76,6 +76,7 @@
                                         <buttons>
                                             <Button contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="90.0" text="Send" />
                                             <Button mnemonicParsing="false" onAction="#handleExit" prefHeight="25.0" text="Exit" />
+                                            <Button mnemonicParsing="false" onAction="#updateContactList" prefHeight="25.0" text="UpdateList" />
                                         </buttons>
                                         <padding>
                                             <Insets right="10.0" />

@@ -1,5 +1,9 @@
 package client.model.formatMsgWithServer;
 
 public class AuthFromServer {
-    public String token;
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
 }
