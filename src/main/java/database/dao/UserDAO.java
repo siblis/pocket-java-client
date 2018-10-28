@@ -68,7 +68,7 @@ public class UserDAO {
         return list;
     }
 
-    public Message findMessageById(int id) {
+    public Message findMessageById(long id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -78,7 +78,7 @@ public class UserDAO {
         return message;
     }
 
-    public void addSentMessage(int userId, Message message) {
+    public void addSentMessage(long userId, Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -89,7 +89,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public void addReceivedMessage(int userId, Message message) {
+    public void addReceivedMessage(long userId, Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 

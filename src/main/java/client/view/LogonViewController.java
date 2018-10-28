@@ -45,6 +45,8 @@ public class LogonViewController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/ChatView.fxml"));
             Parent root = fxmlLoader.load();
             Stage chatStage = new Stage();
+            chatStage.setMinWidth(750.0);
+            chatStage.setMinHeight(430.0);
             chatStage.setTitle("Pocket desktop client. \t\t Logged as: [" + controller.getSender() + "]");
             chatStage.setScene(new Scene(root));
             chatStage.show();
