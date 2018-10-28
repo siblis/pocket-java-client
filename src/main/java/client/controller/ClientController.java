@@ -7,15 +7,20 @@ import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
 import database.dao.DataBaseService;
 import database.entity.User;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static client.utils.Common.showAlert;
 
@@ -184,25 +189,42 @@ public class ClientController {
             conn.getChatClient().close();
     }
 
-    private ContactFromServer convertContactToCFS(String jsonText) {
+    private Map<String, ContactListFromServer> convertContactListToMap(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.fromJson(jsonText, ContactFromServer.class);
+        Type itemsMapType = new TypeToken<Map<String, ContactListFromServer>>() {}.getType();
+        return gson.fromJson(jsonText, itemsMapType);
     }
 
-    private void synchronizeContactList(){
+    private void synchronizeContactList() {
         dbService = new DataBaseService();
         contactList = dbService.getAllUserId();
 
         try {
             ServerResponse response = HTTPSRequest.getContacts(token);
             if (response != null) {
-                System.out.println(response.getResponseJson());
+                Map<String, ContactListFromServer> map = convertContactListToMap(response.getResponseJson());
+                for (Map.Entry<String, ContactListFromServer> entry : map.entrySet()) {
+                    if (!contactList.contains(entry.getValue().getId())) {
+                        ContactFromServer cfs = new ContactFromServer();
+                        cfs.setUid(entry.getValue().getId());
+                        cfs.setAccount_name(entry.getValue().getName());
+                        cfs.setEmail(entry.getKey());
+
+                        addContactToDB(cfs);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private ContactFromServer convertContactToCFS(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.fromJson(jsonText, ContactFromServer.class);
     }
 
     public void addContact(String contact) {
