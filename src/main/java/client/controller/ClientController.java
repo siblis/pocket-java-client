@@ -95,6 +95,7 @@ public class ClientController implements Initializable {
                 token = AFS.getToken();
                 connect(token);
                 myNick = login;
+//                updateContactList();
                 return true;
             } else {
                 showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);

@@ -64,6 +64,8 @@ public class ChatViewController implements Initializable {
         controller.webEngine = messageWebView.getEngine();
         controller.webEngine.setJavaScriptEnabled(true);
         webViewPane.getChildren().setAll(messageWebView);
+
+        ClientController.getInstance().updateContactList();
     }
 
     private void fillContactList() {

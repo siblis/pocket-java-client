@@ -13,11 +13,6 @@ public class WebSocketChatClient extends WebSocketClient {
     private SocketFactory socketFactory = null;
     private ClientController controller = null;
 
-//    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, TestEnterViewController controller) {
-//        super( serverUri );
-//        controller = controller;
-//    }
-
     public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders) {
         super(serverUri, httpHeaders);
     }
@@ -31,16 +26,14 @@ public class WebSocketChatClient extends WebSocketClient {
     @Override
     public void onOpen( ServerHandshake handshakedata ) {
         System.out.println( "Connected" );
-
+//        ClientController.getInstance().updateContactList();
     }
 
     @Override
     public void onMessage( String message ) {
         System.out.println( "got: " + message );
-//        if(!message.startsWith("{")){
         if (message.contains("receiver")){
             Platform.runLater(() -> controller.convertMFStoMessage(message));
-//            Platform.runLater(() -> controller.reciveMessage(message));
         }
     }
 
