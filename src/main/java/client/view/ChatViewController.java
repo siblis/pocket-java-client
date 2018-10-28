@@ -3,7 +3,6 @@ package client.view;
 import client.Main;
 import client.controller.ClientController;
 import client.utils.HTTPSRequest;
-import database.dao.DataBaseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -42,7 +41,6 @@ public class ChatViewController implements Initializable {
     @FXML
     private TextField messageField;
 
-    private DataBaseService dbService;
     private static ObservableList<String> contactsObservList;
 
     private ClientController controller;
@@ -53,7 +51,6 @@ public class ChatViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         controller = ClientController.getInstance();
-        dbService = new DataBaseService();
         fillContactList();
         webtest();
     }
@@ -94,7 +91,6 @@ public class ChatViewController implements Initializable {
             }
         });
         contactsObservList.clear();
-        contactsObservList.addAll(dbService.getAllUserNames());
     }
 
     @FXML
@@ -107,7 +103,6 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleExit() {
-        dbService.close();
         controller.disconnect();
         System.exit(0);
     }
