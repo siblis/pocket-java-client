@@ -9,7 +9,7 @@ import java.util.List;
 public class User {
 
     @Id
-    private int id;
+    private long id;
 
     @Column
     private String name;
@@ -25,7 +25,7 @@ public class User {
 
     public User() {}
 
-    public User(int id, String name, String email) {
+    public User(long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -48,7 +48,7 @@ public class User {
         receivedMess.clear();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -1,38 +1,47 @@
 package client.controller;
 
-import client.model.User;
-import client.model.formatMsgWithServer.AuthFromServer;
-import client.model.formatMsgWithServer.AuthToServer;
-import client.model.formatMsgWithServer.MessageFromServer;
-import client.model.formatMsgWithServer.MessageToServer;
+import client.model.ServerResponse;
+import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javafx.collections.ObservableList;
-import javafx.fxml.Initializable;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
+import database.dao.DataBaseService;
+import database.entity.User;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
-import java.net.URL;
+
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.ResourceBundle;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static client.utils.Common.showAlert;
 
-public class ClientController implements Initializable {
+public class ClientController {
 
     private static ClientController instance;
     private static String token;
+    private ChatViewController chatViewController;
     public WebEngine webEngine;
-    private String msgArea;
-    private ObservableList<String> contactsObservList;
+    private String msgArea = "";
     private String myNick;
     private String sender;
     private String receiver = "24";
     private Connector conn = null;
+    private List<Long> contactList;
+
+    private DataBaseService dbService;
+
+    public void setChatViewController(ChatViewController chatViewController) {
+        this.chatViewController = chatViewController;
+    }
 
     private ClientController() {
     }
@@ -42,11 +51,6 @@ public class ClientController implements Initializable {
             instance = new ClientController();
         }
         return instance;
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        // TODO
     }
 
     private void connect(String token) {
@@ -77,7 +81,7 @@ public class ClientController implements Initializable {
         this.sender = sender;
     }
 
-    private boolean authentification(String login, String password) {
+    private boolean authentication(String login, String password) {
         if (!login.isEmpty() && !password.isEmpty()) {
             setSender(login);
             String answer = "0";
@@ -96,6 +100,9 @@ public class ClientController implements Initializable {
                 token = AFS.token;
                 connect(token);
                 myNick = login;
+
+                synchronizeContactList();
+
                 return true;
             } else {
                 showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
@@ -107,31 +114,38 @@ public class ClientController implements Initializable {
         return false;
     }
 
-    public void convertMFStoMessage(String jsonText) {
+    public void receiveMessage(String message) {
+        MessageFromServer mfs = convertMessageToMFS(message);
+        if (!contactList.contains(mfs.senderid)) {
+            try {
+                ServerResponse response = HTTPSRequest.getUser(mfs.senderid, token);
+                switch (response.getResponseCode()) {
+                    case 200:
+                        addContact(convertContactToCFS(response.getResponseJson()).getEmail());
+                        break;
+                    case 404:
+                        showAlert("Пользователь с id: " + mfs.senderid + " не найден", Alert.AlertType.ERROR);
+                        break;
+                    default:
+                        showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        showMessage(mfs.sender_name, mfs.message);
+    }
+
+    private MessageFromServer convertMessageToMFS(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        MessageFromServer MFS = gson.fromJson(jsonText, MessageFromServer.class);
-        reciveMessage(MFS.sender_name, MFS.message);
+        return gson.fromJson(jsonText, MessageFromServer.class);
     }
 
-    public void sendMessage(String sender, String receiver, String message) {
-        setSender(sender);
-        Date dateNow = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        String mess = " [" + dateFormat.format(dateNow) + "]: " + message;
-        MessageToServer MTS = new MessageToServer(receiver, mess);
-
-        System.out.println(new Gson().toJson(MTS));
-        conn.getChatClient().send(new Gson().toJson(MTS));
-
-        reciveMessage(sender, " [" + dateFormat.format(dateNow) + "]: " + message);
-    }
-
-    private void reciveMessage(String senderName, String message) {
+    private void showMessage(String senderName, String message) {
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
-                +"</font></b>";
+                + "</font></b>";
 
         msgArea += formatSender + message + "<br>";
         webEngine.loadContent("<html>" +
@@ -149,6 +163,20 @@ public class ClientController implements Initializable {
                 "</html>");
     }
 
+    public void sendMessage(String sender, String receiver, String message) {
+        setSender(sender);
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        String mess = " [" + dateFormat.format(dateNow) + "]: " + message;
+        MessageToServer MTS = new MessageToServer(receiver, mess);
+
+        System.out.println(new Gson().toJson(MTS));
+        conn.getChatClient().send(new Gson().toJson(MTS));
+
+        showMessage(sender, " [" + dateFormat.format(dateNow) + "]: " + message);
+    }
+
     public void clientChoice(ListView<String> contactList, MouseEvent event) {
         if (event.getClickCount() == 1) {
             receiver = contactList.getSelectionModel().getSelectedItem();
@@ -161,30 +189,73 @@ public class ClientController implements Initializable {
             conn.getChatClient().close();
     }
 
-    public void addContact(String contact) {
-        User user = new User(contact);
-        String requestJSON = new Gson().toJson(user);
+    private Map<String, ContactListFromServer> convertContactListToMap(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        Type itemsMapType = new TypeToken<Map<String, ContactListFromServer>>() {}.getType();
+        return gson.fromJson(jsonText, itemsMapType);
+    }
+
+    private void synchronizeContactList() {
+        dbService = new DataBaseService();
+        contactList = dbService.getAllUserId();
+
         try {
-            int answer = HTTPSRequest.addContact(requestJSON, token);
-            if (answer == 201) {
-                addToList(user.getContact());
-            } else {
-                showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+            ServerResponse response = HTTPSRequest.getContacts(token);
+            if (response != null) {
+                Map<String, ContactListFromServer> map = convertContactListToMap(response.getResponseJson());
+                for (Map.Entry<String, ContactListFromServer> entry : map.entrySet()) {
+                    if (!contactList.contains(entry.getValue().getId())) {
+                        ContactFromServer cfs = new ContactFromServer();
+                        cfs.setUid(entry.getValue().getId());
+                        cfs.setAccount_name(entry.getValue().getName());
+                        cfs.setEmail(entry.getKey());
+
+                        addContactToDB(cfs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private ContactFromServer convertContactToCFS(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.fromJson(jsonText, ContactFromServer.class);
+    }
+
+    public void addContact(String contact) {
+        ContactToServer cts = new ContactToServer(contact);
+        String requestJSON = new Gson().toJson(cts);
+
+        try {
+            ServerResponse response = HTTPSRequest.addContact(requestJSON, token);
+            switch (response.getResponseCode()) {
+                case 201:
+                    showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
+                    addContactToDB(convertContactToCFS(response.getResponseJson()));
+                    if (chatViewController != null) chatViewController.fillContactListView();
+                    break;
+                case 404:
+                    showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+                    break;
+                case 409:
+                    showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    showAlert("Общая ошибка!", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void addToList(String uid) {
-//         в дальнейшем будет добавлен User , а не id юзера
-        contactsObservList = ChatViewController.getContactList();
-        if (!contactsObservList.contains(uid)) {
-            contactsObservList.add(uid);
-            showAlert("Контакт " + uid + " успешно добавлен", Alert.AlertType.INFORMATION);
-        } else {
-            showAlert("Пользователь " + uid + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
-        }
+    private void addContactToDB(ContactFromServer contact) {
+        dbService.insertUser(new User(contact.getUid(), contact.getAccount_name(), contact.getEmail()));
+        contactList.add(contact.getUid());
     }
 
     public void proceedRegister(String login, String password, String email) {
@@ -205,8 +276,15 @@ public class ClientController implements Initializable {
     }
 
     public boolean proceedLogIn(String login, String password) {
-        return authentification(login, password);
+        return authentication(login, password);
     }
 
 
+    public List<String> getAllUserNames() {
+        return dbService.getAllUserNames();
+    }
+
+    public void dbServiceClose() {
+        dbService.close();
+    }
 }
