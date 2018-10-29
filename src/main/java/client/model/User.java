@@ -13,6 +13,12 @@ public class User {
     public String account_name;
     public String email;
     public ArrayList<User> contactList;
+
+    public User(String uid, String account_name, String email) {
+        this.uid = uid;
+        this.account_name = account_name;
+        this.email = email;
+    }
     //private ArrayList<Group> groupsList;
 
     public String getUid() {

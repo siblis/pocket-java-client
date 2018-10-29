@@ -247,12 +247,24 @@ public class ClientController implements Initializable {
         Map<String, GetUserListFromServer> mapItemsDes = new Gson().fromJson(jsonContacts, itemsMapType);
         System.out.println(mapItemsDes.toString());
 
-        for (GetUserListFromServer GULFS : mapItemsDes.values()
-        ) {
-            System.out.println(GULFS.getId() + " " + GULFS.getName());
-            addToList(new User(GULFS.getId(), GULFS.getName()));
-            msgAreaMap.put(GULFS.getId(), "");
-        }
+        for (Map.Entry<String, GetUserListFromServer> entry : mapItemsDes.entrySet()) {
+            System.out.println(
+            entry.getValue().getId()+" "+
+                entry.getValue().getName()+" "+
+                entry.getKey());
+            addToList(new User(entry.getValue().getId(),entry.getValue().getName(),entry.getKey() ));
+            msgAreaMap.put(entry.getValue().getId(), "");
+        };
+
+
+
+//        for (GetUserListFromServer GULFS : mapItemsDes.values()
+//        ) {
+//            System.out.println(GULFS.getId() + " " + GULFS.getName());
+//            addToList(new User(GULFS.getId(), GULFS.getName()));
+//            msgAreaMap.put(GULFS.getId(), "");
+//
+//        }
     }
 
     public void updateUserinfo(String token) {
