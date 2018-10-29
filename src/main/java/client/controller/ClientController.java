@@ -27,8 +27,10 @@ public class ClientController implements Initializable {
     private static String token;
     public WebEngine webEngine;
     private String msgArea;
+    private HashMap<String, String> msgAreaMap = new HashMap<String, String>();
     private ObservableList<String> contactsObservList;
     private String myNick;
+    private String myId;
     private String sender;
     private String receiver = "24";
     private Connector conn = null;
@@ -94,7 +96,14 @@ public class ClientController implements Initializable {
                 System.out.println(" answer server " + AFS.getToken());
                 token = AFS.getToken();
                 connect(token);
-                myNick = login;
+                updateUserinfo(token);
+//                try {
+//                    HTTPSRequest.getSelfUser(token);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                myNick = login;
 //                updateContactList();
                 return true;
             } else {
@@ -111,7 +120,7 @@ public class ClientController implements Initializable {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         MessageFromServer MFS = gson.fromJson(jsonText, MessageFromServer.class);
-        reciveMessage(MFS.getSender_name(), MFS.getMessage());
+        reciveMessage(MFS.getSender_name(), MFS.getMessage(), MFS.getReceiver(), MFS.getSenderid());
     }
 
     public void sendMessage(String sender, String receiver, String message) {
@@ -125,34 +134,44 @@ public class ClientController implements Initializable {
         System.out.println(new Gson().toJson(MTS));
         conn.getChatClient().send(new Gson().toJson(MTS));
 
-        reciveMessage(sender, " [" + dateFormat.format(dateNow) + "]: " + message);
+        reciveMessage(sender, " [" + dateFormat.format(dateNow) + "]: " + message,
+                receiver, myId);
     }
 
-    private void reciveMessage(String senderName, String message) {
+    private void reciveMessage(String senderName, String message, String receiverId, String senderId) {
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
+                + " from " + senderId
+                + " to " + receiverId
                 + "</font></b>";
 
-        msgArea += formatSender + message + "<br>";
-        webEngine.loadContent("<html>" +
-                "<body>" +
-                "<p>" +
-                "<style>" +
-                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
-                "</style>" +
-                msgArea +
-                "<script>" +
-                "javascript:scroll(0,10000)" +
-                "</script>" +
-                "</p>" +
-                "</body>" +
-                "</html>");
+        String chatId = senderId.equals(myId) ? receiverId : senderId;
+        msgArea = msgAreaMap.get(chatId) + formatSender + message + "<br>";
+        msgAreaMap.put(chatId, msgArea);
+
+
+        int indexSenderOfContList = contactsObservList.indexOf(senderId + " " + senderName);
+        if (indexSenderOfContList == -1) {
+            indexSenderOfContList = contactsObservList.indexOf(senderId + " " + senderName + " *");
+        }
+        System.out.println("contactsObservList.indexOf " + indexSenderOfContList);
+
+        String senderNameofContList = contactsObservList.get(indexSenderOfContList);
+        senderNameofContList = senderNameofContList.split(" ")[0] + " " +
+                senderNameofContList.split(" ")[1];
+        if (senderId != myId) {
+            contactsObservList.set(indexSenderOfContList, senderNameofContList + " *");
+        }
+
+
+        wievChat(receiver);
     }
 
     public void clientChoice(ListView<String> contactList, MouseEvent event) {
         if (event.getClickCount() == 1) {
             receiver = contactList.getSelectionModel().getSelectedItem().split(" ")[0];
-            showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
+//            showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
+            wievChat(receiver);
         }
     }
 
@@ -223,14 +242,47 @@ public class ClientController implements Initializable {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
 
-        Type itemsMapType = new TypeToken<Map<String, GetUserListFromServer>>() {}.getType();
+        Type itemsMapType = new TypeToken<Map<String, GetUserListFromServer>>() {
+        }.getType();
         Map<String, GetUserListFromServer> mapItemsDes = new Gson().fromJson(jsonContacts, itemsMapType);
         System.out.println(mapItemsDes.toString());
 
         for (GetUserListFromServer GULFS : mapItemsDes.values()
         ) {
-            System.out.println(GULFS.getId()+" "+ GULFS.getName());
-            addToList(new User(GULFS.getId(),GULFS.getName()));
+            System.out.println(GULFS.getId() + " " + GULFS.getName());
+            addToList(new User(GULFS.getId(), GULFS.getName()));
+            msgAreaMap.put(GULFS.getId(), "");
         }
+    }
+
+    public void updateUserinfo(String token) {
+        String userInfo = "{}";
+        try {
+            userInfo = HTTPSRequest.getSelfUser(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        User myAccount = gson.fromJson(userInfo, User.class);
+        myNick = myAccount.getAccount_name();
+        myId = myAccount.getUid();
+    }
+
+    private void wievChat(String chatId) {
+        webEngine.loadContent("<html>" +
+                "<body>" +
+                "<p>" +
+                "<style>" +
+                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+                "</style>" +
+//                msgArea +
+                msgAreaMap.get(chatId) +
+                "<script>" +
+                "javascript:scroll(0,10000)" +
+                "</script>" +
+                "</p>" +
+                "</body>" +
+                "</html>");
     }
 }

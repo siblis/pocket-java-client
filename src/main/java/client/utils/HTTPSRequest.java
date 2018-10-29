@@ -83,4 +83,16 @@ public class HTTPSRequest {
         int responseCode = con.getResponseCode();
         return answerRequest(con);
     }
+
+    public static String getSelfUser(String token)throws Exception {
+        URL obj = new URL(serverURL + "/v1/users/");
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Token", token);
+        int responseCode = con.getResponseCode();
+        if (responseCode != 200) {
+            return "" + responseCode;
+        }
+        return answerRequest(con);
+    }
 }
