@@ -1,19 +1,22 @@
 package database.entity;
 
+
 import javax.persistence.*;
+import java.sql.Time;
 
 @Entity
 @Table(name = "messages")
 public class Message {
 
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column
     private String text;
 
     @Column
-    private String time;
+    private Time time;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
@@ -25,7 +28,7 @@ public class Message {
 
     public Message() {}
 
-    public Message(int id, String text, String time, User sender, User receiver) {
+    public Message(long id, String text, Time time, User sender, User receiver) {
         this.id = id;
         this.text = text;
         this.time = time;
@@ -33,17 +36,17 @@ public class Message {
         this.receiver = receiver;
     }
 
-    public Message(int id, String text, String time) {
+    public Message(long id, String text, Time time) {
         this.id = id;
         this.text = text;
         this.time = time;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -55,11 +58,11 @@ public class Message {
         this.text = text;
     }
 
-    public String getTime() {
+    public Time getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Time time) {
         this.time = time;
     }
 
