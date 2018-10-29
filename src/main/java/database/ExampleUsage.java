@@ -4,6 +4,7 @@ import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
 
+import java.sql.Time;
 import java.util.List;
 
 /**
@@ -20,11 +21,11 @@ public class ExampleUsage {
         User user2 = new User(674832, "OzzyFrost", "of_mail");
         dataBaseService.insertUser(user2);
 
-        Message message1 = new Message(1453672, "Привет, как дела?", "03.10.18 19:37:32");
+        Message message1 = new Message(1453672, "Привет, как дела?", new Time(System.currentTimeMillis()));
         user2.addSentMessage(message1);
         user1.addReceivedMessage(message1);
 
-        Message message2 = new Message(1453673, "Здорова, отлично", "03.10.18 19:39:17");
+        Message message2 = new Message(1453673, "Здорова, отлично", new Time(System.currentTimeMillis()));
         user1.addSentMessage(message2);
         user2.addReceivedMessage(message2);
 

@@ -51,15 +51,23 @@ public class DataBaseService {
         return names;
     }
 
-    public void addSentMessage(int userId, Message message) {
+    public List<Long> getAllUserId() {
+        List<Long> ides = new ArrayList<>();
+        for (User user : usersDao.get()) {
+            ides.add(user.getId());
+        }
+        return ides;
+    }
+
+    public void addSentMessage(long userId, Message message) {
         usersDao.addSentMessage(userId, message);
     }
 
-    public void addReceivedMessage(int userId, Message message) {
+    public void addReceivedMessage(long userId, Message message) {
         usersDao.addReceivedMessage(userId, message);
     }
 
-    public Message findMessageById(int id) {
+    public Message findMessageById(long id) {
         return usersDao.findMessageById(id);
     }
 
