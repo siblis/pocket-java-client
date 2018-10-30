@@ -5,7 +5,8 @@
 }
 
 .opacityClass {
-    -fx-background-color: rgba(132, 219, 255, 0.2);
+    -fx-background-color: rgba(210, 242, 255, 0.2);
+    -fx-background-radius: 0px 0px 8px 8px;
 }
 
 #ellipse {
