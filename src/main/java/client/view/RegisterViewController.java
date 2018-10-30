@@ -7,14 +7,13 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
+//import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -74,14 +73,14 @@ public class RegisterViewController implements Initializable {
 
     //метод, отправляющий пользователя читать политику конфиденциальности
     @FXML
-    public void handleLearnMore(MouseEvent mouseEvent) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-        alert.setTitle("Политика конфиденциальности");
-        alert.setHeaderText("Политика конфиденциальности");
-        alert.setContentText("Сейчас вы читаете политику конфиденциальности.\n" +
-                "Читайте, читайте, да повнимательнее....");
-
-        alert.showAndWait();
+    public void handleLearnMore() {
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//
+//        alert.setTitle("Политика конфиденциальности");
+//        alert.setHeaderText("Политика конфиденциальности");
+//        alert.setContentText("Сейчас вы читаете политику конфиденциальности.\n" +
+//                "Читайте, читайте, да повнимательнее....");
+//
+//        alert.showAndWait();
     }
 }
