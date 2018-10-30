@@ -44,7 +44,7 @@
     <center>
         <AnchorPane fx:id="messagePanel" prefHeight="400.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0"
                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <VBox>
+            <!--<VBox>-->
             <SplitPane dividerPositions="0.99" layoutX="146.0" layoutY="159.0" maxHeight="1.7976931348623157E308"
                        maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
                        orientation="VERTICAL" prefHeight="400.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0"
@@ -57,7 +57,7 @@
                         <AnchorPane fx:id="webViewPane" minHeight="50.0" minWidth="50.0"
                                     prefHeight="245.0" prefWidth="584.0">
                             <WebView fx:id="messageWebView" minHeight="50.0" minWidth="50.0"
-                                     prefHeight="236.0" prefWidth="568.0"/>
+                                     prefHeight="236.0" prefWidth="568.0" />
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                             <ListView fx:id="contactList" layoutX="-25.0" layoutY="38.0"
@@ -73,7 +73,7 @@
                     <Button onAction="#handleSendMessage" text="Send"/>
                 </HBox>
             </SplitPane>
-            </VBox>
+            <!--</VBox>-->
         </AnchorPane>
     </center>
 </BorderPane>
