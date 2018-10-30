@@ -20,6 +20,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -51,6 +52,7 @@ public class ChatViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         controller = ClientController.getInstance();
+        controller.initContactFIL();
         fillContactList();
         webtest();
     }

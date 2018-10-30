@@ -1,5 +1,6 @@
 package client.controller;
 
+import client.model.ContactFullInfo;
 import client.model.User;
 import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
@@ -29,6 +30,7 @@ public class ClientController implements Initializable {
     private String msgArea;
     private HashMap<String, String> msgAreaMap = new HashMap<String, String>();
     private ObservableList<String> contactsObservList;
+    private ArrayList contactFIL;
     private String myNick;
     private String myId;
     private String sender;
@@ -97,14 +99,6 @@ public class ClientController implements Initializable {
                 token = AFS.getToken();
                 connect(token);
                 updateUserinfo(token);
-//                try {
-//                    HTTPSRequest.getSelfUser(token);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//                myNick = login;
-//                updateContactList();
                 return true;
             } else {
                 showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
@@ -149,15 +143,20 @@ public class ClientController implements Initializable {
         msgArea = msgAreaMap.get(chatId) + formatSender + message + "<br>";
         msgAreaMap.put(chatId, msgArea);
 
-        indicatorGetMessage(senderId,senderName);
+        indicatorGetMessage(senderId);
 
         wievChat(receiver);
     }
 
     public void clientChoice(ListView<String> contactList, MouseEvent event) {
         if (event.getClickCount() == 1) {
-            receiver = contactList.getSelectionModel().getSelectedItem().split(" ")[0];
-//            showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
+            int selected = contactList.getSelectionModel().getSelectedIndex();
+//            System.out.println("Press on List "+selected);
+//            System.out.println(contactFullInfoList.get(selected));
+            ContactFullInfo CFI =(ContactFullInfo) contactFIL.get(selected);
+            CFI.setNoReadMessage(-1);
+            receiver = (CFI.getUser().getUid());
+            indicatorGetMessage(receiver);
             wievChat(receiver);
         }
     }
@@ -192,6 +191,11 @@ public class ClientController implements Initializable {
     }
 
     private void addToList(User user) {
+//     новый код
+        if (!containsUserInCFIList(user)) {
+            contactFIL.add(new ContactFullInfo(user));
+        }
+//
         contactsObservList = ChatViewController.getContactList();
         if (!contactsObservList.contains(user.getUid() + " " + user.getAccount_name())) {
             contactsObservList.add(user.getUid() + " " + user.getAccount_name());
@@ -236,22 +240,12 @@ public class ClientController implements Initializable {
 
         for (Map.Entry<String, GetUserListFromServer> entry : mapItemsDes.entrySet()) {
             System.out.println(
-            entry.getValue().getId()+" "+
-                entry.getValue().getName()+" "+
-                entry.getKey());
-            addToList(new User(entry.getValue().getId(),entry.getValue().getName(),entry.getKey() ));
+                    entry.getValue().getId() + " " +
+                            entry.getValue().getName() + " " +
+                            entry.getKey());
+            addToList(new User(entry.getValue().getId(), entry.getValue().getName(), entry.getKey()));
             msgAreaMap.put(entry.getValue().getId(), "");
-        };
-
-
-
-//        for (GetUserListFromServer GULFS : mapItemsDes.values()
-//        ) {
-//            System.out.println(GULFS.getId() + " " + GULFS.getName());
-//            addToList(new User(GULFS.getId(), GULFS.getName()));
-//            msgAreaMap.put(GULFS.getId(), "");
-//
-//        }
+        }
     }
 
     public void updateUserinfo(String token) {
@@ -285,22 +279,34 @@ public class ClientController implements Initializable {
                 "</html>");
     }
 
-    private void indicatorGetMessage(String senderId, String senderName){
-        int indexSenderOfContList = contactsObservList.indexOf(senderId + " " + senderName);
-        if (indexSenderOfContList == -1) {
-            indexSenderOfContList = contactsObservList.indexOf(senderId + " " + senderName + " *");
-        }
-        System.out.println("contactsObservList.indexOf " + indexSenderOfContList);
-
-        String senderNameofContList = contactsObservList.get(indexSenderOfContList);
-        senderNameofContList = senderNameofContList.split(" ")[0] + " " +
-                senderNameofContList.split(" ")[1];
+    private void indicatorGetMessage(String senderId) {
+        int index =indexIdfromCFIList(senderId);
+        ContactFullInfo CFI = (ContactFullInfo)contactFIL.get(index);
         if (senderId != myId) {
-            contactsObservList.set(indexSenderOfContList, senderNameofContList + " *");
+            CFI.incNoReadMessage();
         }
-        if (senderId == receiver) {
-            contactsObservList.set(indexSenderOfContList, senderNameofContList);
-        }
+        contactsObservList.set(index ,CFI.toString());
+    }
 
+    private boolean containsUserInCFIList(User user) {
+        for (int i = 0; i < contactFIL.size(); i++) {
+            if (((ContactFullInfo) contactFIL.get(i)).getUser().getUid().equals(user.getUid())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void initContactFIL() {
+        contactFIL = new ArrayList();
+    }
+
+    private int indexIdfromCFIList(String index) {
+        for (int i = 0; i < contactFIL.size(); i++) {
+            if (((ContactFullInfo) contactFIL.get(i)).getUser().getUid().equals(index)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

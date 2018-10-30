@@ -23,4 +23,16 @@ public class ContactFullInfo {
     public void setNoReadMessage(int noReadMessage) {
         this.noReadMessage = noReadMessage;
     }
+
+    public void incNoReadMessage() {
+        this.noReadMessage = getNoReadMessage() + 1;
+    }
+
+    @Override
+    public String toString() {
+        return getUser().getUid() + " "
+                + getUser().getAccount_name() + " "
+//                + getUser().getEmail() + " "
+                + (getNoReadMessage()==0?"":getNoReadMessage());
+    }
 }
