@@ -150,19 +150,6 @@ public class ClientController implements Initializable {
         msgAreaMap.put(chatId, msgArea);
 
         indicatorGetMessage(senderId,senderName);
-//        int indexSenderOfContList = contactsObservList.indexOf(senderId + " " + senderName);
-//        if (indexSenderOfContList == -1) {
-//            indexSenderOfContList = contactsObservList.indexOf(senderId + " " + senderName + " *");
-//        }
-//        System.out.println("contactsObservList.indexOf " + indexSenderOfContList);
-//
-//        String senderNameofContList = contactsObservList.get(indexSenderOfContList);
-//        senderNameofContList = senderNameofContList.split(" ")[0] + " " +
-//                senderNameofContList.split(" ")[1];
-//        if (senderId != myId) {
-//            contactsObservList.set(indexSenderOfContList, senderNameofContList + " *");
-//        }
-
 
         wievChat(receiver);
     }

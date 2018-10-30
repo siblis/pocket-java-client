@@ -3,17 +3,15 @@ package client.model;
 import java.util.ArrayList;
 
 public class User {
-    public String uid;
+    private String uid;
+    private String account_name;
+    private String email;
+    private ArrayList<User> contactList;
 
     public User(String uid, String account_name) {
         this.uid = uid;
         this.account_name = account_name;
     }
-
-    public String account_name;
-    public String email;
-    public ArrayList<User> contactList;
-
     public User(String uid, String account_name, String email) {
         this.uid = uid;
         this.account_name = account_name;
