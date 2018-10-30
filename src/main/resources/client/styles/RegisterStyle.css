@@ -31,7 +31,7 @@
     -fx-font-family: "Roboto";
     -fx-alignment: center;
     -fx-text-fill: #004F70;
-
+    -fx-letter-spacing: 1%;
 }
 .active-label {
    -fx-font-size: 11px;
