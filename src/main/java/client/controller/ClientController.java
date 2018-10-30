@@ -151,9 +151,7 @@ public class ClientController implements Initializable {
     public void clientChoice(ListView<String> contactList, MouseEvent event) {
         if (event.getClickCount() == 1) {
             int selected = contactList.getSelectionModel().getSelectedIndex();
-//            System.out.println("Press on List "+selected);
-//            System.out.println(contactFullInfoList.get(selected));
-            ContactFullInfo CFI =(ContactFullInfo) contactFIL.get(selected);
+            ContactFullInfo CFI = (ContactFullInfo) contactFIL.get(selected);
             CFI.setNoReadMessage(-1);
             receiver = (CFI.getUser().getUid());
             indicatorGetMessage(receiver);
@@ -255,9 +253,7 @@ public class ClientController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        User myAccount = gson.fromJson(userInfo, User.class);
+        User myAccount = jsonToUser(userInfo);
         myNick = myAccount.getAccount_name();
         myId = myAccount.getUid();
     }
@@ -280,12 +276,22 @@ public class ClientController implements Initializable {
     }
 
     private void indicatorGetMessage(String senderId) {
-        int index =indexIdfromCFIList(senderId);
-        ContactFullInfo CFI = (ContactFullInfo)contactFIL.get(index);
+        int index = indexIdfromCFIList(senderId);
+        if (index == -1){
+            String getUser="";
+            try {
+                getUser = HTTPSRequest.getUser(token,senderId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            addContact(jsonToUser(getUser).getEmail());
+//            add user
+        }
+        ContactFullInfo CFI = (ContactFullInfo) contactFIL.get(index);
         if (senderId != myId) {
             CFI.incNoReadMessage();
         }
-        contactsObservList.set(index ,CFI.toString());
+        contactsObservList.set(index, CFI.toString());
     }
 
     private boolean containsUserInCFIList(User user) {
@@ -308,5 +314,11 @@ public class ClientController implements Initializable {
             }
         }
         return -1;
+    }
+
+    private User jsonToUser(String jsonuser){
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.fromJson(jsonuser, User.class);
     }
 }
