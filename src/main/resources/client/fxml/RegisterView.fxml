@@ -13,14 +13,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane fx:id="parentPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="380.0" styleClass="anchor-pane" stylesheets="/client/styles/RegisterStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.RegisterViewController">
-   <AnchorPane fx:id="regPanel" layoutX="-71.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="288.0" styleClass="opacityClass" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0">
+<AnchorPane fx:id="parentPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="380.0" styleClass="anchor-pane" stylesheets="/client/styles/RegisterStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.RegisterViewController">
+   <AnchorPane fx:id="regPanel" layoutX="-71.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="288.0" styleClass="opacityClass" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="0.0">
       <children>
-         <AnchorPane id="ellipse" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="390.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <AnchorPane id="ellipse" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="304.0" prefWidth="304.0" AnchorPane.bottomAnchor="368.0">
             <children>
                <Label alignment="CENTER" styleClass="label-bright" text="For geeks by geeks" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="120.0" />
                <Label alignment="CENTER" styleClass="label-header" text="Pocket Messenger" textAlignment="CENTER" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="40.0" />
-               <Circle fill="#e6f8ff" radius="24.0" stroke="#e6f8ff" strokeType="INSIDE" AnchorPane.bottomAnchor="18.0" AnchorPane.leftAnchor="128.0">
+               <Circle fill="#e6f8ff" radius="24.0" stroke="#e6f8ff" strokeType="INSIDE" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="128.0">
                   <effect>
                      <DropShadow color="#0000001a" height="18.03" offsetY="2.0" radius="7.035" width="12.11" />
                   </effect>
@@ -42,8 +42,8 @@
             </rowConstraints>
             <children>
                <TextField fx:id="regLoginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Ваш никнейм" />
-               <PasswordField fx:id="regPasswordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Подтвердите пароль" GridPane.rowIndex="3" />
-               <PasswordField fx:id="regPasswordFieldDouble" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="2" />
+               <PasswordField fx:id="regPasswordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="2" />
+               <PasswordField fx:id="regPasswordFieldDouble" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Подтвердите пароль" GridPane.rowIndex="3" />
                <TextField fx:id="regEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="E-mail" GridPane.rowIndex="1" />
                <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="208.0" text="Подтверждаю согласие с условиями&#10;политики конфиденциальности." GridPane.rowIndex="4">
                   <GridPane.margin>
