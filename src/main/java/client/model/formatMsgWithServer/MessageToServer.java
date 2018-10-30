@@ -6,6 +6,11 @@ public class MessageToServer {
 
     public MessageToServer(){}
 
+    public MessageToServer(long receiver, String message) {
+        this.receiver = receiver;
+        this.message = message;
+    }
+
     public long getReceiver() {
         return receiver;
     }
