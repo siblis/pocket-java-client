@@ -13,14 +13,14 @@
 <?import javafx.scene.shape.Circle?>
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="610.0" styleClass="anchor-pane" stylesheets="/client/styles/LoginStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.LogonViewController">
-    <AnchorPane fx:id="loginPanel" styleClass="opacityClass" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane fx:id="loginPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="368.0" prefWidth="460.0" styleClass="opacityClass" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="0.0">
         <children>
          <AnchorPane id="ellipse" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="240.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-               <Label alignment="CENTER" styleClass="label-bright" text="For geeks by geeks" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="174.0" />
+               <Label alignment="CENTER" styleClass="label-bright" text="For geeks by geeks" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="182.0" />
                <Label alignment="CENTER" styleClass="label-header" text="Pocket Messenger" textAlignment="CENTER" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="82.0">
                </Label>
-               <Circle fill="#e6f8ff" radius="24.0" stroke="#e6f8ff" strokeType="INSIDE" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="210.0">
+               <Circle fill="#e6f8ff" radius="24.0" stroke="#e6f8ff" strokeType="INSIDE" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="206.0">
                   <effect>
                      <DropShadow color="#0000001a" height="18.03" offsetY="2.0" radius="7.035" width="12.11" />
                   </effect></Circle>
@@ -58,7 +58,7 @@
                   </GridPane.margin></Label>
                     <Label onMouseClicked="#handleRegisterButton" prefWidth="120.0" styleClass="active-label" text="Регистрация" GridPane.rowIndex="3">
                   <GridPane.margin>
-                     <Insets left="100.0" />
+                     <Insets left="70.0" />
                   </GridPane.margin></Label>
                     <Label onMouseClicked="#handleGuestC2Button" prefWidth="120.0" styleClass="active-label" text="Guest C2" GridPane.rowIndex="4" />
                     <Label alignment="CENTER_RIGHT" onMouseClicked="#handleGuestC3Button" prefWidth="120.0" styleClass="active-label" text="Guest C3" GridPane.rowIndex="4">
