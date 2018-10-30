@@ -7,9 +7,8 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -76,5 +75,18 @@ public class RegisterViewController implements Initializable {
     private void handleCancelRegisterButton() {
         Stage stage = (Stage) cancelRegisterButton.getScene().getWindow();
         stage.close();
+    }
+
+    //метод, отправляющий пользователя читать политику конфиденциальности
+    @FXML
+    public void handleLearnMore() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle("Политика конфиденциальности");
+        alert.setHeaderText("Политика конфиденциальности");
+        alert.setContentText("Сейчас вы читаете политику конфиденциальности.\n" +
+                "Читайте, читайте, да повнимательнее....");
+
+        alert.showAndWait();
     }
 }
