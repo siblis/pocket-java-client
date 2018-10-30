@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane fx:id="parentPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="380.0" styleClass="anchor-pane" stylesheets="/client/styles/RegisterLoginSyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.RegisterViewController">
+<AnchorPane fx:id="parentPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="380.0" styleClass="anchor-pane" stylesheets="/client/styles/RegisterStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.RegisterViewController">
    <AnchorPane fx:id="regPanel" layoutX="-71.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="288.0" styleClass="opacityClass" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0">
       <children>
          <AnchorPane id="ellipse" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="390.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
