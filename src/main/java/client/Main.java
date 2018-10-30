@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -21,6 +22,8 @@ public class Main extends Application {
     public void start(Stage stage) {
         primaryStage = stage;
         primaryStage.setTitle("Pocket desktop client");
+
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
 
         //инициализируем главную сцену
         initRootLayout();
@@ -47,7 +50,6 @@ public class Main extends Application {
             scene.setCursor(cursor);
             primaryStage.setScene(scene);
             primaryStage.setResizable(false);
-            //RootLayoutController controller = loader.getController();
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
