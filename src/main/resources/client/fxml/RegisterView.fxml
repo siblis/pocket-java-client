@@ -43,7 +43,7 @@
                <PasswordField fx:id="regPasswordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="2" />
                <PasswordField fx:id="regPasswordFieldDouble" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Подтвердите пароль" GridPane.rowIndex="3" />
                <TextField fx:id="regEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="E-mail" GridPane.rowIndex="1" />
-               <Button fx:id="cancelRegisterButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancelRegisterButton" prefHeight="40.0" prefWidth="232.0" styleClass="active-label" text="Cancel" GridPane.rowIndex="5">
+               <Button fx:id="cancelRegisterButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancelRegisterButton" prefHeight="40.0" prefWidth="232.0" text="Cancel" GridPane.rowIndex="5">
                   <GridPane.margin>
                      <Insets />
                   </GridPane.margin></Button>

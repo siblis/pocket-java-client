@@ -69,37 +69,16 @@
     -fx-font-family: "Roboto";
     -fx-font-size: 16px;
     -fx-text-fill: #004F70;
-    //-fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
 
 .button:hover {
     -fx-background-color: derive(#FFE674,15%);
+    -fx-text-fill: #004F70;
+    -fx-font-size: 16px;
 }
 
 .button:pressed, .button:default:hover:pressed {
-  -fx-background-color: white;
-  -fx-text-fill: #1d1d1d;
+  -fx-background-color: derive(#FFE674,15%);
 }
 
-.button:focused {
-    -fx-border-color: white, white;
-    -fx-border-width: 1, 1;
-    -fx-border-style: solid, segments(1, 1);
-    -fx-border-radius: 0, 0;
-    -fx-border-insets: 1 1 1 1, 0;
-}
 
-.button:disabled, .button:default:disabled {
-    -fx-opacity: 0.4;
-    -fx-background-color: #1d1d1d;
-    -fx-text-fill: white;
-}
-
-.button:default {
-    -fx-background-color: -fx-focus-color;
-    -fx-text-fill: #ffffff;
-}
-
-.button:default:hover {
-    -fx-background-color: derive(-fx-focus-color,30%);
-}
