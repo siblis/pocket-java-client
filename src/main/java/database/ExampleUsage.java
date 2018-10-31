@@ -22,11 +22,11 @@ public class ExampleUsage {
         User user2 = new User(674832, "OzzyFrost", "of_mail");
         dataBaseService.insertUser(user2);
 
-        Message message1 = new Message(1453672L, "Привет, как дела?", new Timestamp(System.currentTimeMillis()));
+        Message message1 = new Message("Привет, как дела?", new Timestamp(System.currentTimeMillis()));
         user2.addSentMessage(message1);
         user1.addReceivedMessage(message1);
 
-        Message message2 = new Message(1453673L, "Здорова, отлично", new Timestamp(System.currentTimeMillis()));
+        Message message2 = new Message("Здорова, отлично", new Timestamp(System.currentTimeMillis()));
         user1.addSentMessage(message2);
         user2.addReceivedMessage(message2);
 

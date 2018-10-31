@@ -20,15 +20,13 @@ public class ExampleUsage2 {
 
         User user1 = dataBaseService.getUser(674832);
         User user2 = dataBaseService.getUser(567364);
-        Message message1 = new Message(1453675L, "Я делаю сервер", new Timestamp(System.currentTimeMillis()), user1, user2);
+        Message message1 = new Message("Я делаю сервер", new Timestamp(System.currentTimeMillis()), user1, user2);
 
-        dataBaseService.addSentMessage(user1.getId(), message1);
-        dataBaseService.addReceivedMessage(user2.getId(), message1);
+        dataBaseService.addMessage(user1.getId(), user2.getId(), message1);
 
-        Message message2 = new Message(1453676L, "Отлично, когда потестим", new Timestamp(System.currentTimeMillis()), user2, user1);
+        Message message2 = new Message("Отлично, когда потестим", new Timestamp(System.currentTimeMillis()), user2, user1);
 
-        dataBaseService.addSentMessage(user1.getId(), message2);
-        dataBaseService.addReceivedMessage(user2.getId(), message2);
+        dataBaseService.addMessage(user2.getId(), user1.getId(), message2);
 
         HibernateUtil.shutdown();
     }
