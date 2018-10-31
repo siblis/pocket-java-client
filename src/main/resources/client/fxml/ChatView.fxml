@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<?import javafx.scene.layout.HBox?>
-<BorderPane prefHeight="450.0" prefWidth="750.0" stylesheets="/client/styles/MyTheme.css"
+<BorderPane stylesheets="/client/styles/MyTheme.css" prefHeight="600"
             xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="client.view.ChatViewController">
     <top>
@@ -42,38 +36,19 @@
         </MenuBar>
     </top>
     <center>
-        <AnchorPane fx:id="messagePanel" prefHeight="400.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0"
+        <AnchorPane fx:id="messagePanel"  AnchorPane.bottomAnchor="0.0"
                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <!--<VBox>-->
-            <SplitPane dividerPositions="0.99" layoutX="146.0" layoutY="159.0" maxHeight="1.7976931348623157E308"
-                       maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                       orientation="VERTICAL" prefHeight="400.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0"
-                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <AnchorPane>
-                    <SplitPane dividerPositions="0.6158176943699732" layoutX="214.0" layoutY="59.0"
-                               prefHeight="209.0" prefWidth="258.0" AnchorPane.bottomAnchor="-159.0"
-                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-208.0"
-                               AnchorPane.topAnchor="0.0">
-                        <AnchorPane fx:id="webViewPane" minHeight="50.0" minWidth="50.0"
-                                    prefHeight="245.0" prefWidth="584.0">
-                            <WebView fx:id="messageWebView" minHeight="50.0" minWidth="50.0"
-                                     prefHeight="236.0" prefWidth="568.0" />
-                        </AnchorPane>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                            <ListView fx:id="contactList" layoutX="-25.0" layoutY="38.0"
-                                      onMouseClicked="#handleClientChoice" prefHeight="275.0"
-                                      prefWidth="209.0" AnchorPane.bottomAnchor="0.0"
-                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                      AnchorPane.topAnchor="0.0"/>
-                        </AnchorPane>
-                    </SplitPane>
-                </AnchorPane>
-                <HBox>
-                    <TextField fx:id="messageField" onAction="#handleSendMessage" HBox.hgrow="ALWAYS" promptText="Input message"/>
-                    <Button onAction="#handleSendMessage" text="Send"/>
-                </HBox>
-            </SplitPane>
-            <!--</VBox>-->
+            <AnchorPane fx:id="webViewPane" minHeight="50.0" minWidth="50.0" AnchorPane.leftAnchor="200.0"
+                        AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <WebView fx:id="messageWebView" minHeight="50.0" minWidth="50.0" />
+            </AnchorPane>
+            <ListView fx:id="contactList" onMouseClicked="#handleClientChoice" minWidth="200"
+                      prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
+                      AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            <TextField fx:id="messageField" onAction="#handleSendMessage" promptText="Input message"
+                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="85.0"/>
+            <Button onAction="#handleSendMessage" text="Send" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"/>
         </AnchorPane>
     </center>
 </BorderPane>
