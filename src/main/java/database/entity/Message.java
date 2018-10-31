@@ -29,16 +29,14 @@ public class Message {
 
     public Message() {}
 
-    public Message(long id, String text, Timestamp time, User sender, User receiver) {
-        this.id = id;
+    public Message(String text, Timestamp time, User receiver, User sender) {
         this.text = text;
         this.time = time;
         this.sender = sender;
         this.receiver = receiver;
     }
 
-    public Message(long id, String text, Timestamp time) {
-        this.id = id;
+    public Message(String text, Timestamp time) {
         this.text = text;
         this.time = time;
     }
