@@ -172,8 +172,9 @@ public class ClientController implements Initializable {
             String answer = HTTPSRequest.addContact(requestJSON, token);
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-
-            if (answer.equals("404")) {
+            if (answer.equals("400")) {
+                showAlert("Ошибка добавления: " + contact + "  код 400", Alert.AlertType.ERROR);
+            } else if (answer.equals("404")) {
                 showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
             } else if (answer.equals("409")) {
                 showAlert("Пользователь с email: " + contact + " Уже в Вашем списке", Alert.AlertType.ERROR);
@@ -263,7 +264,7 @@ public class ClientController implements Initializable {
                 "<body>" +
                 "<p>" +
                 "<style>" +
-                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+                "div { font-size: 14px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
                 "</style>" +
 //                msgArea +
                 msgAreaMap.get(chatId) +
