@@ -17,9 +17,9 @@ import java.util.List;
  * Однако, мы не будем создавать DAO напрямую и вызывать его методы в нашем
  * приложении. Вся логика будет помещена в класс DataBaseService.
  */
-public class UserDAO {
+class UserDAO {
 
-    public void insert(User user) {
+    void insert(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -28,7 +28,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public void update(User user) {
+    void update(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -37,7 +37,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public void delete(User user) {
+    void delete(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -46,7 +46,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public User get(int id) {
+    User get(int id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -57,7 +57,7 @@ public class UserDAO {
         return user;
     }
 
-    public List<User> get() {
+    List<User> get() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -68,7 +68,7 @@ public class UserDAO {
         return list;
     }
 
-    public Message findMessageById(long id) {
+    Message findMessageById(long id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -78,29 +78,29 @@ public class UserDAO {
         return message;
     }
 
-    public void addSentMessage(long userId, Message message) {
+    void addSentMessage(long senderID, Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        User user = session.get(User.class, userId);
+        User user = session.get(User.class, senderID);
         user.addSentMessage(message);
         session.saveOrUpdate(user);
 
         session.getTransaction().commit();
     }
 
-    public void addReceivedMessage(long userId, Message message) {
+    void addReceivedMessage(long receiverId, Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        User user = session.get(User.class, userId);
+        User user = session.get(User.class, receiverId);
         user.addReceivedMessage(message);
         session.saveOrUpdate(user);
 
         session.getTransaction().commit();
     }
 
-    public void close(){
+    void close(){
         HibernateUtil.shutdown();
     }
 }
