@@ -147,7 +147,7 @@ public class ClientController {
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
                 + "</font></b>";
-        
+
         message = message.replaceAll("\n", "<br/>");
         message = Common.urlToHyperlink(message);
 
