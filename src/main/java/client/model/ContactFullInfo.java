@@ -33,6 +33,6 @@ public class ContactFullInfo {
         return getUser().getUid() + " "
                 + getUser().getAccount_name() + " "
 //                + getUser().getEmail() + " "
-                + (getNoReadMessage()==0?"":getNoReadMessage());
+                + (getNoReadMessage()==0?"":("  +"+getNoReadMessage()));
     }
 }
