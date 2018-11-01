@@ -110,9 +110,11 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleSendMessage() {
-        controller.sendMessage(controller.getSender(), controller.getReceiver(), messageField.getText());
-        messageField.clear();
-        messageField.requestFocus();
+        if (messageField.getText().length() > 0) {
+            controller.sendMessage(controller.getSender(), controller.getReceiver(), messageField.getText());
+            messageField.clear();
+            messageField.requestFocus();
+        }
     }
 
     @FXML
