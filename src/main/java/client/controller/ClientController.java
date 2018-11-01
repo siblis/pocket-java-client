@@ -18,6 +18,8 @@ import javafx.scene.web.WebEngine;
 
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -143,7 +145,8 @@ public class ClientController {
     }
 
     private void showMessage(String senderName, String message, Timestamp timestamp) {
-        String time = new Timestamp(timestamp.getTime()).toString();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
                 + "</font></b>";
@@ -151,7 +154,7 @@ public class ClientController {
         message = message.replaceAll("\n", "<br/>");
         message = Common.urlToHyperlink(message);
 
-        msgArea += time + " " + formatSender + message + "<br>";
+        msgArea += dateFormat.format(timestamp) + " " + formatSender + message + "<br>";
         webEngine.loadContent("<html>" +
                 "<body>" +
                 "<p>" +
