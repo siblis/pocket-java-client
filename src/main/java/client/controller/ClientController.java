@@ -139,6 +139,7 @@ public class ClientController implements Initializable {
                 + "</font></b>"
                 + time;
 
+
         String chatId = senderId.equals(myId) ? receiverId : senderId;
         msgArea = msgAreaMap.get(chatId) + formatSender + message + "<br>";
         msgAreaMap.put(chatId, msgArea);
