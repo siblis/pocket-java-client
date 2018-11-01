@@ -20,7 +20,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -60,7 +62,17 @@ public class ChatViewController implements Initializable {
     private void webtest() {
         messageWebView = new WebView();
         clientController.webEngine = messageWebView.getEngine();
+
+        File file = new File(Main.class.getResource("/client/html/1.html").getPath());
+        try {
+            URL url = file.toURI().toURL();
+            clientController.webEngine.load(url.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         clientController.webEngine.setJavaScriptEnabled(true);
+        //clientController.webEngine.executeScript("scr();");
         webViewPane.getChildren().setAll(messageWebView);
     }
 
