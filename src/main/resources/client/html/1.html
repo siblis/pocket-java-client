@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+
+</head>
 
     <body>
         <p>
@@ -7,12 +10,20 @@
             div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }
             </style>
 
-            msgArea
+            <div class="messageArea">msgArea</div>
 
-            <script>
-                javascript:scroll(0,10000)
+            <script language='javascript'>
+                function scr() {
+                    javascript:scroll(0,10000)
+                }
+
+                // document.write("Привет, Мир! \n" + "Я рад тебя видеть!")
+                document.writeln("Hello world")
             </script>
          </p>
-
+        <script src="/client/js/EngineMsg.js" type="text/javascript"></script>
+        <noscript>
+            Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
+        </noscript>
     </body>
 </html>
