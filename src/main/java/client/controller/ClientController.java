@@ -1,5 +1,6 @@
 package client.controller;
 
+import client.model.ContactFullInfo;
 import client.model.User;
 import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
@@ -27,8 +28,11 @@ public class ClientController implements Initializable {
     private static String token;
     public WebEngine webEngine;
     private String msgArea;
+    private HashMap<String, String> msgAreaMap = new HashMap<String, String>();
     private ObservableList<String> contactsObservList;
+    private ArrayList contactFIL;
     private String myNick;
+    private String myId;
     private String sender;
     private String receiver = "24";
     private Connector conn = null;
@@ -94,7 +98,7 @@ public class ClientController implements Initializable {
                 System.out.println(" answer server " + AFS.getToken());
                 token = AFS.getToken();
                 connect(token);
-                myNick = login;
+                updateUserinfo(token);
                 return true;
             } else {
                 showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
@@ -110,48 +114,49 @@ public class ClientController implements Initializable {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         MessageFromServer MFS = gson.fromJson(jsonText, MessageFromServer.class);
-        reciveMessage(MFS.getSender_name(), MFS.getMessage());
+        reciveMessage(MFS.getSender_name(), MFS.getMessage(), MFS.getReceiver(), MFS.getSenderid());
     }
 
     public void sendMessage(String sender, String receiver, String message) {
         setSender(sender);
-        Date dateNow = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        String mess = " [" + dateFormat.format(dateNow) + "]: " + message;
-        MessageToServer MTS = new MessageToServer(receiver, mess);
+        MessageToServer MTS = new MessageToServer(receiver, message);
 
         System.out.println(new Gson().toJson(MTS));
         conn.getChatClient().send(new Gson().toJson(MTS));
 
-        reciveMessage(sender, " [" + dateFormat.format(dateNow) + "]: " + message);
+        reciveMessage(sender, message, receiver, myId);
     }
 
-    private void reciveMessage(String senderName, String message) {
+    private void reciveMessage(String senderName, String message, String receiverId, String senderId) {
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        String time = " [" + dateFormat.format(dateNow) + "]: ";
+
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
-                + "</font></b>";
+//                + " from " + senderId
+//                + " to " + receiverId
+                + "</font></b>"
+                + time;
 
-        msgArea += formatSender + message + "<br>";
-        webEngine.loadContent("<html>" +
-                "<body>" +
-                "<p>" +
-                "<style>" +
-                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
-                "</style>" +
-                msgArea +
-                "<script>" +
-                "javascript:scroll(0,10000)" +
-                "</script>" +
-                "</p>" +
-                "</body>" +
-                "</html>");
+
+        String chatId = senderId.equals(myId) ? receiverId : senderId;
+        msgArea = msgAreaMap.get(chatId) + formatSender + message + "<br>";
+        msgAreaMap.put(chatId, msgArea);
+
+        indicatorGetMessage(senderId);
+
+        wievChat(receiver);
     }
 
     public void clientChoice(ListView<String> contactList, MouseEvent event) {
         if (event.getClickCount() == 1) {
-            receiver = contactList.getSelectionModel().getSelectedItem().split(" ")[0];
-            showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
+            int selected = contactList.getSelectionModel().getSelectedIndex();
+            ContactFullInfo CFI = (ContactFullInfo) contactFIL.get(selected);
+            CFI.setNoReadMessage(-1);
+            receiver = (CFI.getUser().getUid());
+            indicatorGetMessage(receiver);
+            wievChat(receiver);
         }
     }
 
@@ -168,8 +173,9 @@ public class ClientController implements Initializable {
             String answer = HTTPSRequest.addContact(requestJSON, token);
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-
-            if (answer.equals("404")) {
+            if (answer.equals("400")) {
+                showAlert("Ошибка добавления: " + contact + "  код 400", Alert.AlertType.ERROR);
+            } else if (answer.equals("404")) {
                 showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
             } else if (answer.equals("409")) {
                 showAlert("Пользователь с email: " + contact + " Уже в Вашем списке", Alert.AlertType.ERROR);
@@ -185,6 +191,11 @@ public class ClientController implements Initializable {
     }
 
     private void addToList(User user) {
+//     новый код
+        if (!containsUserInCFIList(user)) {
+            contactFIL.add(new ContactFullInfo(user));
+        }
+//
         contactsObservList = ChatViewController.getContactList();
         if (!contactsObservList.contains(user.getUid() + " " + user.getAccount_name())) {
             contactsObservList.add(user.getUid() + " " + user.getAccount_name());
@@ -222,14 +233,94 @@ public class ClientController implements Initializable {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
 
-        Type itemsMapType = new TypeToken<Map<String, GetUserListFromServer>>() {}.getType();
+        Type itemsMapType = new TypeToken<Map<String, GetUserListFromServer>>() {
+        }.getType();
         Map<String, GetUserListFromServer> mapItemsDes = new Gson().fromJson(jsonContacts, itemsMapType);
         System.out.println(mapItemsDes.toString());
 
-        for (GetUserListFromServer GULFS : mapItemsDes.values()
-        ) {
-            System.out.println(GULFS.getId()+" "+ GULFS.getName());
-            addToList(new User(GULFS.getId(),GULFS.getName()));
+        for (Map.Entry<String, GetUserListFromServer> entry : mapItemsDes.entrySet()) {
+            System.out.println(
+                    entry.getValue().getId() + " " +
+                            entry.getValue().getName() + " " +
+                            entry.getKey());
+            addToList(new User(entry.getValue().getId(), entry.getValue().getName(), entry.getKey()));
+            msgAreaMap.put(entry.getValue().getId(), "");
         }
+    }
+
+    public void updateUserinfo(String token) {
+        String userInfo = "{}";
+        try {
+            userInfo = HTTPSRequest.getSelfUser(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        User myAccount = jsonToUser(userInfo);
+        myNick = myAccount.getAccount_name();
+        myId = myAccount.getUid();
+    }
+
+    private void wievChat(String chatId) {
+        webEngine.loadContent("<html>" +
+                "<body>" +
+                "<p>" +
+                "<style>" +
+                "div { font-size: 14px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+                "</style>" +
+//                msgArea +
+                msgAreaMap.get(chatId) +
+                "<script>" +
+                "javascript:scroll(0,10000)" +
+                "</script>" +
+                "</p>" +
+                "</body>" +
+                "</html>");
+    }
+
+    private void indicatorGetMessage(String senderId) {
+        int index = indexIdfromCFIList(senderId);
+        if (index == -1) {
+            String getUser = "";
+            try {
+                getUser = HTTPSRequest.getUser(token, senderId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            addContact(jsonToUser(getUser).getEmail());
+//            add user
+        }
+        ContactFullInfo CFI = (ContactFullInfo) contactFIL.get(index);
+        if (senderId != myId) {
+            CFI.incNoReadMessage();
+        }
+        contactsObservList.set(index, CFI.toString());
+    }
+
+    private boolean containsUserInCFIList(User user) {
+        for (int i = 0; i < contactFIL.size(); i++) {
+            if (((ContactFullInfo) contactFIL.get(i)).getUser().getUid().equals(user.getUid())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void initContactFIL() {
+        contactFIL = new ArrayList();
+    }
+
+    private int indexIdfromCFIList(String index) {
+        for (int i = 0; i < contactFIL.size(); i++) {
+            if (((ContactFullInfo) contactFIL.get(i)).getUser().getUid().equals(index)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private User jsonToUser(String jsonuser) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.fromJson(jsonuser, User.class);
     }
 }
