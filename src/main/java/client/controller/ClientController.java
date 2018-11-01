@@ -1,5 +1,6 @@
 package client.controller;
 
+import client.Main;
 import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
 import client.utils.Common;
@@ -17,6 +18,8 @@ import javafx.scene.web.WebEngine;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -154,21 +157,27 @@ public class ClientController {
 
         msgArea += formatSender + message + "<br>";
 
-        //webEngine.loadContent(getContentFromHTML("d:\\test\\1.html", StandardCharsets.UTF_8));
+//        File file = new File(Main.class.getResource("/client/html/1.html").getPath());
+//        try {
+//            URL url = file.toURI().toURL();
+//            webEngine.load(url.toString());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
 
-        webEngine.loadContent("<html>" +
-                "<body>" +
-                "<p>" +
-                "<style>" +
-                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
-                "</style>" +
-                msgArea +
-                "<script>" +
-                "javascript:scroll(0,10000)" +
-                "</script>" +
-                "</p>" +
-                "</body>" +
-                "</html>");
+//        webEngine.loadContent("<html>" +
+//                "<body>" +
+//                "<p>" +
+//                "<style>" +
+//                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+//                "</style>" +
+//                msgArea +
+//                "<script>" +
+//                "javascript:scroll(0,10000)" +
+//                "</script>" +
+//                "</p>" +
+//                "</body>" +
+//                "</html>");
     }
 
     public void sendMessage(String sender, String receiver, String message) {
@@ -295,25 +304,5 @@ public class ClientController {
     public void dbServiceClose() {
         dbService.close();
     }
-
-    //получаем строку из html
-    //источник: https://javadevblog.com/kak-chitat-s-fajla-v-java-s-pomoshh-yu-bufferedreader-scanner-files-i-filereader.html
-    public String getContentFromHTML(String fileName, Charset cs) {
-        File file = new File(fileName);
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            InputStreamReader isr = new InputStreamReader(fis,cs);
-            BufferedReader br = new BufferedReader(isr);
-            String line;
-            while ((line = br.readLine()) != null) {
-                return line;
-            }
-            br.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    
 }
