@@ -15,7 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -45,6 +45,7 @@ public class LogonViewController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/ChatView.fxml"));
             Parent root = fxmlLoader.load();
             Stage chatStage = new Stage();
+            chatStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
             chatStage.setMinWidth(750.0);
             chatStage.setMinHeight(430.0);
             chatStage.setTitle("Pocket desktop client. \t\t Logged as: [" + controller.getSender() + "]");
@@ -71,14 +72,14 @@ public class LogonViewController implements Initializable {
     private void handleGuestC2Button() throws IOException {
         // id = 24
         handleLogIn("tester2", "123");
-        controller.setReceiver("25");
+        controller.setReceiver(25L);
     }
 
     @FXML
     private void handleGuestC3Button() throws IOException {
         //id = 25
         handleLogIn("tester3", "123");
-        controller.setReceiver("24");
+        controller.setReceiver(24L);
     }
 
     @FXML
@@ -88,13 +89,23 @@ public class LogonViewController implements Initializable {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("New account registration");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
         stage.setResizable(false);
         stage.setScene(new Scene(root));
         stage.show();
     }
 
     //метод для вспоминания пароля
-    public void handleRememberPassword(MouseEvent mouseEvent) {
-        System.out.println("вспоминаем пароль");
+    public void handleRememberPassword() {
+        //если забыли пароль, пишем в наш чат
+        //в рамках MVP
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle("Забыли пароль?");
+        alert.setHeaderText("Забыли пароль?");
+        alert.setContentText("Свяжитесь с техподдержкой: \n" +
+                "tg://join?invite=EY3mdg8Lip-U6hQw_ZNtzg");
+
+        alert.showAndWait();
     }
 }

@@ -2,23 +2,24 @@ package client.controller;
 
 import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
+import client.utils.Common;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import database.dao.DataBaseService;
+import database.entity.Message;
 import database.entity.User;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class ClientController {
     private String msgArea = "";
     private String myNick;
     private String sender;
-    private String receiver = "24";
+    private long receiver = 24L;
     private Connector conn = null;
     private List<Long> contactList;
 
@@ -61,15 +62,11 @@ public class ClientController {
         return myNick;
     }
 
-    public String getReceiver() {
-        return receiver;
-    }
-
     public WebEngine getWebEngine() {
         return webEngine;
     }
 
-    public void setReceiver(String receiver) {
+    public void setReceiver(long receiver) {
         this.receiver = receiver;
     }
 
@@ -114,17 +111,23 @@ public class ClientController {
         return false;
     }
 
+    private MessageFromServer convertMessageToMFS(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.fromJson(jsonText, MessageFromServer.class);
+    }
+
     public void receiveMessage(String message) {
         MessageFromServer mfs = convertMessageToMFS(message);
-        if (!contactList.contains(mfs.senderid)) {
+        if (!contactList.contains(mfs.getSenderid())) {
             try {
-                ServerResponse response = HTTPSRequest.getUser(mfs.senderid, token);
+                ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
                 switch (response.getResponseCode()) {
                     case 200:
                         addContact(convertContactToCFS(response.getResponseJson()).getEmail());
                         break;
                     case 404:
-                        showAlert("Пользователь с id: " + mfs.senderid + " не найден", Alert.AlertType.ERROR);
+                        showAlert("Пользователь с id: " + mfs.getSenderid() + " не найден", Alert.AlertType.ERROR);
                         break;
                     default:
                         showAlert("Общая ошибка!", Alert.AlertType.ERROR);
@@ -133,21 +136,25 @@ public class ClientController {
                 e.printStackTrace();
             }
         }
-        showMessage(mfs.sender_name, mfs.message);
+        showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp());
+
+        dbService.addMessage(mfs.getReceiver(),
+                mfs.getSenderid(),
+                new Message(mfs.getMessage(),
+                        mfs.getTimestamp()));
     }
 
-    private MessageFromServer convertMessageToMFS(String jsonText) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        return gson.fromJson(jsonText, MessageFromServer.class);
-    }
+    private void showMessage(String senderName, String message, Timestamp timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    private void showMessage(String senderName, String message) {
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
                 + "</font></b>";
 
-        msgArea += formatSender + message + "<br>";
+        message = message.replaceAll("\n", "<br/>");
+        message = Common.urlToHyperlink(message);
+
+        msgArea += dateFormat.format(timestamp) + " " + formatSender + message + "<br>";
         webEngine.loadContent("<html>" +
                 "<body>" +
                 "<p>" +
@@ -163,23 +170,19 @@ public class ClientController {
                 "</html>");
     }
 
-    public void sendMessage(String sender, String receiver, String message) {
-        setSender(sender);
-        Date dateNow = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    public void sendMessage(String message) {
+        MessageToServer MTS = new MessageToServer(receiver, message);
 
-        String mess = " [" + dateFormat.format(dateNow) + "]: " + message;
-        MessageToServer MTS = new MessageToServer(receiver, mess);
+        String jsonMessage = new Gson().toJson(MTS);
+        System.out.println(jsonMessage);
+        conn.getChatClient().send(jsonMessage);
 
-        System.out.println(new Gson().toJson(MTS));
-        conn.getChatClient().send(new Gson().toJson(MTS));
-
-        showMessage(sender, " [" + dateFormat.format(dateNow) + "]: " + message);
+        showMessage(sender, message, new Timestamp(System.currentTimeMillis()));
     }
 
     public void clientChoice(ListView<String> contactList, MouseEvent event) {
         if (event.getClickCount() == 1) {
-            receiver = contactList.getSelectionModel().getSelectedItem();
+            receiver = Long.getLong(contactList.getSelectionModel().getSelectedItem());
             showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
         }
     }
@@ -192,7 +195,8 @@ public class ClientController {
     private Map<String, ContactListFromServer> convertContactListToMap(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        Type itemsMapType = new TypeToken<Map<String, ContactListFromServer>>() {}.getType();
+        Type itemsMapType = new TypeToken<Map<String, ContactListFromServer>>() {
+        }.getType();
         return gson.fromJson(jsonText, itemsMapType);
     }
 
