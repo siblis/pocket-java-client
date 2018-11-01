@@ -3,6 +3,7 @@ package database.entity;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "messages")
@@ -16,7 +17,7 @@ public class Message {
     private String text;
 
     @Column
-    private Time time;
+    private Timestamp time;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
@@ -28,16 +29,14 @@ public class Message {
 
     public Message() {}
 
-    public Message(long id, String text, Time time, User sender, User receiver) {
-        this.id = id;
+    public Message(String text, Timestamp time, User receiver, User sender) {
         this.text = text;
         this.time = time;
         this.sender = sender;
         this.receiver = receiver;
     }
 
-    public Message(long id, String text, Time time) {
-        this.id = id;
+    public Message(String text, Timestamp time) {
         this.text = text;
         this.time = time;
     }
@@ -58,11 +57,11 @@ public class Message {
         this.text = text;
     }
 
-    public Time getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 
