@@ -34,7 +34,7 @@ public class ClientController {
     private static ClientController instance;
     private static String token;
     private ChatViewController chatViewController;
-    public WebEngine webEngine;
+
     private String msgArea = "";
     private String myNick;
     private String sender;
@@ -68,10 +68,6 @@ public class ClientController {
 
     public String getReceiver() {
         return receiver;
-    }
-
-    public WebEngine getWebEngine() {
-        return webEngine;
     }
 
     public void setReceiver(String receiver) {
@@ -165,19 +161,19 @@ public class ClientController {
 //            e.printStackTrace();
 //        }
 
-//        webEngine.loadContent("<html>" +
-//                "<body>" +
-//                "<p>" +
-//                "<style>" +
-//                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
-//                "</style>" +
-//                msgArea +
-//                "<script>" +
-//                "javascript:scroll(0,10000)" +
-//                "</script>" +
-//                "</p>" +
-//                "</body>" +
-//                "</html>");
+        chatViewController.webEngine.loadContent("<html>" +
+                "<body>" +
+                "<p>" +
+                "<style>" +
+                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+                "</style>" +
+                msgArea +
+                "<script>" +
+                "javascript:scroll(0,10000)" +
+                "</script>" +
+                "</p>" +
+                "</body>" +
+                "</html>");
     }
 
     public void sendMessage(String sender, String receiver, String message) {
@@ -304,5 +300,5 @@ public class ClientController {
     public void dbServiceClose() {
         dbService.close();
     }
-    
+
 }

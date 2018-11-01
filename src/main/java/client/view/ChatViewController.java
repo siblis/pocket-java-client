@@ -43,6 +43,8 @@ public class ChatViewController implements Initializable {
     @FXML
     private TextField messageField;
 
+    public WebEngine webEngine;
+
     private ObservableList<String> contactsObservList;
 
     private ClientController clientController;
@@ -61,18 +63,19 @@ public class ChatViewController implements Initializable {
 
     private void webtest() {
         messageWebView = new WebView();
-        clientController.webEngine = messageWebView.getEngine();
+        webEngine = messageWebView.getEngine();
 
         File file = new File(Main.class.getResource("/client/html/1.html").getPath());
         try {
             URL url = file.toURI().toURL();
-            clientController.webEngine.load(url.toString());
+            webEngine.load(url.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
-        clientController.webEngine.setJavaScriptEnabled(true);
+        webEngine.setJavaScriptEnabled(true);
         //clientController.webEngine.executeScript("scr();");
+
         webViewPane.getChildren().setAll(messageWebView);
     }
 
