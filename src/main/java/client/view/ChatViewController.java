@@ -34,8 +34,8 @@ public class ChatViewController implements Initializable {
     private AnchorPane webViewPane;
 
     @FXML
-//    private WebView messageWebView = null;
     private WebView messageWebView;
+
     @FXML
     private ListView<String> contactList;
 
@@ -62,11 +62,8 @@ public class ChatViewController implements Initializable {
     }
 
     private void webtest() {
-//        messageWebView = new WebView();
         controller.webEngine = messageWebView.getEngine();
         controller.webEngine.setJavaScriptEnabled(true);
-//        webViewPane.getChildren().setAll(messageWebView);
-
         ClientController.getInstance().updateContactList();
     }
 

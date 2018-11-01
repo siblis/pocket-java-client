@@ -41,12 +41,10 @@
             <ListView fx:id="contactList" onMouseClicked="#handleClientChoice" minWidth="200"
                       prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
                       AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-            <AnchorPane fx:id="webViewPane" minHeight="50.0" minWidth="50.0" AnchorPane.leftAnchor="200.0"
-                        AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <WebView fx:id="messageWebView" minHeight="50.0" minWidth="50.0" prefHeight="400"
-                         AnchorPane.bottomAnchor="60.0" AnchorPane.topAnchor="0.0" />
-            </AnchorPane>
-                  <TextField fx:id="messageField" onAction="#handleSendMessage" promptText="Input message"
+            <WebView fx:id="messageWebView" minHeight="50.0" minWidth="50.0" prefHeight="400"
+                     AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="30.0"
+                     AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="200.0"/>
+            <TextField fx:id="messageField" onAction="#handleSendMessage" promptText="Input message"
                        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="85.0"/>
             <Button onAction="#handleSendMessage" text="Send" AnchorPane.bottomAnchor="0.0"
                     AnchorPane.rightAnchor="0.0"/>
