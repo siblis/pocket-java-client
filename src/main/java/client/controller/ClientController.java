@@ -119,25 +119,25 @@ public class ClientController implements Initializable {
 
     public void sendMessage(String sender, String receiver, String message) {
         setSender(sender);
-        Date dateNow = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        String mess = " [" + dateFormat.format(dateNow) + "]: " + message;
-        MessageToServer MTS = new MessageToServer(receiver, mess);
+        MessageToServer MTS = new MessageToServer(receiver, message);
 
         System.out.println(new Gson().toJson(MTS));
         conn.getChatClient().send(new Gson().toJson(MTS));
 
-        reciveMessage(sender, " [" + dateFormat.format(dateNow) + "]: " + message,
-                receiver, myId);
+        reciveMessage(sender, message, receiver, myId);
     }
 
     private void reciveMessage(String senderName, String message, String receiverId, String senderId) {
+        Date dateNow = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        String time = " [" + dateFormat.format(dateNow) + "]: ";
+
         String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
                 + senderName
-                + " from " + senderId
-                + " to " + receiverId
-                + "</font></b>";
+//                + " from " + senderId
+//                + " to " + receiverId
+                + "</font></b>"
+                + time;
 
         String chatId = senderId.equals(myId) ? receiverId : senderId;
         msgArea = msgAreaMap.get(chatId) + formatSender + message + "<br>";
@@ -278,10 +278,10 @@ public class ClientController implements Initializable {
 
     private void indicatorGetMessage(String senderId) {
         int index = indexIdfromCFIList(senderId);
-        if (index == -1){
-            String getUser="";
+        if (index == -1) {
+            String getUser = "";
             try {
-                getUser = HTTPSRequest.getUser(token,senderId);
+                getUser = HTTPSRequest.getUser(token, senderId);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -317,7 +317,7 @@ public class ClientController implements Initializable {
         return -1;
     }
 
-    private User jsonToUser(String jsonuser){
+    private User jsonToUser(String jsonuser) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(jsonuser, User.class);
