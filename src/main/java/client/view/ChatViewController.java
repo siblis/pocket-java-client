@@ -32,9 +32,6 @@ public class ChatViewController implements Initializable {
     private AnchorPane messagePanel;
 
     @FXML
-    private AnchorPane webViewPane;
-
-    @FXML
     private WebView messageWebView;
 
     @FXML
