@@ -1,3 +1,8 @@
 
+function sendText() {
+    var mes = document.getElementById("messageTextArea").value;
 
-document.write("Привет, Мир! Я рад тебя видеть!");
+    var newDiv = document.createElement('div');
+    document.getElementById("messageArea").appendChild(newDiv);
+    newDiv.innerHTML = mes;
+}
