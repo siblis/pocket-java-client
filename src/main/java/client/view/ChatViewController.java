@@ -35,7 +35,7 @@ public class ChatViewController implements Initializable {
     private AnchorPane webViewPane;
 
     @FXML
-    private WebView messageWebView = null;
+    private WebView messageWebView;
 
     @FXML
     private ListView<String> contactListView;
@@ -62,21 +62,15 @@ public class ChatViewController implements Initializable {
     }
 
     private void webtest() {
-        messageWebView = new WebView();
+        //messageWebView = new WebView();
         webEngine = messageWebView.getEngine();
 
-        File file = new File(Main.class.getResource("/client/html/1.html").getPath());
-        try {
-            URL url = file.toURI().toURL();
-            webEngine.load(url.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        webEngine.load(this.getClass().getResource("/client/html/1.html").toExternalForm());
 
         webEngine.setJavaScriptEnabled(true);
-        //clientController.webEngine.executeScript("scr();");
 
-        webViewPane.getChildren().setAll(messageWebView);
+        //webViewPane.getChildren().setAll(messageWebView);
+        ClientController.getInstance();
     }
 
     public void fillContactListView() {
@@ -123,6 +117,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleSendMessage() {
+        webEngine.executeScript("sendText();");
         clientController.sendMessage(clientController.getSender(), clientController.getReceiver(), messageField.getText());
         messageField.clear();
         messageField.requestFocus();

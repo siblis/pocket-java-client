@@ -161,19 +161,19 @@ public class ClientController {
 //            e.printStackTrace();
 //        }
 
-        chatViewController.webEngine.loadContent("<html>" +
-                "<body>" +
-                "<p>" +
-                "<style>" +
-                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
-                "</style>" +
-                msgArea +
-                "<script>" +
-                "javascript:scroll(0,10000)" +
-                "</script>" +
-                "</p>" +
-                "</body>" +
-                "</html>");
+//        chatViewController.webEngine.loadContent("<html>" +
+//                "<body>" +
+//                "<p>" +
+//                "<style>" +
+//                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
+//                "</style>" +
+//                msgArea +
+//                "<script>" +
+//                "javascript:scroll(0,10000)" +
+//                "</script>" +
+//                "</p>" +
+//                "</body>" +
+//                "</html>");
     }
 
     public void sendMessage(String sender, String receiver, String message) {
