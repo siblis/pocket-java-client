@@ -110,15 +110,15 @@ public class ClientController {
 
     public void receiveMessage(String message) {
         MessageFromServer mfs = convertMessageToMFS(message);
-        if (!contactList.contains(mfs.senderid)) {
+        if (!contactList.contains(mfs.getSenderid())) {
             try {
-                ServerResponse response = HTTPSRequest.getUser(mfs.senderid, token);
+                ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
                 switch (response.getResponseCode()) {
                     case 200:
                         addContact(convertContactToCFS(response.getResponseJson()).getEmail());
                         break;
                     case 404:
-                        showAlert("Пользователь с id: " + mfs.senderid + " не найден", Alert.AlertType.ERROR);
+                        showAlert("Пользователь с id: " + mfs.getSenderid() + " не найден", Alert.AlertType.ERROR);
                         break;
                     default:
                         showAlert("Общая ошибка!", Alert.AlertType.ERROR);
@@ -127,7 +127,7 @@ public class ClientController {
                 e.printStackTrace();
             }
         }
-        showMessage(mfs.sender_name, mfs.message);
+        showMessage(mfs.getSender_name(), mfs.getMessage());
     }
 
     private MessageFromServer convertMessageToMFS(String jsonText) {
