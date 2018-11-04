@@ -59,12 +59,9 @@ public class DataBaseService {
         return ides;
     }
 
-    public void addSentMessage(long userId, Message message) {
-        usersDao.addSentMessage(userId, message);
-    }
-
-    public void addReceivedMessage(long userId, Message message) {
-        usersDao.addReceivedMessage(userId, message);
+    public void addMessage(long receiverId, long senderID, Message message) {
+        usersDao.addSentMessage(senderID, message);
+        usersDao.addReceivedMessage(receiverId, message);
     }
 
     public Message findMessageById(long id) {

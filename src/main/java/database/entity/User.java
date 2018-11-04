@@ -23,7 +23,8 @@ public class User {
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> receivedMess;
 
-    public User() {}
+    public User() {
+    }
 
     public User(long id, String name, String email) {
         this.id = id;
@@ -43,7 +44,7 @@ public class User {
         sentMess.add(message);
     }
 
-    public void clearMessages(){
+    public void clearMessages() {
         sentMess.clear();
         receivedMess.clear();
     }
