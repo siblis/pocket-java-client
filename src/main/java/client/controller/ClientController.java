@@ -153,13 +153,8 @@ public class ClientController {
 
         msgArea += formatSender + message + "<br>";
 
-//        File file = new File(Main.class.getResource("/client/html/1.html").getPath());
-//        try {
-//            URL url = file.toURI().toURL();
-//            webEngine.load(url.toString());
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
+        //chatViewController.webEngine.executeScript("sendText();");
+
 
 //        chatViewController.webEngine.loadContent("<html>" +
 //                "<body>" +
