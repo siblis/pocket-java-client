@@ -1,6 +1,5 @@
 package client.controller;
 
-import client.Main;
 import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
 import client.utils.Common;
@@ -14,14 +13,8 @@ import database.dao.DataBaseService;
 import database.entity.User;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.web.WebEngine;
 
-import java.io.*;
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
