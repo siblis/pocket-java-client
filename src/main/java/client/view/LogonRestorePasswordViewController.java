@@ -17,10 +17,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static client.utils.Common.showAlert;
+import static client.utils.Correct.*;
+
 public class LogonRestorePasswordViewController implements Initializable {
 
     @FXML
     private TextField emailField;
+
+    @FXML
+    private Label emailErrorLabel;
 
     @FXML
     private Button recoveryButton;
@@ -47,8 +53,9 @@ public class LogonRestorePasswordViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //controller = ClientController.getInstance();
+        controller = ClientController.getInstance();
         Platform.runLater(() -> emailField.requestFocus());
+        emailErrorLabel.setVisible(false);
         codeSendMessageLabel.setVisible(false);
         codeRecovery.setDisable(true);
         newPasswordField.setDisable(true);
@@ -58,37 +65,89 @@ public class LogonRestorePasswordViewController implements Initializable {
     }
 
     @FXML
-    private void handleRestorePasswordButton() throws IOException {
-        //если забыли пароль, пишем в наш чат
-        //в рамках MVP
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void handleRestorePasswordButton() {
+        //проверка введённого Email
+        if (isValidEmail(emailField.getText())) {
+            emailErrorLabel.setVisible(false);
+        } else {
+            emailErrorLabel.setVisible(true);
+            return;
+        }
 
-        alert.setTitle("Забыли пароль?");
-        alert.setHeaderText("Забыли пароль?");
-        alert.setContentText("Свяжитесь с техподдержкой: \n" +
-                "tg://join?invite=EY3mdg8Lip-U6hQw_ZNtzg");
+        //отправляем указанный email на сервер
+        //если он там есть, то возращается код ??? и на email отправляется код восстановления
+        //TODO установить правильные коды возвратов сервера
+        String answer = controller.proceedRestorePassword(emailField.getText());
+        if (answer.equals("201")) {
+            //ответ сервера об успешной проверке email и отправки кода восстановления
+            recoveryButton.setDisable(true);
+            codeSendMessageLabel.setText("Код восстановления отправлен на указанный email");
+            codeSendMessageLabel.setVisible(true);
+            codeRecovery.setDisable(false);
+            newPasswordField.setDisable(false);
+            newRepeatPasswordField.setDisable(false);
+            changePassword.setDisable(false);
+        } else if (answer.equals("203")) {
+            //ответ сервера об ошибке: указанный email незарегистрирован
+            codeSendMessageLabel.setText("Указанный email незарегистрирован");
+            codeSendMessageLabel.setVisible(true);
+        } else {
+            //ответ сервера об ошибке: ???
+            //ошибка: нет соединения с сервером
+            System.out.println("handleRestorePasswordButton: Ошибка!");
+            codeSendMessageLabel.setText("Неизвестная ошибка. Попробуйте ещё раз.");
+            codeSendMessageLabel.setVisible(true);
+        }
+    }
 
-        alert.showAndWait();
+    @FXML
+    private void handleNewPasswordField() {
+        //TODO добавить поле отображающее сложность пароля
+        int strengthPercentage = checkPasswordStrength(newPasswordField.getText());
+        if (!newRepeatPasswordField.getText().equals("")) {
+            comparePasswords();
+        }
+    }
 
-        recoveryButton.setDisable(true);
-        codeSendMessageLabel.setVisible(true);
-        codeRecovery.setDisable(false);
-        newPasswordField.setDisable(false);
-        newRepeatPasswordField.setDisable(false);
-        changePassword.setDisable(false);
-
+    @FXML
+    private void handleNewRepeatPasswordField() {
+        //TODO добавить поле отображающее сложность пароля
+        if (!newPasswordField.getText().equals("")) {
+            comparePasswords();
+        }
     }
 
     @FXML
     private void handleChangePassword() throws IOException {
-        comparePasswords(newPasswordField.getText(), newRepeatPasswordField.getText());
-
-        Stage stage = (Stage) changePassword.getScene().getWindow();
-        stage.close();
+        if (!newPasswordField.getText().equals(newRepeatPasswordField.getText()))
+            return;
+        //если новый пароль совпадает с повтором, то отправляем его на сервер
+        //TODO установить правильные коды возвратов сервера
+        String answer = controller.proceedChangePassword(emailField.getText(), codeRecovery.getText(), newPasswordField.getText());
+        if (answer.equals("201")) {
+            //ответ сервера об успешной смене пароля
+            showAlert("Пароль успешно изменён.", Alert.AlertType.INFORMATION);
+            //закрываем окно
+            Stage stage = (Stage) changePassword.getScene().getWindow();
+            stage.close();
+        } else if (answer.equals("203")) {
+            //ответ сервера об ошибке: указанный код восстановления не подходит
+            showAlert("Код восстановления указан не верно!", Alert.AlertType.ERROR);
+            codeSendMessageLabel.setText("Код восстановления указан не верно!");
+            codeSendMessageLabel.setVisible(true);
+        } else {
+            //ответ сервера об ошибке: ???
+            //ошибка: нет соединения с сервером
+            System.out.println("handleRestorePasswordButton: Ошибка!");
+            codeSendMessageLabel.setText("Неизвестная ошибка. Попробуйте ещё раз.");
+            codeSendMessageLabel.setVisible(true);
+        }
     }
 
-    private void comparePasswords(String password1, String password2) {
-        passwordDoNotMatchLabel.setVisible(true);
-
+    private void comparePasswords() {
+        if (newPasswordField.getText().equals(newRepeatPasswordField.getText()))
+            passwordDoNotMatchLabel.setVisible(true);
+        else
+            passwordDoNotMatchLabel.setVisible(false);
     }
 }
