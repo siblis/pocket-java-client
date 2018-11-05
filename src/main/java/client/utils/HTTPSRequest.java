@@ -9,6 +9,32 @@ import javax.net.ssl.HttpsURLConnection;
 public class HTTPSRequest {
     private static String serverURL = "https://pocketmsg.ru:8888";
 
+    public static String restorePassword(String requestJSON) throws Exception {
+        //TODO нужен API на сервере
+        URL obj = new URL(serverURL + "/v1/email/");
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+
+        int responseCode = sendRequest(con, requestJSON);
+        //TODO ошибки responseCode обрабатывать тут или нет?
+        //responseCode == ?
+        if (responseCode == 201) {
+            //успешно
+            return answerRequest(con);
+        } else
+            //Ошибка
+            return Integer.toString(responseCode); //код ошибки?
+    }
+
+    public static String changePassword(String requestJSON) throws Exception {
+        //TODO нужен API на сервере
+        URL obj = new URL(serverURL + "/v1/pass/");
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+        sendRequest(con, requestJSON);
+        return answerRequest(con);
+    }
+
     public static int registration(String requestJSON) throws Exception {
         URL obj = new URL(serverURL + "/v1/users/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
