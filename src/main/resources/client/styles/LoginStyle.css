@@ -61,6 +61,12 @@
     -fx-text-fill: #004F70;
 }
 
+.label-error {
+   -fx-font-size: 11px;
+   -fx-font-family: "Roboto";
+   -fx-text-fill: #fc0000;
+}
+
 .active-label {
    -fx-font-size: 11px;
    -fx-font-family: "Roboto";
