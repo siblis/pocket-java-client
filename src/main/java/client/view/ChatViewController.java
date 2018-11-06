@@ -11,7 +11,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
@@ -39,7 +41,7 @@ public class ChatViewController implements Initializable {
     private ListView<String> contactListView;
 
     @FXML
-    private TextField messageField;
+    private TextArea messageField;
 
     private ObservableList<String> contactsObservList;
 
@@ -55,6 +57,19 @@ public class ChatViewController implements Initializable {
         contactsObservList = FXCollections.observableArrayList();
         fillContactListView();
         webtest();
+
+        messageField.setOnKeyPressed(event -> {
+            if (event.isControlDown() && event.getCode().equals(KeyCode.ENTER)) {
+                String text = messageField.getText().trim();
+                if (!text.isEmpty()) {
+//                    messageField.appendText(System.lineSeparator());
+                    clientController.sendMessage(messageField.getText());
+                    messageField.clear();
+                    messageField.requestFocus();
+                }
+                event.consume();
+            }
+        });
     }
 
     private void webtest() {
