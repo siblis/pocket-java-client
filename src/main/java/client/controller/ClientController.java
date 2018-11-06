@@ -181,14 +181,7 @@ public class ClientController {
         showMessage(sender, message, new Timestamp(System.currentTimeMillis()));
     }
 
-    public void clientChoice(ListView<String> contactList, MouseEvent event) {
-        if (event.getClickCount() == 1) {
-            receiver = Long.getLong(contactList.getSelectionModel().getSelectedItem());
-            showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
-        }
-    }
-
-    public void loadChat(){
+    private void loadChat(){
 
     }
 
