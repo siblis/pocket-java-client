@@ -69,16 +69,14 @@ public class HTTPSRequest {
         return serverResponse;
     }
 
-    public static ServerResponse addContact(String requestJSON, String token) throws Exception {
-        URL url = new URL(serverURL + "/v1/users/contacts/");
+    public static ServerResponse searchContactByEmail(String emailAddress, String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/users/" + emailAddress);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
+        connection.setRequestMethod("GET");
         connection.setRequestProperty("Token", token);
-
         ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(connection, requestJSON));
+        serverResponse.setResponseCode(sendRequest(connection, null));
         serverResponse.setResponseJson(answerRequest(connection));
-
         return serverResponse;
     }
 

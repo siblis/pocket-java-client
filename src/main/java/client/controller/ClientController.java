@@ -15,11 +15,9 @@ import database.entity.User;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
-
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -124,7 +122,7 @@ public class ClientController {
                 ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
                 switch (response.getResponseCode()) {
                     case 200:
-                        addContact(convertContactToCFS(response.getResponseJson()).getEmail());
+                        addContactToDB(convertContactToCFS(response.getResponseJson()));
                         break;
                     case 404:
                         showAlert("Пользователь с id: " + mfs.getSenderid() + " не найден", Alert.AlertType.ERROR);
@@ -225,39 +223,37 @@ public class ClientController {
 
     }
 
-    private ContactFromServer convertContactToCFS(String jsonText) {
+    public ContactFromServer convertContactToCFS(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(jsonText, ContactFromServer.class);
     }
 
-    public void addContact(String contact) {
-        ContactToServer cts = new ContactToServer(contact);
-        String requestJSON = new Gson().toJson(cts);
-
+    public String searchContactByEmail(String contactEmail) {
+        String result = null;
         try {
-            ServerResponse response = HTTPSRequest.addContact(requestJSON, token);
+            ServerResponse response = HTTPSRequest.searchContactByEmail(contactEmail, token);
             switch (response.getResponseCode()) {
-                case 201:
-                    showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
-                    addContactToDB(convertContactToCFS(response.getResponseJson()));
-                    if (chatViewController != null) chatViewController.fillContactListView();
-                    break;
+                case 200:
+                    return response.getResponseJson();
                 case 404:
-                    showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+                    result = "404";
                     break;
-                case 409:
-                    showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+                case 500:
+                    result = "500";
+                    showAlert("Внутренняя ошибка сервера!", Alert.AlertType.ERROR);
                     break;
                 default:
                     showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return result;
     }
 
-    private void addContactToDB(ContactFromServer contact) {
+    public void addContactToDB(ContactFromServer contact) {
         dbService.insertUser(new User(contact.getUid(), contact.getAccount_name(), contact.getEmail()));
         contactList.add(contact.getUid());
     }
