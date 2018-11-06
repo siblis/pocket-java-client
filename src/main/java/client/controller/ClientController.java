@@ -68,6 +68,7 @@ public class ClientController {
 
     public void setReceiver(long receiver) {
         this.receiver = receiver;
+        loadChat();
     }
 
     public String getSender() {
@@ -185,6 +186,10 @@ public class ClientController {
             receiver = Long.getLong(contactList.getSelectionModel().getSelectedItem());
             showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
         }
+    }
+
+    public void loadChat(){
+
     }
 
     public void disconnect() {
