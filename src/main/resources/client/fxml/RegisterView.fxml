@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 
+<?import javafx.scene.shape.Rectangle?>
 <AnchorPane fx:id="parentPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="380.0" styleClass="anchor-pane" stylesheets="/client/styles/RegisterStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.RegisterViewController">
    <AnchorPane fx:id="regPanel" layoutX="-71.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="288.0" styleClass="opacityClass" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="0.0">
       <children>
@@ -40,7 +41,7 @@
             </rowConstraints>
             <children>
                <TextField fx:id="regLoginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Ваш никнейм" />
-               <PasswordField fx:id="regPasswordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="2" />
+               <PasswordField fx:id="regPasswordField" onKeyReleased="#handleKeyReleased" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="2" />
                <PasswordField fx:id="regPasswordFieldDouble" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Подтвердите пароль" GridPane.rowIndex="3" />
                <TextField fx:id="regEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="E-mail" GridPane.rowIndex="1" />
                <Button fx:id="cancelRegisterButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancelRegisterButton" prefHeight="40.0" prefWidth="232.0" text="Cancel" GridPane.rowIndex="5">
@@ -52,4 +53,5 @@
          </GridPane>
       </children>
    </AnchorPane>
+   <Rectangle fx:id="rectPass" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="11.0" layoutX="80.0" layoutY="385.0" stroke="BLACK" strokeType="INSIDE" width="0.0" />
 </AnchorPane>
