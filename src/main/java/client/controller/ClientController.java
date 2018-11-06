@@ -68,6 +68,7 @@ public class ClientController {
 
     public void setReceiver(long receiver) {
         this.receiver = receiver;
+        loadChat();
     }
 
     public String getSender() {
@@ -180,11 +181,8 @@ public class ClientController {
         showMessage(sender, message, new Timestamp(System.currentTimeMillis()));
     }
 
-    public void clientChoice(ListView<String> contactList, MouseEvent event) {
-        if (event.getClickCount() == 1) {
-            receiver = Long.getLong(contactList.getSelectionModel().getSelectedItem());
-            showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
-        }
+    private void loadChat(){
+
     }
 
     public void disconnect() {
