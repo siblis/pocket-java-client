@@ -1,0 +1,84 @@
+.anchor-pane {
+    -fx-background-image: url("../images/reg/clement-h-544786-unsplash.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
+
+.opacityClass {
+    -fx-background-color: rgba(210, 242, 255, 0.2);
+    -fx-background-radius: 0px 0px 8px 8px;
+}
+
+#ellipse {
+    -fx-background-image: url("../images/reg/Ellipse.png");
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
+
+.label {
+    -fx-font-size: 11px;
+    -fx-font-family: "Roboto";
+    -fx-text-fill: #B8C5CB;
+}
+
+.label-bright {
+   -fx-font-size: 11px;
+   -fx-font-family: "Roboto";
+   -fx-text-fill: #004F70;
+}
+
+.label-header {
+    -fx-font-size: 32px;
+    -fx-font-family: "Roboto";
+    -fx-alignment: center;
+    -fx-text-fill: #004F70;
+    -fx-letter-spacing: 1%;
+}
+.active-label {
+   -fx-font-size: 11px;
+   -fx-font-family: "Roboto";
+   //-fx-font-style: regular;
+   -fx-text-fill: #FFE684;
+}
+
+.active-label: hover {
+   -fx-font-size: 11px;
+   -fx-font-family: "Roboto";
+   //-fx-font-style: regular;
+   -fx-text-fill: derive(#FFE674,15%);
+   -fx-opacity: 0.6;
+}
+
+.text-field {
+    -fx-font-size: 13px;
+    -fx-font-family: "Roboto";
+    -fx-font-style: italic;
+    -fx-alignment: center-left;
+    -fx-text-fill: rgba(0, 0, 0, 0.48);
+    -fx-prompt-text-fill: rgba(0, 0, 0, 0.48);
+    -fx-letter-spacing: 0.01em;
+    -fx-background-color: #B8C5CB;
+    -fx-background-radius: 10;
+    -fx-border-color: #FFE684;
+    -fx-border-radius: 10px;
+}
+
+.button {
+    -fx-background-radius: 10px;
+    -fx-background-color: #FFE684;
+    -fx-font-family: "Roboto";
+    -fx-font-size: 16px;
+    -fx-text-fill: #004F70;
+}
+
+.button:hover {
+    -fx-background-color: derive(#FFE674,15%);
+    -fx-text-fill: #004F70;
+    -fx-font-size: 16px;
+}
+
+.button:pressed, .button:default:hover:pressed {
+  -fx-background-color: derive(#FFE674,15%);
+}
+
+

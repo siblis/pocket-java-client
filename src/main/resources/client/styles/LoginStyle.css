@@ -1,0 +1,130 @@
+.anchor-pane {
+    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
+
+.opacityClass {
+    -fx-background-color: rgba(210, 242, 255, 0.2);
+    -fx-background-radius: 0px 0px 8px 8px;
+}
+#ellipse {
+    -fx-background-image: url("../images/enter/Ellipse.png");
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+}
+
+.menu-bar {
+    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+}
+
+.context-menu {
+    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+}
+
+.menu-bar.label {
+    -fx-font-size: 14pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: white;
+}
+#menu:focused {
+    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
+
+}
+#menu:hover {
+    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
+}
+.menu-item:focused {
+    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
+
+}
+
+.label {
+    -fx-font-size: 11px;
+    -fx-font-family: "Roboto";
+    -fx-text-fill: #B8C5CB;
+    -fx-letter-spacing: 0.01;
+    -fx-graphic-text-gap: 1;
+}
+
+.label-bright {
+   -fx-font-size: 11px;
+   -fx-font-family: "Roboto";
+   -fx-text-fill: #004F70;
+}
+
+.label-header {
+    -fx-font-size: 40px;
+    -fx-font-family: "Roboto";
+    -fx-text-fill: #004F70;
+}
+
+.label-error {
+   -fx-font-size: 11px;
+   -fx-font-family: "Roboto";
+   -fx-text-fill: #fc0000;
+}
+
+.active-label {
+   -fx-font-size: 11px;
+   -fx-font-family: "Roboto";
+   //-fx-font-style: regular;
+   -fx-text-fill: #FFE684;
+}
+
+.active-label: hover {
+   -fx-font-size: 11px;
+   -fx-font-family: "Roboto";
+   //-fx-font-style: regular;
+   -fx-text-fill: derive(#FFE674,15%);
+   -fx-opacity: 0.6;
+}
+
+.menu-bar {
+    -fx-background-color: derive(#FFE684,20%);
+}
+
+.context-menu {
+    -fx-background-color: derive(#FFE684,50%);
+}
+
+.menu-bar .label {
+    -fx-font-size: 14pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: white;
+    -fx-opacity: 0.9;
+}
+
+.menu .left-container {
+    -fx-background-color: black;
+}
+
+.text-field {
+    -fx-font-size: 13px;
+    -fx-font-family: "Roboto";
+    -fx-font-style: italic;
+    -fx-line-height: 15px;
+    -fx-alignment: center-left;
+    -fx-text-fill: rgba(0, 0, 0, 0.48);
+    -fx-prompt-text-fill: rgba(0, 0, 0, 0.48);
+    -fx-background-color: #B8C5CB;
+    -fx-background-radius: 10;
+    -fx-border-color: #FFE684;
+    -fx-border-radius: 10;
+}
+
+.button {
+    -fx-background-radius: 10;
+    -fx-background-color: #FFE684;
+    -fx-font-family: "Roboto";
+    -fx-font-size: 16px;
+    -fx-text-fill: #004F70;
+    //-fx-background-insets: 0 0 0 0, 0, 1, 2;
+}
+
+.button:hover {
+    -fx-background-color: derive(#FFE674,15%);
+}
+
