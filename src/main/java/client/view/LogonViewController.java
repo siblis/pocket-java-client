@@ -96,16 +96,15 @@ public class LogonViewController implements Initializable {
     }
 
     //метод для вспоминания пароля
-    public void handleRememberPassword() {
-        //если забыли пароль, пишем в наш чат
-        //в рамках MVP
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-        alert.setTitle("Забыли пароль?");
-        alert.setHeaderText("Забыли пароль?");
-        alert.setContentText("Свяжитесь с техподдержкой: \n" +
-                "tg://join?invite=EY3mdg8Lip-U6hQw_ZNtzg");
-
-        alert.showAndWait();
+    public void handleRememberPassword() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/LoginRememberPasswordView.fxml"));
+        Parent root = fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Remember and change password");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
+        stage.setResizable(false);
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }

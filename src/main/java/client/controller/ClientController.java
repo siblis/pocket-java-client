@@ -283,7 +283,6 @@ public class ClientController {
         return authentication(login, password);
     }
 
-
     public List<String> getAllUserNames() {
         return dbService.getAllUserNames();
     }
@@ -291,4 +290,33 @@ public class ClientController {
     public void dbServiceClose() {
         dbService.close();
     }
+
+    public String proceedRestorePassword(String email) {
+        String answer = "0";
+        String requestJSON = "{" +
+                "\"email\": \"" + email + "\"" +
+                "}";
+        try {
+            answer = HTTPSRequest.restorePassword(requestJSON);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
+
+    public String proceedChangePassword(String email, String codeRecovery, String password) {
+        String answer = "0";
+        String requestJSON = "{" +
+                "\"email\": \"" + email + "\"," +
+                "\"code\": \"" + codeRecovery + "\"," +
+                "\"password\": \"" + password + "\"" +
+                "}";
+        try {
+            answer = HTTPSRequest.changePassword(requestJSON);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
+
 }
