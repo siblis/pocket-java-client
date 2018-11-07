@@ -78,6 +78,10 @@ class UserDAO {
         return message;
     }
 
+    List<Message> getConverstation(long agent1id, long agent2id){
+
+    }
+
     void addSentMessage(long senderID, Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
