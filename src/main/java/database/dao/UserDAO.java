@@ -82,42 +82,6 @@ class UserDAO {
         return list;
     }
 
-    Message findMessageById(long id) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        Message message = session.get(Message.class, id);
-
-        session.getTransaction().commit();
-        return message;
-    }
-
-    List<Message> getConverstation(long agent1id, long agent2id){
-
-    }
-
-    void addSentMessage(long senderID, Message message) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        User user = session.get(User.class, senderID);
-        user.addSentMessage(message);
-        session.saveOrUpdate(user);
-
-        session.getTransaction().commit();
-    }
-
-    void addReceivedMessage(long receiverId, Message message) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        User user = session.get(User.class, receiverId);
-        user.addReceivedMessage(message);
-        session.saveOrUpdate(user);
-
-        session.getTransaction().commit();
-    }
-
     void close(){
         HibernateUtil.shutdown();
     }
