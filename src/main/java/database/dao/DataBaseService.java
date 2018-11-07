@@ -42,7 +42,15 @@ public class DataBaseService {
     public List<User> getAllUsers() {
         return usersDao.get();
     }
-
+    public Long getUserId(String name){
+        Long userId = -1L;
+        for (User user : usersDao.get()) {
+           if (user.getName().equals(name)){
+               userId = user.getId();
+           }
+        }
+        return userId;
+    }
     public List<String> getAllUserNames() {
         List<String> names = new ArrayList<>();
         for (User user : usersDao.get()) {

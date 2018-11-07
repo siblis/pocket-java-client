@@ -2,6 +2,7 @@ package client.view;
 
 import client.Main;
 import client.controller.ClientController;
+import database.dao.DataBaseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -132,9 +133,10 @@ public class ChatViewController implements Initializable {
     @FXML
     private void handleClientChoice(MouseEvent event) {
         if (event.getClickCount() == 1) {
-            long receiver = Long.getLong(contactListView.getSelectionModel().getSelectedItem());
+            String receiver = contactListView.getSelectionModel().getSelectedItem();
+            DataBaseService dbService = new DataBaseService();
             showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
-            clientController.setReceiver(receiver);
+            clientController.setReceiver(dbService.getUserId(receiver));
         }
 
         messageField.requestFocus();
