@@ -6,6 +6,7 @@ import database.entity.User;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -51,6 +52,19 @@ class UserDAO {
         session.getTransaction().begin();
 
         User user = session.get(User.class, id);
+
+        session.getTransaction().commit();
+
+        return user;
+    }
+
+    User get(String userName) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.getTransaction().begin();
+
+        Query<User> query = session.createQuery("from User u where u.name = :userNameParam");
+        query.setParameter("userNameParam", userName);
+        User user = query.getSingleResult();
 
         session.getTransaction().commit();
 

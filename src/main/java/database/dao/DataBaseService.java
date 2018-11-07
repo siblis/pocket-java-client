@@ -39,6 +39,10 @@ public class DataBaseService {
         return usersDao.get(id);
     }
 
+    public long getIdUserByName(String userName) {
+        return usersDao.get(userName).getId();
+    }
+
     public List<User> getAllUsers() {
         return usersDao.get();
     }
