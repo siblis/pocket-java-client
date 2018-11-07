@@ -36,17 +36,6 @@ public class MessageDAO {
         session.getTransaction().commit();
     }
 
-    public static Message get(int id) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        Message message = session.get(Message.class, id);
-
-        session.getTransaction().commit();
-
-        return message;
-    }
-
     public static List<Message> get() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
