@@ -71,6 +71,11 @@ public class ClientController {
         loadChat();
     }
 
+    public void setReceiver(String receiver) {
+        this.receiver = dbService.getIdUserByName(receiver);
+        loadChat();
+    }
+
     public String getSender() {
         return sender;
     }
@@ -316,5 +321,4 @@ public class ClientController {
         }
         return answer;
     }
-
 }
