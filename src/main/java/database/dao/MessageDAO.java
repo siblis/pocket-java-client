@@ -49,7 +49,7 @@ public class MessageDAO {
         return list;
     }
 
-    List<Message> get(long agent1id, long agent2id){
+    List<Message> get(User agent1id, User agent2id){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -57,11 +57,13 @@ public class MessageDAO {
                 "(m.sender = :id1Param or m.sender = :id2Param) " +
                 "and " +
                 "(m.receiver = :id1Param or m.receiver = :id2Param)");
-        List<Message> list = query.list();
+        query.setParameter("id1Param", agent1id);
+        query.setParameter("id2Param", agent2id);
+        List<Message> messages = query.list();
 
         session.getTransaction().commit();
 
-        return list;
+        return messages;
     }
 
     Message findMessageById(long id) {
