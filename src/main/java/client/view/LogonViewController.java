@@ -48,7 +48,7 @@ public class LogonViewController implements Initializable {
             chatStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
             chatStage.setMinWidth(750.0);
             chatStage.setMinHeight(430.0);
-            chatStage.setTitle("Pocket desktop client. \t\t Logged as: [" + controller.getSender() + "]");
+            chatStage.setTitle("Pocket desktop client. \t\t Logged as: [" + controller.getMyNick() + "]");
             chatStage.setScene(new Scene(root));
             chatStage.show();
 
@@ -72,14 +72,14 @@ public class LogonViewController implements Initializable {
     private void handleGuestC2Button() throws IOException {
         // id = 24
         handleLogIn("tester2", "123");
-        controller.setReceiver(25L);
+        controller.setReceiverId(25L);
     }
 
     @FXML
     private void handleGuestC3Button() throws IOException {
         //id = 25
         handleLogIn("tester3", "123");
-        controller.setReceiver(24L);
+        controller.setReceiverId(24L);
     }
 
     @FXML
