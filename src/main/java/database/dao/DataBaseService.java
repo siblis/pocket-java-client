@@ -18,9 +18,11 @@ import java.util.List;
 public class DataBaseService {
 
     private UserDAO usersDao;
+    private MessageDAO messageDao;
 
     public DataBaseService() {
         usersDao = new UserDAO();
+        messageDao = new MessageDAO();
     }
 
     public void insertUser(User user) {
@@ -64,12 +66,16 @@ public class DataBaseService {
     }
 
     public void addMessage(long receiverId, long senderID, Message message) {
-        usersDao.addSentMessage(senderID, message);
-        usersDao.addReceivedMessage(receiverId, message);
+        messageDao.addSentMessage(senderID, message);
+        messageDao.addReceivedMessage(receiverId, message);
+    }
+
+    public List<Message> getChat(long agent1id, long agent2id){
+        return messageDao.get(agent1id, agent2id);
     }
 
     public Message findMessageById(long id) {
-        return usersDao.findMessageById(id);
+        return messageDao.findMessageById(id);
     }
 
     public void close(){
