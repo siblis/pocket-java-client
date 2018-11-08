@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -40,7 +40,7 @@
             <ListView fx:id="contactListView" minWidth="200" onMouseClicked="#handleClientChoice" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <WebView fx:id="messageWebView" minHeight="50.0" minWidth="50.0" prefHeight="400" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <TextArea fx:id="messageField" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="45.0" prefWidth="1029.0" promptText="Input message" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" />
-            <Button onAction="#handleSendMessage" text="Send" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <Label id="vector" onMouseClicked="#handleSendMessage" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="80.5" />
         </AnchorPane>
 
 
