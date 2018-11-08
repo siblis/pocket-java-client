@@ -70,8 +70,8 @@ public class DataBaseService {
         messageDao.addReceivedMessage(receiverId, message);
     }
 
-    public List<Message> getChat(long agent1id, long agent2id){
-        return messageDao.get(agent1id, agent2id);
+    public List<Message> getChat(User user1, User user2){
+        return messageDao.get(user1, user2);
     }
 
     public Message findMessageById(long id) {
