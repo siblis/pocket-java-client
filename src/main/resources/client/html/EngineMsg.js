@@ -6,3 +6,4 @@ function sendText() {
     document.getElementById("messageArea").appendChild(newDiv);
     newDiv.innerHTML = mes;
 }
+
