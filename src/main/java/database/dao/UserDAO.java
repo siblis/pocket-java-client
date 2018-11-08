@@ -47,7 +47,7 @@ class UserDAO {
         session.getTransaction().commit();
     }
 
-    User get(int id) {
+    User get(long id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
