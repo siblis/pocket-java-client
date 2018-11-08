@@ -31,8 +31,8 @@ public class ClientController {
     public WebEngine webEngine;
     private String msgArea = "";
     private String myNick;
-    private long receiverId = 24L;
-    private long senderId = -1L;
+    private User receiver = null;
+    private User sender = null;
     private Connector conn = null;
     private List<Long> contactList;
 
@@ -64,13 +64,13 @@ public class ClientController {
         return webEngine;
     }
 
-    public void setReceiverId(long receiverId) {
-        this.receiverId = receiverId;
+    public void setReceiver(long receiverId) {
+        this.receiver = receiverId;
         loadChat();
     }
 
     public void setReceiver(String receiver) {
-        this.receiverId = dbService.getIdUserByName(receiver);
+        this.receiver = dbService.getUserByName(receiver);
         loadChat();
     }
 
@@ -95,6 +95,13 @@ public class ClientController {
                 System.out.println(" answer server " + AFS.token);
                 token = AFS.token;
                 connect(token);
+
+                try {
+                    ServerResponse response = HTTPSRequest.getMySelf(token);
+                    sender = convertUserToUFS(response.getResponseJson());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 myNick = login;
 
                 synchronizeContactList();
@@ -182,6 +189,7 @@ public class ClientController {
     private void loadChat(){
         List<Message> converstation = dbService.getChat(senderId, receiverId);
         msgArea = "";
+        showMessage("", "", new Timestamp(0));// не очень удачная попытка очистить WebView
         for (Message message :
                 converstation) {
             showMessage(message.getSender().getName(), message.getText(), message.getTime());
@@ -226,10 +234,10 @@ public class ClientController {
 
     }
 
-    private UserFromServer convertUserToUFS(String jsonText) {
+    private User convertUserToUFS(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.fromJson(jsonText, UserFromServer.class);
+        return gson.fromJson(jsonText, User.class);
     }
 
     public void addContact(String contact) {

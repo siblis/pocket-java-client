@@ -41,8 +41,8 @@ public class DataBaseService {
         return usersDao.get(id);
     }
 
-    public long getIdUserByName(String userName) {
-        return usersDao.get(userName).getId();
+    public User getUserByName(String userName) {
+        return usersDao.get(userName);
     }
 
     public List<User> getAllUsers() {
