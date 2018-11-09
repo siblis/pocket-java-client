@@ -37,7 +37,7 @@ public class DataBaseService {
         usersDao.update(user);
     }
 
-    public User getUser(int id) {
+    public User getUser(long id) {
         return usersDao.get(id);
     }
 
@@ -52,7 +52,7 @@ public class DataBaseService {
     public List<String> getAllUserNames() {
         List<String> names = new ArrayList<>();
         for (User user : usersDao.get()) {
-            names.add(user.getName());
+            names.add(user.getAccount_name());
         }
         return names;
     }
@@ -60,7 +60,7 @@ public class DataBaseService {
     public List<Long> getAllUserId() {
         List<Long> ides = new ArrayList<>();
         for (User user : usersDao.get()) {
-            ides.add(user.getId());
+            ides.add(user.getUid());
         }
         return ides;
     }
