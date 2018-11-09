@@ -9,6 +9,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -34,6 +36,9 @@ public class RegisterViewController implements Initializable {
     @FXML
     private Button cancelRegisterButton;
 
+    @FXML
+    private Rectangle rectPass;
+
     private ClientController controller;
 
     @Override
@@ -54,7 +59,7 @@ public class RegisterViewController implements Initializable {
                         regEmailField.textProperty()));
         regPasswordFieldDouble.disableProperty().bind(
                 Bindings.createBooleanBinding(
-                        () -> Correct.checkPasswordStrength(regPasswordField.getText()) <2,
+                        () -> Correct.checkPasswordStrength(regPasswordField.getText()) < 2,
                         regPasswordField.textProperty()));
 
     }
@@ -84,4 +89,19 @@ public class RegisterViewController implements Initializable {
 //
 //        alert.showAndWait();
 //    }
+    @FXML
+    private void handleKeyReleased() {
+        String s = regPasswordField.getText();
+        int koefHard = Correct.checkPasswordStrength(s);
+        System.out.println(koefHard);
+        rectPass.setWidth(235 / 5 * koefHard);
+        rectPass.setFill(Color.RED);
+        if (koefHard > 1) {
+            rectPass.setFill(Color.YELLOW);
+        }
+        if (koefHard > 3) {
+            rectPass.setFill(Color.GREEN);
+        }
+    }
+
 }

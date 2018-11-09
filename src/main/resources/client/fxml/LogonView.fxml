@@ -78,7 +78,7 @@
                             maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
                             onAction="#handleLogInButton" prefHeight="40.0" prefWidth="232.0" text="Войти"
                             textAlignment="JUSTIFY" GridPane.rowIndex="2"/>
-                    <Label prefWidth="120.0" text="Нет аккаутна?" GridPane.rowIndex="3">
+                    <Label prefWidth="120.0" text="Нет аккаунта?" GridPane.rowIndex="3">
                         <GridPane.margin>
                             <Insets/>
                         </GridPane.margin>
