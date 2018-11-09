@@ -13,7 +13,6 @@ import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
 import javafx.scene.control.*;
-import javafx.scene.web.WebEngine;
 
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
@@ -30,7 +29,6 @@ public class ClientController {
     private ChatViewController chatViewController;
 
     private String msgArea = "";
-    private String myNick;
     private User receiver = null;
     private User sender = null;
     private Connector conn = null;
@@ -56,12 +54,8 @@ public class ClientController {
         conn = new Connector(token, ClientController.getInstance());
     }
 
-    public String getMyNick() {
-        return myNick;
-    }
-
-    public WebEngine getWebEngine() {
-        return webEngine;
+    public String getSenderName() {
+        return sender.getAccount_name();
     }
 
     public void setReceiver(long receiverId) {
@@ -98,8 +92,7 @@ public class ClientController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                myNick = login;
-
+                sender.setAccount_name(login);
                 synchronizeContactList();
 
                 return true;
@@ -149,7 +142,7 @@ public class ClientController {
     private void showMessage(String senderName, String message, Timestamp timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-        String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
+        String formatSender = "<b><font color = " + (sender.getAccount_name().equals(senderName) ? "green" : "red") + ">"
                 + senderName
                 + "</font></b>";
 
@@ -196,13 +189,17 @@ public class ClientController {
         System.out.println(jsonMessage);
         conn.getChatClient().send(jsonMessage);
 
-        showMessage(myNick, message, new Timestamp(System.currentTimeMillis()));
+        dbService.addMessage(receiver.getUid(),
+                sender.getUid(),
+                new Message(message, new Timestamp(System.currentTimeMillis()))
+        );
+        showMessage(sender.getAccount_name(), message, new Timestamp(System.currentTimeMillis()));
     }
 
-    private void loadChat(){
+    private void loadChat() {
         List<Message> converstation = dbService.getChat(sender, receiver);
         msgArea = "";
-        showMessage("", "", new Timestamp(0));// не очень удачная попытка очистить WebView
+        showMessage("", "", new Timestamp(0));// не очень удачная (плохая) попытка очистить WebView
         for (Message message :
                 converstation) {
             showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime());
