@@ -9,13 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,14 +28,13 @@ import static client.utils.Common.showAlert;
 
 public class ChatViewController implements Initializable {
 
+    public WebEngine webEngine;
+
     @FXML
     private AnchorPane messagePanel;
 
     @FXML
-    private AnchorPane webViewPane;
-
-    @FXML
-    private WebView messageWebView = null;
+    private WebView messageWebView;
 
     @FXML
     private ListView<String> contactListView;
@@ -53,6 +51,7 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableArrayList();
@@ -60,6 +59,7 @@ public class ChatViewController implements Initializable {
         webtest();
 
         messageField.setOnKeyPressed(event -> {
+
             if (event.isControlDown() && event.getCode().equals(KeyCode.ENTER)) {
                 String text = messageField.getText().trim();
                 if (!text.isEmpty()) {
@@ -74,10 +74,25 @@ public class ChatViewController implements Initializable {
     }
 
     private void webtest() {
-        messageWebView = new WebView();
-        clientController.webEngine = messageWebView.getEngine();
-        clientController.webEngine.setJavaScriptEnabled(true);
-        webViewPane.getChildren().setAll(messageWebView);
+        webEngine = messageWebView.getEngine();
+        webEngine.setJavaScriptEnabled(true);
+        clientController.getInstance();
+        webEngine.loadContent("<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+
+                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "</head>\n" +
+
+                "    <body style=\"background-image: url(https://s3-alpha.figma.com/img/0f65/df21/9351ace9280e6668b235304d7ceaf426)\">\n" +
+
+                "        <div id=\"messageArea\">" +
+                "       </div>\n" +
+
+                "    </body>\n" +
+                "</html>");
+
+
     }
 
     public void fillContactListView() {
@@ -152,4 +167,5 @@ public class ChatViewController implements Initializable {
         stage.setScene(new Scene(root));
         stage.show();
     }
+    
 }
