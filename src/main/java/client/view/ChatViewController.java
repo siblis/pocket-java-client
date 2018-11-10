@@ -2,6 +2,7 @@ package client.view;
 
 import client.Main;
 import client.controller.ClientController;
+import client.utils.CustomTextArea;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -39,7 +40,7 @@ public class ChatViewController implements Initializable {
     private ListView<String> contactListView;
 
     @FXML
-    private TextArea messageField;
+    private CustomTextArea messageField;
 
     private ObservableList<String> contactsObservList;
 
