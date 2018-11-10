@@ -12,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
@@ -107,7 +106,7 @@ public class ChatViewController implements Initializable {
                         super.updateItem(item, empty);
                         if (!empty) {
                             setText(item);
-                            if (item.equals(clientController.getMyNick())) {
+                            if (item.equals(clientController.getSenderName())) {
                                 setStyle("-fx-font-weight: bold;" +
                                         " -fx-background-color: #ffead4");
                             }

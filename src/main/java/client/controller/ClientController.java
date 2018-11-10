@@ -13,13 +13,10 @@ import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.web.WebEngine;
 
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +29,8 @@ public class ClientController {
     private ChatViewController chatViewController;
 
     private String msgArea = "";
-    private String myNick;
-    private String sender;
-    private long receiver = 24L;
+    private User receiver = null;
+    private User sender = null;
     private Connector conn = null;
     private List<Long> contactList;
 
@@ -58,31 +54,22 @@ public class ClientController {
         conn = new Connector(token, ClientController.getInstance());
     }
 
-    public String getMyNick() {
-        return myNick;
+    public String getSenderName() {
+        return sender.getAccount_name();
     }
 
-    public void setReceiver(long receiver) {
-        this.receiver = receiver;
+    public void setReceiver(long receiverId) {
+        this.receiver = dbService.getUser(receiverId);
         loadChat();
     }
 
     public void setReceiver(String receiver) {
-        this.receiver = dbService.getIdUserByName(receiver);
+        this.receiver = dbService.getUserByName(receiver);
         loadChat();
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    private void setSender(String sender) {
-        this.sender = sender;
     }
 
     private boolean authentication(String login, String password) {
         if (!login.isEmpty() && !password.isEmpty()) {
-            setSender(login);
             String answer = "0";
             AuthToServer ATS = new AuthToServer(login, password);
             String reqJSON = new Gson().toJson(ATS);
@@ -98,8 +85,14 @@ public class ClientController {
                 System.out.println(" answer server " + AFS.token);
                 token = AFS.token;
                 connect(token);
-                myNick = login;
 
+                try {
+                    ServerResponse response = HTTPSRequest.getMySelf(token);
+                    sender = convertJSONToUser(response.getResponseJson());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                sender.setAccount_name(login);
                 synchronizeContactList();
 
                 return true;
@@ -126,10 +119,10 @@ public class ClientController {
                 ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
                 switch (response.getResponseCode()) {
                     case 200:
-                        addContact(convertContactToCFS(response.getResponseJson()).getEmail());
+                        addContact(convertJSONToUser(response.getResponseJson()).getEmail());
                         break;
                     case 404:
-                        showAlert("Пользователь с id: " + mfs.getSenderid() + " не найден", Alert.AlertType.ERROR);
+                        showAlert("Пользователь не найден", Alert.AlertType.ERROR);//с id: " + mfs.getSenderid() + "
                         break;
                     default:
                         showAlert("Общая ошибка!", Alert.AlertType.ERROR);
@@ -149,7 +142,7 @@ public class ClientController {
     private void showMessage(String senderName, String message, Timestamp timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-        String formatSender = "<b><font color = " + (myNick.equals(senderName) ? "green" : "red") + ">"
+        String formatSender = "<b><font color = " + (sender.getAccount_name().equals(senderName) ? "green" : "red") + ">"
                 + senderName
                 + "</font></b>";
 
@@ -190,17 +183,31 @@ public class ClientController {
     }
 
     public void sendMessage(String message) {
-        MessageToServer MTS = new MessageToServer(receiver, message);
+        if (receiver == null){
+            showAlert("Выберите контакт для отправки сообщения", Alert.AlertType.ERROR);
+            return;
+        }
+        MessageToServer MTS = new MessageToServer(receiver.getUid(), message);
 
         String jsonMessage = new Gson().toJson(MTS);
         System.out.println(jsonMessage);
         conn.getChatClient().send(jsonMessage);
 
-        showMessage(sender, message, new Timestamp(System.currentTimeMillis()));
+        dbService.addMessage(receiver.getUid(),
+                sender.getUid(),
+                new Message(message, new Timestamp(System.currentTimeMillis()))
+        );
+        showMessage(sender.getAccount_name(), message, new Timestamp(System.currentTimeMillis()));
     }
 
-    private void loadChat(){
-
+    private void loadChat() {
+        List<Message> converstation = dbService.getChat(sender, receiver);
+        msgArea = "";
+        showMessage("", "", new Timestamp(0));// не очень удачная (плохая) попытка очистить WebView
+        for (Message message :
+                converstation) {
+            showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime());
+        }
     }
 
     public void disconnect() {
@@ -226,12 +233,12 @@ public class ClientController {
                 Map<String, ContactListFromServer> map = convertContactListToMap(response.getResponseJson());
                 for (Map.Entry<String, ContactListFromServer> entry : map.entrySet()) {
                     if (!contactList.contains(entry.getValue().getId())) {
-                        ContactFromServer cfs = new ContactFromServer();
-                        cfs.setUid(entry.getValue().getId());
-                        cfs.setAccount_name(entry.getValue().getName());
-                        cfs.setEmail(entry.getKey());
+                        User user = new User();
+                        user.setUid(entry.getValue().getId());
+                        user.setAccount_name(entry.getValue().getName());
+                        user.setEmail(entry.getKey());
 
-                        addContactToDB(cfs);
+                        addContactToDB(user);
                     }
                 }
             }
@@ -239,16 +246,21 @@ public class ClientController {
             e.printStackTrace();
         }
 
+        // проверяем, есть ли наш пользователь в БД
+        User user = dbService.getUser(sender.getUid());
+        if (user == null){
+            dbService.insertUser(sender);
+        }
     }
 
-    private ContactFromServer convertContactToCFS(String jsonText) {
+    private User convertJSONToUser(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.fromJson(jsonText, ContactFromServer.class);
+        return gson.fromJson(jsonText, User.class);
     }
 
     public void addContact(String contact) {
-        ContactToServer cts = new ContactToServer(contact);
+        UserToServer cts = new UserToServer(contact);
         String requestJSON = new Gson().toJson(cts);
 
         try {
@@ -256,7 +268,7 @@ public class ClientController {
             switch (response.getResponseCode()) {
                 case 201:
                     showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
-                    addContactToDB(convertContactToCFS(response.getResponseJson()));
+                    addContactToDB(convertJSONToUser(response.getResponseJson()));
                     if (chatViewController != null) chatViewController.fillContactListView();
                     break;
                 case 404:
@@ -273,7 +285,7 @@ public class ClientController {
         }
     }
 
-    private void addContactToDB(ContactFromServer contact) {
+    private void addContactToDB(User contact) {
         dbService.insertUser(new User(contact.getUid(), contact.getAccount_name(), contact.getEmail()));
         contactList.add(contact.getUid());
     }
