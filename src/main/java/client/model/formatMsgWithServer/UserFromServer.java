@@ -1,11 +1,11 @@
 package client.model.formatMsgWithServer;
 
-public class ContactFromServer {
+public class UserFromServer {
     private long uid;
     private String account_name;
     private String email;
 
-    public ContactFromServer() {}
+    public UserFromServer() {}
 
     public long getUid() {
         return uid;

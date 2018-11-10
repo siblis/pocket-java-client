@@ -9,10 +9,10 @@ import java.util.List;
 public class User {
 
     @Id
-    private long id;
+    private long uid;
 
     @Column
-    private String name;
+    private String account_name;
 
     @Column
     private String email;
@@ -26,9 +26,9 @@ public class User {
     public User() {
     }
 
-    public User(long id, String name, String email) {
-        this.id = id;
-        this.name = name;
+    public User(long uid, String account_name, String email) {
+        this.uid = uid;
+        this.account_name = account_name;
         this.email = email;
         sentMess = new ArrayList<>();
         receivedMess = new ArrayList<>();
@@ -49,20 +49,20 @@ public class User {
         receivedMess.clear();
     }
 
-    public long getId() {
-        return id;
+    public long getUid() {
+        return uid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUid(long id) {
+        this.uid = id;
     }
 
-    public String getName() {
-        return name;
+    public String getAccount_name() {
+        return account_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAccount_name(String name) {
+        this.account_name = name;
     }
 
     public String getEmail() {
