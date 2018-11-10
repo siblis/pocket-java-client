@@ -122,7 +122,7 @@ public class ClientController {
                         addContact(convertJSONToUser(response.getResponseJson()).getEmail());
                         break;
                     case 404:
-                        showAlert("Пользователь с id: " + mfs.getSenderid() + " не найден", Alert.AlertType.ERROR);
+                        showAlert("Пользователь не найден", Alert.AlertType.ERROR);//с id: " + mfs.getSenderid() + "
                         break;
                     default:
                         showAlert("Общая ошибка!", Alert.AlertType.ERROR);
@@ -183,6 +183,10 @@ public class ClientController {
     }
 
     public void sendMessage(String message) {
+        if (receiver == null){
+            showAlert("Выберите контакт для отправки сообщения", Alert.AlertType.ERROR);
+            return;
+        }
         MessageToServer MTS = new MessageToServer(receiver.getUid(), message);
 
         String jsonMessage = new Gson().toJson(MTS);
@@ -242,6 +246,11 @@ public class ClientController {
             e.printStackTrace();
         }
 
+        // проверяем, есть ли наш пользователь в БД
+        User user = dbService.getUser(sender.getUid());
+        if (user == null){
+            dbService.insertUser(sender);
+        }
     }
 
     private User convertJSONToUser(String jsonText) {
