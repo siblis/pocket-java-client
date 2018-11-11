@@ -149,13 +149,12 @@ public class ClientController {
         message = message.replaceAll("\n", "<br/>");
         message = Common.urlToHyperlink(message);
 
-        msgArea += dateFormat.format(timestamp) + " " + formatSender + message + "<br>";
+        msgArea += dateFormat.format(timestamp) + " " + formatSender + " " + message + "<br>";
 
         chatViewController.webEngine.loadContent("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
-
                 "</head>\n" +
 
                 "    <body style=\"background-image: url(https://s3-alpha.figma.com/img/0f65/df21/9351ace9280e6668b235304d7ceaf426)\">\n" +
@@ -166,20 +165,6 @@ public class ClientController {
 
                 "    </body>\n" +
                 "</html>");
-
-//        webEngine.loadContent("<html>" +
-//                "<body>" +
-//                "<p>" +
-//                "<style>" +
-//                "div { font-size: 16px; white-space: pre-wrap;} html { overflow-x:  hidden; }" +
-//                "</style>" +
-//                msgArea +
-//                "<script>" +
-//                "javascript:scroll(0,10000)" +
-//                "</script>" +
-//                "</p>" +
-//                "</body>" +
-//                "</html>");
     }
 
     public void sendMessage(String message) {
