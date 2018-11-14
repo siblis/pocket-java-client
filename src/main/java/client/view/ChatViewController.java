@@ -30,6 +30,7 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -58,16 +59,26 @@ public class ChatViewController implements Initializable {
 
     private ClientController clientController;
 
+    private File chatBackgroundImage;
+
     public ChatViewController() {
+    }
+
+    public void setChatBackgroundImage(File fileName) {
+        chatBackgroundImage = fileName;
+    }
+
+    public File getChatBackgroundImage() {
+        return chatBackgroundImage;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableArrayList();
         fillContactListView();
+        setChatBackgroundImage(new File(getClass().getResource("/client/images/chat-bg.jpg").getFile()));
         webtest();
         initFX(); //устанавливаем слушатель на обновление webView
 
@@ -91,15 +102,12 @@ public class ChatViewController implements Initializable {
         webEngine.loadContent("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
-                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "   <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "</head>\n" +
-
-                "    <body style=\"background-image: url(https://s3-alpha.figma.com/img/0f65/df21/9351ace9280e6668b235304d7ceaf426)\">\n" +
-
-                "        <div id=\"messageArea\">" +
-                "       </div>\n" +
-
-                "    </body>\n" +
+                "<body style=\"background-image: url(" + chatBackgroundImage.toURI().toString() + ")\">\n" +
+                "   <div id=\"messageArea\">" +
+                "   </div>\n" +
+                "</body>\n" +
                 "</html>");
     }
 
