@@ -157,10 +157,10 @@ public class ClientController {
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "</head>\n" +
 
-                "    <body style=\"background-image: url(https://s3-alpha.figma.com/img/0f65/df21/9351ace9280e6668b235304d7ceaf426)\">\n" +
+                "<body style=\"background-image: url(" + chatViewController.getChatBackgroundImage().toURI().toString() + ")\">\n" +
 
                 "        <div id=\"messageArea\">" +
-                            msgArea +
+                msgArea +
                 "       </div>\n" +
 
                 "    </body>\n" +
