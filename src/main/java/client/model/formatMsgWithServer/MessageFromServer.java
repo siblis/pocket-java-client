@@ -45,8 +45,9 @@ public class MessageFromServer {
     }
 
     public Timestamp getTimestamp() {
-        long longTS = Long.parseLong(timestamp.substring(0, 10) + timestamp.substring(10 + 1));
-        return new Timestamp(longTS / 1000);
+        String stringTS = (timestamp.substring(0, 10) + timestamp.substring(10 + 1)).substring(0, 13);
+        long longTS = Long.parseLong(stringTS);
+        return new Timestamp(longTS);
     }
 
     public void setTimestamp(String timestamp) {
