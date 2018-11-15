@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -35,6 +36,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static client.utils.Common.showAlert;
@@ -232,5 +235,29 @@ public class ChatViewController implements Initializable {
                 }
             }
         });
+    }
+    //метод выбора файла
+    private Desktop desktop = Desktop.getDesktop();
+    @FXML
+    public void handleSendFile() {
+        Stage stage = (Stage) messagePanel.getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            try {
+                this.desktop.open(file);//открывается файл на компьютере
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            List<File> files = Arrays.asList(file);
+            if (files == null || files.isEmpty()) return;
+            for(File f : files) {
+                messageField.appendText(f.getAbsolutePath() + "\n");
+            }
+        }
+    }
+    //метод добавления смайликов
+    public void handleSendSmile(MouseEvent mouseEvent) {
     }
 }
