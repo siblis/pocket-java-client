@@ -101,3 +101,7 @@
 #smailik {
     -fx-graphic: url("../images/chat/smailik.png");
 }
+
+#skrepka {
+     -fx-graphic: url("../images/chat/skrepka.png");
+ }

@@ -25,7 +25,7 @@ public class CustomTextArea extends TextArea {
         super.layoutChildren();
 
         setWrapText(true);
-        setPadding(new Insets(0, 104, 0, 4));
+        setPadding(new Insets(0, 120, 0, 69));
 
         ScrollPane scrollPane = (ScrollPane)lookup(".scroll-pane");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
