@@ -97,3 +97,7 @@
 #vector {
     -fx-graphic: url("../images/chat/Vector.png");
 }
+
+#smailik {
+    -fx-graphic: url("../images/chat/smailik.png");
+}
