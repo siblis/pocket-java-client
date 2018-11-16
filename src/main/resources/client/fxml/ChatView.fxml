@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import client.utils.CustomTextArea?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.web.WebView?>
 
-<?import client.utils.CustomTextArea?>
 <BorderPane prefHeight="450.0" prefWidth="750.0" stylesheets="/client/styles/ChatStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.ChatViewController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -39,64 +38,13 @@
 
         <AnchorPane fx:id="messagePanel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <ListView fx:id="contactListView" minWidth="200" onMouseClicked="#handleClientChoice" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <WebView fx:id="messageWebView" minHeight="50.0" minWidth="50.0" prefHeight="400" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <CustomTextArea fx:id="messageField" prefWidth="1029.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0"/>
-            <Label id="vector" onMouseClicked="#handleSendMessage" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="80.5" />
+            <WebView fx:id="messageWebView" minHeight="50.0" minWidth="50.0" prefHeight="400" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0" maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" />
+
+            <Label id="vector" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendMessage" prefHeight="18.0" prefWidth="20.5" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="81.5" />
+            <Label id="smailik" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendSmile" prefHeight="24.0" prefWidth="24.0" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="31.0" />
+            <Label id="skrepka" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendFile" prefHeight="35.0" prefWidth="35.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="215.0" />
         </AnchorPane>
-
-
-
-        <!--<AnchorPane fx:id="messagePanel" prefHeight="400.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">-->
-            <!--<children>-->
-                <!--<SplitPane dividerPositions="0.6" layoutX="146.0" layoutY="159.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">-->
-                    <!--<items>-->
-                        <!--<AnchorPane>-->
-                            <!--<children>-->
-                                <!--<SplitPane dividerPositions="0.6158176943699732" layoutX="214.0" layoutY="59.0" prefHeight="209.0" prefWidth="258.0" AnchorPane.bottomAnchor="-159.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-208.0" AnchorPane.topAnchor="0.0">-->
-                                    <!--<items>-->
-                                        <!--<AnchorPane fx:id="webViewPane" minHeight="50.0" minWidth="50.0" prefHeight="245.0" prefWidth="584.0">-->
-                                            <!--<children>-->
-                                                <!--<ScrollPane prefHeight="252.0" prefWidth="584.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">-->
-                                                    <!--<content>-->
-                                                        <!--<WebView fx:id="messageWebView" minHeight="50.0" minWidth="50.0" prefHeight="236.0" prefWidth="568.0" />-->
-                                                    <!--</content>-->
-                                                <!--</ScrollPane>-->
-                                            <!--</children>-->
-                                        <!--</AnchorPane>-->
-                                        <!--<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">-->
-                                            <!--<children>-->
-                                                <!--<ListView fx:id="contactListView" layoutX="-25.0" layoutY="38.0" onMouseClicked="#handleClientChoice" prefHeight="275.0" prefWidth="209.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />-->
-                                            <!--</children>-->
-                                        <!--</AnchorPane>-->
-                                    <!--</items>-->
-                                <!--</SplitPane>-->
-                            <!--</children>-->
-                        <!--</AnchorPane>-->
-                        <!--<AnchorPane styleClass="tab-pane">-->
-                            <!--<VBox prefHeight="200.0" prefWidth="190.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">-->
-                                <!--<children>-->
-                                    <!--<TextField fx:id="messageField" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="506.0">-->
-                                        <!--<VBox.margin>-->
-                                            <!--<Insets top="15.0" />-->
-                                        <!--</VBox.margin></TextField>-->
-                                    <!--<ButtonBar prefHeight="40.0" prefWidth="145.0">-->
-                                        <!--<buttons>-->
-                                            <!--<Button contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" onAction="#handleSendMessage" prefHeight="25.0" prefWidth="90.0" text="Send" />-->
-                                            <!--<Button mnemonicParsing="false" onAction="#handleExit" prefHeight="25.0" text="Exit" />-->
-                                        <!--</buttons>-->
-                                        <!--<padding>-->
-                                            <!--<Insets right="10.0" />-->
-                                        <!--</padding>-->
-                                        <!--<VBox.margin>-->
-                                            <!--<Insets top="15.0" />-->
-                                        <!--</VBox.margin>-->
-                                    <!--</ButtonBar>-->
-                                <!--</children>-->
-                            <!--</VBox>-->
-                        <!--</AnchorPane>-->
-                    <!--</items>-->
-                <!--</SplitPane>-->
-            <!--</children>-->
-        <!--</AnchorPane>-->
+        
     </center>
 </BorderPane>
