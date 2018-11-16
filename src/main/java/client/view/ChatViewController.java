@@ -253,7 +253,7 @@ public class ChatViewController implements Initializable {
             List<File> files = Arrays.asList(file);
             if (files == null || files.isEmpty()) return;
             for(File f : files) {
-                messageField.appendText(f.getAbsolutePath() + "\n");
+                messageField .appendText(f.getAbsolutePath() + "\n");
             }
         }
     }
