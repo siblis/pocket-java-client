@@ -1,3 +1,5 @@
+
+
 #menu {
     -fx-background-color: #3498DB;
 }
@@ -81,4 +83,22 @@
 
 #skrepka {
      -fx-graphic: url("../images/chat/skrepka.png");
- }
+}
+
+#addContact {
+    -fx-graphic: url("../images/chat/Создать.png");
+}
+
+#contacts .tab-label {
+     -fx-graphic: url("../images/chat/contacts.png");
+     -fx-background-color: #3498DB;
+}
+
+#chats .tab-label {
+     -fx-graphic: url("../images/chat/chats.png");
+     -fx-background-color: #3498DB;
+}
+
+.tab-header-area {
+    -fx-background-color: #3498DB;
+}
