@@ -88,17 +88,19 @@
 #addContact {
     -fx-graphic: url("../images/chat/Создать.png");
 }
+.tab {
+    -fx-background-color: #3498DB;
+}
 
 #contacts .tab-label {
      -fx-graphic: url("../images/chat/contacts.png");
-     -fx-background-color: #3498DB;
 }
 
 #chats .tab-label {
      -fx-graphic: url("../images/chat/chats.png");
-     -fx-background-color: #3498DB;
+
 }
 
-.tab-header-area {
+.tab-header-background {
     -fx-background-color: #3498DB;
 }
