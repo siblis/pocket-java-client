@@ -10,25 +10,38 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.web.WebView?>
 
 <BorderPane prefHeight="450.0" prefWidth="750.0" stylesheets="/client/styles/ChatStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.ChatViewController">
     <top>
-        <MenuBar id="menu-bar" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="49.0" prefWidth="300.0" BorderPane.alignment="TOP_LEFT">
+        <MenuBar id="menu-bar" maxHeight="-Infinity" minHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="49.0" BorderPane.alignment="CENTER">
             <menus>
                 <Menu id="menu" mnemonicParsing="false">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleDisconnectButton" text="Отключиться..." />
                         <SeparatorMenuItem />
                         <MenuItem mnemonicParsing="false" text="Профиль" />
-                        <MenuItem mnemonicParsing="false" text="Настройки связи" />
-                        <MenuItem mnemonicParsing="false" text="Настройки внешнего вида" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Выход" />
                     </items>
                 </Menu>
+                <Menu id="findMenu">
+               <graphic>
+                  <TextField maxWidth="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="250.0" />
+               </graphic></Menu>
+                <Menu id="leftMenu" mnemonicParsing="false">
+                    <MenuItem mnemonicParsing="false" text="Настройки связи" />
+                    <MenuItem mnemonicParsing="false" text="Настройки внешнего вида" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Выход" />
+                </Menu>
             </menus>
+         <padding>
+            <Insets right="25.0" top="5.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
         </MenuBar>
     </top>
     <center>
@@ -69,7 +82,7 @@
          </TabPane>
 
             <WebView fx:id="messageWebView" maxWidth="1031.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0" maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" promptText="Написать сообщение..."/>
+            <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0" maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50" promptText="Написать сообщение..." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" />
 
             <Label id="vector" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendMessage" prefHeight="18.0" prefWidth="20.5" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="81.5" />
             <Label id="smailik" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendSmile" prefHeight="24.0" prefWidth="24.0" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="31.0" />
