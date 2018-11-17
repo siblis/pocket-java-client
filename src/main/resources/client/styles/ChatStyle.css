@@ -2,6 +2,9 @@
 
 #menu {
     -fx-background-color: #3498DB;
+    -fx-background-image: url("../images/chat/Shape.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
 }
 
 #menu-bar {
@@ -13,9 +16,7 @@
 }
 
 #menu-bar.label {
-    -fx-font-size: 14pt;
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: white;
+
 }
 #menu:focused {
     -fx-background-color: #3498DB;

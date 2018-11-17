@@ -16,9 +16,9 @@
 
 <BorderPane prefHeight="450.0" prefWidth="750.0" stylesheets="/client/styles/ChatStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.ChatViewController">
     <top>
-        <MenuBar id="menu-bar" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="49.0" BorderPane.alignment="CENTER">
+        <MenuBar id="menu-bar" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="49.0" prefWidth="300.0" BorderPane.alignment="TOP_LEFT">
             <menus>
-                <Menu id="menu" mnemonicParsing="false" text="Меню">
+                <Menu id="menu" mnemonicParsing="false">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleDisconnectButton" text="Отключиться..." />
                         <SeparatorMenuItem />
@@ -75,6 +75,6 @@
             <Label id="smailik" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendSmile" prefHeight="24.0" prefWidth="24.0" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="31.0" />
             <Label id="skrepka" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendFile" prefHeight="35.0" prefWidth="35.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="316.0" />
         </AnchorPane>
-        
+
     </center>
 </BorderPane>
