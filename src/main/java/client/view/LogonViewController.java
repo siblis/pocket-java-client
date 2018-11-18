@@ -54,8 +54,8 @@ public class LogonViewController implements Initializable {
 
             chatStage.setOnCloseRequest(event -> {
                 event.consume();
-                Tray.trayON();
-                Common.showAlert("Закрывайте через кнопку Выход", Alert.AlertType.ERROR);
+                Tray.trayON(chatStage);
+                //Common.showAlert("Закрывайте через кнопку Выход", Alert.AlertType.ERROR);
             });
         } else {
             loginField.clear();

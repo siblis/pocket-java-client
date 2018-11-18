@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    public static Stage primaryStage;
+    private static Stage primaryStage;
     private static BorderPane rootLayout;
 
     @Override
@@ -42,7 +42,7 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
             //primaryStage.setTitle("Закрывайте через кнопку Выход");
-            Tray.trayON();
+            Tray.trayON(primaryStage);
             //Common.showAlert("Закрывайте через кнопку Выход", Alert.AlertType.ERROR);
         });
     }

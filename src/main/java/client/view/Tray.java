@@ -13,21 +13,20 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPopupMenu;
 
-import static client.Main.primaryStage;
-
 public class Tray extends Application {
     private static SystemTray tray;
    // private static TrayIcon icon;
 
-    public static void trayON(){
+    public static void trayON(Stage stage){
         System.out.println("сворачиваем в трей");
-        primaryStage.hide();
+        stage.hide();
     }
 
-    public static void trayOFF(){
-        if (primaryStage != null) {
-            primaryStage.show();
-            primaryStage.toFront();
+    public static void trayOFF(Stage stage){
+        if (stage != null) {
+            System.out.println("111");
+            stage.show();
+            stage.toFront();
         }
         System.out.println("выходим из трея");
     }
@@ -56,8 +55,8 @@ public class Tray extends Application {
             JMenuItem open = new JMenuItem("Открыть messenger");
             JMenuItem close = new JMenuItem("Свернуть в трей");
             exit.addActionListener(exitListener);
-            open.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayOFF();}}));
-            close.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayON();}}));
+            open.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayOFF(primaryStage);}}));
+            close.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayON(primaryStage);}}));
             popup.add(exit);
             popup.addSeparator();
             popup.add(open);
