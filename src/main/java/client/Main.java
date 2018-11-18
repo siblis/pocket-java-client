@@ -1,12 +1,10 @@
 package client;
 
-import client.utils.Common;
-import client.view.Tray;
+import client.utils.Tray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -15,7 +13,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private static Stage primaryStage;
+    public static Stage primaryStage;
     private static BorderPane rootLayout;
 
     @Override
@@ -33,17 +31,12 @@ public class Main extends Application {
 
         //значек в трее
         Tray tray = new Tray();
-        try {
-            tray.start(primaryStage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        tray.setTrayIcon();
+
 
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
-            //primaryStage.setTitle("Закрывайте через кнопку Выход");
             Tray.trayON(primaryStage);
-            //Common.showAlert("Закрывайте через кнопку Выход", Alert.AlertType.ERROR);
         });
     }
 
@@ -76,7 +69,5 @@ public class Main extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args){launch(args);}
 }

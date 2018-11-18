@@ -1,6 +1,5 @@
-package client.view;
+package client.utils;
 
-import client.Main;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -13,9 +12,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPopupMenu;
 
-public class Tray extends Application {
+import static client.Main.primaryStage;
+
+
+public class Tray {
     private static SystemTray tray;
-   // private static TrayIcon icon;
+    public static Stage currentStage;
 
     public static void trayON(Stage stage){
         System.out.println("сворачиваем в трей");
@@ -24,15 +26,13 @@ public class Tray extends Application {
 
     public static void trayOFF(Stage stage){
         if (stage != null) {
-            System.out.println("111");
             stage.show();
             stage.toFront();
         }
         System.out.println("выходим из трея");
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void setTrayIcon()  {
         final TrayIcon trayIcon;
         Platform.setImplicitExit(false);
         if(!SystemTray.isSupported()){
@@ -41,6 +41,7 @@ public class Tray extends Application {
         else{
             tray = SystemTray.getSystemTray();
             trayIcon = new TrayIcon(new ImageIcon(Tray.class.getResource("/client/images/icon.png")).getImage().getScaledInstance(16, -1, 4));
+            trayIcon.setToolTip("Меню Pocket");
 
             ActionListener exitListener = new ActionListener() {
                 @Override
@@ -51,17 +52,24 @@ public class Tray extends Application {
             };
 
             final JPopupMenu popup = new JPopupMenu();
-            JMenuItem exit = new JMenuItem("Exit");
-            JMenuItem open = new JMenuItem("Открыть messenger");
+            JMenuItem exit = new JMenuItem("Выход");
+            JMenuItem open = new JMenuItem("Развернуть");
             JMenuItem close = new JMenuItem("Свернуть в трей");
+            JMenuItem quietMode = new JMenuItem("Тихий режим");
+
+            trayIcon.addActionListener(event-> Platform.runLater(new Runnable(){@Override public void run() {trayOFF(currentStage == null?primaryStage:currentStage);}}));
+            open.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayOFF(currentStage == null?primaryStage:currentStage);}}));
+            close.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayON(currentStage == null?primaryStage:currentStage);}}));
+            quietMode.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {System.out.println("Пока не сделанно");}}));
             exit.addActionListener(exitListener);
-            open.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayOFF(primaryStage);}}));
-            close.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayON(primaryStage);}}));
-            popup.add(exit);
-            popup.addSeparator();
+
             popup.add(open);
             popup.addSeparator();
+            popup.add(quietMode);
+            popup.addSeparator();
             popup.add(close);
+            popup.addSeparator();
+            popup.add(exit);
             trayIcon.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
@@ -74,21 +82,11 @@ public class Tray extends Application {
                 }
             });
 
-            tray.add(trayIcon);
-
-
-//            try {tray.add(trayIcon);
-//                MenuItem open = new MenuItem("Открыть TaskBar");
-//                MenuItem close = new MenuItem("Выйти");
-//                trayIcon.addActionListener(event-> Platform.runLater(new Runnable(){@Override public void run() {trayOFF();}}));
-//                open.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayOFF();}}));
-//                close.addActionListener(event->trayON());
-//                menu.add(open);
-//                menu.addSeparator();
-//                menu.add(close);
-//                trayIcon.setPopupMenu(menu);
-//                trayIcon.setToolTip("TEST");}
-//            catch (AWTException ex) {System.out.println("Unable to init system tray");}
+            try {
+                tray.add(trayIcon);
+            } catch (AWTException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
