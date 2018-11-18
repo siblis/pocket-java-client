@@ -1,7 +1,7 @@
 package client;
 
-import client.controller.ClientController;
 import client.utils.Common;
+import client.view.Tray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private static Stage primaryStage;
+    public static Stage primaryStage;
     private static BorderPane rootLayout;
 
     @Override
@@ -31,10 +31,19 @@ public class Main extends Application {
         //показываем общий вид
         showOverview();
 
+        //значек в трее
+        Tray tray = new Tray();
+        try {
+            tray.start(primaryStage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
             //primaryStage.setTitle("Закрывайте через кнопку Выход");
-            Common.showAlert("Закрывайте через кнопку Выход", Alert.AlertType.ERROR);
+            Tray.trayON();
+            //Common.showAlert("Закрывайте через кнопку Выход", Alert.AlertType.ERROR);
         });
     }
 
