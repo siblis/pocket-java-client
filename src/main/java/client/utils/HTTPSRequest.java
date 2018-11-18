@@ -94,6 +94,18 @@ public class HTTPSRequest {
         return serverResponse;
     }
 
+    public static ServerResponse getMySelf(String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/users/");
+        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Token", token);
+
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setResponseCode(sendRequest(connection, null));
+        serverResponse.setResponseJson(answerRequest(connection));
+        return serverResponse;
+    }
+
     private static int sendRequest(HttpsURLConnection con, String requestJSON) throws Exception {
         if (requestJSON != null) {
             con.setDoOutput(true);

@@ -47,7 +47,7 @@ class UserDAO {
         session.getTransaction().commit();
     }
 
-    User get(int id) {
+    User get(long id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -62,7 +62,7 @@ class UserDAO {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        Query<User> query = session.createQuery("from User u where u.name = :userNameParam");
+        Query<User> query = session.createQuery("from User u where u.account_name = :userNameParam");
         query.setParameter("userNameParam", userName);
         User user = query.getSingleResult();
 
@@ -80,38 +80,6 @@ class UserDAO {
         session.getTransaction().commit();
 
         return list;
-    }
-
-    Message findMessageById(long id) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        Message message = session.get(Message.class, id);
-
-        session.getTransaction().commit();
-        return message;
-    }
-
-    void addSentMessage(long senderID, Message message) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        User user = session.get(User.class, senderID);
-        user.addSentMessage(message);
-        session.saveOrUpdate(user);
-
-        session.getTransaction().commit();
-    }
-
-    void addReceivedMessage(long receiverId, Message message) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        User user = session.get(User.class, receiverId);
-        user.addReceivedMessage(message);
-        session.saveOrUpdate(user);
-
-        session.getTransaction().commit();
     }
 
     void close(){

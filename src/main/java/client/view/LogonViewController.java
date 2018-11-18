@@ -48,7 +48,7 @@ public class LogonViewController implements Initializable {
             chatStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
             chatStage.setMinWidth(750.0);
             chatStage.setMinHeight(430.0);
-            chatStage.setTitle("Pocket desktop client. \t\t Logged as: [" + controller.getSender() + "]");
+            chatStage.setTitle("Pocket desktop client. \t\t Logged as: [" + controller.getSenderName() + "]");
             chatStage.setScene(new Scene(root));
             chatStage.show();
 
