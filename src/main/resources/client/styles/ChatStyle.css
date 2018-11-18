@@ -13,12 +13,12 @@
     -fx-background-position: center center;
 }
 
-#menu-bar {
+.menu-bar {
     -fx-background-color: #3498DB;
 }
 
-.context-menu {
-    -fx-background-color: #3498DB;
+.menu-button > .arrow-button > .arrow {
+    -fx-background-color: transparent;
 }
 
 #menu-bar.label {
