@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -30,10 +31,13 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static client.utils.Common.showAlert;
@@ -58,16 +62,26 @@ public class ChatViewController implements Initializable {
 
     private ClientController clientController;
 
+    private File chatBackgroundImage;
+
     public ChatViewController() {
+    }
+
+    public void setChatBackgroundImage(File fileName) {
+        chatBackgroundImage = fileName;
+    }
+
+    public File getChatBackgroundImage() {
+        return chatBackgroundImage;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableArrayList();
         fillContactListView();
+        setChatBackgroundImage(new File(getClass().getResource("/client/images/chat-bg.jpg").getFile()));
         webtest();
         initFX(); //устанавливаем слушатель на обновление webView
 
@@ -91,15 +105,12 @@ public class ChatViewController implements Initializable {
         webEngine.loadContent("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
-                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "   <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "</head>\n" +
-
-                "    <body style=\"background-image: url(https://s3-alpha.figma.com/img/0f65/df21/9351ace9280e6668b235304d7ceaf426)\">\n" +
-
-                "        <div id=\"messageArea\">" +
-                "       </div>\n" +
-
-                "    </body>\n" +
+                "<body style=\"background-image: url(" + chatBackgroundImage.toURI().toString() + ")\">\n" +
+                "   <div id=\"messageArea\">" +
+                "   </div>\n" +
+                "</body>\n" +
                 "</html>");
     }
 
@@ -224,5 +235,29 @@ public class ChatViewController implements Initializable {
                 }
             }
         });
+    }
+    //метод выбора файла
+    private Desktop desktop = Desktop.getDesktop();
+    @FXML
+    public void handleSendFile() {
+        Stage stage = (Stage) messagePanel.getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            try {
+                this.desktop.open(file);//открывается файл на компьютере
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            List<File> files = Arrays.asList(file);
+            if (files == null || files.isEmpty()) return;
+            for(File f : files) {
+                messageField .appendText(f.getAbsolutePath() + "\n");
+            }
+        }
+    }
+    //метод добавления смайликов
+    public void handleSendSmile(MouseEvent mouseEvent) {
     }
 }

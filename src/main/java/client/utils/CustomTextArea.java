@@ -3,13 +3,15 @@ package client.utils;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class CustomTextArea extends TextArea {
 
-    private final double DEFAULT_MIN_HEIGHT = 30.0;
+    private final double DEFAULT_MIN_HEIGHT = 50.0;
     private final double DEFAULT_MAX_HEIGHT = 350.0;
 
     public CustomTextArea() {
@@ -23,7 +25,7 @@ public class CustomTextArea extends TextArea {
         super.layoutChildren();
 
         setWrapText(true);
-        setPadding(new Insets(0, 0, 0, 0));
+        setPadding(new Insets(0, 120, 0, 69));//паддиинги в соответствии с дизайном
 
         ScrollPane scrollPane = (ScrollPane)lookup(".scroll-pane");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
