@@ -2,7 +2,9 @@ package client.view;
 
 import client.Main;
 import client.controller.ClientController;
+import client.utils.Common;
 import client.utils.CustomTextArea;
+import client.utils.Sound;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -36,6 +38,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -44,7 +48,8 @@ import static client.utils.Common.showAlert;
 
 public class ChatViewController implements Initializable {
 
-    public WebEngine webEngine;
+    private WebEngine webEngine;
+    private String msgArea = "";
 
     @FXML
     private AnchorPane messagePanel;
@@ -139,6 +144,38 @@ public class ChatViewController implements Initializable {
         });
         contactsObservList.clear();
         contactsObservList.addAll(clientController.getAllUserNames());
+    }
+
+    public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
+        if (isNew){
+            Sound.playSound("src\\main\\resources\\client\\sounds\\1.wav").join();
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        String formatSender = "<b><font color = " + (clientController.getSenderName().equals(senderName) ? "green" : "red") + ">"
+                + senderName
+                + "</font></b>";
+
+        message = message.replaceAll("\n", "<br/>");
+        message = Common.urlToHyperlink(message);
+
+        msgArea += dateFormat.format(timestamp) + " " + formatSender + " " + message + "<br>";
+
+        webEngine.loadContent("<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "</head>\n" +
+
+                "<body style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+
+                "        <div id=\"messageArea\">" +
+                msgArea +
+                "       </div>\n" +
+
+                "    </body>\n" +
+                "</html>");
     }
 
     @FXML
@@ -259,5 +296,19 @@ public class ChatViewController implements Initializable {
     }
     //метод добавления смайликов
     public void handleSendSmile(MouseEvent mouseEvent) {
+    }
+
+    public void clearMessageWebView() {
+        msgArea = "";
+        webEngine.loadContent("<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "</head>\n" +
+
+                "<body style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+
+                "</body>\n" +
+                "</html>");
     }
 }
