@@ -5,6 +5,7 @@ import client.model.formatMsgWithServer.*;
 import client.utils.Common;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
+import client.utils.Sound;
 import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -131,7 +132,7 @@ public class ClientController {
                 e.printStackTrace();
             }
         }
-        showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp());
+        showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(),true);
 
         dbService.addMessage(mfs.getReceiver(),
                 mfs.getSenderid(),
@@ -139,7 +140,11 @@ public class ClientController {
                         mfs.getTimestamp()));
     }
 
-    private void showMessage(String senderName, String message, Timestamp timestamp) {
+    private void showMessage(String senderName, String message, Timestamp timestamp,boolean isNew) {
+        if (isNew){
+            Sound.playSound("src\\main\\resources\\client\\sounds\\1.wav").join();
+        }
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
         String formatSender = "<b><font color = " + (sender.getAccount_name().equals(senderName) ? "green" : "red") + ">"
@@ -182,16 +187,16 @@ public class ClientController {
                 sender.getUid(),
                 new Message(message, new Timestamp(System.currentTimeMillis()))
         );
-        showMessage(sender.getAccount_name(), message, new Timestamp(System.currentTimeMillis()));
+        showMessage(sender.getAccount_name(), message, new Timestamp(System.currentTimeMillis()),false);
     }
 
     private void loadChat() {
         List<Message> converstation = dbService.getChat(sender, receiver);
         msgArea = "";
-        showMessage("", "", new Timestamp(0));// не очень удачная (плохая) попытка очистить WebView
+        showMessage("", "", new Timestamp(0),false);// не очень удачная (плохая) попытка очистить WebView
         for (Message message :
                 converstation) {
-            showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime());
+            showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(),false);
         }
     }
 
