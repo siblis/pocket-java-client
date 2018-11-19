@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import client.controller.ClientController;
-import client.utils.Common;
+import client.utils.Tray;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -32,6 +31,7 @@ public class LogonViewController implements Initializable {
 
     private ClientController controller;
 
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         controller = ClientController.getInstance();
@@ -45,16 +45,18 @@ public class LogonViewController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/ChatView.fxml"));
             Parent root = fxmlLoader.load();
             Stage chatStage = new Stage();
+            Platform.setImplicitExit(false);
             chatStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
             chatStage.setMinWidth(750.0);
             chatStage.setMinHeight(430.0);
             chatStage.setTitle("Pocket desktop client. \t\t Logged as: [" + controller.getSenderName() + "]");
             chatStage.setScene(new Scene(root));
             chatStage.show();
+            Tray.currentStage = chatStage;
 
             chatStage.setOnCloseRequest(event -> {
                 event.consume();
-                Common.showAlert("Закрывайте через кнопку Выход", Alert.AlertType.ERROR);
+                Tray.trayON(chatStage);
             });
         } else {
             loginField.clear();
