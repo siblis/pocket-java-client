@@ -1,5 +1,7 @@
 package client.utils;
 
+import client.controller.ClientController;
+import client.view.ChatViewController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -46,6 +48,11 @@ public class Tray {
             ActionListener exitListener = new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    ClientController clientController = ChatViewController.getClientController();
+                    if (clientController != null){
+                        clientController.dbServiceClose();
+                        clientController.disconnect();
+                    }
                     System.out.println("Выход из приложения");
                     System.exit(0);
                 }
