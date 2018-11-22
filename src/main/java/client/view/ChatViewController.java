@@ -171,12 +171,16 @@ public class ChatViewController implements Initializable {
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "</head>\n" +
 
-                "<body style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+                "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
 
                 "        <div id=\"messageArea\">" +
                 msgArea +
                 "       </div>\n" +
-
+                "<script language=\"javascript\" type=\"text/javascript\">\n" +
+                "function pageScrollDown() {\n" +
+                "document.body.scrollTop = document.body.scrollHeight;\n" +
+                "}\n" +
+                "</script>\n" +
                 "    </body>\n" +
                 "</html>");
     }
@@ -198,16 +202,18 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleSendMessage() {
-        clientController.sendMessage(messageField.getText());
-        messageField.clear();
-        messageField.requestFocus();
+        if (!messageField.getText().isEmpty()) {
+            clientController.sendMessage(messageField.getText());
+            messageField.clear();
+            messageField.requestFocus();
+        }
     }
 
     @FXML
     private void handleClientChoice(MouseEvent event) {
         if (event.getClickCount() == 1) {
             String receiver = contactListView.getSelectionModel().getSelectedItem();
-            showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
+            //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
             clientController.setReceiver(receiver);
         }
 
