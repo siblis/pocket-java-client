@@ -65,12 +65,15 @@ public class ChatViewController implements Initializable {
 
     private ObservableList<String> contactsObservList;
 
-    private ClientController clientController;
+    private static ClientController clientController;
 
     private File chatBackgroundImage;
 
+
     public ChatViewController() {
     }
+
+    public static ClientController getClientController(){return clientController;}
 
     public void setChatBackgroundImage(File fileName) {
         chatBackgroundImage = fileName;
