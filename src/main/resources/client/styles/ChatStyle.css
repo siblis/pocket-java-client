@@ -66,10 +66,11 @@
 }
 
 #chats .tab-label {
-     -fx-graphic: url("../images/chat/chats.png");
+     -fx-graphic: url("../images/chat/chatsActive.png");
 
 }
 
 .tab-header-background {
     -fx-background-color: #3498DB;
+    
 }

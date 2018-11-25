@@ -50,12 +50,12 @@
          </AnchorPane>
          <TabPane maxWidth="410.0" minWidth="-Infinity" prefWidth="300.0" tabMaxHeight="69.0" tabMinHeight="69.0" tabMinWidth="130.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="49.0">
             <tabs>
-               <Tab id="chats" closable="false" text="чаты">
+               <Tab fx:id="chats" closable="false" onSelectionChanged="#handleOnChatSelected" text="чаты">
                  <content>
                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                  </content>
                </Tab>
-               <Tab id="contacts" closable="false" text="Контакты">
+               <Tab fx:id="contacts" closable="false" onSelectionChanged="#handleOnContactSelected" text="Контакты">
                   <content>
 
                      <AnchorPane>
