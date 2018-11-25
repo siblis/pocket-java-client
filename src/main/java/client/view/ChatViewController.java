@@ -336,7 +336,7 @@ public class ChatViewController implements Initializable {
     }
     public void handleOnContactSelected() {
         contacts.setGraphic(buildImage("/client/images/chat/contactsActive.png"));
-        contacts.setGraphic(buildImage("/client/images/chat/Rectangle.png"));
+        chats.setGraphic(buildImage("/client/images/chat/chats.png"));
 
     }
 
