@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,10 +19,25 @@
 
 
         <AnchorPane fx:id="messagePanel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <AnchorPane styleClass="menu-bar" prefHeight="49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
+            <children>
+               <MenuBar maxWidth="18.0" prefHeight="12.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="18.0">
+                 <menus>
+                     <Menu id="menu" mnemonicParsing="false">
+                     <items>
+                     <MenuItem mnemonicParsing="false" onAction="#handleDisconnectButton" text="Отключиться..." />
+                     <SeparatorMenuItem />
+                     <MenuItem mnemonicParsing="false" text="Профиль" />
+                     </items>
+                     </Menu>
+                 </menus>
+               </MenuBar>
+            </children>
+         </AnchorPane>
          <AnchorPane maxWidth="-Infinity" minHeight="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0" styleClass="menu-bar" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                <MenuBar layoutX="33.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" prefHeight="27.0" prefWidth="54.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="16.0">
-                   <Menu id="leftMenu" >
+                   <Menu id="leftMenu">
                        <MenuItem mnemonicParsing="false" text="Настройки связи" />
                        <MenuItem mnemonicParsing="false" text="Настройки внешнего вида" />
                        <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Выход" />
@@ -62,13 +78,7 @@
                </Tab>
             </tabs>
          </TabPane>
-          <!--<MenuBar minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0" prefWidth="800.0" styleClass="menu-bar" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">-->
-              <!--<Menu id="leftMenu" mnemonicParsing="false">-->
-                  <!--<MenuItem mnemonicParsing="false" text="Настройки связи" />-->
-                  <!--<MenuItem mnemonicParsing="false" text="Настройки внешнего вида" />-->
-                  <!--<MenuItem mnemonicParsing="false" onAction="#handleExit" text="Выход" />-->
-              <!--</Menu>-->
-          <!--</MenuBar>-->
+
 
             <WebView fx:id="messageWebView" maxWidth="1031.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0" />
             <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0" maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50" promptText="Написать сообщение..." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" />
