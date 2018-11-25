@@ -2,9 +2,10 @@
 
 <?import client.utils.CustomTextArea?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -12,23 +13,21 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.web.WebView?>
 
-<?import javafx.scene.control.MenuButton?>
 <BorderPane prefHeight="450.0" prefWidth="750.0" stylesheets="/client/styles/ChatStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.ChatViewController">
     <center>
 
 
         <AnchorPane fx:id="messagePanel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <AnchorPane styleClass="menu-bar" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <AnchorPane maxWidth="-Infinity" minHeight="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0" styleClass="menu-bar" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-               <MenuButton id="leftMenu" pickOnBounds="true" prefHeight="12.0" prefWidth="18.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="18.0">
-
-                   <items>
+               <MenuBar layoutX="33.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" prefHeight="27.0" prefWidth="54.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="16.0">
+                   <Menu id="leftMenu" >
                        <MenuItem mnemonicParsing="false" text="Настройки связи" />
                        <MenuItem mnemonicParsing="false" text="Настройки внешнего вида" />
                        <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Выход" />
-                   </items>
+                   </Menu>
 
-               </MenuButton>
+               </MenuBar>
             </children>
          </AnchorPane>
          <TabPane maxWidth="410.0" minWidth="-Infinity" prefWidth="300.0" tabMaxHeight="69.0" tabMinHeight="69.0" tabMinWidth="130.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="49.0">
