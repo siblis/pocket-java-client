@@ -3,10 +3,9 @@ package client.utils;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class CustomTextArea extends TextArea {
@@ -23,37 +22,29 @@ public class CustomTextArea extends TextArea {
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
-
         setWrapText(true);
-        setPadding(new Insets(17, 120, 0, 69));//паддиинги в соответствии с дизайном
-
+        setPadding(new Insets(0, 120, 0, 69));//паддиинги в соответствии с дизайном
+        //TODO починить установку фокуса
+        //Сейчас при установке фокуса пропадает возможность ввода текста, до тех пор, пока не будет выбран получатель в контакт-листе
+        //setFocused(true);
         ScrollPane scrollPane = (ScrollPane)lookup(".scroll-pane");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setPadding(new Insets(0, 0, 0, 0));
-
         StackPane viewport = (StackPane) scrollPane.lookup(".viewport");
-        viewport.setPadding(new Insets(0, 0, 0, 0));
-
         Region content = (Region) viewport.lookup(".content");
-        content.setPadding(new Insets(-1, 1, 0, 1));
-
+        content.setPadding(new Insets(DEFAULT_MIN_HEIGHT / 2 - 10, 0, DEFAULT_MIN_HEIGHT / 2 - 10, 0));
+        Font font = new Font(14);
+        setFont(font);
         Text text = (Text) content.lookup(".text");
 
         text.textProperty().addListener((property) -> {
             double textHeight = text.getBoundsInLocal().getHeight();
-
             if (textHeight < DEFAULT_MAX_HEIGHT) {
-
-                if (textHeight < DEFAULT_MIN_HEIGHT) {
-                    textHeight = DEFAULT_MIN_HEIGHT;
-                }
-
-                textHeight = textHeight + 1;
-                setMinHeight(textHeight);
-                setPrefHeight(textHeight);
-                setMaxHeight(textHeight);
+                setMinHeight(textHeight + DEFAULT_MIN_HEIGHT / 2 + 5);
+                setPrefHeight(textHeight + DEFAULT_MIN_HEIGHT / 2 + 5);
+                setMaxHeight(textHeight + DEFAULT_MIN_HEIGHT / 2 + 5);
             }
         });
+
     }
 }
