@@ -19,11 +19,16 @@ public class HibernateUtil {
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             Configuration configuration = new Configuration();
-            configuration.setProperty("hibernate.connection.url",
-                    "jdbc:sqlite:" + userName + ".db");
-            registry = new StandardServiceRegistryBuilder().applySettings(
-                    configuration.getProperties()).build();
-            sessionFactory = configuration.buildSessionFactory(registry);
+            configuration
+                    .setProperty("hibernate.connection.driver_class", "org.sqlite.JDBC")
+                    .setProperty("hibernate.current_session_context_class", "thread")
+                    .setProperty("hibernate.connection.url", "jdbc:sqlite:" + userName.hashCode() + ".db")
+                    .setProperty("hibernate.show_sql", "true")
+                    .setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect")
+                    .setProperty("hibernate.hbm2ddl.auto", "update")
+                    .addAnnotatedClass(database.entity.User.class)
+                    .addAnnotatedClass(database.entity.Message.class);
+            sessionFactory = configuration.buildSessionFactory();
         }
 
         return sessionFactory;
