@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Circle?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0"
-            prefWidth="610.0"
+            prefWidth="600.0"
             styleClass="anchor-pane" stylesheets="/client/styles/LoginStyle.css"
             xmlns="http://javafx.com/javafx/8.0.121" fx:controller="client.view.LogonViewController">
     <AnchorPane fx:id="loginPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
@@ -67,13 +67,7 @@
                             <Insets top="35.0"/>
                         </GridPane.margin>
                     </Label>
-                    <!--<ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="4">-->
-                    <!--<buttons>-->
-                    <!--<Button mnemonicParsing="false" onAction="#handleGuestC2Button" prefWidth="120.0" text="Guest C2" />-->
-                    <!--<Button mnemonicParsing="false" onAction="#handleGuestC3Button" prefWidth="120.0" text="Guest C3" />-->
-                    <!--</buttons>-->
-                    <!--</ButtonBar>-->
-                    <!--<Button mnemonicParsing="false" onAction="#handleRegisterButton" prefWidth="120.0" text="Register" GridPane.rowIndex="3" />-->
+
                     <Button fx:id="logInButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity"
                             maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
                             onAction="#handleLogInButton" prefHeight="40.0" prefWidth="232.0" text="Войти"
