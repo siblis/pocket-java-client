@@ -55,7 +55,7 @@
 }
 
 #addContact {
-    -fx-graphic: url("../images/chat/Создать.png");
+    -fx-graphic: url("../images/chat/create.png");
 }
 .tab {
     -fx-background-color: #3498DB;
@@ -67,7 +67,6 @@
 
 #chats .tab-label {
      -fx-graphic: url("../images/chat/chatsActive.png");
-
 }
 
 .tab-header-background {

@@ -331,12 +331,14 @@ public class ChatViewController implements Initializable {
     //метод смены иконки
     public void handleOnChatSelected() {
         chats.setGraphic(buildImage("/client/images/chat/chatsActive.png"));
-        contacts.setGraphic(buildImage("/client/images/chat/contacts.png"));
+        if (contacts != null) {
+            contacts.setGraphic(buildImage("/client/images/chat/contacts.png"));
+        }
 
     }
     public void handleOnContactSelected() {
         contacts.setGraphic(buildImage("/client/images/chat/contactsActive.png"));
-        contacts.setGraphic(buildImage("/client/images/chat/Rectangle.png"));
+        chats.setGraphic(buildImage("/client/images/chat/chats.png"));
 
     }
 
