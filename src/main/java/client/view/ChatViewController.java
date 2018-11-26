@@ -340,14 +340,14 @@ public class ChatViewController implements Initializable {
                     "          -fx-border-style: solid;");
         }
         chats.setStyle("-fx-border-width: 0 0 5 0; " +
-                        "-fx-border-color: #3498DB #3498DB #F8D57D #3498DB;" +
+                        "-fx-border-color: transparent transparent #F8D57D transparent;" +
                         "-fx-border-style: solid;");
     }
     public void handleOnContactSelected() {
         contacts.setGraphic(buildImage("/client/images/chat/contactsActive.png"));
         chats.setGraphic(buildImage("/client/images/chat/chats.png"));
         contacts.setStyle("-fx-border-width: 0 0 5 0; " +
-                "-fx-border-color: #3498DB #3498DB #F8D57D #3498DB;" +
+                "-fx-border-color: transparent transparent #F8D57D transparent;" +
                 "-fx-border-style: solid;");
         chats.setStyle("-fx-border-width: 0 0 5 0; " +
                 "       -fx-border-color: #3498DB #3498DB transparent #3498DB;" +
