@@ -63,7 +63,7 @@
    -fx-text-fill: #FFE684;
 }
 
-.active-label: hover {
+.active-label:hover {
    -fx-font-size: 11px;
    -fx-font-family: "Roboto";
    //-fx-font-style: regular;
@@ -92,6 +92,8 @@
 
 #customTextArea {
     -fx-background-color: #FFFFFF;
+    -fx-focus-color: -fx-control-inner-background;
+    -fx-faint-focus-color: -fx-control-inner-background;
 }
 
 #vector {
