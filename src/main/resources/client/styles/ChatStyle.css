@@ -43,16 +43,6 @@
     -fx-focus-color: -fx-control-inner-background;
     -fx-faint-focus-color: -fx-control-inner-background;
 }
-#customTextArea: focused {
-    -fx-focus-color: #FFFFFF;
-    -fx-faint-focus-color: #FFFFFF;
-    -fx-inner-border: #FFFFFF;
-    -fx-body-color: #FFFFFF;
-
-    -fx-background-color: -fx-faint-focus-color, -fx-focus-color, -fx-inner-border, -fx-body-color;
-    -fx-background-insets: 0, 0, 0, 0;
-}
-
 
 #vector {
     -fx-graphic: url("../images/chat/Vector.png");
@@ -69,8 +59,11 @@
 #addContact {
     -fx-graphic: url("../images/chat/create.png");
 }
+
 .tab {
     -fx-background-color: #3498DB;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
 #contacts .tab-label {
@@ -83,5 +76,5 @@
 
 .tab-header-background {
     -fx-background-color: #3498DB;
-    
+
 }
