@@ -1,5 +1,6 @@
 package database.dao;
 
+import database.HibernateUtil;
 import database.entity.Message;
 import database.entity.User;
 
@@ -20,7 +21,8 @@ public class DataBaseService {
     private UserDAO usersDao;
     private MessageDAO messageDao;
 
-    public DataBaseService() {
+    public DataBaseService(User myUser) {
+        HibernateUtil.setUserName(myUser.getAccount_name());
         usersDao = new UserDAO();
         messageDao = new MessageDAO();
     }

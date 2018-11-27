@@ -27,7 +27,7 @@ public class ClientController {
     private ChatViewController chatViewController;
 
     private User receiver = null;
-    private User sender = null;
+    private User myUser = null;
     private Connector conn = null;
     private List<Long> contactList;
 
@@ -52,7 +52,7 @@ public class ClientController {
     }
 
     public String getSenderName() {
-        return sender.getAccount_name();
+        return myUser.getAccount_name();
     }
 
     public void setReceiver(long receiverId) {
@@ -85,11 +85,11 @@ public class ClientController {
 
                 try {
                     ServerResponse response = HTTPSRequest.getMySelf(token);
-                    sender = convertJSONToUser(response.getResponseJson());
+                    myUser = convertJSONToUser(response.getResponseJson());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                sender.setAccount_name(login);
+                myUser.setAccount_name(login);
                 synchronizeContactList();
 
                 return true;
@@ -148,14 +148,14 @@ public class ClientController {
         conn.getChatClient().send(jsonMessage);
 
         dbService.addMessage(receiver.getUid(),
-                sender.getUid(),
+                myUser.getUid(),
                 new Message(message, new Timestamp(System.currentTimeMillis()))
         );
-        chatViewController.showMessage(sender.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+        chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
     }
 
     private void loadChat() {
-        List<Message> converstation = dbService.getChat(sender, receiver);
+        List<Message> converstation = dbService.getChat(myUser, receiver);
         chatViewController.clearMessageWebView();
         for (Message message :
                 converstation) {
@@ -177,7 +177,7 @@ public class ClientController {
     }
 
     private void synchronizeContactList() {
-        dbService = new DataBaseService();
+        dbService = new DataBaseService(myUser);
         contactList = dbService.getAllUserId();
 
         try {
@@ -200,9 +200,9 @@ public class ClientController {
         }
 
         // проверяем, есть ли наш пользователь в БД
-        User user = dbService.getUser(sender.getUid());
+        User user = dbService.getUser(myUser.getUid());
         if (user == null) {
-            dbService.insertUser(sender);
+            dbService.insertUser(myUser);
         }
     }
 
