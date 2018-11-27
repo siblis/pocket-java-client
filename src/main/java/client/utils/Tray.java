@@ -2,7 +2,6 @@ package client.utils;
 
 import client.controller.ClientController;
 import client.view.ChatViewController;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -13,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPopupMenu;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import static client.Main.primaryStage;
 
@@ -20,6 +21,7 @@ import static client.Main.primaryStage;
 public class Tray {
     private static SystemTray tray;
     public static Stage currentStage;
+    private long timeLastShown = 0;
 
     public static void trayON(Stage stage){
         System.out.println("сворачиваем в трей");
@@ -77,6 +79,34 @@ public class Tray {
             popup.add(close);
             popup.addSeparator();
             popup.add(exit);
+            popup.setFocusable(true);
+            popup.requestFocus();
+
+            popup.addPopupMenuListener(new PopupMenuListener() {
+                @Override
+                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            timeLastShown = System.currentTimeMillis();
+                            while ((System.currentTimeMillis () - timeLastShown) < 6000){ }
+                            popup.setVisible(false);
+                        }
+                    }).start();
+
+                }
+
+                @Override
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+
+                }
+
+                @Override
+                public void popupMenuCanceled(PopupMenuEvent e) {
+
+                }
+            });
+
             trayIcon.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
