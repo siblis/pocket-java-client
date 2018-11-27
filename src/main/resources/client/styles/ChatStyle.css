@@ -1,97 +1,47 @@
-.anchor-pane {
-    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
-    -fx-background-repeat: stretch;
+
+#menu {
+    -fx-background-color: #3498DB;
+    -fx-background-image: url("../images/chat/Shape.png");
+    -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
 }
 
-.opacityClass {
-    -fx-background-color: rgba(210, 242, 255, 0.2);
-    -fx-background-radius: 0px 0px 8px 8px;
+#leftMenu {
+    -fx-background-color: #3498DB;
+    -fx-background-image: url("../images/chat/ShapeLeft.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
 }
 
 .menu-bar {
-    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
-    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-background-color: #3498DB;
 }
 
-.context-menu {
-    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
-    -fx-background-color: rgba(255, 255, 255, 0.16);
+.menu-button > .arrow-button > .arrow {
+    -fx-background-color: transparent;
 }
 
-.menu-bar.label {
-    -fx-font-size: 14pt;
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: white;
+#menu-bar.label {
+
 }
 #menu:focused {
-    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
-
+    -fx-background-color: #3498DB;
 }
 #menu:hover {
-    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
+    -fx-background-color: #3498DB;
 }
-.menu-item:focused {
-    -fx-background-image: url("../images/enter/clement-h-544786-unsplash.jpg");
-
-}
-
-.label {
-    -fx-font-size: 11px;
-    -fx-font-family: "Roboto";
-    -fx-text-fill: #B8C5CB;
-    -fx-letter-spacing: 0.01;
-    -fx-graphic-text-gap: 1;
-}
-
-.label-bright {
-   -fx-font-size: 11px;
-   -fx-font-family: "Roboto";
-   -fx-text-fill: #004F70;
-}
-
-.label-header {
-    -fx-font-size: 40px;
-    -fx-font-family: "Roboto";
-    -fx-text-fill: #004F70;
-}
-
-.active-label {
-   -fx-font-size: 11px;
-   -fx-font-family: "Roboto";
-   //-fx-font-style: regular;
-   -fx-text-fill: #FFE684;
-}
-
-.active-label: hover {
-   -fx-font-size: 11px;
-   -fx-font-family: "Roboto";
-   //-fx-font-style: regular;
-   -fx-text-fill: derive(#FFE674,15%);
-   -fx-opacity: 0.6;
-}
-
-.menu-bar {
-    -fx-background-color: derive(#FFE684,20%);
-}
-
-.context-menu {
-    -fx-background-color: derive(#FFE684,50%);
-}
-
-.menu-bar .label {
-    -fx-font-size: 14pt;
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: white;
-    -fx-opacity: 0.9;
-}
-
-.menu .left-container {
-    -fx-background-color: black;
+#menu-item:focused {
+   -fx-background-color: #3498DB;
 }
 
 #customTextArea {
     -fx-background-color: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+    -fx-font-family: Roboto;
+    -fx-text-fill: #757575;
+    -fx-focus-color: -fx-control-inner-background;
+    -fx-faint-focus-color: -fx-control-inner-background;
 }
 
 #vector {
@@ -104,4 +54,27 @@
 
 #skrepka {
      -fx-graphic: url("../images/chat/skrepka.png");
- }
+}
+
+#addContact {
+    -fx-graphic: url("../images/chat/create.png");
+}
+
+.tab {
+    -fx-background-color: #3498DB;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+#contacts .tab-label {
+     -fx-graphic: url("../images/chat/contacts.png");
+}
+
+#chats .tab-label {
+     -fx-graphic: url("../images/chat/chatsActive.png");
+}
+
+.tab-header-background {
+    -fx-background-color: #3498DB;
+
+}
