@@ -1,5 +1,8 @@
 package client.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -13,6 +16,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound implements AutoCloseable {
+    private static final Logger logger = LogManager.getLogger(Sound.class.getName());
     private boolean released = false;
     private AudioInputStream stream = null;
     private Clip clip = null;
@@ -30,7 +34,7 @@ public class Sound implements AutoCloseable {
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
             exc.printStackTrace();
             released = false;
-
+            logger.error("AudioSystem_Error", exc);
             close();
         }
     }
@@ -87,6 +91,7 @@ public class Sound implements AutoCloseable {
                 stream.close();
             } catch (IOException exc) {
                 exc.printStackTrace();
+                logger.error("public_void_close_ERROR", exc);
             }
     }
 

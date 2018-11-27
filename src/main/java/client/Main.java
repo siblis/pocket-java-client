@@ -9,12 +9,17 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
+
 
 public class Main extends Application {
 
     public static Stage primaryStage;
     private static BorderPane rootLayout;
+    private static final Logger logger = LogManager.getLogger(Main.class.getName());
 
     @Override
     public void start(Stage stage) {
@@ -55,6 +60,7 @@ public class Main extends Application {
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            logger.info(e);
         }
     }
 
@@ -66,6 +72,7 @@ public class Main extends Application {
             rootLayout.setCenter(overview);
         } catch (IOException e) {
             e.printStackTrace();
+            logger.info(e);
         }
     }
 
