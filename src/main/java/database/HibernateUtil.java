@@ -22,7 +22,7 @@ public class HibernateUtil {
             configuration
                     .setProperty("hibernate.connection.driver_class", "org.sqlite.JDBC")
                     .setProperty("hibernate.current_session_context_class", "thread")
-                    .setProperty("hibernate.connection.url", "jdbc:sqlite:" + userName.hashCode() + ".db")
+                    .setProperty("hibernate.connection.url", "jdbc:sqlite:" + userName + ".db")
                     .setProperty("hibernate.show_sql", "true")
                     .setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect")
                     .setProperty("hibernate.hbm2ddl.auto", "update")
