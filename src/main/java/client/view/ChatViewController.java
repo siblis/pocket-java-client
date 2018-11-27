@@ -10,12 +10,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -62,6 +65,15 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private CustomTextArea messageField;
+
+    @FXML
+    private TabPane tabContainer;
+
+    @FXML
+    private Tab chats;
+
+    @FXML
+    private Tab contacts;
 
     private ObservableList<String> contactsObservList;
 
@@ -317,4 +329,40 @@ public class ChatViewController implements Initializable {
                 "</body>\n" +
                 "</html>");
     }
+
+    //метод смены иконки
+    public void handleOnChatSelected() {
+        chats.setGraphic(buildImage("/client/images/chat/chatsActive.png"));
+        if (contacts != null) {
+            contacts.setGraphic(buildImage("/client/images/chat/contacts.png"));
+            contacts.setStyle("-fx-border-width: 0 0 5 0; " +
+                    "          -fx-border-color: #3498DB #3498DB transparent #3498DB;" +
+                    "-fx-border-insets: 0;" +
+                    "          -fx-border-style: solid;");
+        }
+        chats.setStyle("-fx-border-width: 0 0 5 0; " +
+                        "-fx-border-color: transparent transparent #F8D57D transparent;" +
+                "-fx-border-insets: 0;" +
+                        "-fx-border-style: solid;");
+    }
+    public void handleOnContactSelected() {
+        contacts.setGraphic(buildImage("/client/images/chat/contactsActive.png"));
+        chats.setGraphic(buildImage("/client/images/chat/chats.png"));
+        contacts.setStyle("-fx-border-width: 0 0 5 0; " +
+                "-fx-border-color: transparent transparent #F8D57D transparent;" +
+                "-fx-border-insets: 0;" +
+                "-fx-border-style: solid;");
+        chats.setStyle("-fx-border-width: 0 0 5 0; " +
+                "       -fx-border-color: #3498DB #3498DB transparent #3498DB;" +
+                "-fx-border-insets: 0;" +
+                "       -fx-border-style: solid;");
+    }
+
+    private ImageView buildImage(String s) {
+        Image i = new Image(s);
+        ImageView imageView = new ImageView();
+        imageView.setImage(i);
+        return imageView;
+    }
+
 }
