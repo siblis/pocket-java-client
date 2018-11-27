@@ -1,11 +1,8 @@
 package database.dao;
 
 import database.HibernateUtil;
-import database.entity.Message;
 import database.entity.User;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.query.Query;
 
 import java.util.List;
