@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ExampleUsage {
     public static void main(String[] args) {
-        DataBaseService dataBaseService = new DataBaseService();
+        DataBaseService dataBaseService = new DataBaseService(new User(1, "test2Name", "test2Email"));
 
         clearBase(dataBaseService);
 
