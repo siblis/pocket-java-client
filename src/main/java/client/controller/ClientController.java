@@ -269,7 +269,7 @@ public class ClientController {
     }
 
     public void dbServiceClose() {
-        dbService.close();
+        if (dbService != null) dbService.close();
     }
 
     public String proceedRestorePassword(String email) {

@@ -1,7 +1,6 @@
-package client.utils;
+package client.view;
 
 import client.controller.ClientController;
-import client.view.ChatViewController;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -21,7 +20,6 @@ import static client.Main.primaryStage;
 public class Tray {
     private static SystemTray tray;
     public static Stage currentStage;
-    private long timeLastShown = 0;
 
     public static void trayON(Stage stage){
         System.out.println("сворачиваем в трей");
@@ -50,11 +48,9 @@ public class Tray {
             ActionListener exitListener = new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    ClientController clientController = ChatViewController.getClientController();
-                    if (clientController != null){
-                        clientController.dbServiceClose();
-                        clientController.disconnect();
-                    }
+                    ClientController clientController = ClientController.getInstance();
+                    clientController.dbServiceClose();
+                    clientController.disconnect();
                     System.out.println("Выход из приложения");
                     System.exit(0);
                 }
@@ -88,8 +84,11 @@ public class Tray {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            timeLastShown = System.currentTimeMillis();
-                            while ((System.currentTimeMillis () - timeLastShown) < 6000){ }
+                            try {
+                                Thread.sleep(6000);
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
                             popup.setVisible(false);
                         }
                     }).start();

@@ -1,6 +1,6 @@
 package client;
 
-import client.utils.Tray;
+import client.view.Tray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
