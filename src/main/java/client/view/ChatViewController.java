@@ -77,10 +77,9 @@ public class ChatViewController implements Initializable {
 
     private ObservableList<String> contactsObservList;
 
-    private  ClientController clientController;
+    private ClientController clientController;
 
     private File chatBackgroundImage;
-
 
     public ChatViewController() {
     }
