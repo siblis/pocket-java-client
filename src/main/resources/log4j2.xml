@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
+
+    <Properties>
+        <Property name="APP_LOG_ROOT">logs/</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+
     <Appenders>
 
         <!-- Console Appender -->
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n" />
+                    pattern="${LOG_PATTERN}"/>
         </Console>
 
         <!-- File Appender -->
-        <File name="File" fileName="c:/log/pocketmessenger_log.log">
-            <PatternLayout
-                    pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n" />
-        </File>
+        <RollingFile name="pocketLog" fileName="${APP_LOG_ROOT}/pocketmessenger_log-${date:yyyy-MM-dd}.log"
+                     filePattern="${APP_LOG_ROOT}/pocketmessenger_log-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="FATAL" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100KB"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${APP_LOG_ROOT}" maxDepth="1">
+                    <IfLastModified age="1d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
 
     </Appenders>
     <Loggers>
         <Root level="trace">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="File" />
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="pocketLog"/>
         </Root>
     </Loggers>
 </Configuration>

@@ -10,8 +10,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class Common {
-
-    private static final Logger logger = LogManager.getLogger(Common.class.getName());
+    private static final Logger commonLogger = LogManager.getLogger(Common.class.getName());
 
     public static void showAlert(String message, Alert.AlertType alertType) {
         Platform.runLater(() -> {
@@ -19,13 +18,13 @@ public class Common {
             switch (alertType) {
                 case INFORMATION:
                     title = "Информация";
-                break;
+                    break;
                 case CONFIRMATION:
                     title = "Подтверждение";
-                break;
+                    break;
                 case ERROR:
                     title = "Ошибка";
-                break;
+                    break;
                 default:
                     break;
             }
@@ -84,12 +83,9 @@ public class Common {
             System.err.println("Описание: " + pse.getDescription());
             System.err.println("Позиция: " + pse.getIndex());
             System.err.println("Неправильный шаблон: " + pse.getPattern());
-           /* FIXME Я уверен что здесь нужно писать подругому и скорее всего System.err.println можно убирать.*/
-            logger.info( "Неправильное регулярное выражение: " + pse.getMessage() + "\n" + "Описание: " + pse.getDescription() + "\n" + "Позиция: " + pse.getIndex() + "\n" +"Неправильный шаблон: " + pse.getPattern()+ "\n");
         } catch (Exception e) {
             System.err.println("Ошибка при поиске регулярного выражения");
-            e.printStackTrace();
-            logger.info("Ошибка при поиске регулярного выражения", e);
+            commonLogger.error("Ошибка при поиске регулярного выражения", e);
         }
         return inputString;
     }

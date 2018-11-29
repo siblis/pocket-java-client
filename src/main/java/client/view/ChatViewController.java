@@ -10,14 +10,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +26,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -47,9 +47,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static client.utils.Common.showAlert;
-
 public class ChatViewController implements Initializable {
+    private static final Logger chatViewLogger = LogManager.getLogger(ChatViewController.class.getName());
 
     private WebEngine webEngine;
     private String msgArea = "";
@@ -80,16 +79,18 @@ public class ChatViewController implements Initializable {
     private ClientController clientController;
 
     private File chatBackgroundImage;
+    //метод выбора файла
+    private Desktop desktop = Desktop.getDesktop();
 
     public ChatViewController() {
     }
 
-    public void setChatBackgroundImage(File fileName) {
-        chatBackgroundImage = fileName;
-    }
-
     public File getChatBackgroundImage() {
         return chatBackgroundImage;
+    }
+
+    public void setChatBackgroundImage(File fileName) {
+        chatBackgroundImage = fileName;
     }
 
     @Override
@@ -159,7 +160,7 @@ public class ChatViewController implements Initializable {
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
-        if (isNew){
+        if (isNew) {
             Sound.playSound("src\\main\\resources\\client\\sounds\\1.wav").join();
         }
 
@@ -271,7 +272,8 @@ public class ChatViewController implements Initializable {
                                     }
                                     System.out.println("Opening external browser.");
                                 } catch (IOException | URISyntaxException e) {
-                                    e.printStackTrace();
+//                                    e.printStackTrace();
+                                    chatViewLogger.error("handleEvent_error", e);
                                 }
                             }
                         }
@@ -291,8 +293,7 @@ public class ChatViewController implements Initializable {
             }
         });
     }
-    //метод выбора файла
-    private Desktop desktop = Desktop.getDesktop();
+
     @FXML
     public void handleSendFile() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
@@ -303,15 +304,17 @@ public class ChatViewController implements Initializable {
             try {
                 this.desktop.open(file);//открывается файл на компьютере
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                chatViewLogger.error("handleSendFile_error", e);
             }
             List<File> files = Arrays.asList(file);
             if (files == null || files.isEmpty()) return;
-            for(File f : files) {
-                messageField .appendText(f.getAbsolutePath() + "\n");
+            for (File f : files) {
+                messageField.appendText(f.getAbsolutePath() + "\n");
             }
         }
     }
+
     //метод добавления смайликов
     public void handleSendSmile(MouseEvent mouseEvent) {
     }
@@ -341,10 +344,11 @@ public class ChatViewController implements Initializable {
                     "          -fx-border-style: solid;");
         }
         chats.setStyle("-fx-border-width: 0 0 5 0; " +
-                        "-fx-border-color: transparent transparent #F8D57D transparent;" +
+                "-fx-border-color: transparent transparent #F8D57D transparent;" +
                 "-fx-border-insets: 0;" +
-                        "-fx-border-style: solid;");
+                "-fx-border-style: solid;");
     }
+
     public void handleOnContactSelected() {
         contacts.setGraphic(buildImage("/client/images/chat/contactsActive.png"));
         chats.setGraphic(buildImage("/client/images/chat/chats.png"));

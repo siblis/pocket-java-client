@@ -23,24 +23,17 @@ import java.util.Map;
 import static client.utils.Common.showAlert;
 
 public class ClientController {
-
-    private static final Logger logger = LogManager.getLogger(ClientController.class.getName());
-
-
+    static final Logger controllerLogger = LogManager.getLogger(ClientController.class);
     private static ClientController instance;
     private static String token;
     private ChatViewController chatViewController;
 
     private User receiver = null;
-    private User myUser = null;
+    private User sender = null;
     private Connector conn = null;
     private List<Long> contactList;
 
     private DataBaseService dbService;
-
-    public void setChatViewController(ChatViewController chatViewController) {
-        this.chatViewController = chatViewController;
-    }
 
     private ClientController() {
     }
@@ -52,12 +45,16 @@ public class ClientController {
         return instance;
     }
 
+    public void setChatViewController(ChatViewController chatViewController) {
+        this.chatViewController = chatViewController;
+    }
+
     private void connect(String token) {
         conn = new Connector(token, ClientController.getInstance());
     }
 
     public String getSenderName() {
-        return myUser.getAccount_name();
+        return sender.getAccount_name();
     }
 
     public void setReceiver(long receiverId) {
@@ -78,36 +75,33 @@ public class ClientController {
             try {
                 answer = HTTPSRequest.authorization(reqJSON);
             } catch (Exception e) {
-                e.printStackTrace();
-                logger.error(e);
+                controllerLogger.error("HTTPSRequest.authorization_error", e);
             }
             if (answer.contains("token")) {
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder.create();
                 AuthFromServer AFS = gson.fromJson(answer, AuthFromServer.class);
                 System.out.println(" answer server " + AFS.token);
-                logger.info(" answer server " + AFS.token);
                 token = AFS.token;
                 connect(token);
 
                 try {
                     ServerResponse response = HTTPSRequest.getMySelf(token);
-                    myUser = convertJSONToUser(response.getResponseJson());
+                    sender = convertJSONToUser(response.getResponseJson());
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    logger.error(e);
+                    controllerLogger.error("HTTPSRequest.getMySelf_error", e);
                 }
-                myUser.setAccount_name(login);
+                sender.setAccount_name(login);
                 synchronizeContactList();
 
                 return true;
             } else {
                 showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
-                logger.info("Ошибка авторизации!", Alert.AlertType.ERROR);
+                controllerLogger.info("Ошибка авторизации!", Alert.AlertType.ERROR);
             }
         } else {
             showAlert("Неполные данные для авторизации!", Alert.AlertType.ERROR);
-            logger.info("Неполные данные для авторизации!", Alert.AlertType.ERROR);
+            controllerLogger.info("Неполные данные для авторизации!", Alert.AlertType.ERROR);
             return false;
         }
         return false;
@@ -130,15 +124,12 @@ public class ClientController {
                         break;
                     case 404:
                         showAlert("Пользователь не найден", Alert.AlertType.ERROR);//с id: " + mfs.getSenderid() + "
-                        logger.info("Пользователь не найден", Alert.AlertType.ERROR);
                         break;
                     default:
                         showAlert("Общая ошибка!", Alert.AlertType.ERROR);
-                        logger.info("Общая ошибка!", Alert.AlertType.ERROR);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                logger.error(e);
+                controllerLogger.error("HTTPSRequest.getUser_error", e);
             }
         }
         chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
@@ -152,7 +143,6 @@ public class ClientController {
     public void sendMessage(String message) {
         if (receiver == null) {
             showAlert("Выберите контакт для отправки сообщения", Alert.AlertType.ERROR);
-            logger.info("Выберите контакт для отправки сообщения", Alert.AlertType.ERROR);
             return;
         }
         MessageToServer MTS = new MessageToServer(receiver.getUid(), message);
@@ -162,14 +152,14 @@ public class ClientController {
         conn.getChatClient().send(jsonMessage);
 
         dbService.addMessage(receiver.getUid(),
-                myUser.getUid(),
+                sender.getUid(),
                 new Message(message, new Timestamp(System.currentTimeMillis()))
         );
-        chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+        chatViewController.showMessage(sender.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
     }
 
     private void loadChat() {
-        List<Message> converstation = dbService.getChat(myUser, receiver);
+        List<Message> converstation = dbService.getChat(sender, receiver);
         chatViewController.clearMessageWebView();
         for (Message message :
                 converstation) {
@@ -191,7 +181,7 @@ public class ClientController {
     }
 
     private void synchronizeContactList() {
-        dbService = new DataBaseService(myUser);
+        dbService = new DataBaseService();
         contactList = dbService.getAllUserId();
 
         try {
@@ -204,20 +194,18 @@ public class ClientController {
                         user.setUid(entry.getValue().getId());
                         user.setAccount_name(entry.getValue().getName());
                         user.setEmail(entry.getKey());
-
                         addContactToDB(user);
                     }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e);
+            controllerLogger.error("HTTPSRequest.getContacts_error", e);
         }
 
         // проверяем, есть ли наш пользователь в БД
-        User user = dbService.getUser(myUser.getUid());
+        User user = dbService.getUser(sender.getUid());
         if (user == null) {
-            dbService.insertUser(myUser);
+            dbService.insertUser(sender);
         }
     }
 
@@ -236,25 +224,20 @@ public class ClientController {
             switch (response.getResponseCode()) {
                 case 201:
                     showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
-                    logger.info("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
                     addContactToDB(convertJSONToUser(response.getResponseJson()));
                     if (chatViewController != null) chatViewController.fillContactListView();
                     break;
                 case 404:
                     showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
-                    logger.info("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
                     break;
                 case 409:
                     showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
-                    logger.info("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
                     break;
                 default:
                     showAlert("Общая ошибка!", Alert.AlertType.ERROR);
-                    logger.info("Общая ошибка!", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e);
+            controllerLogger.error("HTTPSRequest.addContact_error", e);
         }
     }
 
@@ -273,13 +256,14 @@ public class ClientController {
             int responseCode = HTTPSRequest.registration(requestJSON);
             if (responseCode == 201) {
                 showAlert("Вы успешно зарегистрированы", Alert.AlertType.INFORMATION);
-                logger.info("Вы успешно зарегистрированы", Alert.AlertType.INFORMATION);
-            } else
+                controllerLogger.info(login + "Вы успешно зарегистрированы", Alert.AlertType.INFORMATION);
+            } else {
                 showAlert("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);
-            logger.info("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);
+                controllerLogger.info("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e);
+            //e.printStackTrace();
+            controllerLogger.error("HTTPSRequest.registration", e);
         }
     }
 
@@ -304,7 +288,6 @@ public class ClientController {
             answer = HTTPSRequest.restorePassword(requestJSON);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e);
         }
         return answer;
     }
@@ -319,8 +302,7 @@ public class ClientController {
         try {
             answer = HTTPSRequest.changePassword(requestJSON);
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e);
+            controllerLogger.error("proceedChangePassword_error", e);
         }
         return answer;
     }

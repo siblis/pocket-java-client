@@ -14,36 +14,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-
 public class Main extends Application {
+
+    static final Logger mainLogger = LogManager.getLogger(Main.class);
 
     public static Stage primaryStage;
     private static BorderPane rootLayout;
-    private static final Logger logger = LogManager.getLogger(Main.class.getName());
-
-    @Override
-    public void start(Stage stage) {
-        primaryStage = stage;
-        primaryStage.setTitle("Pocket desktop client");
-
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
-
-        //инициализируем главную сцену
-        initRootLayout();
-
-        //показываем общий вид
-        showOverview();
-
-        //значек в трее
-        Tray tray = new Tray();
-        tray.setTrayIcon();
-
-
-        primaryStage.setOnCloseRequest(event -> {
-            event.consume();
-            Tray.trayON(primaryStage);
-        });
-    }
 
     public static void initRootLayout() {
         try {
@@ -59,8 +35,7 @@ public class Main extends Application {
             primaryStage.setResizable(false);
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            logger.info(e);
+            mainLogger.error("initRootLayout_error", e);
         }
     }
 
@@ -71,10 +46,35 @@ public class Main extends Application {
             AnchorPane overview = loader.load();
             rootLayout.setCenter(overview);
         } catch (IOException e) {
-            e.printStackTrace();
-            logger.info(e);
+            mainLogger.error("showOverview_error", e);
         }
     }
 
-    public static void main(String[] args){launch(args);}
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage stage) {
+        primaryStage = stage;
+        primaryStage.setTitle("Pocket desktop client");
+
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
+
+        //инициализируем главную сцену
+        initRootLayout();
+
+        //показываем общий вид
+        showOverview();
+        mainLogger.info("Окно приложения запущено");
+
+        //значек в трее
+        Tray tray = new Tray();
+        tray.setTrayIcon();
+
+        primaryStage.setOnCloseRequest(event -> {
+            event.consume();
+            Tray.trayON(primaryStage);
+        });
+    }
 }

@@ -1,8 +1,9 @@
 package client.utils;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,21 +11,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JPopupMenu;
 
 import static client.Main.primaryStage;
 
 
 public class Tray {
-    private static SystemTray tray;
+    private static final Logger trayLogger = LogManager.getLogger(Tray.class.getName());
     public static Stage currentStage;
+    private static SystemTray tray;
 
-    public static void trayON(Stage stage){
+    public static void trayON(Stage stage) {
         System.out.println("сворачиваем в трей");
         stage.hide();
     }
 
-    public static void trayOFF(Stage stage){
+    public static void trayOFF(Stage stage) {
         if (stage != null) {
             stage.show();
             stage.toFront();
@@ -32,13 +33,12 @@ public class Tray {
         System.out.println("выходим из трея");
     }
 
-    public void setTrayIcon()  {
+    public void setTrayIcon() {
         final TrayIcon trayIcon;
         Platform.setImplicitExit(false);
-        if(!SystemTray.isSupported()){
+        if (!SystemTray.isSupported()) {
             System.out.println("No system tray support");
-        }
-        else{
+        } else {
             tray = SystemTray.getSystemTray();
             trayIcon = new TrayIcon(new ImageIcon(Tray.class.getResource("/client/images/icon.png")).getImage().getScaledInstance(16, -1, 4));
             trayIcon.setToolTip("Меню Pocket");
@@ -57,10 +57,30 @@ public class Tray {
             JMenuItem close = new JMenuItem("Свернуть в трей");
             JMenuItem quietMode = new JMenuItem("Тихий режим");
 
-            trayIcon.addActionListener(event-> Platform.runLater(new Runnable(){@Override public void run() {trayOFF(currentStage == null?primaryStage:currentStage);}}));
-            open.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayOFF(currentStage == null?primaryStage:currentStage);}}));
-            close.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {trayON(currentStage == null?primaryStage:currentStage);}}));
-            quietMode.addActionListener(event->Platform.runLater(new Runnable(){@Override public void run() {System.out.println("Пока не сделанно");}}));
+            trayIcon.addActionListener(event -> Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    trayOFF(currentStage == null ? primaryStage : currentStage);
+                }
+            }));
+            open.addActionListener(event -> Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    trayOFF(currentStage == null ? primaryStage : currentStage);
+                }
+            }));
+            close.addActionListener(event -> Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    trayON(currentStage == null ? primaryStage : currentStage);
+                }
+            }));
+            quietMode.addActionListener(event -> Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Пока не сделанно");
+                }
+            }));
             exit.addActionListener(exitListener);
 
             popup.add(open);
@@ -74,7 +94,7 @@ public class Tray {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     super.mouseReleased(e);
-                    if (e.isPopupTrigger()){
+                    if (e.isPopupTrigger()) {
                         popup.setLocation(e.getX(), e.getY());
                         popup.setInvoker(popup);
                         popup.setVisible(true);
@@ -85,7 +105,8 @@ public class Tray {
             try {
                 tray.add(trayIcon);
             } catch (AWTException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                trayLogger.error("trayIcon_error", e);
             }
         }
     }

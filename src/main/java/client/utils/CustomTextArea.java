@@ -27,7 +27,7 @@ public class CustomTextArea extends TextArea {
         //TODO починить установку фокуса
         //Сейчас при установке фокуса пропадает возможность ввода текста, до тех пор, пока не будет выбран получатель в контакт-листе
         //setFocused(true);
-        ScrollPane scrollPane = (ScrollPane)lookup(".scroll-pane");
+        ScrollPane scrollPane = (ScrollPane) lookup(".scroll-pane");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         StackPane viewport = (StackPane) scrollPane.lookup(".viewport");

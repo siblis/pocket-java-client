@@ -29,31 +29,32 @@ public class WebSocketChatClient extends WebSocketClient {
     }
 
     @Override
-    public void onOpen( ServerHandshake handshakedata ) {
-        System.out.println( "Connected" );
+    public void onOpen(ServerHandshake handshakedata) {
+        System.out.println("Connected");
 
     }
 
     @Override
-    public void onMessage( String message ) {
-        System.out.println( "got: " + message );
-        if (message.contains("receiver")){
+    public void onMessage(String message) {
+        System.out.println("got: " + message);
+        if (message.contains("receiver")) {
             Platform.runLater(() -> controller.receiveMessage(message));
         }
     }
 
     @Override
-    public void onClose( int code, String reason, boolean remote ) {
-        System.out.println( "Disconnected" );
-        System.exit( 0 );
+    public void onClose(int code, String reason, boolean remote) {
+        System.out.println("Disconnected");
+        System.exit(0);
 
     }
 
     @Override
-    public void onError( Exception ex ) {
+    public void onError(Exception ex) {
         ex.printStackTrace();
 
     }
+
     void setSocketFactory(SocketFactory socketFactory) {
         this.socketFactory = socketFactory;
     }

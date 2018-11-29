@@ -1,26 +1,24 @@
 package client.view;
 
 import client.controller.ClientController;
-import client.utils.Common;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import static client.utils.Common.showAlert;
-import static client.utils.Correct.*;
+import static client.utils.Correct.checkPasswordStrength;
+import static client.utils.Correct.isValidEmail;
 
 public class LogonRestorePasswordViewController implements Initializable {
+    private static final Logger LogonRestorelogger = LogManager.getLogger(LogonRestorePasswordViewController.class.getName());
 
     @FXML
     private TextField emailField;
@@ -97,6 +95,7 @@ public class LogonRestorePasswordViewController implements Initializable {
             System.out.println("handleRestorePasswordButton: Ошибка!");
             codeSendMessageLabel.setText("Неизвестная ошибка. Попробуйте ещё раз.");
             codeSendMessageLabel.setVisible(true);
+
         }
     }
 

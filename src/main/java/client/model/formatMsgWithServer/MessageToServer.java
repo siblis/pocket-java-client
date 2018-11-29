@@ -4,7 +4,8 @@ public class MessageToServer {
     private long receiver;
     private String message;
 
-    public MessageToServer(){}
+    public MessageToServer() {
+    }
 
     public MessageToServer(long receiver, String message) {
         this.receiver = receiver;

@@ -12,15 +12,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class RegisterViewController implements Initializable {
-
-    private static final Logger logger = LogManager.getLogger(RegisterViewController.class.getName());
 
     @FXML
     private TextField regLoginField;

@@ -4,7 +4,8 @@ public class ContactListFromServer {
     private long id;
     private String name;
 
-    public ContactListFromServer() {}
+    public ContactListFromServer() {
+    }
 
     public long getId() {
         return id;

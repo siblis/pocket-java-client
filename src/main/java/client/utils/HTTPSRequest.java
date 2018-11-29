@@ -4,14 +4,16 @@ import client.model.ServerResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.net.URL;
-import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 public class HTTPSRequest {
-
-    private static final Logger logger = LogManager.getLogger(HTTPSRequest.class.getName());
     private static String serverURL = "https://pocketmsg.ru:8888";
+    private static Logger requestLogger = LogManager.getLogger(HTTPSRequest.class);
 
     public static String restorePassword(String requestJSON) throws Exception {
         //TODO нужен API на сервере
@@ -88,7 +90,7 @@ public class HTTPSRequest {
 
     public static ServerResponse getContacts(String token) throws Exception {
         URL url = new URL(serverURL + "/v1/users/contacts/");
-        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Token", token);
 
@@ -100,7 +102,7 @@ public class HTTPSRequest {
 
     public static ServerResponse getMySelf(String token) throws Exception {
         URL url = new URL(serverURL + "/v1/users/");
-        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Token", token);
 
@@ -139,8 +141,7 @@ public class HTTPSRequest {
 
             System.out.println(response.toString());
         } catch (IOException e) {
-            e.printStackTrace();
-            logger.error(e);
+            requestLogger.error("answerRequest_error", e);
         }
         return response.toString();
     }

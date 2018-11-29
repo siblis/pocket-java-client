@@ -3,20 +3,12 @@ package client.utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
 public class Sound implements AutoCloseable {
-    private static final Logger logger = LogManager.getLogger(Sound.class.getName());
+    private static final Logger soundLogger = LogManager.getLogger(Sound.class.getName());
     private boolean released = false;
     private AudioInputStream stream = null;
     private Clip clip = null;
@@ -32,11 +24,19 @@ public class Sound implements AutoCloseable {
             volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             released = true;
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
-            exc.printStackTrace();
+//            exc.printStackTrace();
+            soundLogger.error("Sound_error", exc);
             released = false;
-            logger.error("AudioSystem_Error", exc);
             close();
         }
+    }
+
+    // Статический метод, для удобства
+    public static Sound playSound(String path) {
+        File f = new File(path);
+        Sound snd = new Sound(f);
+        snd.play();
+        return snd;
     }
 
     // true если звук успешно загружен, false если произошла ошибка
@@ -90,21 +90,9 @@ public class Sound implements AutoCloseable {
             try {
                 stream.close();
             } catch (IOException exc) {
-                exc.printStackTrace();
-                logger.error("public_void_close_ERROR", exc);
+//                exc.printStackTrace();
+                soundLogger.error("stream_error", exc);
             }
-    }
-
-    // Установка громкости
-	/*
-	  x долже быть в пределах от 0 до 1 (от самого тихого к самому громкому)
-	*/
-    public void setVolume(float x) {
-        if (x<0) x = 0;
-        if (x>1) x = 1;
-        float min = volumeControl.getMinimum();
-        float max = volumeControl.getMaximum();
-        volumeControl.setValue((max-min)*x+min);
     }
 
     // Возвращает текущую громкость (число от 0 до 1)
@@ -112,33 +100,39 @@ public class Sound implements AutoCloseable {
         float v = volumeControl.getValue();
         float min = volumeControl.getMinimum();
         float max = volumeControl.getMaximum();
-        return (v-min)/(max-min);
+        return (v - min) / (max - min);
+    }
+
+    // Установка громкости
+	/*
+	  x долже быть в пределах от 0 до 1 (от самого тихого к самому громкому)
+	*/
+    public void setVolume(float x) {
+        if (x < 0) x = 0;
+        if (x > 1) x = 1;
+        float min = volumeControl.getMinimum();
+        float max = volumeControl.getMaximum();
+        volumeControl.setValue((max - min) * x + min);
     }
 
     // Дожидается окончания проигрывания звука
     public void join() {
         if (!released) return;
-        synchronized(clip) {
+        synchronized (clip) {
             try {
                 while (playing)
                     clip.wait();
-            } catch (InterruptedException exc) {}
+            } catch (InterruptedException exc) {
+                soundLogger.error("join_error", exc);
+            }
         }
-    }
-
-    // Статический метод, для удобства
-    public static Sound playSound(String path) {
-        File f = new File(path);
-        Sound snd = new Sound(f);
-        snd.play();
-        return snd;
     }
 
     private class Listener implements LineListener {
         public void update(LineEvent ev) {
             if (ev.getType() == LineEvent.Type.STOP) {
                 playing = false;
-                synchronized(clip) {
+                synchronized (clip) {
                     clip.notify();
                 }
             }

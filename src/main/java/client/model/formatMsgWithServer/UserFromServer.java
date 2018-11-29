@@ -5,7 +5,8 @@ public class UserFromServer {
     private String account_name;
     private String email;
 
-    public UserFromServer() {}
+    public UserFromServer() {
+    }
 
     public long getUid() {
         return uid;
