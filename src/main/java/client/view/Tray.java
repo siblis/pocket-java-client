@@ -1,6 +1,6 @@
-package client.utils;
+package client.view;
 
-import javafx.application.Application;
+import client.controller.ClientController;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPopupMenu;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import static client.Main.primaryStage;
 
@@ -46,6 +48,9 @@ public class Tray {
             ActionListener exitListener = new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    ClientController clientController = ClientController.getInstance();
+                    clientController.dbServiceClose();
+                    clientController.disconnect();
                     System.out.println("Выход из приложения");
                     System.exit(0);
                 }
@@ -70,6 +75,37 @@ public class Tray {
             popup.add(close);
             popup.addSeparator();
             popup.add(exit);
+            popup.setFocusable(true);
+            popup.requestFocus();
+
+            popup.addPopupMenuListener(new PopupMenuListener() {
+                @Override
+                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(6000);
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                            popup.setVisible(false);
+                        }
+                    }).start();
+
+                }
+
+                @Override
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+
+                }
+
+                @Override
+                public void popupMenuCanceled(PopupMenuEvent e) {
+
+                }
+            });
+
             trayIcon.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
