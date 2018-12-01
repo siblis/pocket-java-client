@@ -2,11 +2,15 @@ package client.utils;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class Common {
+    private static final Logger commonLogger = LogManager.getLogger(Common.class.getName());
 
     public static void showAlert(String message, Alert.AlertType alertType) {
         Platform.runLater(() -> {
@@ -79,9 +83,10 @@ public class Common {
             System.err.println("Описание: " + pse.getDescription());
             System.err.println("Позиция: " + pse.getIndex());
             System.err.println("Неправильный шаблон: " + pse.getPattern());
+            commonLogger.error("urlToHyperlink_error_1", pse);
         } catch (Exception e) {
             System.err.println("Ошибка при поиске регулярного выражения");
-            e.printStackTrace();
+            commonLogger.error("urlToHyperlink_error_2_Ошибка при поиске регулярного выражения", e);
         }
         return inputString;
     }

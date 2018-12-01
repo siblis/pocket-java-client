@@ -1,12 +1,18 @@
 package client.utils;
 
 import client.model.ServerResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.net.URL;
-import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 public class HTTPSRequest {
+    private static final Logger requestLogger = LogManager.getLogger(HTTPSRequest.class.getName());
     private static String serverURL = "https://pocketmsg.ru:8888";
 
     public static String restorePassword(String requestJSON) throws Exception {
@@ -135,7 +141,7 @@ public class HTTPSRequest {
 
             System.out.println(response.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            requestLogger.error("answerRequest_error", e);
         }
         return response.toString();
     }
