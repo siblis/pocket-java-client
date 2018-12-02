@@ -178,6 +178,11 @@ public class ChatViewController implements Initializable {
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "   <style> \n" +
+                "       #messageArea {\n"+
+                "           word-wrap: break-word; \n" + //Перенос слов
+                "       }\n"+
+                "   </style> \n" +
                 "</head>\n" +
 
                 "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + "); background-attachment: fixed;\">\n" +
