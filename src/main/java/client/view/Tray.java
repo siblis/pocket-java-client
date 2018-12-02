@@ -3,21 +3,23 @@ package client.view;
 import client.controller.ClientController;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JPopupMenu;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 
 import static client.Main.primaryStage;
 
 
 public class Tray {
+    private static final Logger trayLogger = LogManager.getLogger(Tray.class.getName());
     private static SystemTray tray;
     public static Stage currentStage;
 
@@ -121,7 +123,7 @@ public class Tray {
             try {
                 tray.add(trayIcon);
             } catch (AWTException e) {
-                e.printStackTrace();
+                trayLogger.error("trayIcon_error", e);
             }
         }
     }

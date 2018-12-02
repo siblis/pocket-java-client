@@ -1,18 +1,14 @@
 package client.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
 public class Sound implements AutoCloseable {
+    private static final Logger soundLogger = LogManager.getLogger(Sound.class.getName());
     private boolean released = false;
     private AudioInputStream stream = null;
     private Clip clip = null;
@@ -28,9 +24,8 @@ public class Sound implements AutoCloseable {
             volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             released = true;
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
-            exc.printStackTrace();
+            soundLogger.error("Sound_error", exc);
             released = false;
-
             close();
         }
     }
@@ -86,7 +81,7 @@ public class Sound implements AutoCloseable {
             try {
                 stream.close();
             } catch (IOException exc) {
-                exc.printStackTrace();
+                soundLogger.error("stream_error", exc);
             }
     }
 
@@ -117,7 +112,9 @@ public class Sound implements AutoCloseable {
             try {
                 while (playing)
                     clip.wait();
-            } catch (InterruptedException exc) {}
+            } catch (InterruptedException exc) {
+                soundLogger.error("join_error", exc);
+            }
         }
     }
 
