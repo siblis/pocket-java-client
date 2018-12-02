@@ -179,13 +179,19 @@ public class ChatViewController implements Initializable {
                 "<head>\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "   <style> \n" +
+                "       body { \n" +
+                "           background-image: url(" + getChatBackgroundImage().toURI().toString() + "); \n" +
+                "           background-attachment: fixed; \n" +
+                "       } \n" +
                 "       #messageArea {\n"+
                 "           word-wrap: break-word; \n" + //Перенос слов
                 "       }\n"+
                 "   </style> \n" +
                 "</head>\n" +
 
-                "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + "); background-attachment: fixed;\">\n" +
+                //ШПС 181202 - Перенес стили вверх, в отдельный тег
+               // "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + "); background-attachment: fixed;\">\n" +
+                "<body onload=\"pageScrollDown()\"> \n" +
 
                 "        <div id=\"messageArea\">" +
                 msgArea +
