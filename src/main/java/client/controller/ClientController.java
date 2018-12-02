@@ -1,5 +1,6 @@
 package client.controller;
 
+import client.customFX.CFXListElement;
 import client.model.ContactFullInfo;
 import client.model.User;
 import client.model.formatMsgWithServer.*;
@@ -9,12 +10,20 @@ import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.jfoenix.controls.JFXListView;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.web.WebEngine;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -29,7 +38,7 @@ public class ClientController implements Initializable {
     public WebEngine webEngine;
     private String msgArea;
     private HashMap<String, String> msgAreaMap = new HashMap<String, String>();
-    private ObservableList<String> contactsObservList;
+    private ObservableList<CFXListElement> contactsObservList;
     private ArrayList contactFIL;
     private String myNick;
     private String myId;
@@ -149,7 +158,7 @@ public class ClientController implements Initializable {
         wievChat(receiver);
     }
 
-    public void clientChoice(ListView<String> contactList, MouseEvent event) {
+    public void clientChoice(JFXListView<CFXListElement> contactList, MouseEvent event) {
         if (event.getClickCount() == 1) {
             int selected = contactList.getSelectionModel().getSelectedIndex();
             ContactFullInfo CFI = (ContactFullInfo) contactFIL.get(selected);
@@ -198,7 +207,21 @@ public class ClientController implements Initializable {
 //
         contactsObservList = ChatViewController.getContactList();
         if (!contactsObservList.contains(user.getUid() + " " + user.getAccount_name())) {
-            contactsObservList.add(user.getUid() + " " + user.getAccount_name());
+            CFXListElement cfxListElement = new CFXListElement();
+            try {
+                //Если получать URL аватара пользователя, то можно подгружать его тут
+                File file = new File("src/main/resources/client/images/ava.png");
+                if (cfxListElement!=null) {
+                    cfxListElement.setTopic(user.getAccount_name());
+                    cfxListElement.setBody("Последнее сообщение");
+                    cfxListElement.setAvatar((new Image(new FileInputStream(file))));
+                //сдесь необходимо написать все инфо для инициализации
+
+                }
+            } catch (FileNotFoundException ex2){
+                ex2.printStackTrace();
+            }
+            contactsObservList.add(cfxListElement);
         }
     }
 
@@ -293,7 +316,9 @@ public class ClientController implements Initializable {
         if (senderId != myId) {
             CFI.incNoReadMessage();
         }
-        contactsObservList.set(index, CFI.toString());
+        CFXListElement lbl = contactsObservList.get(index);
+        lbl.setUnreadMessages(""+CFI.getNoReadMessage());
+        contactsObservList.set(index, lbl);
     }
 
     private boolean containsUserInCFIList(User user) {
