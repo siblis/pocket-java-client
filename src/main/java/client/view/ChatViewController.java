@@ -180,7 +180,7 @@ public class ChatViewController implements Initializable {
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "</head>\n" +
 
-                "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+                "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + "); background-attachment: fixed;\">\n" +
 
                 "        <div id=\"messageArea\">" +
                 msgArea +
