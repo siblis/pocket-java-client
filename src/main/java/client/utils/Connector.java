@@ -1,20 +1,23 @@
 package client.utils;
 
 import client.controller.ClientController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import javax.net.ssl.SSLSocketFactory;
 
 public class Connector {
+    private static final Logger connectorLogger = LogManager.getLogger(Connector.class.getName());
     private WebSocketChatClient chatClient;
 
     public Connector(String token, ClientController controller){
         try {
             connect(token,controller);
         } catch (Exception e) {
-            e.printStackTrace();
+            connectorLogger.error("Connector_error", e);
         }
     }
 
