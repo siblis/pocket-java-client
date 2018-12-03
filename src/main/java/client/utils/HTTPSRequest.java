@@ -73,7 +73,7 @@ public class HTTPSRequest {
 //        serverResponse.setResponseJson(answerRequest(connection));
 //
 //        return serverResponse;
-        return getServerResponse(connection,null);
+        return getServerResponse(connection, null);
     }
 
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
@@ -87,12 +87,12 @@ public class HTTPSRequest {
 //        serverResponse.setResponseJson(answerRequest(connection));
 //
 //        return serverResponse;
-        return getServerResponse(connection,requestJSON);
+        return getServerResponse(connection, requestJSON);
     }
 
     public static ServerResponse getContacts(String token) throws Exception {
         URL url = new URL(serverURL + "/v1/users/contacts/");
-        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Token", token);
 
@@ -100,12 +100,12 @@ public class HTTPSRequest {
 //        serverResponse.setResponseCode(sendRequest(connection, null));
 //        serverResponse.setResponseJson(answerRequest(connection));
 //        return serverResponse;
-        return getServerResponse(connection,null);
+        return getServerResponse(connection, null);
     }
 
     public static ServerResponse getMySelf(String token) throws Exception {
         URL url = new URL(serverURL + "/v1/users/");
-        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Token", token);
 
@@ -113,10 +113,35 @@ public class HTTPSRequest {
 //        serverResponse.setResponseCode(sendRequest(connection, null));
 //        serverResponse.setResponseJson(answerRequest(connection));
 //        return serverResponse;
-        return getServerResponse(connection,null);
+        return getServerResponse(connection, null);
     }
 
-    private static ServerResponse getServerResponse(HttpsURLConnection con, String requestJSON) throws Exception{
+    public static ServerResponse addGroup(String requestJSON, String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/chats/");
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Token", token);
+        return getServerResponse(connection, requestJSON);
+    }
+
+    public static ServerResponse addUserGroup(String requestJSON, String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/chats/");
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("PUT");
+        connection.setRequestProperty("Token", token);
+        return getServerResponse(connection, requestJSON);
+    }
+// я вообще поражаюсь зачем этот метод в АПИ сделали. ведь в вебсокете должнеы быть все сообщения
+    public static ServerResponse addMessageGroup(String requestJSON, String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/chats/messages/");
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Token", token);
+        return getServerResponse(connection, requestJSON);
+    }
+
+
+    private static ServerResponse getServerResponse(HttpsURLConnection con, String requestJSON) throws Exception {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setResponseCode(sendRequest(con, requestJSON));
         serverResponse.setResponseJson(answerRequest(con));
