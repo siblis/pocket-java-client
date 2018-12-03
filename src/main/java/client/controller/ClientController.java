@@ -8,6 +8,7 @@ import client.view.ChatViewController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import database.HibernateUtil;
 import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
@@ -91,8 +92,6 @@ public class ClientController {
                     controllerLogger.error("HTTPSRequest.getMySelf_error", e);
                 }
                 myUser.setAccount_name(login);
-                synchronizeContactList();
-
                 return true;
             } else {
 //                showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
@@ -264,7 +263,20 @@ public class ClientController {
     }
 
     public boolean proceedLogIn(String login, String password) {
-        return authentication(login, password);
+        if (authentication(login, password)) {
+            //TODO реализовать для пользователя вывод ошибок по каждой проверке
+            HibernateUtil.setUserName(myUser.getAccount_name());
+            if (HibernateUtil.checkDatabaseAvailability()) {
+                synchronizeContactList();
+                return true;
+            } else {
+                System.out.println("Ошибка создания БД для пользователя '" + myUser.getAccount_name() + "'.");
+                System.out.println("Работа приложения будет продолжена без локальной БД");
+                //TODO поставить таймер периодической проверки возможности создания БД
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<String> getAllUserNames() {
