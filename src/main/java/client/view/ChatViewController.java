@@ -28,6 +28,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import netscape.javascript.JSObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -102,7 +103,6 @@ public class ChatViewController implements Initializable {
         setChatBackgroundImage(new File(getClass().getResource("/client/images/chat-bg.jpg").getFile()));
         webtest();
         initFX(); //устанавливаем слушатель на обновление webView
-
         messageField.setOnKeyPressed(event -> {
             if (event.isControlDown() && event.getCode().equals(KeyCode.ENTER)) {
                 String text = messageField.getText().trim();
@@ -120,16 +120,17 @@ public class ChatViewController implements Initializable {
     private void webtest() {
         webEngine = messageWebView.getEngine();
         webEngine.setJavaScriptEnabled(true);
-        webEngine.loadContent("<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "   <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
-                "</head>\n" +
-                "<body style=\"background-image: url(" + chatBackgroundImage.toURI().toString() + ")\">\n" +
-                "   <div id=\"messageArea\">" +
-                "   </div>\n" +
-                "</body>\n" +
-                "</html>");
+//        webEngine.loadContent("<!DOCTYPE html>\n" +
+//                "<html lang=\"en\">\n" +
+//                "<head>\n" +
+//                "   <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+//                "</head>\n" +
+//                "<body style=\"background-image: url(" + chatBackgroundImage.toURI().toString() + ")\">\n" +
+//                "   <div id=\"messageArea\" >" +
+//                "   </div>\n" +
+//                "</body>\n" +
+//                "</html>");
+
     }
 
     public void fillContactListView() {
@@ -179,20 +180,37 @@ public class ChatViewController implements Initializable {
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "<style>\n" +
+                        "   #messageArea{\n" +
+                        "       background: #C6FCFF;\n" +
+                        "       margin: 20%;\n" +
+                        "       padding: 10px;\n" +
+                        "   }\n" +
+                "  </style>" +
                 "</head>\n" +
 
                 "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
 
-                "        <div id=\"messageArea\">" +
-                msgArea +
+                "        <div id=\"messageArea\" >" +
+                            msgArea +
                 "       </div>\n" +
                 "<script language=\"javascript\" type=\"text/javascript\">\n" +
-                "function pageScrollDown() {\n" +
-                "document.body.scrollTop = document.body.scrollHeight;\n" +
-                "}\n" +
+                    "function pageScrollDown() {\n" +
+                        "document.body.scrollTop = document.body.scrollHeight;\n" +
+                    "}\n" +
+                    "function sendText() {\n" +
+                    "    var mes = " + msgArea + ";\n" +
+
+                    "    var newDiv = document.createElement('div');\n" +
+                    "    document.getElementById(\"messageArea\").appendChild(newDiv);\n" +
+                    "    newDiv.innerHTML = mes;\n" +
+                    "}" +
                 "</script>\n" +
                 "    </body>\n" +
                 "</html>");
+
+        JSObject windowObject = (JSObject)messageWebView.getEngine().executeScript("window");
+        windowObject.call("sendText");
     }
 
     @FXML
