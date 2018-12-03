@@ -5,6 +5,7 @@ import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
 import client.view.ChatViewController;
+import client.view.customFX.CFXListElement;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -15,6 +16,8 @@ import javafx.scene.control.*;
 
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +33,7 @@ public class ClientController {
     private User myUser = null;
     private Connector conn = null;
     private List<Long> contactList;
+    private List<CFXListElement> contactListOfCards;
 
     private DataBaseService dbService;
 
@@ -63,6 +67,10 @@ public class ClientController {
     public void setReceiver(String receiver) {
         this.receiver = dbService.getUserByName(receiver);
         loadChat();
+    }
+
+    public List<CFXListElement> getContactListOfCards() {
+        return contactListOfCards;
     }
 
     private boolean authentication(String login, String password) {
@@ -129,7 +137,6 @@ public class ClientController {
             }
         }
         chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
-
         dbService.addMessage(mfs.getReceiver(),
                 mfs.getSenderid(),
                 new Message(mfs.getMessage(),
@@ -160,7 +167,17 @@ public class ClientController {
         for (Message message :
                 converstation) {
             chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
+            contactListOfCards.get(getListIDbyUID(message.getSender().getUid())).setBody(message.getText());
         }
+    }
+
+    private int getListIDbyUID(Long uid){
+        int index=-1;
+        for (CFXListElement element : contactListOfCards){
+            index++;
+            if (element.getUser().getUid()==uid) return index;
+        }
+        return -1;
     }
 
     public void disconnect() {
@@ -176,9 +193,21 @@ public class ClientController {
         return gson.fromJson(jsonText, itemsMapType);
     }
 
+    private void synchronizeContactListAsAdressBook(){
+        if (contactListOfCards==null) contactListOfCards=new ArrayList<>();
+        Iterator it = contactList.iterator();
+        while (it.hasNext()){
+            Long id = (Long) it.next();
+            CFXListElement element = new CFXListElement();
+            element.setUser(dbService.getUser(id));
+            contactListOfCards.add(element);
+        }
+    }
+
     private void synchronizeContactList() {
         dbService = new DataBaseService(myUser);
         contactList = dbService.getAllUserId();
+        synchronizeContactListAsAdressBook();
 
         try {
             ServerResponse response = HTTPSRequest.getContacts(token);
@@ -190,7 +219,9 @@ public class ClientController {
                         user.setUid(entry.getValue().getId());
                         user.setAccount_name(entry.getValue().getName());
                         user.setEmail(entry.getKey());
-
+                        CFXListElement element = new CFXListElement();
+                        element.setUser(user);
+                        contactListOfCards.add(element);
                         addContactToDB(user);
                     }
                 }
