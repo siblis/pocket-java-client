@@ -1,6 +1,6 @@
 package client;
 
-import client.utils.Tray;
+import client.view.Tray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -9,18 +9,21 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 
 public class Main extends Application {
 
     public static Stage primaryStage;
     private static BorderPane rootLayout;
+    private static final Logger mainLogger = LogManager.getLogger(Main.class);
 
     @Override
     public void start(Stage stage) {
         primaryStage = stage;
         primaryStage.setTitle("Pocket desktop client");
-
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
 
         //инициализируем главную сцену
@@ -54,7 +57,7 @@ public class Main extends Application {
             primaryStage.setResizable(false);
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            mainLogger.error("initRootLayout_error", e);
         }
     }
 
@@ -65,7 +68,7 @@ public class Main extends Application {
             AnchorPane overview = loader.load();
             rootLayout.setCenter(overview);
         } catch (IOException e) {
-            e.printStackTrace();
+            mainLogger.error("showOverview_error", e);
         }
     }
 
