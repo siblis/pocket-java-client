@@ -183,7 +183,7 @@ public class ChatViewController implements Initializable {
                 "<style>\n" +
                         "   #messageArea{\n" +
                         "       background: #C6FCFF;\n" +
-                        "       margin: 20%;\n" +
+                        "       margin: 10%;\n" +
                         "       padding: 10px;\n" +
                         "   }\n" +
                 "  </style>" +

@@ -52,7 +52,24 @@
             <tabs>
                <Tab fx:id="chats" closable="false" onSelectionChanged="#handleOnChatSelected" text="чаты">
                  <content>
-                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                           <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="145.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                              <children>
+                                 <Label id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleAddContactButton" prefHeight="50.0" text="Добавить группу" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="79.0">
+                                    <padding>
+                                       <Insets right="70.0" />
+                                    </padding>
+                                 </Label>
+                                 <Label id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleAddContactButton" prefHeight="50.0" text="Создать свою группу" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="15.0">
+                                    <padding>
+                                       <Insets right="70.0" />
+                                    </padding>
+                                 </Label>
+                              </children>
+                           </AnchorPane>
+                           <AnchorPane prefHeight="372.0" prefWidth="201.0" AnchorPane.bottomAnchor="164.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        </children></AnchorPane>
                  </content>
                </Tab>
                <Tab fx:id="contacts" closable="false" onSelectionChanged="#handleOnContactSelected" text="Контакты">
@@ -67,7 +84,7 @@
                            </AnchorPane>
                            <AnchorPane layoutX="11.0" layoutY="334.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="82.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                               <children>
-                                    <Label id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleAddContactButton" prefHeight="50.0" prefWidth="190.0" text="Добавить контакт" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="11.0">
+                                    <Label id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleAddContactButton" prefHeight="50.0" text="Добавить контакт" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="11.0">
                                     <padding>
                                        <Insets right="70.0" />
                                     </padding>
