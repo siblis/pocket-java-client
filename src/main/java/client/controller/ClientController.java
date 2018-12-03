@@ -265,7 +265,7 @@ public class ClientController {
     }
 
     public List<String> getAllUserNames() {
-        return dbService.getAllUserNames();
+        return dbService.getAllUserNames(myUser);
     }
 
     public void dbServiceClose() {

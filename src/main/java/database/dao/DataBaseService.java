@@ -51,9 +51,10 @@ public class DataBaseService {
         return usersDao.get();
     }
 
-    public List<String> getAllUserNames() {
+    public List<String> getAllUserNames(User myUser) {
         List<String> names = new ArrayList<>();
         for (User user : usersDao.get()) {
+            if(user.getUid() != myUser.getUid())
             names.add(user.getAccount_name());
         }
         return names;
