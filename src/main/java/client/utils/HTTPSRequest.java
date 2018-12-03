@@ -63,52 +63,58 @@ public class HTTPSRequest {
     }
 
     public static ServerResponse getUser(long id, String token) throws Exception {
-        URL url = new URL(serverURL + "/v1/users/" + id);
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Token", token);
-
-        ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(connection, null));
-        serverResponse.setResponseJson(answerRequest(connection));
-
-        return serverResponse;
+        HttpsURLConnection connection = getConnection("/v1/users/" + id, "GET", token);
+        return getServerResponse(connection, null);
     }
 
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
-        URL url = new URL(serverURL + "/v1/users/contacts/");
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Token", token);
-
-        ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(connection, requestJSON));
-        serverResponse.setResponseJson(answerRequest(connection));
-
-        return serverResponse;
+        HttpsURLConnection connection = getConnection("/v1/users/contacts/", "POST", token);
+        return getServerResponse(connection, requestJSON);
     }
 
     public static ServerResponse getContacts(String token) throws Exception {
-        URL url = new URL(serverURL + "/v1/users/contacts/");
-        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Token", token);
-
-        ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(connection, null));
-        serverResponse.setResponseJson(answerRequest(connection));
-        return serverResponse;
+        HttpsURLConnection connection = getConnection("/v1/users/contacts/", "GET", token);
+        return getServerResponse(connection, null);
     }
 
     public static ServerResponse getMySelf(String token) throws Exception {
-        URL url = new URL(serverURL + "/v1/users/");
-        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Token", token);
+        HttpsURLConnection connection = getConnection("/v1/users/", "GET", token);
+        return getServerResponse(connection, null);
+    }
 
+    public static ServerResponse addGroup(String requestJSON, String token) throws Exception {
+        HttpsURLConnection connection = getConnection("/v1/chats/", "POST", token);
+        return getServerResponse(connection, requestJSON);
+    }
+
+    public static ServerResponse addUserGroup(String requestJSON, String token) throws Exception {
+        HttpsURLConnection connection = getConnection("/v1/chats/", "PUT", token);
+        return getServerResponse(connection, requestJSON);
+    }
+
+    // я вообще поражаюсь зачем этот метод в АПИ сделали. ведь в вебсокете должнеы быть все сообщения
+    public static ServerResponse addMessageGroup(String requestJSON, String token) throws Exception {
+        HttpsURLConnection connection = getConnection("/v1/chats/messages/", "POST", token);
+        return getServerResponse(connection, requestJSON);
+    }
+
+    public static ServerResponse getGroupInfo(String id, String token) throws Exception {
+        HttpsURLConnection connection = getConnection("/v1/chats/" + id, "GET", token);
+        return getServerResponse(connection, null);
+    }
+
+    private static HttpsURLConnection getConnection(String urlPath, String method, String token) throws Exception {
+        URL url = new URL(serverURL + urlPath);
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod(method);
+        connection.setRequestProperty("Token", token);
+        return connection;
+    }
+
+    private static ServerResponse getServerResponse(HttpsURLConnection con, String requestJSON) throws Exception {
         ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(connection, null));
-        serverResponse.setResponseJson(answerRequest(connection));
+        serverResponse.setResponseCode(sendRequest(con, requestJSON));
+        serverResponse.setResponseJson(answerRequest(con));
         return serverResponse;
     }
 
