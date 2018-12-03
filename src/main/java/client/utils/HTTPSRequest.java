@@ -68,11 +68,12 @@ public class HTTPSRequest {
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Token", token);
 
-        ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(connection, null));
-        serverResponse.setResponseJson(answerRequest(connection));
-
-        return serverResponse;
+//        ServerResponse serverResponse = new ServerResponse();
+//        serverResponse.setResponseCode(sendRequest(connection, null));
+//        serverResponse.setResponseJson(answerRequest(connection));
+//
+//        return serverResponse;
+        return getServerResponse(connection,null);
     }
 
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
@@ -81,11 +82,12 @@ public class HTTPSRequest {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Token", token);
 
-        ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(connection, requestJSON));
-        serverResponse.setResponseJson(answerRequest(connection));
-
-        return serverResponse;
+//        ServerResponse serverResponse = new ServerResponse();
+//        serverResponse.setResponseCode(sendRequest(connection, requestJSON));
+//        serverResponse.setResponseJson(answerRequest(connection));
+//
+//        return serverResponse;
+        return getServerResponse(connection,requestJSON);
     }
 
     public static ServerResponse getContacts(String token) throws Exception {
@@ -94,10 +96,11 @@ public class HTTPSRequest {
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Token", token);
 
-        ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(connection, null));
-        serverResponse.setResponseJson(answerRequest(connection));
-        return serverResponse;
+//        ServerResponse serverResponse = new ServerResponse();
+//        serverResponse.setResponseCode(sendRequest(connection, null));
+//        serverResponse.setResponseJson(answerRequest(connection));
+//        return serverResponse;
+        return getServerResponse(connection,null);
     }
 
     public static ServerResponse getMySelf(String token) throws Exception {
@@ -106,9 +109,17 @@ public class HTTPSRequest {
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Token", token);
 
+//        ServerResponse serverResponse = new ServerResponse();
+//        serverResponse.setResponseCode(sendRequest(connection, null));
+//        serverResponse.setResponseJson(answerRequest(connection));
+//        return serverResponse;
+        return getServerResponse(connection,null);
+    }
+
+    private static ServerResponse getServerResponse(HttpsURLConnection con, String requestJSON) throws Exception{
         ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setResponseCode(sendRequest(connection, null));
-        serverResponse.setResponseJson(answerRequest(connection));
+        serverResponse.setResponseCode(sendRequest(con, requestJSON));
+        serverResponse.setResponseJson(answerRequest(con));
         return serverResponse;
     }
 
