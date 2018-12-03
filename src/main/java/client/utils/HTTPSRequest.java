@@ -63,39 +63,44 @@ public class HTTPSRequest {
     }
 
     public static ServerResponse getUser(long id, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/users/" + id,"GET",token);
+        HttpsURLConnection connection = getConnection("/v1/users/" + id, "GET", token);
         return getServerResponse(connection, null);
     }
 
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/users/contacts/","POST",token);
+        HttpsURLConnection connection = getConnection("/v1/users/contacts/", "POST", token);
         return getServerResponse(connection, requestJSON);
     }
 
     public static ServerResponse getContacts(String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/users/contacts/","GET",token);
+        HttpsURLConnection connection = getConnection("/v1/users/contacts/", "GET", token);
         return getServerResponse(connection, null);
     }
 
     public static ServerResponse getMySelf(String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/users/","GET",token);
+        HttpsURLConnection connection = getConnection("/v1/users/", "GET", token);
         return getServerResponse(connection, null);
     }
 
     public static ServerResponse addGroup(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/chats/","POST",token );
+        HttpsURLConnection connection = getConnection("/v1/chats/", "POST", token);
         return getServerResponse(connection, requestJSON);
     }
 
     public static ServerResponse addUserGroup(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/chats/","PUT",token);
+        HttpsURLConnection connection = getConnection("/v1/chats/", "PUT", token);
         return getServerResponse(connection, requestJSON);
     }
 
     // я вообще поражаюсь зачем этот метод в АПИ сделали. ведь в вебсокете должнеы быть все сообщения
     public static ServerResponse addMessageGroup(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/chats/messages/","POST",token);
+        HttpsURLConnection connection = getConnection("/v1/chats/messages/", "POST", token);
         return getServerResponse(connection, requestJSON);
+    }
+
+    public static ServerResponse getGroupInfo(String id, String token) throws Exception {
+        HttpsURLConnection connection = getConnection("/v1/chats/" + id, "GET", token);
+        return getServerResponse(connection, null);
     }
 
     private static HttpsURLConnection getConnection(String urlPath, String method, String token) throws Exception {
