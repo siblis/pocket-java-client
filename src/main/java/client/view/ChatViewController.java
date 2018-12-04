@@ -35,6 +35,9 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -79,18 +82,19 @@ public class ChatViewController implements Initializable {
 
     private ClientController clientController;
 
-    private File chatBackgroundImage;
+    //private File chatBackgroundImage;
+    private String backgroundImage;
 
     public ChatViewController() {
     }
 
-    public void setChatBackgroundImage(File fileName) {
+    /*private void setChatBackgroundImage(File fileName) {
         chatBackgroundImage = fileName;
     }
 
-    public File getChatBackgroundImage() {
+    private File getChatBackgroundImage() {
         return chatBackgroundImage;
-    }
+    }*/
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -98,7 +102,19 @@ public class ChatViewController implements Initializable {
         clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableArrayList();
         fillContactListView();
-        setChatBackgroundImage(new File(getClass().getResource("/client/images/chat-bg.jpg").getFile()));
+
+        //setChatBackgroundImage(new File(getClass().getResource("/client/images/chat-bg.jpg").getFile()));
+
+        String path = "client/images/chat-bg.jpg"; //картинка фона
+        ClassLoader cl = this.getClass().getClassLoader();
+        backgroundImage = "";
+        try {
+            backgroundImage = cl.getResource(path).toURI().toString();
+        }catch (Exception e) {
+            //todo перенести в логирование
+            e.printStackTrace();
+        }
+
         webtest();
         initFX(); //устанавливаем слушатель на обновление webView
 
@@ -124,7 +140,8 @@ public class ChatViewController implements Initializable {
                 "<head>\n" +
                 "   <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "</head>\n" +
-                "<body style=\"background-image: url(" + chatBackgroundImage.toURI().toString() + ")\">\n" +
+                //"<body style=\"background-image: url(" + chatBackgroundImage.toURI().toString() + ")\">\n" +
+                "<body style=\"background-image: url(" + backgroundImage + ")\">\n" +
                 "   <div id=\"messageArea\">" +
                 "   </div>\n" +
                 "</body>\n" +
@@ -159,9 +176,22 @@ public class ChatViewController implements Initializable {
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
-        if (isNew){
-            Sound.playSound("src\\main\\resources\\client\\sounds\\1.wav").join();
+        if (isNew) {
+            String path = "client/sounds/1.wav"; //звук нового сообщения
+            ClassLoader cl = this.getClass().getClassLoader();
+            try {
+
+                URL soundMsg = cl.getResource(path);
+                Sound.playSound(soundMsg).join();
+
+            } catch (Exception e) { //todo поправить Exception, тут их всего 2
+                //todo перенести в логирование
+                e.printStackTrace();
+            }
         }
+        /*if (isNew){
+            Sound.playSound("src\\main\\resources\\client\\sounds\\1.wav").join();
+        }*/
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -178,9 +208,21 @@ public class ChatViewController implements Initializable {
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "   <style> \n" +
+                "       body { \n" +
+                //"           background-image: url(" + getChatBackgroundImage().toURI().toString() + "); \n" +
+                "           background-image: url(" + backgroundImage + "); \n" +
+                "           background-attachment: fixed; \n" +
+                "       } \n" +
+                "       #messageArea {\n"+
+                "           word-wrap: break-word; \n" + //Перенос слов
+                "       }\n"+
+                "   </style> \n" +
                 "</head>\n" +
 
-                "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+                //ШПС 181202 - Перенес стили вверх, в отдельный тег
+               // "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + "); background-attachment: fixed;\">\n" +
+                "<body onload=\"pageScrollDown()\"> \n" +
 
                 "        <div id=\"messageArea\">" +
                 msgArea +
@@ -324,7 +366,8 @@ public class ChatViewController implements Initializable {
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "</head>\n" +
 
-                "<body style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+                //"<body style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+                "<body style=\"background-image: url(" + backgroundImage + ")\">\n" +
 
                 "</body>\n" +
                 "</html>");
