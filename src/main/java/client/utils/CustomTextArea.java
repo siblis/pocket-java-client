@@ -36,6 +36,7 @@ public class CustomTextArea extends TextArea {
         Font font = new Font(14);
         setFont(font);
         Text text = (Text) content.lookup(".text");
+        setPromptText("Написать сообщение...");
 
         text.textProperty().addListener((property) -> {
             double textHeight = text.getBoundsInLocal().getHeight();
