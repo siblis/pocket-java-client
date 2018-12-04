@@ -28,15 +28,16 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import netscape.javascript.JSObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
-import sun.font.FontFamily;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -81,18 +82,19 @@ public class ChatViewController implements Initializable {
 
     private ClientController clientController;
 
-    private File chatBackgroundImage;
+    //private File chatBackgroundImage;
+    private String backgroundImage;
 
     public ChatViewController() {
     }
 
-    public void setChatBackgroundImage(File fileName) {
+    /*private void setChatBackgroundImage(File fileName) {
         chatBackgroundImage = fileName;
     }
 
-    public File getChatBackgroundImage() {
+    private File getChatBackgroundImage() {
         return chatBackgroundImage;
-    }
+    }*/
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -100,9 +102,22 @@ public class ChatViewController implements Initializable {
         clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableArrayList();
         fillContactListView();
-        setChatBackgroundImage(new File(getClass().getResource("/client/images/chat-bg.jpg").getFile()));
+
+        //setChatBackgroundImage(new File(getClass().getResource("/client/images/chat-bg.jpg").getFile()));
+
+        String path = "client/images/chat-bg.jpg"; //картинка фона
+        ClassLoader cl = this.getClass().getClassLoader();
+        backgroundImage = "";
+        try {
+            backgroundImage = cl.getResource(path).toURI().toString();
+        }catch (Exception e) {
+            //todo перенести в логирование
+            e.printStackTrace();
+        }
+
         webtest();
         initFX(); //устанавливаем слушатель на обновление webView
+
         messageField.setOnKeyPressed(event -> {
             if (event.isControlDown() && event.getCode().equals(KeyCode.ENTER)) {
                 String text = messageField.getText().trim();
@@ -120,17 +135,17 @@ public class ChatViewController implements Initializable {
     private void webtest() {
         webEngine = messageWebView.getEngine();
         webEngine.setJavaScriptEnabled(true);
-//        webEngine.loadContent("<!DOCTYPE html>\n" +
-//                "<html lang=\"en\">\n" +
-//                "<head>\n" +
-//                "   <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
-//                "</head>\n" +
-//                "<body style=\"background-image: url(" + chatBackgroundImage.toURI().toString() + ")\">\n" +
-//                "   <div id=\"messageArea\" >" +
-//                "   </div>\n" +
-//                "</body>\n" +
-//                "</html>");
-
+        webEngine.loadContent("<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "   <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                "</head>\n" +
+                //"<body style=\"background-image: url(" + chatBackgroundImage.toURI().toString() + ")\">\n" +
+                "<body style=\"background-image: url(" + backgroundImage + ")\">\n" +
+                "   <div id=\"messageArea\">" +
+                "   </div>\n" +
+                "</body>\n" +
+                "</html>");
     }
 
     public void fillContactListView() {
@@ -161,9 +176,22 @@ public class ChatViewController implements Initializable {
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
-        if (isNew){
-            Sound.playSound("src\\main\\resources\\client\\sounds\\1.wav").join();
+        if (isNew) {
+            String path = "client/sounds/1.wav"; //звук нового сообщения
+            ClassLoader cl = this.getClass().getClassLoader();
+            try {
+
+                URL soundMsg = cl.getResource(path);
+                Sound.playSound(soundMsg).join();
+
+            } catch (Exception e) { //todo поправить Exception, тут их всего 2
+                //todo перенести в логирование
+                e.printStackTrace();
+            }
         }
+        /*if (isNew){
+            Sound.playSound("src\\main\\resources\\client\\sounds\\1.wav").join();
+        }*/
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -180,37 +208,32 @@ public class ChatViewController implements Initializable {
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
-                "<style>\n" +
-                        "   #messageArea{\n" +
-                        "       background: #C6FCFF;\n" +
-                        "       margin: 10%;\n" +
-                        "       padding: 10px;\n" +
-                        "   }\n" +
-                "  </style>" +
+                "   <style> \n" +
+                "       body { \n" +
+                //"           background-image: url(" + getChatBackgroundImage().toURI().toString() + "); \n" +
+                "           background-image: url(" + backgroundImage + "); \n" +
+                "           background-attachment: fixed; \n" +
+                "       } \n" +
+                "       #messageArea {\n"+
+                "           word-wrap: break-word; \n" + //Перенос слов
+                "       }\n"+
+                "   </style> \n" +
                 "</head>\n" +
 
-                "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+                //ШПС 181202 - Перенес стили вверх, в отдельный тег
+               // "<body onload=\"pageScrollDown()\" style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + "); background-attachment: fixed;\">\n" +
+                "<body onload=\"pageScrollDown()\"> \n" +
 
-                "        <div id=\"messageArea\" >" +
-                            msgArea +
+                "        <div id=\"messageArea\">" +
+                msgArea +
                 "       </div>\n" +
                 "<script language=\"javascript\" type=\"text/javascript\">\n" +
-                    "function pageScrollDown() {\n" +
-                        "document.body.scrollTop = document.body.scrollHeight;\n" +
-                    "}\n" +
-                    "function sendText() {\n" +
-                    "    var mes = " + msgArea + ";\n" +
-
-                    "    var newDiv = document.createElement('div');\n" +
-                    "    document.getElementById(\"messageArea\").appendChild(newDiv);\n" +
-                    "    newDiv.innerHTML = mes;\n" +
-                    "}" +
+                "function pageScrollDown() {\n" +
+                "document.body.scrollTop = document.body.scrollHeight;\n" +
+                "}\n" +
                 "</script>\n" +
                 "    </body>\n" +
                 "</html>");
-
-        JSObject windowObject = (JSObject)messageWebView.getEngine().executeScript("window");
-        windowObject.call("sendText");
     }
 
     @FXML
@@ -343,7 +366,8 @@ public class ChatViewController implements Initializable {
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
                 "</head>\n" +
 
-                "<body style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+                //"<body style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
+                "<body style=\"background-image: url(" + backgroundImage + ")\">\n" +
 
                 "</body>\n" +
                 "</html>");
@@ -356,18 +380,13 @@ public class ChatViewController implements Initializable {
             contacts.setGraphic(buildImage("/client/images/chat/contacts.png"));
             contacts.setStyle("-fx-border-width: 0 0 5 0; " +
                     "          -fx-border-color: #3498DB #3498DB transparent #3498DB;" +
-                    "          -fx-border-insets: 0;" +
-                    "          -fx-border-style: solid;" +
-                    "          -fx-font-weight: normal;" +
-                    "          -fx-text-fill: #FFFFFF;");
-
+                    "-fx-border-insets: 0;" +
+                    "          -fx-border-style: solid;");
         }
         chats.setStyle("-fx-border-width: 0 0 5 0; " +
                         "-fx-border-color: transparent transparent #F8D57D transparent;" +
-                        "-fx-border-insets: 0;" +
-                        "-fx-border-style: solid;" +
-                        "-fx-font-weight: lighter;" +
-                        "-fx-text-fill: #F8D57D;");
+                "-fx-border-insets: 0;" +
+                        "-fx-border-style: solid;");
     }
     public void handleOnContactSelected() {
         contacts.setGraphic(buildImage("/client/images/chat/contactsActive.png"));
@@ -375,17 +394,11 @@ public class ChatViewController implements Initializable {
         contacts.setStyle("-fx-border-width: 0 0 5 0; " +
                 "-fx-border-color: transparent transparent #F8D57D transparent;" +
                 "-fx-border-insets: 0;" +
-                "-fx-border-style: solid;" +
-                "-fx-font-weight: lighter;" +
-                "-fx-text-fill: #F8D57D;");
-
+                "-fx-border-style: solid;");
         chats.setStyle("-fx-border-width: 0 0 5 0; " +
                 "       -fx-border-color: #3498DB #3498DB transparent #3498DB;" +
-                "       -fx-border-insets: 0;" +
-                "       -fx-border-style: solid;" +
-                "       -fx-font-weight: normal;" +
-                "       -fx-text-fill: #FFFFFF;");
-
+                "-fx-border-insets: 0;" +
+                "       -fx-border-style: solid;");
     }
 
     private ImageView buildImage(String s) {
