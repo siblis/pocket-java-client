@@ -108,14 +108,14 @@ public class ChatViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
-        webEngine.loadContent("<body><div id='content'> </div></body>");
-        webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState)->{
+        //webEngine.loadContent("<body><div id='content'> </div></body>");
+        /*webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState)->{
             if (newState == Worker.State.SUCCEEDED) {
                 doc = webEngine.getDocument();
                 JPanel myRootPane = new JPanel();
                 JOptionPane.showMessageDialog(myRootPane,"Док появился");
             }
-        });
+        });*/
 
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
@@ -225,17 +225,22 @@ public class ChatViewController implements Initializable {
         msgArea += dateFormat.format(timestamp) + " " + formatSender + " " + message + "<br>";*/
 
         //Node body = webEngine.getDocument().getElementsByTagName("body").item(0);
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState)->{
+            if (newState == Worker.State.SUCCEEDED) {
+                doc = webEngine.getDocument();
+                Node body = doc.getElementsByTagName("body").item(0);
+                Element div = webEngine.getDocument().createElement("div");
+                if (clientController.getSenderName().equals(senderName)) {
+                    div.setAttribute("class", "myUserClass");
+                } else {
+                    div.setAttribute("class", "senderUserClass");
+                }
 
-        Node body = doc.getElementsByTagName("body").item(0);
-        Element div = webEngine.getDocument().createElement("div");
-        if (clientController.getSenderName().equals(senderName)) {
-             div.setAttribute("class", "myUserClass");
-        } else {
-             div.setAttribute("class", "senderUserClass");
-        }
+                div.setTextContent(dateFormat.format(timestamp) + " " + senderName + " " + message);
+                body.appendChild(div);
+            }
+        });
 
-        div.setTextContent(dateFormat.format(timestamp) + " " + senderName + " " + message);
-        body.appendChild(div);
 
 
 
@@ -410,12 +415,23 @@ public class ChatViewController implements Initializable {
                 "           background-image: url(" + backgroundImage + "); \n" +
                 "           background-attachment: fixed; \n" +
                 "       } \n" +
+                "       div {\n"+
+                "      display: block; \n"+
+                "           word-wrap: break-word; \n" + //Перенос слов"
+                    "         height: auto; \n"+
+                    "      width: 300px; \n"+
+                "       border-radius: 5px;\n" +
+                "       margin: 5px;\n"+
+                "       padding: 5px\n"+
+                "       }\n"+
                 "       .myUserClass {\n" +
-                "       background: blue;\n" +
+                        "       background: grey;\n" +
+                    "      float: left; \n"+
                 "       }\n" +
                 "       .senderUserClass {\n" +
                         "       background: yellow;\n" +
-                        "       }\n" +
+                    "       float: right; \n"+
+                "       }\n" +
                 // "       #messageArea {\n"+
                 //"           word-wrap: break-word; \n" + //Перенос слов
                 //"       }\n"+
