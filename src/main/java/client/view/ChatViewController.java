@@ -10,7 +10,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,14 +29,13 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -85,6 +83,17 @@ public class ChatViewController implements Initializable {
     //private File chatBackgroundImage;
     private String backgroundImage;
 
+    private Document doc = null;
+
+    public boolean getItDoc(){
+        if (doc == null) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
     public ChatViewController() {
     }
 
@@ -98,6 +107,16 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        webEngine = messageWebView.getEngine(); //инициализация WebEngine
+        webEngine.loadContent("<body><div id='content'> </div></body>");
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState)->{
+            if (newState == Worker.State.SUCCEEDED) {
+                doc = webEngine.getDocument();
+                JPanel myRootPane = new JPanel();
+                JOptionPane.showMessageDialog(myRootPane,"Док появился");
+            }
+        });
+
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableArrayList();
@@ -115,7 +134,8 @@ public class ChatViewController implements Initializable {
             e.printStackTrace();
         }
 
-        webtest();
+        //webtest();
+
         initFX(); //устанавливаем слушатель на обновление webView
 
         messageField.setOnKeyPressed(event -> {
@@ -195,16 +215,31 @@ public class ChatViewController implements Initializable {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-        String formatSender = "<b><font color = " + (clientController.getSenderName().equals(senderName) ? "green" : "red") + ">"
+        /*String formatSender = "<b><font color = " + (clientController.getSenderName().equals(senderName) ? "green" : "red") + ">"
                 + senderName
                 + "</font></b>";
 
         message = message.replaceAll("\n", "<br/>");
         message = Common.urlToHyperlink(message);
 
-        msgArea += dateFormat.format(timestamp) + " " + formatSender + " " + message + "<br>";
+        msgArea += dateFormat.format(timestamp) + " " + formatSender + " " + message + "<br>";*/
 
-        webEngine.loadContent("<!DOCTYPE html>\n" +
+        //Node body = webEngine.getDocument().getElementsByTagName("body").item(0);
+
+        Node body = doc.getElementsByTagName("body").item(0);
+        Element div = webEngine.getDocument().createElement("div");
+        if (clientController.getSenderName().equals(senderName)) {
+             div.setAttribute("class", "myUserClass");
+        } else {
+             div.setAttribute("class", "senderUserClass");
+        }
+
+        div.setTextContent(dateFormat.format(timestamp) + " " + senderName + " " + message);
+        body.appendChild(div);
+
+
+
+       /*webEngine.loadContent("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
@@ -229,11 +264,12 @@ public class ChatViewController implements Initializable {
                 "       </div>\n" +
                 "<script language=\"javascript\" type=\"text/javascript\">\n" +
                 "function pageScrollDown() {\n" +
+
                 "document.body.scrollTop = document.body.scrollHeight;\n" +
                 "}\n" +
                 "</script>\n" +
                 "    </body>\n" +
-                "</html>");
+                "</html>");*/
     }
 
     @FXML
@@ -333,8 +369,10 @@ public class ChatViewController implements Initializable {
             }
         });
     }
+
     //метод выбора файла
     private Desktop desktop = Desktop.getDesktop();
+
     @FXML
     public void handleSendFile() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
@@ -360,16 +398,42 @@ public class ChatViewController implements Initializable {
 
     public void clearMessageWebView() {
         msgArea = "";
+
         webEngine.loadContent("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
+                //
+                "   <style> \n" +
+                "       body { \n" +
+                //"           background-image: url(" + getChatBackgroundImage().toURI().toString() + "); \n" +
+                "           background-image: url(" + backgroundImage + "); \n" +
+                "           background-attachment: fixed; \n" +
+                "       } \n" +
+                "       .myUserClass {\n" +
+                "       background: blue;\n" +
+                "       }\n" +
+                "       .senderUserClass {\n" +
+                        "       background: yellow;\n" +
+                        "       }\n" +
+                // "       #messageArea {\n"+
+                //"           word-wrap: break-word; \n" + //Перенос слов
+                //"       }\n"+
+                "   </style> \n" +
+                //
                 "</head>\n" +
 
                 //"<body style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
-                "<body style=\"background-image: url(" + backgroundImage + ")\">\n" +
+                //"<body style=\"background-image: url(" + backgroundImage + ")\">\n" +
+                "<body>\n" +
 
                 "</body>\n" +
+                "<script>\n" +
+                "   document.body.onload=pageScrollDown;\n" +
+                "   function pageScrollDown() {\n" +
+                "       document.body.scrollTop = document.body.scrollHeight;\n"+
+                "   }\n"+
+                "</script>\n"+
                 "</html>");
     }
 
