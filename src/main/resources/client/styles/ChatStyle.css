@@ -68,10 +68,14 @@
 
 #contacts .tab-label {
      -fx-graphic: url("../images/chat/contacts.png");
-}
-
-#chats .tab-label {
-     -fx-graphic: url("../images/chat/chatsActive.png");
+     -fx-border-width: 0 0 5 0;
+     -fx-border-color: #3498DB #3498DB transparent #3498DB;
+     -fx-border-insets: 0;
+     -fx-border-style: solid;
+     -fx-font-weight: normal;
+     -fx-text-fill: #FFFFFF;
+     -fx-font-size: 14px;
+     -fx-font-family: Roboto;
 }
 
 .tab-header-background {
