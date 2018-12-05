@@ -83,16 +83,16 @@ public class ChatViewController implements Initializable {
     //private File chatBackgroundImage;
     private String backgroundImage;
 
-    private Document doc = null;
+    private Document DOMdocument = null;
 
-    public boolean getItDoc(){
+    /*public boolean getItDoc(){
         if (doc == null) {
             return false;
         } else {
             return true;
         }
 
-    }
+    }*/
 
     public ChatViewController() {
     }
@@ -107,7 +107,11 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
+        initBackgroundWebView();
+        //initWebView(); //при запуске от теста вызывается еще раз. Если не будет вызова там, тут расскоментировать
+
         //webEngine.loadContent("<body><div id='content'> </div></body>");
         /*webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState)->{
             if (newState == Worker.State.SUCCEEDED) {
@@ -124,15 +128,7 @@ public class ChatViewController implements Initializable {
 
         //setChatBackgroundImage(new File(getClass().getResource("/client/images/chat-bg.jpg").getFile()));
 
-        String path = "client/images/chat-bg.jpg"; //картинка фона
-        ClassLoader cl = this.getClass().getClassLoader();
-        backgroundImage = "";
-        try {
-            backgroundImage = cl.getResource(path).toURI().toString();
-        }catch (Exception e) {
-            //todo перенести в логирование
-            e.printStackTrace();
-        }
+
 
         //webtest();
 
@@ -152,7 +148,7 @@ public class ChatViewController implements Initializable {
         });
     }
 
-    private void webtest() {
+    /*private void webtest() {
         webEngine = messageWebView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         webEngine.loadContent("<!DOCTYPE html>\n" +
@@ -166,6 +162,86 @@ public class ChatViewController implements Initializable {
                 "   </div>\n" +
                 "</body>\n" +
                 "</html>");
+    }*/
+    //  инициализация картинки backgrounda
+    private void initBackgroundWebView() {
+        String path = "client/images/chat-bg.jpg"; //картинка фона
+        ClassLoader cl = this.getClass().getClassLoader();
+        backgroundImage = "";
+        try {
+            backgroundImage = cl.getResource(path).toURI().toString();
+        }catch (Exception e) {
+            //todo перенести в логирование
+            e.printStackTrace();
+        }
+    }
+
+    // инициализация только HTML в WebView.
+    private void initWebView() {
+        //webEngine.setJavaScriptEnabled(true);
+        webEngine.loadContent(
+                "<!DOCTYPE html> \n"+
+                "<html lang=\"en\"> \n"+
+                  "<head> \n"+
+                    "<meta charset=UTF-8> \n"+
+                    "<style> \n"+
+                        "body { \n" +
+                            "background-image: url(" + backgroundImage + "); \n"+
+                            "background-attachment: fixed; \n"+
+                        "} \n"+
+                        ".message { \n"+
+                            "display: flex; \n"+
+                            "height: auto; \n"+
+                            "width: 85%; \n"+
+                            //"margin: 5px; \n"+
+                            //"padding: 5px \n"+
+                            "align-items: center; \n"+
+                        "} \n"+
+                        ".msgLogo { \n"+
+                            "flex: none; \n"+
+                            "width: 35px; \n"+
+                            "height: 35px; \n"+
+                            "background: yellow; \n"+
+                            "border-radius: 50%; \n"+
+                        "} \n"+
+                        ".msgTxt { \n"+
+                            "flex: content; \n"+
+                            "word-wrap: break-word; \n"+    //<!--Перенос слов-->
+                            "border-radius: 25px; \n"+
+                            "float: left; \n"+
+                        "} \n"+
+                        ".msgTime { \n"+
+                            "flex: auto; \n"+
+                        "} \n"+
+                        //"<!--класс своих сообщений--> \n"+
+                        ".myUserClass { \n"+
+                            "background: #C6FCFF; \n"+
+                            //"float: left; \n"+
+                        "} \n"+
+                        ".myUserClassT { \n"+
+                            "color: #6399F3; \n"+
+                            //"float: left; \n"+
+                        "} \n"+
+                        //"<!--класс своих сообщений--> \n"+
+                        ".senderUserClass { \n"+
+                            "background: #FFFFFF; \n"+
+                            //"float: left; \n"+
+                        "} \n"+
+                        ".senderUserClassT { \n"+
+                            "color: #959493; \n"+
+                            //"float: left; \n"+
+                        "} \n"+
+                    "</style> \n"+
+                  "</head> \n"+
+                  "<body> \n"+
+                  "</body> \n"+
+                 /* "<script> \n"+
+                    "document.body.onload=pageScrollDown; \n"+
+                    "function pageScrollDown() { \n"+
+                        "document.body.scrollTop = document.body.scrollHeight; \n"+
+                    "} \n"+
+                  "</script> \n"+*/
+                "</html> \n");
     }
 
     public void fillContactListView() {
@@ -195,6 +271,15 @@ public class ChatViewController implements Initializable {
         contactsObservList.addAll(clientController.getAllUserNames());
     }
 
+    /*private void createDivMessage(Document DOMdocument, String attrClass){
+        Node body = DOMdocument.getElementsByTagName("body").item(0);
+        Element div = webEngine.getDocument().createElement("div");
+        div.setAttribute("class", attrClass);
+
+        div.setTextContent(dateFormat.format(timestamp) + " " + senderName + " " + message);
+        body.appendChild(div);
+    }*/
+
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
         if (isNew) {
             String path = "client/sounds/1.wav"; //звук нового сообщения
@@ -212,7 +297,7 @@ public class ChatViewController implements Initializable {
         /*if (isNew){
             Sound.playSound("src\\main\\resources\\client\\sounds\\1.wav").join();
         }*/
-
+        SimpleDateFormat dateFormatDay = new SimpleDateFormat("d MMMM");
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
         /*String formatSender = "<b><font color = " + (clientController.getSenderName().equals(senderName) ? "green" : "red") + ">"
@@ -225,24 +310,49 @@ public class ChatViewController implements Initializable {
         msgArea += dateFormat.format(timestamp) + " " + formatSender + " " + message + "<br>";*/
 
         //Node body = webEngine.getDocument().getElementsByTagName("body").item(0);
-        webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState)->{
-            if (newState == Worker.State.SUCCEEDED) {
-                doc = webEngine.getDocument();
-                Node body = doc.getElementsByTagName("body").item(0);
-                Element div = webEngine.getDocument().createElement("div");
-                if (clientController.getSenderName().equals(senderName)) {
-                    div.setAttribute("class", "myUserClass");
-                } else {
-                    div.setAttribute("class", "senderUserClass");
+
+        //Подбор наше сообщение или чужое. Такой класс DIV и будем ставить
+        String attrClass="";
+        if (clientController.getSenderName().equals(senderName)) {
+            attrClass = "myUserClass";
+        } else {
+            attrClass = "senderUserClass";
+        }
+
+        //Подписка на событие загрузки документа HTML in WebView
+        if (DOMdocument == null) {
+            String attrClass2 = attrClass; //не понял почему, но attrClass требуется final не изменяемый дальше
+            webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+                if (newState == Worker.State.SUCCEEDED) {
+                    DOMdocument = webEngine.getDocument();
+                    Node body = DOMdocument.getElementsByTagName("body").item(0);
+                    Element div = webEngine.getDocument().createElement("div");
+                    Element divLogo = webEngine.getDocument().createElement("div");
+                    Element divTxt = webEngine.getDocument().createElement("div");
+                    Element divTime = webEngine.getDocument().createElement("div");
+                    div.setAttribute("class", "message");
+                    divLogo.setAttribute("class", "msgLogo");
+                    divTxt.setAttribute("class", attrClass2+" msgTxt");
+                    divTime.setAttribute("class", attrClass2+"T msgTime");
+                    //div.setTextContent(dateFormat.format(timestamp) + " " + senderName + " " + message);
+                    divLogo.setTextContent("Лого");
+                    divTxt.setTextContent(dateFormatDay.format(timestamp) + " " + senderName + " " + message);
+                    divTime.setTextContent("Время");
+                    div.appendChild(divLogo);
+                    div.appendChild(divTxt);
+                    div.appendChild(divTime);
+                    body.appendChild(div);
+
                 }
+            });
+        }else {
+            Node body = DOMdocument.getElementsByTagName("body").item(0);
+            Element div = webEngine.getDocument().createElement("div");
+            div.setAttribute("class", attrClass);
+            div.setTextContent(dateFormat.format(timestamp) + " " + senderName + " " + message);
+            body.appendChild(div);
 
-                div.setTextContent(dateFormat.format(timestamp) + " " + senderName + " " + message);
-                body.appendChild(div);
-            }
-        });
-
-
-
+        }
 
        /*webEngine.loadContent("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -402,55 +512,8 @@ public class ChatViewController implements Initializable {
     }
 
     public void clearMessageWebView() {
-        msgArea = "";
-
-        webEngine.loadContent("<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
-                //
-                "   <style> \n" +
-                "       body { \n" +
-                //"           background-image: url(" + getChatBackgroundImage().toURI().toString() + "); \n" +
-                "           background-image: url(" + backgroundImage + "); \n" +
-                "           background-attachment: fixed; \n" +
-                "       } \n" +
-                "       div {\n"+
-                "      display: block; \n"+
-                "           word-wrap: break-word; \n" + //Перенос слов"
-                    "         height: auto; \n"+
-                    "      width: 300px; \n"+
-                "       border-radius: 5px;\n" +
-                "       margin: 5px;\n"+
-                "       padding: 5px\n"+
-                "       }\n"+
-                "       .myUserClass {\n" +
-                        "       background: grey;\n" +
-                    "      float: left; \n"+
-                "       }\n" +
-                "       .senderUserClass {\n" +
-                        "       background: yellow;\n" +
-                    "       float: right; \n"+
-                "       }\n" +
-                // "       #messageArea {\n"+
-                //"           word-wrap: break-word; \n" + //Перенос слов
-                //"       }\n"+
-                "   </style> \n" +
-                //
-                "</head>\n" +
-
-                //"<body style=\"background-image: url(" + getChatBackgroundImage().toURI().toString() + ")\">\n" +
-                //"<body style=\"background-image: url(" + backgroundImage + ")\">\n" +
-                "<body>\n" +
-
-                "</body>\n" +
-                "<script>\n" +
-                "   document.body.onload=pageScrollDown;\n" +
-                "   function pageScrollDown() {\n" +
-                "       document.body.scrollTop = document.body.scrollHeight;\n"+
-                "   }\n"+
-                "</script>\n"+
-                "</html>");
+        //msgArea = "";
+        initWebView();
     }
 
     //метод смены иконки
