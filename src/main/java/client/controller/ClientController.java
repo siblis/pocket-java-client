@@ -155,6 +155,7 @@ public class ClientController {
                 new Message(message, new Timestamp(System.currentTimeMillis()))
         );
         chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+
     }
 
     private void loadChat() {
@@ -162,7 +163,7 @@ public class ClientController {
         chatViewController.clearMessageWebView();
         for (Message message :
                 converstation) {
-            chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
+           chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
         }
     }
 
