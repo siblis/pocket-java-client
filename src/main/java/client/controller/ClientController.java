@@ -163,7 +163,7 @@ public class ClientController {
         chatViewController.clearMessageWebView();
         for (Message message :
                 converstation) {
-           chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
+            chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
         }
     }
 
