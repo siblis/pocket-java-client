@@ -171,12 +171,10 @@ public class ChatViewController implements Initializable {
                     "<meta charset=UTF-8> \n"+
                     "<style> \n"+
                         "body { \n" +
-                            //"width: 75%; \n"+
                             "margin: 0; \n"+
                             "padding: 0; \n"+
                             "background-image: url(" + backgroundImage + "); \n"+
                             "background-attachment: fixed; \n"+
-                            "background: yellow; \n"+
                         "} \n"+
                         //общие стили
                         //time day
@@ -184,7 +182,7 @@ public class ChatViewController implements Initializable {
                             "display: inline-block; \n"+
                             "text-align: center; \n"+
                             "width: 80px; \n"+
-                            "margin: 0 50%;  \n"+
+                            "margin: 0 38%;  \n"+
                             "color: #55635A; \n"+
                             "background: #BCDCC9; \n"+
                             "border-radius: 10px; \n"+
@@ -193,7 +191,8 @@ public class ChatViewController implements Initializable {
                         //
                         ".message { \n"+
                             "display: flex; \n"+
-                            "height: auto; \n"+
+                            //"height: auto; \n"+
+                            //"width: 90%; \n"+
                             "align-items: center; \n"+
                             "margin-left: 10px; \n"+
                             "margin-right: 10px; \n"+
@@ -214,9 +213,7 @@ public class ChatViewController implements Initializable {
                             "display: flex \n"+
                             "flex-direction: column; \n"+
                             "flex: auto; \n"+
-                            "width: auto; \n"+
                             "min-width: 200px; \n"+
-                            //"word-wrap: break-word; \n"+    //<!--Перенос слов-->"
                             "border-radius: 15px; \n"+
                             "margin-left: 10px; \n"+
                             "margin-right: 10px; \n"+
@@ -225,9 +222,7 @@ public class ChatViewController implements Initializable {
                         "} \n"+
                         //div time
                         ".msgTime { \n"+
-                            "width: auto; \n"+
-                            "background: orange; \n"+
-                            //"flex: 1; \n"+
+                            "flex: auto; \n"+
                         "} \n"+
 
                         //div msgTxt --> sender
@@ -263,8 +258,7 @@ public class ChatViewController implements Initializable {
                         "} \n"+
                     "</style> \n"+
                   "</head> \n"+
-                  "<body> тест \n"+
-                  "</body> \n"+
+                  "<body></body> \n"+
                   /*"<script> \n"+
                     "document.body.onload=pageScrollDown; \n"+
                     "function pageScrollDown() { \n"+
@@ -377,7 +371,7 @@ public class ChatViewController implements Initializable {
                         body.appendChild(divTimeDay);
                     }
                     Element div = webEngine.getDocument().createElement("div");
-                   /* Element divLogo = webEngine.getDocument().createElement("div");
+                    Element divLogo = webEngine.getDocument().createElement("div");
                     Element divTxt = webEngine.getDocument().createElement("div");
                     Element divTxtSender = webEngine.getDocument().createElement("div");
                     Element divTxtMsg = webEngine.getDocument().createElement("div");
@@ -395,7 +389,7 @@ public class ChatViewController implements Initializable {
                     divTxt.appendChild(divTxtSender);
                     divTxt.appendChild(divTxtMsg);
                     div.appendChild(divTxt);
-                    div.appendChild(divTime);*/
+                    div.appendChild(divTime);
                     body.appendChild(div);
                 }
             });
