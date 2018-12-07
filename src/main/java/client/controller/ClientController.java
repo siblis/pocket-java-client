@@ -12,7 +12,9 @@ import com.google.gson.reflect.TypeToken;
 import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
@@ -24,7 +26,7 @@ import java.util.Map;
 import static client.utils.Common.showAlert;
 
 public class ClientController {
-
+    private static final Logger controllerLogger = LogManager.getLogger(ClientController.class);
     private static ClientController instance;
     private static String token;
     private ChatViewController chatViewController;
@@ -81,7 +83,7 @@ public class ClientController {
             try {
                 answer = HTTPSRequest.authorization(reqJSON);
             } catch (Exception e) {
-                e.printStackTrace();
+                controllerLogger.error("HTTPSRequest.authorization_error", e);
             }
             if (answer.contains("token")) {
                 GsonBuilder builder = new GsonBuilder();
@@ -95,17 +97,19 @@ public class ClientController {
                     ServerResponse response = HTTPSRequest.getMySelf(token);
                     myUser = convertJSONToUser(response.getResponseJson());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    controllerLogger.error("HTTPSRequest.getMySelf_error", e);
                 }
                 myUser.setAccount_name(login);
                 synchronizeContactList();
 
                 return true;
             } else {
-                showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
+//                showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
+                controllerLogger.info("Ошибка авторизации!", Alert.AlertType.ERROR);
             }
         } else {
-            showAlert("Неполные данные для авторизации!", Alert.AlertType.ERROR);
+//            showAlert("Неполные данные для авторизации!", Alert.AlertType.ERROR);
+            controllerLogger.info("Неполные данные для авторизации!", Alert.AlertType.ERROR);
             return false;
         }
         return false;
@@ -133,7 +137,7 @@ public class ClientController {
                         showAlert("Общая ошибка!", Alert.AlertType.ERROR);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                controllerLogger.error("HTTPSRequest.getUser_error", e);
             }
         }
         chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
@@ -159,6 +163,7 @@ public class ClientController {
                 new Message(message, new Timestamp(System.currentTimeMillis()))
         );
         chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+
     }
 
     private void loadChat() {
@@ -227,7 +232,7 @@ public class ClientController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            controllerLogger.error("HTTPSRequest.getContacts_error", e);
         }
 
         // проверяем, есть ли наш пользователь в БД
@@ -265,7 +270,7 @@ public class ClientController {
                     showAlert("Общая ошибка!", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            controllerLogger.error("HTTPSRequest.addContact_error", e);
         }
     }
 
@@ -287,7 +292,7 @@ public class ClientController {
             } else
                 showAlert("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);
         } catch (Exception e) {
-            e.printStackTrace();
+            controllerLogger.error("HTTPSRequest.registration", e);
         }
     }
 
@@ -311,7 +316,7 @@ public class ClientController {
         try {
             answer = HTTPSRequest.restorePassword(requestJSON);
         } catch (Exception e) {
-            e.printStackTrace();
+            controllerLogger.error("proceedRestorePassword_error", e);
         }
         return answer;
     }
@@ -326,7 +331,7 @@ public class ClientController {
         try {
             answer = HTTPSRequest.changePassword(requestJSON);
         } catch (Exception e) {
-            e.printStackTrace();
+            controllerLogger.error("proceedChangePassword_error", e);
         }
         return answer;
     }

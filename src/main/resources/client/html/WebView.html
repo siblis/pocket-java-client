@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset=UTF-8>
+    <style>
+      body {
+        background-image: url(" + backgroundImage + ");
+        background-attachment: fixed;
+      }
+      div {
+        display: block;
+        word-wrap: break-word; <!--Перенос слов"-->
+        height: auto;
+        width: 300px;
+        border-radius: 5px;
+        margin: 5px;
+        padding: 5px
+      }
+      <!--класс своих сообщений-->
+      .myUserClass {
+        background: grey;
+        float: left;
+      }
+      <!--класс своих сообщений-->
+      .senderUserClass {
+        background: yellow;
+        float: right;
+      }
+    </style>
+</head>
+<body>
+
+</body>
+<script>
+    document.body.onload=pageScrollDown;
+    function pageScrollDown() {
+      document.body.scrollTop = document.body.scrollHeight;
+    }
+  </script>
+</html>
