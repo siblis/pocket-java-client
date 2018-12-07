@@ -155,6 +155,7 @@ public class ClientController {
                 new Message(message, new Timestamp(System.currentTimeMillis()))
         );
         chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+
     }
 
     private void loadChat() {
