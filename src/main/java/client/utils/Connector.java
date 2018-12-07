@@ -25,6 +25,7 @@ public class Connector {
     public void connect(String token, ClientController controller) throws Exception {
         Map<String,String> httpHeaders = new HashMap<String, String>();
         httpHeaders.put("Token",token);
+
         chatClient = new WebSocketChatClient(
                 new URI("wss://pocketmsg.ru:8888/v1/ws/"),httpHeaders,controller);
         SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();

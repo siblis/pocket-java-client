@@ -1,8 +1,9 @@
 package client.model.formatMsgWithServer;
 
-public class AddContactToServer {
+public class UserToServer {
     private String contact;
-    public AddContactToServer(String contact){
+
+    public UserToServer(String contact) {
         this.contact = contact;
     }
 }

@@ -1,0 +1,80 @@
+
+#menu {
+    -fx-background-color: #3498DB;
+    -fx-background-image: url("../images/chat/Shape.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
+
+#leftMenu {
+    -fx-background-color: #3498DB;
+    -fx-background-image: url("../images/chat/ShapeLeft.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
+
+.menu-bar {
+    -fx-background-color: #3498DB;
+}
+
+.menu-button > .arrow-button > .arrow {
+    -fx-background-color: transparent;
+}
+
+#menu-bar.label {
+
+}
+#menu:focused {
+    -fx-background-color: #3498DB;
+}
+#menu:hover {
+    -fx-background-color: #3498DB;
+}
+#menu-item:focused {
+   -fx-background-color: #3498DB;
+}
+
+#customTextArea {
+    -fx-background-color: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+    -fx-font-family: Roboto;
+    -fx-text-fill: #757575;
+    -fx-focus-color: -fx-control-inner-background;
+    -fx-faint-focus-color: -fx-control-inner-background;
+}
+
+#vector {
+    -fx-graphic: url("../images/chat/Vector.png");
+}
+
+#smailik {
+    -fx-graphic: url("../images/chat/smailik.png");
+}
+
+#skrepka {
+     -fx-graphic: url("../images/chat/skrepka.png");
+}
+
+#addContact {
+    -fx-graphic: url("../images/chat/create.png");
+}
+
+.tab {
+    -fx-background-color: #3498DB;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+#contacts .tab-label {
+     -fx-graphic: url("../images/chat/contacts.png");
+}
+
+#chats .tab-label {
+     -fx-graphic: url("../images/chat/chatsActive.png");
+}
+
+.tab-header-background {
+    -fx-background-color: #3498DB;
+
+}

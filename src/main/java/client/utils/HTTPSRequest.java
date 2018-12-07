@@ -1,11 +1,39 @@
 package client.utils;
 
+import client.model.ServerResponse;
+
 import java.net.URL;
 import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
 
 public class HTTPSRequest {
     private static String serverURL = "https://pocketmsg.ru:8888";
+
+    public static String restorePassword(String requestJSON) throws Exception {
+        //TODO нужен API на сервере
+        URL obj = new URL(serverURL + "/v1/email/");
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+
+        int responseCode = sendRequest(con, requestJSON);
+        //TODO ошибки responseCode обрабатывать тут или нет?
+        //responseCode == ?
+        if (responseCode == 201) {
+            //успешно
+            return answerRequest(con);
+        } else
+            //Ошибка
+            return Integer.toString(responseCode); //код ошибки?
+    }
+
+    public static String changePassword(String requestJSON) throws Exception {
+        //TODO нужен API на сервере
+        URL obj = new URL(serverURL + "/v1/pass/");
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+        sendRequest(con, requestJSON);
+        return answerRequest(con);
+    }
 
     public static int registration(String requestJSON) throws Exception {
         URL obj = new URL(serverURL + "/v1/users/");
@@ -28,12 +56,64 @@ public class HTTPSRequest {
         return answerRequest(con);
     }
 
+    public static ServerResponse getUser(long id, String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/users/" + id);
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Token", token);
+
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setResponseCode(sendRequest(connection, null));
+        serverResponse.setResponseJson(answerRequest(connection));
+
+        return serverResponse;
+    }
+
+    public static ServerResponse addContact(String requestJSON, String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/users/contacts/");
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Token", token);
+
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setResponseCode(sendRequest(connection, requestJSON));
+        serverResponse.setResponseJson(answerRequest(connection));
+
+        return serverResponse;
+    }
+
+    public static ServerResponse getContacts(String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/users/contacts/");
+        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Token", token);
+
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setResponseCode(sendRequest(connection, null));
+        serverResponse.setResponseJson(answerRequest(connection));
+        return serverResponse;
+    }
+
+    public static ServerResponse getMySelf(String token) throws Exception {
+        URL url = new URL(serverURL + "/v1/users/");
+        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Token", token);
+
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setResponseCode(sendRequest(connection, null));
+        serverResponse.setResponseJson(answerRequest(connection));
+        return serverResponse;
+    }
+
     private static int sendRequest(HttpsURLConnection con, String requestJSON) throws Exception {
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(requestJSON);
-        wr.flush();
-        wr.close();
+        if (requestJSON != null) {
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(requestJSON);
+            wr.flush();
+            wr.close();
+        }
 
         int responseCode = con.getResponseCode();
         System.out.println("\nSending " + con.getRequestMethod() + " request to URL : " + con.getURL());
@@ -53,58 +133,10 @@ public class HTTPSRequest {
                 response.append(inputLine);
             }
 
-            System.out.println("response " + response.toString());
+            System.out.println(response.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return response.toString();
-    }
-
-    public static String addContact(String requestJSON, String token) throws Exception {
-        URL obj = new URL(serverURL + "/v1/users/contacts/");
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Token", token);
-        int responseCode = sendRequest(con, requestJSON);
-//    возможно тут надо будет вернуть user ,когда сервер сделает чтобы
-//         одинаковые контакты не добавлялись
-//        Если конечно на запрос на добавление контакта вернет все поля юзера
-        if (responseCode != 201) {
-            return "" + responseCode;
-        }
-        return answerRequest(con);
-    }
-
-    public static String getContact(String token)throws Exception {
-        URL obj = new URL(serverURL + "/v1/users/contacts/");
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Token", token);
-        int responseCode = con.getResponseCode();
-        return answerRequest(con);
-    }
-
-    public static String getSelfUser(String token)throws Exception {
-        URL obj = new URL(serverURL + "/v1/users/");
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Token", token);
-        int responseCode = con.getResponseCode();
-        if (responseCode != 200) {
-            return "" + responseCode;
-        }
-        return answerRequest(con);
-    }
-
-    public static String getUser(String token, String id)throws Exception {
-        URL obj = new URL(serverURL + "/v1/users/"+id+"");
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Token", token);
-        int responseCode = con.getResponseCode();
-        if (responseCode != 200) {
-            return "" + responseCode;
-        }
-        return answerRequest(con);
     }
 }

@@ -10,7 +10,7 @@ public class Correct {
                 "A-Z]{2,7}$";
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
         java.util.regex.Matcher m = p.matcher(email);
-        return m.matches();
+        return m.matches() && email.length() <= 64;
     }
 
     public static int checkPasswordStrength(String password) {
@@ -39,5 +39,4 @@ public class Correct {
 
         return strengthPercentage;
     }
-
 }

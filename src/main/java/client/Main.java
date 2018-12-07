@@ -1,12 +1,11 @@
 package client;
 
-import client.controller.ClientController;
-import client.utils.Common;
+import client.view.Tray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -14,7 +13,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private static Stage primaryStage;
+    public static Stage primaryStage;
     private static BorderPane rootLayout;
 
     @Override
@@ -22,16 +21,22 @@ public class Main extends Application {
         primaryStage = stage;
         primaryStage.setTitle("Pocket desktop client");
 
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
+
         //инициализируем главную сцену
         initRootLayout();
 
         //показываем общий вид
         showOverview();
 
+        //значек в трее
+        Tray tray = new Tray();
+        tray.setTrayIcon();
+
+
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
-            //primaryStage.setTitle("Закрывайте через кнопку Выход");
-            Common.showAlert("Закрывайте через кнопку Выход", Alert.AlertType.ERROR);
+            Tray.trayON(primaryStage);
         });
     }
 
@@ -47,7 +52,6 @@ public class Main extends Application {
             scene.setCursor(cursor);
             primaryStage.setScene(scene);
             primaryStage.setResizable(false);
-            //RootLayoutController controller = loader.getController();
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +69,5 @@ public class Main extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args){launch(args);}
 }

@@ -6,17 +6,13 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -40,6 +36,9 @@ public class RegisterViewController implements Initializable {
     @FXML
     private Button cancelRegisterButton;
 
+    @FXML
+    private Rectangle rectPass;
+
     private ClientController controller;
 
     @Override
@@ -60,7 +59,7 @@ public class RegisterViewController implements Initializable {
                         regEmailField.textProperty()));
         regPasswordFieldDouble.disableProperty().bind(
                 Bindings.createBooleanBinding(
-                        () -> Correct.checkPasswordStrength(regPasswordField.getText()) <2,
+                        () -> Correct.checkPasswordStrength(regPasswordField.getText()) < 2,
                         regPasswordField.textProperty()));
 
     }
@@ -77,4 +76,32 @@ public class RegisterViewController implements Initializable {
         Stage stage = (Stage) cancelRegisterButton.getScene().getWindow();
         stage.close();
     }
+
+    //метод, отправляющий пользователя читать политику конфиденциальности
+//    @FXML
+//    public void handleLearnMore() {
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//
+//        alert.setTitle("Политика конфиденциальности");
+//        alert.setHeaderText("Политика конфиденциальности");
+//        alert.setContentText("Сейчас вы читаете политику конфиденциальности.\n" +
+//                "Читайте, читайте, да повнимательнее....");
+//
+//        alert.showAndWait();
+//    }
+    @FXML
+    private void handleKeyReleased() {
+        String s = regPasswordField.getText();
+        int koefHard = Correct.checkPasswordStrength(s);
+        System.out.println(koefHard);
+        rectPass.setWidth(235 / 5 * koefHard);
+        rectPass.setFill(Color.RED);
+        if (koefHard > 1) {
+            rectPass.setFill(Color.YELLOW);
+        }
+        if (koefHard > 3) {
+            rectPass.setFill(Color.GREEN);
+        }
+    }
+
 }
