@@ -4,3 +4,4 @@
 /DesktopClient.iml
 /deploy/
 */*.db
+/logs
