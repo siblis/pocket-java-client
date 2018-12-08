@@ -3,6 +3,7 @@ package database.dao;
 import database.HibernateUtil;
 import database.entity.Message;
 import database.entity.User;
+import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,21 @@ public class DataBaseService {
     private MessageDAO messageDao;
 
     public DataBaseService(User myUser) {
+//                System.out.println("Ошибка создания БД для пользователя '" + myUser.getAccount_name() + "'.");
+//                System.out.println("Работа приложения будет продолжена без локальной БД");
         HibernateUtil.setUserName(myUser.getAccount_name());
         usersDao = new UserDAO();
         messageDao = new MessageDAO();
+    }
+
+    public boolean checkCreateSession() {
+        try {
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+
+        }
+
+        return false;
     }
 
     public void insertUser(User user) {

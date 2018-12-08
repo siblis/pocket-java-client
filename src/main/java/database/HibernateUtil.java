@@ -1,9 +1,16 @@
 package database;
 
+import org.hibernate.HibernateException;
+import org.hibernate.JDBCException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
+import org.hibernate.exception.GenericJDBCException;
 
 import java.io.File;
+import java.nio.channels.SelectableChannel;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
@@ -17,30 +24,54 @@ public class HibernateUtil {
         userName = Name;
     }
 
-    public static boolean checkDatabaseAvailability() {
-        return isExistsDB() ||
-                (isEnoughFreeSpaceForCreateDB() &&
-                        isCanAccessRightsCreateDB() &&
-                        isExistsDirectoryForDB());
-    }
-
     public static SessionFactory getSessionFactory() {
-        if (!checkDatabaseAvailability()) return sessionFactory;
-
         if (sessionFactory == null) {
-            Configuration configuration = new Configuration();
-            configuration
-                    .setProperty("hibernate.connection.driver_class", "org.sqlite.JDBC")
-                    .setProperty("hibernate.current_session_context_class", "thread")
-                    .setProperty("hibernate.connection.url", "jdbc:sqlite:" + DATABASE_DIR + File.separator + userName + ".db")
-                    .setProperty("hibernate.show_sql", "true")
-                    .setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect")
-                    .setProperty("hibernate.hbm2ddl.auto", "update")
-                    .addAnnotatedClass(database.entity.User.class)
-                    .addAnnotatedClass(database.entity.Message.class);
-            sessionFactory = configuration.buildSessionFactory();
-        }
+            try {
+                Configuration configuration = new Configuration();
+                configuration
+                        .setProperty("hibernate.connection.driver_class", "org.sqlite.JDBC")
+                        .setProperty("hibernate.current_session_context_class", "thread")
+                        .setProperty("hibernate.connection.url", "jdbc:sqlite:" + DATABASE_DIR + File.separator + userName + ".db")
+                        .setProperty("hibernate.show_sql", "true")
+                        .setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect")
+                        .setProperty("hibernate.hbm2ddl.auto", "update")
+                        .addAnnotatedClass(database.entity.User.class)
+                        .addAnnotatedClass(database.entity.Message.class);
+                sessionFactory = configuration.buildSessionFactory();
+            }
+            //https://docs.jboss.org/hibernate/orm/3.2/api/org/hibernate/class-use/HibernateException.html
+            catch (HibernateException e) {
+                System.err.println("HibernateException: " + e.toString());
+                //System.err.println("HibernateException: " + e.getMessage());
+                Throwable t = e.getCause();
+                System.err.println("HibernateException: " + t.toString());
+                //System.err.println("HibernateException: " + t.getMessage());
+                if (t instanceof org.hibernate.JDBCException)
+                    System.err.println("JDBCException");
+                if (t instanceof org.hibernate.exception.GenericJDBCException) {
+                    GenericJDBCException ge = (GenericJDBCException) t;
+                    System.err.println("GenericJDBCException: " + ge.getErrorCode());
+                    System.err.println("GenericJDBCException: " + ge.getSQLException());
+                    System.err.println("GenericJDBCException: " + ge.getSQLState());
+                    System.err.println("GenericJDBCException: " + ge.getSQL());
+                    if (ge.getSQLException() != null) {
+                        String sqlEx = ge.getSQLException().getMessage();
+                        if (sqlEx.contains(DATABASE_DIR + "' does not exist")) {
+                            System.err.println("Отсутствует каталог");
+                        }
+                    }
+                } else if (t instanceof org.hibernate.exception.JDBCConnectionException)
+                    System.err.println("JDBCConnectionException");
+                else if (t instanceof org.hibernate.SessionException)
+                    System.err.println("SessionException");
+                else if (t instanceof org.hibernate.service.spi.ServiceException)
+                    System.err.println("ServiceException");
 
+                t.printStackTrace();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
         return sessionFactory;
     }
 

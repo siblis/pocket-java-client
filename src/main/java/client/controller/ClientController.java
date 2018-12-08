@@ -92,6 +92,7 @@ public class ClientController {
                     controllerLogger.error("HTTPSRequest.getMySelf_error", e);
                 }
                 myUser.setAccount_name(login);
+                synchronizeContactList();
                 return true;
             } else {
 //                showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
@@ -180,6 +181,8 @@ public class ClientController {
 
     private void synchronizeContactList() {
         dbService = new DataBaseService(myUser);
+
+
         contactList = dbService.getAllUserId();
 
         try {
@@ -263,20 +266,7 @@ public class ClientController {
     }
 
     public boolean proceedLogIn(String login, String password) {
-        if (authentication(login, password)) {
-            //TODO реализовать для пользователя вывод ошибок по каждой проверке
-            HibernateUtil.setUserName(myUser.getAccount_name());
-            if (HibernateUtil.checkDatabaseAvailability()) {
-                synchronizeContactList();
-                return true;
-            } else {
-                System.out.println("Ошибка создания БД для пользователя '" + myUser.getAccount_name() + "'.");
-                System.out.println("Работа приложения будет продолжена без локальной БД");
-                //TODO поставить таймер периодической проверки возможности создания БД
-                return true;
-            }
-        }
-        return false;
+        return authentication(login, password);
     }
 
     public List<String> getAllUserNames() {
