@@ -203,10 +203,15 @@ public class ClientController {
         Iterator it = contactList.iterator();
         while (it.hasNext()){
             Long id = (Long) it.next();
+            if (id.equals(ClientController.getInstance().myUser.getUid())) {
+                continue;
+            }
             CFXListElement element = new CFXListElement();
             element.setUser(dbService.getUser(id));
+
             contactListOfCards.add(element);
         }
+
     }
 
     private void synchronizeContactList() {
