@@ -298,13 +298,21 @@ public class ChatViewController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param pattern
+     * @return
+     * Устанавливаем формат даты
+     */
+    private SimpleDateFormat initDateFormat(String pattern){
+        return new SimpleDateFormat(pattern);
+    }
 
     /**
      *
      * @param message
      * @param senderName
-     * @param timestamp
-     * @param visibleDateDay
+     * @param timestamp     *
      * @param attrClass
      * ****
      * /* Create module DIV for messenger
@@ -322,8 +330,8 @@ public class ChatViewController implements Initializable {
      *
      */
     private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
-        SimpleDateFormat dateFormatDay = new SimpleDateFormat("d MMMM");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
+        SimpleDateFormat dateFormat = initDateFormat("HH:mm");
 
         boolean visibleDateDay=false;
         if (tsOld == null) {
