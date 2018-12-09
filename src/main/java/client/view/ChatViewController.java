@@ -166,7 +166,6 @@ public class ChatViewController implements Initializable {
 
     // инициализация только HTML в WebView.
     private void initWebView() {
-        //webEngine.setJavaScriptEnabled(true);
         webEngine.loadContent(
                 "<!DOCTYPE html> \n"+
                 "<html lang=\"en\"> \n"+
@@ -262,12 +261,6 @@ public class ChatViewController implements Initializable {
                     "</style> \n"+
                   "</head> \n"+
                   "<body></body> \n"+
-                  /*"<script> \n"+
-                    "document.body.onload=pageScrollDown; \n"+
-                    "function pageScrollDown() { \n"+
-                        "document.body.scrollTop = document.body.scrollHeight; \n"+
-                    "} \n"+
-                  "</script> \n"+*/
                 "</html> \n");
     }
 
@@ -305,6 +298,83 @@ public class ChatViewController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param pattern
+     * @return
+     * Устанавливаем формат даты
+     */
+    private SimpleDateFormat initDateFormat(String pattern){
+        return new SimpleDateFormat(pattern);
+    }
+
+    /**
+     *
+     * @param message
+     * @param senderName
+     * @param timestamp     *
+     * @param attrClass
+     * ****
+     * /* Create module DIV for messenger
+     * <div class="timeStampDay"></div>
+         * <div class="message">
+             * <div class="msgLogo"></div>
+             * <div class="attrClass msgTxt">
+     *          <div class="'attrClass+S' sender"></div>
+     *          <div class="'attrClass+M' msg"></div>
+     *        </div>
+         * </div>
+         * <div class="'attrClass+T' msgTime"></div>
+     * </div>
+     * Style create in initWebView
+     *
+     */
+    private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
+        SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
+        SimpleDateFormat dateFormat = initDateFormat("HH:mm");
+
+        boolean visibleDateDay=false;
+        if (tsOld == null) {
+            tsOld = dateFormatDay.format(timestamp);
+            visibleDateDay = true;
+        }else if (!tsOld.equals(dateFormatDay.format(timestamp))) {
+            tsOld = dateFormatDay.format(timestamp);
+            visibleDateDay = true;
+        }
+
+        Node body = DOMdocument.getElementsByTagName("body").item(0);
+
+        if (visibleDateDay) {
+            Element divTimeDay = webEngine.getDocument().createElement("div");
+            divTimeDay.setAttribute("class", "timeStampDay");
+            divTimeDay.setTextContent(dateFormatDay.format(timestamp));
+            body.appendChild(divTimeDay);
+        }
+        Element div = webEngine.getDocument().createElement("div");
+        Element divLogo = webEngine.getDocument().createElement("div");
+        Element divTxt = webEngine.getDocument().createElement("div");
+        Element divTxtSender = webEngine.getDocument().createElement("div");
+        Element divTxtMsg = webEngine.getDocument().createElement("div");
+        Element divTime = webEngine.getDocument().createElement("div");
+        div.setAttribute("class", "message");
+        divLogo.setAttribute("class", "msgLogo");
+        divTxt.setAttribute("class", attrClass+" msgTxt");
+        divTxtSender.setAttribute("class", attrClass+"S sender");
+        divTxtMsg.setAttribute("class", attrClass+"M msg");
+        divTime.setAttribute("class", attrClass+"T msgTime");
+        divTxtSender.setTextContent(senderName);
+        divTxtMsg.setTextContent(message);
+        divTime.setTextContent(dateFormat.format(timestamp));
+        div.appendChild(divLogo);
+        divTxt.appendChild(divTxtSender);
+        divTxt.appendChild(divTxtMsg);
+        div.appendChild(divTxt);
+        div.appendChild(divTime);
+        body.appendChild(div);
+        webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight"); //Сдвигаем страницу на последний элемент
+
+    }
+
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
         if (isNew) {
             /*String path = "client/sounds/1.wav"; //звук нового сообщения
@@ -316,12 +386,16 @@ public class ChatViewController implements Initializable {
 
             } catch (Exception e) {
                 e.printStackTrace();
+
             }*/
             Sound.playSoundNewMessage().join();
-       }
+        }
 
-        SimpleDateFormat dateFormatDay = new SimpleDateFormat("d MMMM");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+    
+
+      /*    SimpleDateFormat dateFormatDay = new SimpleDateFormat("d MMMM");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");*/
+
 
         /*String formatSender = "<b><font color = " + (clientController.getSenderName().equals(senderName) ? "green" : "red") + ">"
                 + senderName
@@ -341,37 +415,26 @@ public class ChatViewController implements Initializable {
         } else {
             attrClass = "senderUserClass";
         }
-        boolean visibleDateDay=false;
+        //boolean visibleDateDay=false;
 
-        if (tsOld == null) {
+        /*if (tsOld == null) {
             tsOld = dateFormatDay.format(timestamp);
             visibleDateDay = true;
         }else if (!tsOld.equals(dateFormatDay.format(timestamp))) {
             tsOld = dateFormatDay.format(timestamp);
             visibleDateDay = true;
-        }
+        }*/
 
         //Подписка на событие загрузки документа HTML in WebView
         if (DOMdocument == null) {
             String attrClass2 = attrClass; //не понял почему, но attrClass требуется final не изменяемый дальше
-            Boolean visibleDateDay2 = visibleDateDay;
+            //Boolean visibleDateDay2 = visibleDateDay;
             webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     DOMdocument = webEngine.getDocument();
-                    Node body = DOMdocument.getElementsByTagName("body").item(0);
-                    // todo structure module message
-                    /* Create module DIV for messenger
-                    <div class="timeStampDay"></div>
-                    <div class="message">
-                        <div class="msgLogo"></div>
-                        <div class="attrClass msgTxt">
-                            <div class="'attrClass+S' sender"></div>
-                            <div class="'attrClass+M' msg"></div>
-                        </div>
-                        <div class="'attrClass+T' msgTime"></div>
-                    </div>
-                    Style create in initWebView
-                     */
+                    createMessageDiv(message, senderName, timestamp,attrClass2);
+                    /*Node body = DOMdocument.getElementsByTagName("body").item(0);
+
                     if (visibleDateDay2) {
                         Element divTimeDay = webEngine.getDocument().createElement("div");
                         divTimeDay.setAttribute("class", "timeStampDay");
@@ -399,10 +462,12 @@ public class ChatViewController implements Initializable {
                     div.appendChild(divTxt);
                     div.appendChild(divTime);
                     body.appendChild(div);
+                    webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight"); //Сдвигаем страницу на последний элемент*/
                 }
             });
         }else {
-            Node body = DOMdocument.getElementsByTagName("body").item(0);
+            createMessageDiv(message, senderName, timestamp,attrClass);
+            /*Node body = DOMdocument.getElementsByTagName("body").item(0);
             if (visibleDateDay) {
                 Element divTimeDay = webEngine.getDocument().createElement("div");
                 divTimeDay.setAttribute("class", "timeStampDay");
@@ -430,6 +495,7 @@ public class ChatViewController implements Initializable {
             div.appendChild(divTxt);
             div.appendChild(divTime);
             body.appendChild(div);
+            webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight"); //Сдвигаем страницу на последний элемент*/
         }
 
        /*webEngine.loadContent("<!DOCTYPE html>\n" +
