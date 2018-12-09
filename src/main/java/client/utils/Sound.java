@@ -4,9 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+
+import static java.lang.ClassLoader.getSystemClassLoader;
 
 public class Sound implements AutoCloseable {
     private static final Logger soundLogger = LogManager.getLogger(Sound.class.getName());
@@ -15,7 +16,9 @@ public class Sound implements AutoCloseable {
     private Clip clip = null;
     private FloatControl volumeControl = null;
     private boolean playing = false;
-    private final String SOUND_NEW_MSG = "client/sounds/1.wav";
+
+    private final  String SOUND_NEW_MSG = "client/sounds/1.wav";
+
 
     //public Sound(File f) {
     public Sound(URL f) {
@@ -33,6 +36,7 @@ public class Sound implements AutoCloseable {
         }
     }
 
+    //sound new message
     public Sound() {
         ClassLoader cl = this.getClass().getClassLoader();
         try {
@@ -45,7 +49,6 @@ public class Sound implements AutoCloseable {
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
             exc.printStackTrace();
             released = false;
-
             close();
         }
     }
@@ -152,9 +155,13 @@ public class Sound implements AutoCloseable {
     // Статический метод, для удобства
     //public static Sound playSound(String path) {
     public static Sound playSound(URL path) {
-        //File f = new File(path);
-        //Sound snd = new Sound(f);
         Sound snd = new Sound(path);
+        snd.play();
+        return snd;
+    }
+
+    public static Sound playSoundNewMessage() {
+        Sound snd = new Sound();
         snd.play();
         return snd;
     }

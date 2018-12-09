@@ -377,23 +377,25 @@ public class ChatViewController implements Initializable {
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
         if (isNew) {
-            String path = "client/sounds/1.wav"; //звук нового сообщения
+            /*String path = "client/sounds/1.wav"; //звук нового сообщения
             ClassLoader cl = this.getClass().getClassLoader();
             try {
 
                 URL soundMsg = cl.getResource(path);
                 Sound.playSound(soundMsg).join();
 
-            } catch (Exception e) { //todo поправить Exception, тут их всего 2
-                //todo перенести в логирование
+            } catch (Exception e) {
                 e.printStackTrace();
-            }
+
+            }*/
+            Sound.playSoundNewMessage().join();
         }
-        /*if (isNew){
-            Sound.playSound("src\\main\\resources\\client\\sounds\\1.wav").join();
-        }*/
-    /*    SimpleDateFormat dateFormatDay = new SimpleDateFormat("d MMMM");
+
+    
+
+      /*    SimpleDateFormat dateFormatDay = new SimpleDateFormat("d MMMM");
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");*/
+
 
         /*String formatSender = "<b><font color = " + (clientController.getSenderName().equals(senderName) ? "green" : "red") + ">"
                 + senderName
