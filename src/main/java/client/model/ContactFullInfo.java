@@ -1,5 +1,7 @@
 package client.model;
 
+import database.entity.User;
+
 public class ContactFullInfo {
     private User user;
     private int noReadMessage;
