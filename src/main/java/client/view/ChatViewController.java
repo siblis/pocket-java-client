@@ -5,6 +5,8 @@ import client.controller.ClientController;
 import client.utils.Common;
 import client.utils.CustomTextArea;
 import client.utils.Sound;
+import client.view.customFX.CFXListElement;
+import com.jfoenix.controls.JFXListView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -62,7 +64,7 @@ public class ChatViewController implements Initializable {
     private WebView messageWebView;
 
     @FXML
-    private ListView<String> contactListView;
+    private JFXListView<CFXListElement> contactListView;
 
     @FXML
     private CustomTextArea messageField;
@@ -76,7 +78,7 @@ public class ChatViewController implements Initializable {
     @FXML
     private Tab contacts;
 
-    private ObservableList<String> contactsObservList;
+    private ObservableList<CFXListElement> contactsObservList;
 
     private ClientController clientController;
 
@@ -112,6 +114,7 @@ public class ChatViewController implements Initializable {
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableArrayList();
+        contactListView.setExpanded(true);
         fillContactListView();
 
         //webtest();
@@ -270,29 +273,36 @@ public class ChatViewController implements Initializable {
 
     public void fillContactListView() {
         contactListView.setItems(contactsObservList);
-        contactListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-            @Override
-            public ListCell<String> call(ListView<String> param) {
-                return new ListCell<String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (!empty) {
-                            setText(item);
-                            if (item.equals(clientController.getSenderName())) {
-                                setStyle("-fx-font-weight: bold;" +
-                                        " -fx-background-color: #ffead4");
-                            }
-                        } else {
-                            setGraphic(null);
-                            setText(null);
-                        }
-                    }
-                };
-            }
-        });
-        contactsObservList.clear();
-        contactsObservList.addAll(clientController.getAllUserNames());
+//        contactListView.setCellFactory(new Callback<ListView<CFXListElement>, ListCell<CFXListElement>>() {
+//
+//            @Override
+//            public ListCell<CFXListElement> call(ListView<CFXListElement> param) {
+//                return new ListCell<CFXListElement>() {
+//                    @Override
+//                    protected void updateItem(CFXListElement item, boolean empty) {
+//                        super.updateItem(item, empty);
+//                        if (!empty) {
+//
+//                            setText(item.getTopic());
+//                            if (item.equals(clientController.getSenderName())) {
+//                                setStyle("-fx-font-weight: bold;" +
+//                                        " -fx-background-color: #ffead4");
+//                            }
+//                        } else {
+//                            setGraphic(null);
+//                            setText(null);
+//                        }
+//                    }
+//                };
+//            }
+//        });
+      //  contactsObservList.clear();
+        contactsObservList.addAll(clientController.getContactListOfCards());
+        for (CFXListElement element:contactsObservList){
+            element.setUnreadMessages("0");
+            element.setBody("Входящие сообщения");
+
+        }
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
@@ -484,7 +494,7 @@ public class ChatViewController implements Initializable {
     @FXML
     private void handleClientChoice(MouseEvent event) {
         if (event.getClickCount() == 1) {
-            String receiver = contactListView.getSelectionModel().getSelectedItem();
+            String receiver = contactListView.getSelectionModel().getSelectedItem().getTopic();
             //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
             clientController.setReceiver(receiver);
         }
