@@ -185,6 +185,7 @@ public class ChatViewController implements Initializable {
                             "text-align: center; \n"+
                             "width: 80px; \n"+
                             "margin: 0 38%;  \n"+
+                            "margin-top: 10px;  \n"+
                             "color: #55635A; \n"+
                             "background: #BCDCC9; \n"+
                             "border-radius: 10px; \n"+
