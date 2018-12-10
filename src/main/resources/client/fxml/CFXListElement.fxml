@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<fx:root id="listElement" prefHeight="60.0" prefWidth="256.0" style="-fx-background-color: #FFFFFF;" styleClass="text" type="javafx.scene.layout.GridPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+    <Circle fx:id="avatar" fill="DODGERBLUE" radius="25.0" stroke="TRANSPARENT" strokeLineCap="ROUND" strokeType="INSIDE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+        <GridPane.margin>
+            <Insets left="11.0" />
+        </GridPane.margin></Circle>
+    <Text fx:id="topic" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold; -fx-font-family: Roboto; -fx-font-size: 14px;" styleClass="text" text="Topic" wrappingWidth="258.2265625" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+        <GridPane.margin>
+            <Insets left="5.0" />
+        </GridPane.margin>
+        <font>
+            <Font name="Marlett" size="12.0" />
+        </font></Text>
+    <Text fx:id="body" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Roboto; -fx-font-size: 12; -fx-fill: #757575;" text="message" wrappingWidth="254.13671875" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+        <GridPane.margin>
+            <Insets left="5.0" />
+        </GridPane.margin>
+        <font>
+            <Font name="Marlett" size="12.0" />
+        </font></Text>
+    <Text fx:id="elementDate" fill="#757575" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Roboto; -fx-font-size: 12px; -fx-font-weight: 300;" text="02.12.18" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+        <GridPane.margin>
+            <Insets right="5.0" />
+        </GridPane.margin></Text>
+    <Circle fx:id="circleUnreadMessages" fill="#f46767" radius="11.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="2" />
+
+    <Text fx:id="unreadMessages" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #FFFFFF;" text="+5" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="2">
+        <GridPane.margin>
+            <Insets right="5.0" />
+        </GridPane.margin>
+    </Text>
+   <MaterialDesignIconView fx:id="unreadGlyph" glyphName="CHECK_ALL" size="18" style="-fx-fill: green;" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+    <columnConstraints>
+        <ColumnConstraints />
+        <ColumnConstraints fillWidth="false" maxWidth="108.0" minWidth="10.0" prefWidth="73.0" />
+        <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="121.0" minWidth="-Infinity" prefWidth="120.0" />
+        <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="219.0" minWidth="10.0" prefWidth="44.0" />
+        <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="146.0" minWidth="10.0" prefWidth="54.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" />
+        <RowConstraints vgrow="ALWAYS" />
+    </rowConstraints>
+
+</fx:root>
