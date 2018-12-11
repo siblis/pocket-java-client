@@ -7,6 +7,7 @@ import client.utils.CustomTextArea;
 import client.utils.Sound;
 import client.view.customFX.CFXListElement;
 import com.jfoenix.controls.JFXListView;
+import com.sun.java.browser.plugin2.DOM;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -29,10 +30,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
@@ -82,7 +80,6 @@ public class ChatViewController implements Initializable {
 
     private ClientController clientController;
 
-    //private File chatBackgroundImage;
     private String backgroundImage;
 
     private Document DOMdocument;
@@ -101,6 +98,7 @@ public class ChatViewController implements Initializable {
 
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
         initBackgroundWebView();
+        initFX(); //устанавливаем слушатель на обновление webView
         //initWebView(); //при запуске от теста вызывается еще раз. Если не будет вызова там, тут расскоментировать
 
         clientController = ClientController.getInstance();
@@ -109,7 +107,7 @@ public class ChatViewController implements Initializable {
         contactListView.setExpanded(true);
         fillContactListView();
 
-        initFX(); //устанавливаем слушатель на обновление webView
+        //initFX(); //устанавливаем слушатель на обновление webView
 
         messageField.setOnKeyPressed(event -> {
             if (event.isControlDown() && event.getCode().equals(KeyCode.ENTER)) {
@@ -309,6 +307,9 @@ public class ChatViewController implements Initializable {
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
         SimpleDateFormat dateFormat = initDateFormat("HH:mm");
 
+        //Парсим ссылки, получаем строку вида <a href="message">message</a>
+        message = Common.urlToHyperlink(message);
+
         boolean visibleDateDay=false;
         if (tsOld == null) {
             tsOld = dateFormatDay.format(timestamp);
@@ -339,7 +340,11 @@ public class ChatViewController implements Initializable {
         divTxtMsg.setAttribute("class", attrClass+"M msg");
         divTime.setAttribute("class", attrClass+"T msgTime");
         divTxtSender.setTextContent(senderName);
+        //
         divTxtMsg.setTextContent(message);
+        //divTxtMsg.appendChild(DOMdocument.createCDATASection(message));
+
+        //
         divTime.setTextContent(dateFormat.format(timestamp));
         div.appendChild(divLogo);
         divTxt.appendChild(divTxtSender);
@@ -347,8 +352,13 @@ public class ChatViewController implements Initializable {
         div.appendChild(divTxt);
         div.appendChild(divTime);
         body.appendChild(div);
+        //
+        //String scriptLink = "document.getElementsByClassName('msg').innerHTML=\"" + message+"\"";
+        //String scriptLink = divTxtMsg+".innerHTML";
+        //String scriptLink = divTxtMsg+".innerHTML=\"ссылка\"";
+        //System.out.println(scriptLink);
+        //webEngine.executeScript(scriptLink);
         webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight"); //Сдвигаем страницу на последний элемент
-
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
@@ -369,11 +379,11 @@ public class ChatViewController implements Initializable {
             webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     DOMdocument = webEngine.getDocument();
-                    createMessageDiv(message, senderName, timestamp,attrClass2);
+                    createMessageDiv(message, senderName, timestamp, attrClass2);
                 }
             });
         }else {
-            createMessageDiv(message, senderName, timestamp,attrClass);
+            createMessageDiv(message, senderName, timestamp, attrClass);
         }
     }
 
@@ -470,6 +480,7 @@ public class ChatViewController implements Initializable {
                         ((EventTarget) nodeList.item(i)).addEventListener(EVENT_TYPE_CLICK, listener, false);
                         System.out.println("Remove & after add event listener. " + nodeList.item(i));
                     }
+
                 }
             }
         });
