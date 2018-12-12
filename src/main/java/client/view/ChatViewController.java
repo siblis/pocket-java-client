@@ -192,7 +192,7 @@ public class ChatViewController implements Initializable {
                             "flex-direction: column; \n"+
                             "flex: auto; \n"+
                             "min-width: 200px; \n"+
-                            "border-radius: 15px; \n"+
+                            "border-radius: 20px; \n"+
                             "margin-left: 10px; \n"+
                             "margin-right: 10px; \n"+
                             "padding: 10px; \n"+
