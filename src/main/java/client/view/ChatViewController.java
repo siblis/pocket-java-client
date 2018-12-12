@@ -229,10 +229,10 @@ public class ChatViewController implements Initializable {
 
                         //div time -->sender
                         ".myUserClassT { \n"+
-                            "color: #6399F3; \n"+
+                            "color: #757575; \n"+
                         "} \n"+
                         ".senderUserClassT { \n"+
-                            "color: #959493; \n"+
+                            "color: #4285F4; \n"+
                         "} \n"+
                     "</style> \n"+
                   "</head> \n"+
