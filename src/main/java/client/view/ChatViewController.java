@@ -7,7 +7,6 @@ import client.utils.CustomTextArea;
 import client.utils.Sound;
 import client.view.customFX.CFXListElement;
 import com.jfoenix.controls.JFXListView;
-import com.sun.java.browser.plugin2.DOM;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -29,16 +28,12 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.w3c.dom.*;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
-
-import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -86,6 +81,8 @@ public class ChatViewController implements Initializable {
 
     private String tsOld;
 
+    private int idDivMsg =0;
+
     ////////////////////////
 
     public ChatViewController() {
@@ -98,7 +95,6 @@ public class ChatViewController implements Initializable {
 
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
         initBackgroundWebView();
-        initFX(); //устанавливаем слушатель на обновление webView
         //initWebView(); //при запуске от теста вызывается еще раз. Если не будет вызова там, тут расскоментировать
 
         clientController = ClientController.getInstance();
@@ -107,7 +103,7 @@ public class ChatViewController implements Initializable {
         contactListView.setExpanded(true);
         fillContactListView();
 
-        //initFX(); //устанавливаем слушатель на обновление webView
+        initFX(); //устанавливаем слушатель на обновление webView
 
         messageField.setOnKeyPressed(event -> {
             if (event.isControlDown() && event.getCode().equals(KeyCode.ENTER)) {
@@ -304,9 +300,15 @@ public class ChatViewController implements Initializable {
      *
      */
     private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
+        //ID требуется для скрипта вставки тегов
+        idDivMsg+=1;
+        String idMsg = "msg"+idDivMsg;
+
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
         SimpleDateFormat dateFormat = initDateFormat("HH:mm");
 
+        //Заменяем Enter на перенос строки, для отображения
+        message = message.replaceAll("\n", "<br/>");
         //Парсим ссылки, получаем строку вида <a href="message">message</a>
         message = Common.urlToHyperlink(message);
 
@@ -338,13 +340,10 @@ public class ChatViewController implements Initializable {
         divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxtSender.setAttribute("class", attrClass+"S sender");
         divTxtMsg.setAttribute("class", attrClass+"M msg");
+        divTxtMsg.setAttribute("id", idMsg); //id
         divTime.setAttribute("class", attrClass+"T msgTime");
         divTxtSender.setTextContent(senderName);
-        //
         divTxtMsg.setTextContent(message);
-        //divTxtMsg.appendChild(DOMdocument.createCDATASection(message));
-
-        //
         divTime.setTextContent(dateFormat.format(timestamp));
         div.appendChild(divLogo);
         divTxt.appendChild(divTxtSender);
@@ -352,13 +351,11 @@ public class ChatViewController implements Initializable {
         div.appendChild(divTxt);
         div.appendChild(divTime);
         body.appendChild(div);
-        //
-        //String scriptLink = "document.getElementsByClassName('msg').innerHTML=\"" + message+"\"";
-        //String scriptLink = divTxtMsg+".innerHTML";
-        //String scriptLink = divTxtMsg+".innerHTML=\"ссылка\"";
-        //System.out.println(scriptLink);
-        //webEngine.executeScript(scriptLink);
-        webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight"); //Сдвигаем страницу на последний элемент
+        //Scripts
+        //вставляем текст с тегами
+        webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + message+"'");
+        //Сдвигаем страницу на последний элемент
+        webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
