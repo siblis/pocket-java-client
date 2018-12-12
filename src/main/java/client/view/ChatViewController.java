@@ -149,7 +149,7 @@ public class ChatViewController implements Initializable {
                     "<style> \n"+
                         "body { \n" +
                             "margin: 0; \n"+
-                            "padding: 0; \n"+
+                            "padding: 10px; \n"+
                             "background-image: url(" + backgroundImage + "); \n"+
                             "background-attachment: fixed; \n"+
                         "} \n"+
@@ -158,7 +158,7 @@ public class ChatViewController implements Initializable {
                         ".timeStampDay { \n" +
                             "display: inline-block; \n"+
                             "text-align: center; \n"+
-                            "width: 80px; \n"+
+                            //"width: 80px; \n"+
                             "margin: 0 38%;  \n"+
                             "margin-top: 10px;  \n"+
                             "color: #55635A; \n"+
@@ -169,8 +169,7 @@ public class ChatViewController implements Initializable {
                         //
                         ".message { \n"+
                             "display: flex; \n"+
-                            //"height: auto; \n"+
-                            //"width: 90%; \n"+
+                            "width: 0px; \n"+
                             "align-items: center; \n"+
                             "margin-left: 10px; \n"+
                             "margin-right: 10px; \n"+
@@ -191,12 +190,12 @@ public class ChatViewController implements Initializable {
                             "display: flex \n"+
                             "flex-direction: column; \n"+
                             "flex: auto; \n"+
-                            "min-width: 200px; \n"+
+                            "max-width: 400px; \n"+
                             "border-radius: 20px; \n"+
                             "margin-left: 10px; \n"+
                             "margin-right: 10px; \n"+
-                            "padding: 10px; \n"+
-                            "box-shadow: -1px 1px 2px 2px #DCD8D3; \n"+
+                            "padding: 16px; \n"+
+                            "box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15); \n"+
                         "} \n"+
                         //div time
                         ".msgTime { \n"+
