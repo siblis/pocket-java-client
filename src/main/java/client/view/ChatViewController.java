@@ -86,7 +86,6 @@ public class ChatViewController implements Initializable {
     private String tsOld;
 
     private int idDivMsg =0;
-
     ////////////////////////
 
     public ChatViewController() {
