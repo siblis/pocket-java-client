@@ -28,7 +28,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,8 +35,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
-
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -82,13 +79,13 @@ public class ChatViewController implements Initializable {
 
     private ClientController clientController;
 
-    //private File chatBackgroundImage;
     private String backgroundImage;
 
     private Document DOMdocument;
 
     private String tsOld;
 
+    private int idDivMsg =0;
     ////////////////////////
 
     public ChatViewController() {
@@ -306,8 +303,17 @@ public class ChatViewController implements Initializable {
      *
      */
     private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
+        //ID требуется для скрипта вставки тегов
+        idDivMsg+=1;
+        String idMsg = "msg"+idDivMsg;
+
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
         SimpleDateFormat dateFormat = initDateFormat("HH:mm");
+
+        //Заменяем Enter на перенос строки, для отображения
+        message = message.replaceAll("\n", "<br/>");
+        //Парсим ссылки, получаем строку вида <a href="message">message</a>
+        message = Common.urlToHyperlink(message);
 
         boolean visibleDateDay=false;
         if (tsOld == null) {
@@ -337,6 +343,7 @@ public class ChatViewController implements Initializable {
         divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxtSender.setAttribute("class", attrClass+"S sender");
         divTxtMsg.setAttribute("class", attrClass+"M msg");
+        divTxtMsg.setAttribute("id", idMsg); //id
         divTime.setAttribute("class", attrClass+"T msgTime");
         divTxtSender.setTextContent(senderName);
         divTxtMsg.setTextContent(message);
@@ -347,8 +354,11 @@ public class ChatViewController implements Initializable {
         div.appendChild(divTxt);
         div.appendChild(divTime);
         body.appendChild(div);
-        webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight"); //Сдвигаем страницу на последний элемент
-
+        //Scripts
+        //вставляем текст с тегами
+        webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + message+"'");
+        //Сдвигаем страницу на последний элемент
+        webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
@@ -369,11 +379,11 @@ public class ChatViewController implements Initializable {
             webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     DOMdocument = webEngine.getDocument();
-                    createMessageDiv(message, senderName, timestamp,attrClass2);
+                    createMessageDiv(message, senderName, timestamp, attrClass2);
                 }
             });
         }else {
-            createMessageDiv(message, senderName, timestamp,attrClass);
+            createMessageDiv(message, senderName, timestamp, attrClass);
         }
     }
 
@@ -470,6 +480,7 @@ public class ChatViewController implements Initializable {
                         ((EventTarget) nodeList.item(i)).addEventListener(EVENT_TYPE_CLICK, listener, false);
                         System.out.println("Remove & after add event listener. " + nodeList.item(i));
                     }
+
                 }
             }
         });
