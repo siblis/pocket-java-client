@@ -101,7 +101,7 @@
 
 
             <WebView fx:id="messageWebView" maxWidth="1031.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0" />
-            <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0" maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0">
+            <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0"  maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0">
             <padding>
                <Insets left="69.0" />
             </padding></CustomTextArea>
