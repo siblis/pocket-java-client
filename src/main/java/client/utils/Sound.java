@@ -4,9 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 public class Sound implements AutoCloseable {
     private static final Logger soundLogger = LogManager.getLogger(Sound.class.getName());
@@ -17,26 +15,12 @@ public class Sound implements AutoCloseable {
     private boolean playing = false;
     private final String SOUND_NEW_MSG = "client/sounds/1.wav";
 
-    //public Sound(File f) {
-    public Sound(URL f) {
-        try {
-            stream = AudioSystem.getAudioInputStream(f);
-            clip = AudioSystem.getClip();
-            clip.open(stream);
-            clip.addLineListener(new Listener());
-            volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            released = true;
-        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
-            soundLogger.error("Sound_error", exc);
-            released = false;
-            close();
-        }
-    }
-
-    public Sound() {
+    public Sound(int what) {
         ClassLoader cl = this.getClass().getClassLoader();
         try {
-            stream = AudioSystem.getAudioInputStream(cl.getResource(SOUND_NEW_MSG));
+            switch(what) {
+                case 1:stream = AudioSystem.getAudioInputStream(cl.getResource(SOUND_NEW_MSG)); //Новое сообщение
+            }
             clip = AudioSystem.getClip();
             clip.open(stream);
             clip.addLineListener(new Listener());
@@ -45,7 +29,6 @@ public class Sound implements AutoCloseable {
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
             exc.printStackTrace();
             released = false;
-
             close();
         }
     }
@@ -149,12 +132,13 @@ public class Sound implements AutoCloseable {
         }
     }
 
-    // Статический метод, для удобства
-    //public static Sound playSound(String path) {
-    public static Sound playSound(URL path) {
-        //File f = new File(path);
-        //Sound snd = new Sound(f);
-        Sound snd = new Sound(path);
+    /**
+    * Статические методы, для удобства
+     * 1 - Новое сообщение (Указывается для конструктора
+     * 2 - ... Задать в конструторе и создать метод
+    */
+    public static Sound playSoundNewMessage() {
+        Sound snd = new Sound(1);
         snd.play();
         return snd;
     }
