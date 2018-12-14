@@ -82,3 +82,8 @@
     -fx-background-color: #3498DB;
 
 }
+
+#contactListView:pressed {
+    -fx-background-color: #3498DB;
+}
+
