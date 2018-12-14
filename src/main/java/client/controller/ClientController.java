@@ -169,10 +169,12 @@ public class ClientController {
     private void loadChat() {
         List<Message> converstation = dbService.getChat(myUser, receiver);
         chatViewController.clearMessageWebView();
+
         for (Message message :
                 converstation) {
             chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
             contactListOfCards.get(getListIDbyUID(message.getSender().getUid())).setBody(message.getText());
+
         }
     }
 
@@ -210,6 +212,7 @@ public class ClientController {
             element.setUser(dbService.getUser(id));
 
             contactListOfCards.add(element);
+
         }
 
     }
