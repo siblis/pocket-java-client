@@ -36,5 +36,4 @@ public class Connector {
         chatClient.connectBlocking();
     }
 
-
 }
