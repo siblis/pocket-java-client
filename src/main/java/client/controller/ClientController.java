@@ -96,6 +96,8 @@ public class ClientController {
                 try {
                     ServerResponse response = HTTPSRequest.getMySelf(token);
                     myUser = convertJSONToUser(response.getResponseJson());
+                    System.out.println("info myUser id "+myUser.getUid()+
+                            " acc name "+myUser.getAccount_name());
                 } catch (Exception e) {
                     controllerLogger.error("HTTPSRequest.getMySelf_error", e);
                 }
