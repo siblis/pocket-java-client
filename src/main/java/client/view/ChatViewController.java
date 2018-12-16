@@ -28,7 +28,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,8 +35,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
-
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -82,13 +79,13 @@ public class ChatViewController implements Initializable {
 
     private ClientController clientController;
 
-    //private File chatBackgroundImage;
     private String backgroundImage;
 
     private Document DOMdocument;
 
     private String tsOld;
 
+    private int idDivMsg =0;
     ////////////////////////
 
     public ChatViewController() {
@@ -149,7 +146,7 @@ public class ChatViewController implements Initializable {
                     "<style> \n"+
                         "body { \n" +
                             "margin: 0; \n"+
-                            "padding: 0; \n"+
+                            "padding: 10px; \n"+
                             "background-image: url(" + backgroundImage + "); \n"+
                             "background-attachment: fixed; \n"+
                         "} \n"+
@@ -158,7 +155,7 @@ public class ChatViewController implements Initializable {
                         ".timeStampDay { \n" +
                             "display: inline-block; \n"+
                             "text-align: center; \n"+
-                            "width: 80px; \n"+
+                            //"width: 80px; \n"+
                             "margin: 0 38%;  \n"+
                             "margin-top: 10px;  \n"+
                             "color: #55635A; \n"+
@@ -169,8 +166,7 @@ public class ChatViewController implements Initializable {
                         //
                         ".message { \n"+
                             "display: flex; \n"+
-                            //"height: auto; \n"+
-                            //"width: 90%; \n"+
+                            "width: 0px; \n"+
                             "align-items: center; \n"+
                             "margin-left: 10px; \n"+
                             "margin-right: 10px; \n"+
@@ -191,12 +187,12 @@ public class ChatViewController implements Initializable {
                             "display: flex \n"+
                             "flex-direction: column; \n"+
                             "flex: auto; \n"+
-                            "min-width: 200px; \n"+
-                            "border-radius: 15px; \n"+
+                            "max-width: 400px; \n"+
+                            "border-radius: 20px; \n"+
                             "margin-left: 10px; \n"+
                             "margin-right: 10px; \n"+
-                            "padding: 10px; \n"+
-                            "box-shadow: -1px 1px 2px 2px #DCD8D3; \n"+
+                            "padding: 16px; \n"+
+                            "box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15); \n"+
                         "} \n"+
                         //div time
                         ".msgTime { \n"+
@@ -229,10 +225,10 @@ public class ChatViewController implements Initializable {
 
                         //div time -->sender
                         ".myUserClassT { \n"+
-                            "color: #6399F3; \n"+
+                            "color: #757575; \n"+
                         "} \n"+
                         ".senderUserClassT { \n"+
-                            "color: #959493; \n"+
+                            "color: #4285F4; \n"+
                         "} \n"+
                     "</style> \n"+
                   "</head> \n"+
@@ -306,8 +302,17 @@ public class ChatViewController implements Initializable {
      *
      */
     private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
+        //ID требуется для скрипта вставки тегов
+        idDivMsg+=1;
+        String idMsg = "msg"+idDivMsg;
+
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
         SimpleDateFormat dateFormat = initDateFormat("HH:mm");
+
+        //Заменяем Enter на перенос строки, для отображения
+        message = message.replaceAll("\n", "<br/>");
+        //Парсим ссылки, получаем строку вида <a href="message">message</a>
+        message = Common.urlToHyperlink(message);
 
         boolean visibleDateDay=false;
         if (tsOld == null) {
@@ -337,6 +342,7 @@ public class ChatViewController implements Initializable {
         divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxtSender.setAttribute("class", attrClass+"S sender");
         divTxtMsg.setAttribute("class", attrClass+"M msg");
+        divTxtMsg.setAttribute("id", idMsg); //id
         divTime.setAttribute("class", attrClass+"T msgTime");
         divTxtSender.setTextContent(senderName);
         divTxtMsg.setTextContent(message);
@@ -347,8 +353,11 @@ public class ChatViewController implements Initializable {
         div.appendChild(divTxt);
         div.appendChild(divTime);
         body.appendChild(div);
-        webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight"); //Сдвигаем страницу на последний элемент
-
+        //Scripts
+        //вставляем текст с тегами
+        webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + message+"'");
+        //Сдвигаем страницу на последний элемент
+        webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
@@ -369,11 +378,11 @@ public class ChatViewController implements Initializable {
             webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     DOMdocument = webEngine.getDocument();
-                    createMessageDiv(message, senderName, timestamp,attrClass2);
+                    createMessageDiv(message, senderName, timestamp, attrClass2);
                 }
             });
         }else {
-            createMessageDiv(message, senderName, timestamp,attrClass);
+            createMessageDiv(message, senderName, timestamp, attrClass);
         }
     }
 
@@ -470,6 +479,7 @@ public class ChatViewController implements Initializable {
                         ((EventTarget) nodeList.item(i)).addEventListener(EVENT_TYPE_CLICK, listener, false);
                         System.out.println("Remove & after add event listener. " + nodeList.item(i));
                     }
+
                 }
             }
         });

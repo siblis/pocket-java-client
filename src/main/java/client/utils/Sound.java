@@ -135,7 +135,7 @@ public class Sound implements AutoCloseable {
     /**
     * Статические методы, для удобства
      * 1 - Новое сообщение (Указывается для конструктора
-     * 2 - ... Задать в конструторе и создать метод
+     * 2 - ... Задать в конструкторе и создать метод
     */
     public static Sound playSoundNewMessage() {
         Sound snd = new Sound(1);
