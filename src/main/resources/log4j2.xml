@@ -32,7 +32,7 @@
     </Appenders>
     <Loggers>
         <Root level="trace">
-            <AppenderRef ref="Console"/>
+            <!--<AppenderRef ref="Console"/>-->
             <AppenderRef ref="pocketLog"/>
         </Root>
     </Loggers>
