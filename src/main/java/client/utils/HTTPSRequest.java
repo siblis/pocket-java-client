@@ -42,7 +42,7 @@ public class HTTPSRequest {
     }
 
     public static int registration(String requestJSON) throws Exception {
-        URL obj = new URL(serverURL + "/v1/users/");
+        URL obj = new URL(serverURL + "/v1/auth/register/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
 
@@ -55,9 +55,9 @@ public class HTTPSRequest {
     }
 
     public static String authorization(String requestJSON) throws Exception {
-        URL obj = new URL(serverURL + "/v1/auth/");
+        URL obj = new URL(serverURL + "/v1/auth/login/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("PUT");
+        con.setRequestMethod("POST");
         sendRequest(con, requestJSON);
         return answerRequest(con);
     }
@@ -68,17 +68,17 @@ public class HTTPSRequest {
     }
 
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/users/contacts/", "POST", token);
+        HttpsURLConnection connection = getConnection("/v1/account/contacts/", "POST", token);
         return getServerResponse(connection, requestJSON);
     }
 
     public static ServerResponse getContacts(String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/users/contacts/", "GET", token);
+        HttpsURLConnection connection = getConnection("/v1/account/contacts/", "GET", token);
         return getServerResponse(connection, null);
     }
 
     public static ServerResponse getMySelf(String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/users/", "GET", token);
+        HttpsURLConnection connection = getConnection("/v1/account/", "GET", token);
         return getServerResponse(connection, null);
     }
 
