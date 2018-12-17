@@ -70,6 +70,7 @@ public class DataBaseService {
     public void addMessage(long receiverId, long senderID, Message message) {
         messageDao.addSentMessage(senderID, message);
         messageDao.addReceivedMessage(receiverId, message);
+        System.out.println("BD addMessage "+ receiverId+" "+senderID+" "+message);
     }
 
     public List<Message> getChat(User user1, User user2){

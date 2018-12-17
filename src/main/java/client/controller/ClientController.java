@@ -96,6 +96,8 @@ public class ClientController {
                 try {
                     ServerResponse response = HTTPSRequest.getMySelf(token);
                     myUser = convertJSONToUser(response.getResponseJson());
+                    System.out.println("info myUser id "+myUser.getUid()+
+                            " acc name "+myUser.getAccount_name());
                 } catch (Exception e) {
                     controllerLogger.error("HTTPSRequest.getMySelf_error", e);
                 }
@@ -245,7 +247,11 @@ public class ClientController {
     private User convertJSONToUser(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.fromJson(jsonText, User.class);
+        //TODO дебилизм, но пока с БД не разберемся так
+        System.out.println("новое АПИ MYSELFUSER "+jsonText);
+        String jsText="{\"u"+jsonText.substring(7);
+        System.out.println("переделано как старое АПИ MYSELFUSER "+jsText);
+        return gson.fromJson(jsText, User.class);
     }
 
     public void addContact(String contact) {
