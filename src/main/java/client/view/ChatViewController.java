@@ -86,6 +86,8 @@ public class ChatViewController implements Initializable {
     private String tsOld;
 
     private int idDivMsg =0;
+
+    private Desktop desktop = Desktop.getDesktop();//переменная для открытия файла в компъютере
     ////////////////////////
 
     public ChatViewController() {
@@ -453,7 +455,6 @@ public class ChatViewController implements Initializable {
                                 System.out.println("href: " + href); // DEBUG
                                 try {
                                     // Open URL in Browser:
-                                    Desktop desktop = Desktop.getDesktop();
                                     if (desktop.isSupported(Desktop.Action.BROWSE)) {
                                         desktop.browse(new URI(href.contains("://") ? href : "http://" + href + "/"));
                                         //отменяем событие, чтобы ссылка не открывалась в самом webView
@@ -486,8 +487,6 @@ public class ChatViewController implements Initializable {
     }
 
     //метод выбора файла
-    private Desktop desktop = Desktop.getDesktop();
-
     @FXML
     public void handleSendFile() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
@@ -495,15 +494,15 @@ public class ChatViewController implements Initializable {
 
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
-            try {
-                this.desktop.open(file);//открывается файл на компьютере
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                this.desktop.open(file);//открывается файл на компьютере, пока не нужно
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             List<File> files = Arrays.asList(file);
             if (files == null || files.isEmpty()) return;
             for(File f : files) {
-                messageField .appendText(f.getAbsolutePath() + "\n");
+                messageField .appendText(f.getName() + "\n");
             }
         }
     }
