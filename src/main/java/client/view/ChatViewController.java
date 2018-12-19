@@ -102,7 +102,7 @@ public class ChatViewController implements Initializable {
 
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
-        contactsObservList = FXCollections.observableArrayList();
+        contactsObservList = FXCollections.observableList(ClientController.getInstance().getContactListOfCards());
         contactListView.setExpanded(true);
         fillContactListView();
 
@@ -262,7 +262,7 @@ public class ChatViewController implements Initializable {
 //            }
 //        });
       //  contactsObservList.clear();
-        contactsObservList.addAll(clientController.getContactListOfCards());
+//        contactsObservList.addAll(clientController.getContactListOfCards());
         for (CFXListElement element:contactsObservList){
             element.setUnreadMessages("0");
             element.setBody("Входящие сообщения");
