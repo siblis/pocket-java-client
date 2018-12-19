@@ -40,15 +40,15 @@
                <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-               <TextField fx:id="regLoginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Ваш никнейм" />
-               <PasswordField fx:id="regPasswordField" onKeyReleased="#handleKeyReleased" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="2" />
-               <PasswordField fx:id="regPasswordFieldDouble" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Подтвердите пароль" GridPane.rowIndex="3" />
+               <TextField fx:id="regLoginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Ваш никнейм" GridPane.rowIndex="0" />
                <TextField fx:id="regEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="E-mail" GridPane.rowIndex="1" />
-               <Button fx:id="cancelRegisterButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancelRegisterButton" prefHeight="40.0" prefWidth="232.0" text="Cancel" GridPane.rowIndex="5">
+               <PasswordField fx:id="regPasswordField" onKeyReleased="#handleKeyReleased" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="2" />
+               <PasswordField fx:id="regPasswordFieldDouble" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Подтверждение пароля" GridPane.rowIndex="3" />
+               <Button fx:id="okRegisterButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOkRegisterButton" prefHeight="40.0" prefWidth="232.0" text="Зарегистрироваться" GridPane.rowIndex="4">
                   <GridPane.margin>
                      <Insets />
                   </GridPane.margin></Button>
-               <Button fx:id="okRegisterButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOkRegisterButton" prefHeight="40.0" prefWidth="232.0" text="Register" GridPane.rowIndex="4" />
+               <Button fx:id="cancelRegisterButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancelRegisterButton" prefHeight="40.0" prefWidth="232.0" text="Отмена" GridPane.rowIndex="5" />
             </children>
          </GridPane>
       </children>

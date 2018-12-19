@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import client.utils.CustomTextArea?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -13,6 +14,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.web.WebView?>
+
 <?import com.jfoenix.controls.JFXListView?>
 
 <BorderPane prefHeight="450.0" prefWidth="600.0" stylesheets="/client/styles/ChatStyle.css"
@@ -102,7 +104,6 @@
                     <Tab fx:id="contacts" closable="false" onSelectionChanged="#handleOnContactSelected"
                          text="Контакты">
                         <content>
-
                             <AnchorPane>
                                 <children>
                                     <AnchorPane prefHeight="372.0" prefWidth="201.0" AnchorPane.bottomAnchor="82.0"
@@ -137,7 +138,6 @@
                     </Tab>
                 </tabs>
             </TabPane>
-
 
             <WebView fx:id="messageWebView"
                      prefWidth="500" minWidth="-Infinity" maxWidth="1031.0"
