@@ -91,8 +91,6 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        DOMdocument = null;
-        tsOld = null;
 
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
         initBackgroundWebView();
@@ -478,7 +476,14 @@ public class ChatViewController implements Initializable {
     }
 
     public void clearMessageWebView() {
+        DOMdocument = null; //чистка документа
+        tsOld = null; //чистка даты
         initWebView();
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED) {
+                DOMdocument = webEngine.getDocument();
+            }
+        });
     }
 
     //метод смены иконки
