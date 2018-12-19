@@ -15,14 +15,14 @@
 <?import javafx.scene.web.WebView?>
 <?import com.jfoenix.controls.JFXListView?>
 
-<BorderPane prefHeight="450.0" prefWidth="750.0" stylesheets="/client/styles/ChatStyle.css"
+<BorderPane prefHeight="450.0" prefWidth="600.0" stylesheets="/client/styles/ChatStyle.css"
             xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="client.view.ChatViewController">
     <center>
 
 
         <AnchorPane fx:id="messagePanel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" prefWidth="600.0" minWidth="400.0">
             <AnchorPane prefHeight="49.0" styleClass="menu-bar" AnchorPane.leftAnchor="0.0"
                         AnchorPane.rightAnchor="460.0" AnchorPane.topAnchor="0.0">
                 <children>
@@ -44,8 +44,8 @@
                                promptText="Найти..." AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="9.0"/>
                 </children>
             </AnchorPane>
-            <AnchorPane maxWidth="-Infinity" minHeight="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0"
-                        styleClass="menu-bar" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0"
+            <AnchorPane minWidth="-Infinity" minHeight="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0"
+                        styleClass="menu-bar" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0"
                         AnchorPane.topAnchor="0.0">
                 <children>
                     <MenuBar layoutX="49.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
@@ -139,10 +139,12 @@
             </TabPane>
 
 
-            <WebView fx:id="messageWebView" maxWidth="1031.0" minHeight="-Infinity" minWidth="-Infinity"
-                     prefHeight="400" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="300.0"
+            <WebView fx:id="messageWebView"
+                     prefWidth="500" minWidth="-Infinity" maxWidth="1031.0"
+                     prefHeight="400" minHeight="-Infinity" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="300.0"
                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0"/>
             <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0"
+                            prefWidth="500"
                             maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50"
                             AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0">
                 <padding>
