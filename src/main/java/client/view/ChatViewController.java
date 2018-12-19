@@ -51,9 +51,6 @@ import static client.utils.Common.showAlert;
 
 public class ChatViewController implements Initializable {
 
-    private WebEngine webEngine;
-    private String msgArea = "";
-
     @FXML
     private AnchorPane messagePanel;
 
@@ -67,13 +64,13 @@ public class ChatViewController implements Initializable {
     private CustomTextArea messageField;
 
     @FXML
-    private TabPane tabContainer;
-
-    @FXML
     private Tab chats;
 
     @FXML
     private Tab contacts;
+
+    //
+    private WebEngine webEngine;
 
     private ObservableList<CFXListElement> contactsObservList;
 
@@ -86,6 +83,9 @@ public class ChatViewController implements Initializable {
     private String tsOld;
 
     private int idDivMsg =0;
+
+    //ссылка на desktop
+    private Desktop desktop;
     ////////////////////////
 
     public ChatViewController() {
@@ -106,7 +106,7 @@ public class ChatViewController implements Initializable {
         contactListView.setExpanded(true);
         fillContactListView();
 
-        initFX(); //устанавливаем слушатель на обновление webView
+        desktop = Desktop.getDesktop();
 
         messageField.setOnKeyPressed(event -> {
             if (event.isControlDown() && event.getCode().equals(KeyCode.ENTER)) {
@@ -238,31 +238,7 @@ public class ChatViewController implements Initializable {
 
     public void fillContactListView() {
         contactListView.setItems(contactsObservList);
-//        contactListView.setCellFactory(new Callback<ListView<CFXListElement>, ListCell<CFXListElement>>() {
-//
-//            @Override
-//            public ListCell<CFXListElement> call(ListView<CFXListElement> param) {
-//                return new ListCell<CFXListElement>() {
-//                    @Override
-//                    protected void updateItem(CFXListElement item, boolean empty) {
-//                        super.updateItem(item, empty);
-//                        if (!empty) {
-//
-//                            setText(item.getTopic());
-//                            if (item.equals(clientController.getSenderName())) {
-//                                setStyle("-fx-font-weight: bold;" +
-//                                        " -fx-background-color: #ffead4");
-//                            }
-//                        } else {
-//                            setGraphic(null);
-//                            setText(null);
-//                        }
-//                    }
-//                };
-//            }
-//        });
-      //  contactsObservList.clear();
-//        contactsObservList.addAll(clientController.getContactListOfCards());
+        contactsObservList.addAll(clientController.getContactListOfCards());
         for (CFXListElement element:contactsObservList){
             element.setUnreadMessages("0");
             element.setBody("Входящие сообщения");
@@ -293,7 +269,10 @@ public class ChatViewController implements Initializable {
              * <div class="msgLogo"></div>
              * <div class="attrClass msgTxt">
      *          <div class="'attrClass+S' sender"></div>
-     *          <div class="'attrClass+M' msg"></div>
+     *          <div class="'attrClass+M' msg">
+     *              <Если ссылка то
+     *              <a href=ссылка></a>
+     *          </div>
      *        </div>
          * </div>
          * <div class="'attrClass+T' msgTime"></div>
@@ -326,17 +305,17 @@ public class ChatViewController implements Initializable {
         Node body = DOMdocument.getElementsByTagName("body").item(0);
 
         if (visibleDateDay) {
-            Element divTimeDay = webEngine.getDocument().createElement("div");
+            Element divTimeDay = DOMdocument.createElement("div");
             divTimeDay.setAttribute("class", "timeStampDay");
             divTimeDay.setTextContent(dateFormatDay.format(timestamp));
             body.appendChild(divTimeDay);
         }
-        Element div = webEngine.getDocument().createElement("div");
-        Element divLogo = webEngine.getDocument().createElement("div");
-        Element divTxt = webEngine.getDocument().createElement("div");
-        Element divTxtSender = webEngine.getDocument().createElement("div");
-        Element divTxtMsg = webEngine.getDocument().createElement("div");
-        Element divTime = webEngine.getDocument().createElement("div");
+        Element div = DOMdocument.createElement("div");
+        Element divLogo = DOMdocument.createElement("div");
+        Element divTxt = DOMdocument.createElement("div");
+        Element divTxtSender = DOMdocument.createElement("div");
+        Element divTxtMsg = DOMdocument.createElement("div");
+        Element divTime = DOMdocument.createElement("div");
         div.setAttribute("class", "message");
         divLogo.setAttribute("class", "msgLogo");
         divTxt.setAttribute("class", attrClass+" msgTxt");
@@ -358,6 +337,8 @@ public class ChatViewController implements Initializable {
         webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + message+"'");
         //Сдвигаем страницу на последний элемент
         webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
+        //Подписка на событие по открытию ссылки
+        addListenerLinkExternalBrowser(divTxtMsg);
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
@@ -434,59 +415,44 @@ public class ChatViewController implements Initializable {
         stage.show();
     }
 
-    private void initFX() {
-        final String EVENT_TYPE_CLICK = "click";
+    //подписка на обработку открытия ссылок
+    //Element tagElement = <div class="msg">
+    private void addListenerLinkExternalBrowser(Element tagElement){
+        NodeList nodeList = tagElement.getElementsByTagName("a");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            ((EventTarget) nodeList.item(i)).addEventListener("click", listenerLinkExternalBrowser(), false);
 
-        //отслеживаем изменения в messageWebView
-        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
-            @Override
-            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-                //messageWebView получил новое состояние, страница загружена полностью
-                if (newState == Worker.State.SUCCEEDED) {
-                    EventListener listener = new EventListener() {
-                        @Override
-                        public void handleEvent(Event ev) {
-                            String domEventType = ev.getType();
-                            System.err.println("EventType: " + domEventType); // DEBUG
-                            if (domEventType.equals(EVENT_TYPE_CLICK)) {
-                                String href = ((Element) ev.getTarget()).getAttribute("href");
-                                System.out.println("href: " + href); // DEBUG
-                                try {
-                                    // Open URL in Browser:
-                                    Desktop desktop = Desktop.getDesktop();
-                                    if (desktop.isSupported(Desktop.Action.BROWSE)) {
-                                        desktop.browse(new URI(href.contains("://") ? href : "http://" + href + "/"));
-                                        //отменяем событие, чтобы ссылка не открывалась в самом webView
-                                        ev.preventDefault();
-                                    } else {
-                                        System.out.println("Could not load URL: " + href);
-                                    }
-                                    System.out.println("Opening external browser.");
-                                } catch (IOException | URISyntaxException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    };
-
-                    Document doc = webEngine.getDocument();
-                    NodeList nodeList = doc.getElementsByTagName("a");
-                    System.out.println(nodeList.getLength());
-
-                    for (int i = 0; i < nodeList.getLength(); i++) {
-                        //сначало удаляем ранее установленные слушатели
-                        ((EventTarget) nodeList.item(i)).removeEventListener(EVENT_TYPE_CLICK, listener, false);
-                        ((EventTarget) nodeList.item(i)).addEventListener(EVENT_TYPE_CLICK, listener, false);
-                        System.out.println("Remove & after add event listener. " + nodeList.item(i));
-                    }
-
-                }
-            }
-        });
+        }
     }
 
-    //метод выбора файла
-    private Desktop desktop = Desktop.getDesktop();
+    //обработчик открытия ссылок во внешнем браузере
+    private EventListener listenerLinkExternalBrowser(){
+        EventListener listener = new EventListener() {
+
+            @Override
+            public void handleEvent(Event evt) {
+                String domEventType = evt.getType();
+                if ("click".equals(domEventType)) {
+                    String href = ((Element) evt.getTarget()).getAttribute("href");
+                    try {
+                        // Open URL in Browser:
+                        //ну удалил, т.к. не много не понятно пока зачем
+                        //if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                            desktop.browse(new URI(href.contains("://") ? href : "http://" + href + "/"));
+                            //отменяем событие, чтобы ссылка не открывалась в самом webView
+                            //evt.preventDefault();
+                        /*} else {
+                            System.out.println("Could not load URL: " + href);
+                        }*/
+                    } catch (IOException | URISyntaxException e) {
+                        //todo logger
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        return listener;
+    }
 
     @FXML
     public void handleSendFile() {
@@ -512,7 +478,6 @@ public class ChatViewController implements Initializable {
     }
 
     public void clearMessageWebView() {
-        //msgArea = "";
         initWebView();
     }
 
