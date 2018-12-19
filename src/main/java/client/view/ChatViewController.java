@@ -7,8 +7,6 @@ import client.utils.CustomTextArea;
 import client.utils.Sound;
 import client.view.customFX.CFXListElement;
 import com.jfoenix.controls.JFXListView;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -188,6 +186,8 @@ public class ChatViewController implements Initializable {
                             "flex-direction: column; \n"+
                             "flex: auto; \n"+
                             "max-width: 400px; \n"+
+                            "min-width: 200px; \n"+
+                            "width: 300px; \n"+
                             "border-radius: 20px; \n"+
                             "margin-left: 10px; \n"+
                             "margin-right: 10px; \n"+
