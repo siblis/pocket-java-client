@@ -17,7 +17,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -35,6 +36,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +48,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static client.utils.Common.showAlert;
 
 public class ChatViewController implements Initializable {
 
@@ -503,6 +503,7 @@ public class ChatViewController implements Initializable {
             if (files == null || files.isEmpty()) return;
             for(File f : files) {
                 messageField .appendText(f.getName() + "\n");
+
             }
         }
     }
