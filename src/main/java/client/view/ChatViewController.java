@@ -238,7 +238,7 @@ public class ChatViewController implements Initializable {
 
     public void fillContactListView() {
         contactListView.setItems(contactsObservList);
-        contactsObservList.addAll(clientController.getContactListOfCards());
+        //contactsObservList.addAll(clientController.getContactListOfCards());
         for (CFXListElement element:contactsObservList){
             element.setUnreadMessages("0");
             element.setBody("Входящие сообщения");
