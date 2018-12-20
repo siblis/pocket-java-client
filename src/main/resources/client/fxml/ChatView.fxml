@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import client.utils.CustomTextArea?>
-<?import com.jfoenix.controls.JFXListView?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.web.WebView?>
-
-<?import com.jfoenix.controls.JFXListView?>
+        <?import client.utils.CustomTextArea?>
+        <?import javafx.geometry.Insets?>
+        <?import javafx.scene.control.Label?>
+        <?import javafx.scene.control.Menu?>
+        <?import javafx.scene.control.MenuBar?>
+        <?import javafx.scene.control.MenuItem?>
+        <?import javafx.scene.control.SeparatorMenuItem?>
+        <?import javafx.scene.control.Tab?>
+        <?import javafx.scene.control.TabPane?>
+        <?import javafx.scene.control.TextField?>
+        <?import javafx.scene.layout.AnchorPane?>
+        <?import javafx.scene.layout.BorderPane?>
+        <?import javafx.scene.web.WebView?>
+        <?import com.jfoenix.controls.JFXListView?>
 
 <BorderPane prefHeight="450.0" prefWidth="600.0" stylesheets="/client/styles/ChatStyle.css"
             xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
@@ -104,6 +102,7 @@
                     <Tab fx:id="contacts" closable="false" onSelectionChanged="#handleOnContactSelected"
                          text="Контакты">
                         <content>
+
                             <AnchorPane>
                                 <children>
                                     <AnchorPane prefHeight="372.0" prefWidth="201.0" AnchorPane.bottomAnchor="82.0"
@@ -112,9 +111,9 @@
                                         <children>
                                             <JFXListView fx:id="contactListView" maxWidth="410.0" minWidth="200"
                                                          onMouseClicked="#handleClientChoice" prefHeight="400.0"
-                                                         prefWidth="410.0" styleClass="contactsListView"
-                                                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                                         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                         prefWidth="410.0" AnchorPane.bottomAnchor="0.0"
+                                                         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                                         AnchorPane.topAnchor="0.0"/>
                                         </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="11.0" layoutY="334.0" maxHeight="-Infinity"
@@ -138,6 +137,7 @@
                     </Tab>
                 </tabs>
             </TabPane>
+
 
             <WebView fx:id="messageWebView"
                      prefWidth="500" minWidth="-Infinity" maxWidth="1031.0"
