@@ -91,10 +91,13 @@ public class ChatViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        DOMdocument = null;
+        tsOld = null; //чистка даты
+        idDivMsg =0; //присваивание ID
 
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
         initBackgroundWebView();
-        //initWebView(); //при запуске от теста вызывается еще раз. Если не будет вызова там, тут расскоментировать
+        initWebView();
 
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
@@ -475,15 +478,24 @@ public class ChatViewController implements Initializable {
     public void handleSendSmile(MouseEvent mouseEvent) {
     }
 
+    /**
+     * Вызывается для чистки документа внутри WebEngine
+     * при первом вызове чистки нет, т.к. DOMdocument == null
+     * так де обнуляем дату для группировки (tsOld) и ID для DIV
+     */
     public void clearMessageWebView() {
-        DOMdocument = null; //чистка документа
-        tsOld = null; //чистка даты
-        initWebView();
-        webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                DOMdocument = webEngine.getDocument();
+        if (DOMdocument != null) {
+            //чистим все, что внутри тегов <body></body>
+            Node body = DOMdocument.getElementsByTagName("body").item(0);
+            Node fc = body.getFirstChild();
+            while (fc != null) {
+                body.removeChild(fc);
+                fc = body.getFirstChild();
             }
-        });
+        }
+
+        tsOld = null; //чистка даты
+        idDivMsg =0; //присваивание ID
     }
 
     //метод смены иконки
