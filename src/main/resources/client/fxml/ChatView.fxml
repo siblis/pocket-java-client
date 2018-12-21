@@ -88,6 +88,21 @@
                                                   <JFXListView fx:id="contactListView" maxWidth="410.0" minWidth="200" onMouseClicked="#handleClientChoice" prefHeight="400.0" prefWidth="410.0" styleClass="contactsListView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                               </children>
                                           </AnchorPane>
+                                 <AnchorPane fx:id="userSearchPane" prefHeight="100.0" prefWidth="284.0" stylesheets="@../styles/searchUserPane.css" visible="false" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                       <Rectangle fill="#3498db" height="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
+                                       <TextField layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Введите e-mail пользователя" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
+                                          <font>
+                                             <Font name="Serif Italic" size="14.0" />
+                                          </font>
+                                       </TextField>
+                                       <JFXButton buttonType="RAISED" layoutX="128.0" layoutY="60.0" mnemonicParsing="false" onAction="#onUserSearchButtonClicked" ripplerFill="#ffe684" style="-fx-background-fill: FFE68; -fx-border-radius: 8px;" text="Найти" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="75.0">
+                                          <font>
+                                             <Font size="16.0" />
+                                          </font>
+                                       </JFXButton>
+                                    </children>
+                                 </AnchorPane>
                                           <AnchorPane layoutX="11.0" layoutY="334.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="82.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                                               <children>
                                                   <JFXButton id="addContact" fx:id="bAddContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleAddContactButton" prefHeight="50.0" text="Добавить контакт" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="11.0">
@@ -117,21 +132,6 @@
             <Label id="vector" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendMessage" prefHeight="18.0" prefWidth="20.5" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="81.5" />
             <Label id="smailik" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendSmile" prefHeight="24.0" prefWidth="24.0" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="31.0" />
             <Label id="skrepka" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendFile" prefHeight="35.0" prefWidth="35.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="316.0" />
-         <AnchorPane fx:id="userSearchPane" prefHeight="100.0" prefWidth="284.0" stylesheets="@../styles/searchUserPane.css" visible="false" AnchorPane.topAnchor="125.0">
-            <children>
-               <Rectangle fill="#3498db" height="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
-               <TextField layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Введите e-mail пользователя" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
-                  <font>
-                     <Font name="Serif Italic" size="14.0" />
-                  </font>
-               </TextField>
-               <JFXButton buttonType="RAISED" layoutX="128.0" layoutY="60.0" mnemonicParsing="false" onAction="#onUserSearchButtonClicked" ripplerFill="#ffe684" style="-fx-background-fill: FFE68; -fx-border-radius: 8px;" text="Найти" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="75.0">
-                  <font>
-                     <Font size="16.0" />
-                  </font>
-               </JFXButton>
-            </children>
-         </AnchorPane>
 
         </AnchorPane>
 
