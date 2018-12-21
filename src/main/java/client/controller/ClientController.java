@@ -171,10 +171,12 @@ public class ClientController {
     private void loadChat() {
         List<Message> converstation = dbService.getChat(myUser, receiver);
         chatViewController.clearMessageWebView();
+
         for (Message message :
                 converstation) {
             chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
             contactListOfCards.get(getListIDbyUID(message.getSender().getUid())).setBody(message.getText());
+
         }
     }
 
@@ -205,10 +207,17 @@ public class ClientController {
         Iterator it = contactList.iterator();
         while (it.hasNext()){
             Long id = (Long) it.next();
+            //TODO если разкомментировать с ними не работает. Не понятно почему.
+            /*if (id.equals(ClientController.getInstance().myUser.getUid())) {
+                continue;
+            }*/
             CFXListElement element = new CFXListElement();
             element.setUser(dbService.getUser(id));
+
             contactListOfCards.add(element);
+
         }
+
     }
 
     private void synchronizeContactList() {

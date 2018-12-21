@@ -92,11 +92,13 @@ public class CFXListElement extends GridPane {
         if (unreadMessages.equals("0")){
             circleUnreadMessages.setVisible(false);
             unreadGlyph.setVisible(false);
+            this.unreadMessages.setVisible(false);
         } else
         {
             circleUnreadMessages.setVisible(true);
             unreadGlyph.setVisible(true);
             this.unreadMessages.setText("+"+unreadMessages);
+            this.unreadMessages.setVisible(true);
         }
     }
 
