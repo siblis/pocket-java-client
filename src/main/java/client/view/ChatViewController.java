@@ -6,6 +6,7 @@ import client.utils.Common;
 import client.utils.CustomTextArea;
 import client.utils.Sound;
 import client.view.customFX.CFXListElement;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +35,7 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import java.awt.*;
+import java.awt.Label;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -66,6 +68,14 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private Tab contacts;
+
+    @FXML
+    private AnchorPane userSearchPane;
+
+    @FXML
+    private JFXButton bAddContact;
+
+
 
     //
     private WebEngine webEngine;
@@ -406,14 +416,26 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleAddContactButton() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AddContactView.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Add contact");
-        stage.setResizable(false);
-        stage.setScene(new Scene(root));
-        stage.show();
+        contactListView.setVisible(false);
+        bAddContact.setVisible(false);
+        userSearchPane.setVisible(true);
+        userSearchPane.setFocusTraversable(true);
+
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AddContactView.fxml"));
+//        Parent root = fxmlLoader.load();
+//        Stage stage = new Stage();
+//        stage.initModality(Modality.APPLICATION_MODAL);
+//        stage.setTitle("Add contact");
+//        stage.setResizable(false);
+//        stage.setScene(new Scene(root));
+//        stage.show();
+
+    }
+    @FXML
+    private void onUserSearchButtonClicked(){
+        bAddContact.setVisible(true);
+        contactListView.setVisible(true);
+        userSearchPane.setVisible(false);
     }
 
     //подписка на обработку открытия ссылок
