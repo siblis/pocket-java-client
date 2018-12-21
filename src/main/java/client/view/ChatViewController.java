@@ -572,6 +572,7 @@ public class ChatViewController implements Initializable {
     }
 
     public void handleGroupNewButton(MouseEvent mouseEvent) {
+
         groupListPane.setVisible(false);
     }
 
