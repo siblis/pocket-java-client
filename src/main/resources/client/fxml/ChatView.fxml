@@ -3,6 +3,7 @@
 <?import client.utils.CustomTextArea?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -59,21 +60,41 @@
                               <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="271.0" prefWidth="300.0">
                                       <children>
-                                          <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="145.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                                          <AnchorPane fx:id="groupListPane" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="145.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                                               <children>
-                                                  <Label id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleAddContactButton" prefHeight="50.0" text="Добавить группу" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="79.0">
+                                                  <JFXButton id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleGroupSearchButton" prefHeight="50.0" text="Добавить группу" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="79.0">
                                                       <padding>
                                                           <Insets right="70.0" />
                                                       </padding>
-                                                  </Label>
-                                                  <Label id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleAddContactButton" prefHeight="50.0" text="Создать свою группу" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="15.0">
+                                                  </JFXButton>
+                                                  <JFXButton id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleGroupNewButton" prefHeight="50.0" text="Создать свою группу" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="15.0">
                                                       <padding>
                                                           <Insets right="70.0" />
                                                       </padding>
-                                                  </Label>
+                                                  </JFXButton>
                                               </children>
                                           </AnchorPane>
-                                          <AnchorPane prefHeight="140.0" prefWidth="300.0" AnchorPane.bottomAnchor="164.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <AnchorPane prefHeight="326.0" prefWidth="300.0" AnchorPane.bottomAnchor="164.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 <AnchorPane fx:id="groupSearchPane" prefHeight="326.0" prefWidth="300.0" snapToPixel="false" stylesheets="@../styles/searchGroupPane.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                       <Rectangle fill="#3498db" height="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
+                                       <TextField layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Название группы..." style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
+                                          <font>
+                                             <Font name="Serif Italic" size="14.0" />
+                                          </font>
+                                       </TextField>
+                                       <JFXButton mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="60.0">
+                                          <graphic>
+                                             <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          </graphic></JFXButton>
+                                       <JFXButton mnemonicParsing="false" onAction="#onGroupSearchCancelButtonPressed" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="60.0">
+                                          <graphic>
+                                             <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          </graphic>
+                                       </JFXButton>
+                                       <JFXListView prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
+                                    </children>
+                                 </AnchorPane>
                                       </children>
                                   </AnchorPane>
                               </content>

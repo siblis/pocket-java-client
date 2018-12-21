@@ -11,6 +11,7 @@ import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -74,6 +75,12 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private JFXButton bAddContact;
+
+    @FXML
+    private AnchorPane groupSearchPane;
+
+    @FXML
+    private AnchorPane groupListPane;
 
 
 
@@ -555,4 +562,21 @@ public class ChatViewController implements Initializable {
         return imageView;
     }
 
+    public void onGroupSearchButtonClicked(ActionEvent actionEvent) {
+        groupSearchPane.setVisible(false);
+    }
+
+    public void handleGroupSearchButton(MouseEvent mouseEvent) {
+        groupListPane.setVisible(false);
+        groupSearchPane.setVisible(true);
+    }
+
+    public void handleGroupNewButton(MouseEvent mouseEvent) {
+        groupListPane.setVisible(false);
+    }
+
+    public void onGroupSearchCancelButtonPressed(ActionEvent actionEvent) {
+        groupSearchPane.setVisible(false);
+        groupListPane.setVisible(true);
+    }
 }
