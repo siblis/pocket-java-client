@@ -80,7 +80,7 @@ public class ChatViewController implements Initializable {
 
     private String tsOld;
 
-    private int idDivMsg =0;
+    private int idDivMsg;
 
     //ссылка на desktop
     private Desktop desktop;
@@ -93,7 +93,7 @@ public class ChatViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         DOMdocument = null;
         tsOld = null; //чистка даты
-        idDivMsg =0; //присваивание ID
+        idDivMsg = 0; //присваивание ID
 
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
         initBackgroundWebView();
