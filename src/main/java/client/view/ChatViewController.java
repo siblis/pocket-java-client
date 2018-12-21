@@ -440,7 +440,7 @@ public class ChatViewController implements Initializable {
                         //if (desktop.isSupported(Desktop.Action.BROWSE)) {
                             desktop.browse(new URI(href.contains("://") ? href : "http://" + href + "/"));
                             //отменяем событие, чтобы ссылка не открывалась в самом webView
-                            //evt.preventDefault();
+                            evt.preventDefault();
                         /*} else {
                             System.out.println("Could not load URL: " + href);
                         }*/
