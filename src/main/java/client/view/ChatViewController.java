@@ -82,6 +82,11 @@ public class ChatViewController implements Initializable {
     @FXML
     private AnchorPane groupListPane;
 
+    @FXML
+    private AnchorPane groupNewPane;
+
+    @FXML
+    private JFXListView<CFXListElement> listViewAddToGroup;
 
 
     //
@@ -578,6 +583,23 @@ public class ChatViewController implements Initializable {
 
     public void onGroupSearchCancelButtonPressed(ActionEvent actionEvent) {
         groupSearchPane.setVisible(false);
+        groupListPane.setVisible(true);
+    }
+
+    public void onSearchGroupButtonClicked(ActionEvent actionEvent) {
+        groupListPane.setVisible(false);
+        groupSearchPane.setVisible(true);
+    }
+
+    public void onNewGroupClicked(ActionEvent actionEvent) {
+        groupListPane.setVisible(false);
+        listViewAddToGroup.setExpanded(true);
+        listViewAddToGroup = contactListView;
+        groupNewPane.setVisible(true);
+    }
+
+    public void onGroupNewCancelButtonPressed(ActionEvent actionEvent) {
+        groupNewPane.setVisible(false);
         groupListPane.setVisible(true);
     }
 }
