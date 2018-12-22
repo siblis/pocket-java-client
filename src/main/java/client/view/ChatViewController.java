@@ -372,13 +372,14 @@ public class ChatViewController implements Initializable {
     private void handleDisconnectButton() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
         stage.close();
+        clientController.disconnect();
+        Tray.currentStage = null;
         Main.initRootLayout();
         Main.showOverview();
     }
 
     @FXML
     private void handleExit() {
-        clientController.dbServiceClose();
         clientController.disconnect();
         System.exit(0);
     }
