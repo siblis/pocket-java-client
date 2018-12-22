@@ -31,9 +31,9 @@ public class ClientController {
     private static String token;
     private ChatViewController chatViewController;
 
-    private User receiver = null;
-    private User myUser = null;
-    private Connector conn = null;
+    private User receiver;
+    private User myUser;
+    private Connector conn;
     private List<Long> contactList;
     private List<CFXListElement> contactListOfCards;
 
@@ -44,6 +44,9 @@ public class ClientController {
     }
 
     private ClientController() {
+        receiver = null;
+        myUser = null;
+        conn = null;
     }
 
     public static ClientController getInstance() {
@@ -66,8 +69,8 @@ public class ClientController {
         loadChat();
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = dbService.getUserByName(receiver);
+    public void setReceiver(String receiverName) {
+        this.receiver = dbService.getUser(receiverName);
         loadChat();
     }
 
