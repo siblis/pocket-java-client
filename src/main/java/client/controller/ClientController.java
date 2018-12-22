@@ -193,8 +193,15 @@ public class ClientController {
     }
 
     public void disconnect() {
-        if (conn != null)
-            conn.getChatClient().close();
+        if (conn != null) {
+            conn.disconnect();
+            conn = null;
+        }
+        if (dbService != null) {
+            dbService.close();
+            dbService = null;
+        }
+        //instance = null; - рассмотреть необходимость
     }
 
     private Map<String, ContactListFromServer> convertContactListToMap(String jsonText) {
@@ -320,10 +327,6 @@ public class ClientController {
 
     public List<String> getAllUserNames() {
         return dbService.getAllUserNames();
-    }
-
-    public void dbServiceClose() {
-        if (dbService != null) dbService.close();
     }
 
     public String proceedRestorePassword(String email) {
