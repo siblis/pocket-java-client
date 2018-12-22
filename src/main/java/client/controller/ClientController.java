@@ -58,7 +58,7 @@ public class ClientController {
     }
 
     private void connect(String token) {
-        conn = new Connector(token, ClientController.getInstance());
+        conn = new Connector(token, getInstance());
     }
 
     public String getSenderName() {
