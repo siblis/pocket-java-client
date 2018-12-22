@@ -43,7 +43,7 @@ public class DataBaseService {
         return usersDao.get(id);
     }
 
-    public User getUserByName(String userName) {
+    public User getUser(String userName) {
         return usersDao.get(userName);
     }
 
