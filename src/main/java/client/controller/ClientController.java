@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static client.utils.Common.showAlert;
+import java.io.IOException;
 
 public class ClientController {
     private static final Logger controllerLogger = LogManager.getLogger(ClientController.class);
@@ -161,13 +162,19 @@ public class ClientController {
 
         String jsonMessage = new Gson().toJson(MTS);
         System.out.println(jsonMessage);
-        conn.getChatClient().send(jsonMessage);
+        try {
+            conn.getChatClient().send(jsonMessage);
 
-        dbService.addMessage(receiver.getUid(),
-                myUser.getUid(),
-                new Message(message, new Timestamp(System.currentTimeMillis()))
-        );
-        chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+            dbService.addMessage(receiver.getUid(),
+                    myUser.getUid(),
+                    new Message(message, new Timestamp(System.currentTimeMillis()))
+            );
+            chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+
+        } catch (IOException ex) {
+            showAlert("Потеряно соединение с сервером", Alert.AlertType.ERROR);
+            controllerLogger.error(ex);
+        }
 
     }
 
