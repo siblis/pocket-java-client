@@ -256,11 +256,7 @@ public class ClientController {
     private User convertJSONToUser(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        //TODO дебилизм, но пока с БД не разберемся так
-        System.out.println("новое АПИ MYSELFUSER "+jsonText);
-        String jsText="{\"u"+jsonText.substring(7);
-        System.out.println("переделано как старое АПИ MYSELFUSER "+jsText);
-        return gson.fromJson(jsText, User.class);
+        return gson.fromJson(jsonText, User.class);
     }
 
     public void addContact(String contact) {
