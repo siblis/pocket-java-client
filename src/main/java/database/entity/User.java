@@ -9,7 +9,8 @@ import java.util.List;
 public class User {
 
     @Id
-    private long uid;
+    @Column(name = "uid") // для совместимости с уже созданными БД
+    private long user_id;
 
     @Column
     private String account_name;
@@ -26,8 +27,8 @@ public class User {
     public User() {
     }
 
-    public User(long uid, String account_name, String email) {
-        this.uid = uid;
+    public User(long user_id, String account_name, String email) {
+        this.user_id = user_id;
         this.account_name = account_name;
         this.email = email;
         sentMess = new ArrayList<>();
@@ -50,11 +51,11 @@ public class User {
     }
 
     public long getUid() {
-        return uid;
+        return user_id;
     }
 
     public void setUid(long id) {
-        this.uid = id;
+        this.user_id = id;
     }
 
     public String getAccount_name() {
