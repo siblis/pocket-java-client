@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static client.utils.Common.showAlert;
+import java.io.IOException;
 
 public class ClientController {
     private static final Logger controllerLogger = LogManager.getLogger(ClientController.class);
@@ -31,9 +32,9 @@ public class ClientController {
     private static String token;
     private ChatViewController chatViewController;
 
-    private User receiver = null;
-    private User myUser = null;
-    private Connector conn = null;
+    private User receiver;
+    private User myUser;
+    private Connector conn;
     private List<Long> contactList;
     private List<CFXListElement> contactListOfCards;
 
@@ -44,6 +45,9 @@ public class ClientController {
     }
 
     private ClientController() {
+        receiver = null;
+        myUser = null;
+        conn = null;
     }
 
     public static ClientController getInstance() {
@@ -54,7 +58,7 @@ public class ClientController {
     }
 
     private void connect(String token) {
-        conn = new Connector(token, ClientController.getInstance());
+        conn = new Connector(token, getInstance());
     }
 
     public String getSenderName() {
@@ -66,8 +70,8 @@ public class ClientController {
         loadChat();
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = dbService.getUserByName(receiver);
+    public void setReceiver(String receiverName) {
+        this.receiver = dbService.getUser(receiverName);
         loadChat();
     }
 
@@ -158,13 +162,19 @@ public class ClientController {
 
         String jsonMessage = new Gson().toJson(MTS);
         System.out.println(jsonMessage);
-        conn.getChatClient().send(jsonMessage);
+        try {
+            conn.getChatClient().send(jsonMessage);
 
-        dbService.addMessage(receiver.getUid(),
-                myUser.getUid(),
-                new Message(message, new Timestamp(System.currentTimeMillis()))
-        );
-        chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+            dbService.addMessage(receiver.getUid(),
+                    myUser.getUid(),
+                    new Message(message, new Timestamp(System.currentTimeMillis()))
+            );
+            chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+
+        } catch (IOException ex) {
+            showAlert("Потеряно соединение с сервером", Alert.AlertType.ERROR);
+            controllerLogger.error(ex);
+        }
 
     }
 
@@ -190,8 +200,17 @@ public class ClientController {
     }
 
     public void disconnect() {
-        if (conn != null)
-            conn.getChatClient().close();
+        if (conn != null) {
+            conn.disconnect();
+            conn = null;
+        }
+        if (dbService != null) {
+            dbService.close();
+            dbService = null;
+        }
+        instance = null;
+        contactList = null;
+        contactListOfCards = null;
     }
 
     private Map<String, ContactListFromServer> convertContactListToMap(String jsonText) {
@@ -317,10 +336,6 @@ public class ClientController {
 
     public List<String> getAllUserNames() {
         return dbService.getAllUserNames();
-    }
-
-    public void dbServiceClose() {
-        if (dbService != null) dbService.close();
     }
 
     public String proceedRestorePassword(String email) {
