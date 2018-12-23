@@ -208,7 +208,9 @@ public class ClientController {
             dbService.close();
             dbService = null;
         }
-        //instance = null; - рассмотреть необходимость
+        instance = null;
+        contactList = null;
+        contactListOfCards = null;
     }
 
     private Map<String, ContactListFromServer> convertContactListToMap(String jsonText) {
