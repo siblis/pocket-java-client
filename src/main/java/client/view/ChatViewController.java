@@ -81,9 +81,7 @@ public class ChatViewController implements Initializable {
 
     private String tsOld;
 
-    private int idDivMsg;
-
-    private String idMsg = "msg"+idDivMsg;
+    private int idMsg;
 
     //ссылка на desktop
     private Desktop desktop;
@@ -92,19 +90,19 @@ public class ChatViewController implements Initializable {
     public ChatViewController() {
     }
 
-    public String getIdMsg() {
+    public int getIdMsg() {
         return idMsg;
     }
 
-    public void setIdMsg(String idMsg) {
+    public void setIdMsg(int idMsg) {
         this.idMsg = idMsg;
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         DOMdocument = null;
         tsOld = null; //чистка даты
-        idDivMsg = 0; //присваивание ID
+        idMsg = 0; //присваивание ID
 
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
         initBackgroundWebView();
@@ -295,8 +293,8 @@ public class ChatViewController implements Initializable {
 
     private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
         //ID требуется для скрипта вставки тегов
-        idDivMsg+=1;
-
+        idMsg+=1;
+        setIdMsg(idMsg);
 
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
         SimpleDateFormat dateFormat = initDateFormat("HH:mm");
@@ -334,7 +332,7 @@ public class ChatViewController implements Initializable {
         divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxtSender.setAttribute("class", attrClass+"S sender");
         divTxtMsg.setAttribute("class", attrClass+"M msg");
-        divTxtMsg.setAttribute("id", idMsg); //id
+        divTxtMsg.setAttribute("id", String.valueOf(idMsg)); //id
         divTime.setAttribute("class", attrClass+"T msgTime");
         divTxtSender.setTextContent(senderName);
         divTxtMsg.setTextContent(message);
@@ -495,7 +493,7 @@ public class ChatViewController implements Initializable {
             img += fs.toURI();
             //messageField .appendText(fs.getName() + "\n");
             //clientController.sendMessage(img);
-            System.out.println(idMsg);
+            System.out.println(getIdMsg());
             webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"50\" alt=\"lorem\"/>" +"'");
         }
     }
@@ -517,7 +515,7 @@ public class ChatViewController implements Initializable {
         }
 
         tsOld = null; //чистка даты
-        idDivMsg =0; //присваивание ID
+        idMsg =0; //присваивание ID
     }
 
     //метод смены иконки
