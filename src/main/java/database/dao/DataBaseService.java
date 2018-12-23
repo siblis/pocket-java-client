@@ -83,5 +83,6 @@ public class DataBaseService {
 
     public void close(){
         usersDao.close();
+        messageDao.close();
     }
 }
