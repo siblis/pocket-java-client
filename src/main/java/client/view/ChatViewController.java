@@ -456,6 +456,7 @@ public class ChatViewController implements Initializable {
         return listener;
     }
 
+    //метод загрузки файла
     @FXML
     public void handleSendFile() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
@@ -464,25 +465,21 @@ public class ChatViewController implements Initializable {
 
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
-            try {
-                this.desktop.open(file);//открывается файл на компьютере
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             List<File> files = Arrays.asList(file);
             if (files == null || files.isEmpty()) return;
             for(File f : files) {
-                messageField .appendText(f.getAbsolutePath() + "\n");
+                //messageField .appendText(f.getAbsolutePath() + "\n");
+                clientController.sendMessage(f.getName());
             }
         }
     }
 
     //метод добавления смайликов
+    @FXML
     public void handleSendSmile() {
         String img = "";
         File f = new File(getClass().getResource("/client/smiley").getFile());
         for (File fs : f.listFiles()) {
-            //img +=  "<img src=\"" + fs.toURI() + "\" width='50' />";
             img += fs.toURI();
             System.out.println(img);
             clientController.sendMessage(img);
