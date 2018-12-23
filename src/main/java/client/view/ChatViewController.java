@@ -35,6 +35,7 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import java.awt.*;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -81,6 +82,7 @@ public class ChatViewController implements Initializable {
     private String tsOld;
 
     private int idDivMsg;
+    private String idMsg = "msg"+idDivMsg;
 
     //ссылка на desktop
     private Desktop desktop;
@@ -281,10 +283,11 @@ public class ChatViewController implements Initializable {
      * Style create in initWebView
      *
      */
+
     private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
         //ID требуется для скрипта вставки тегов
         idDivMsg+=1;
-        String idMsg = "msg"+idDivMsg;
+
 
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
         SimpleDateFormat dateFormat = initDateFormat("HH:mm");
@@ -462,7 +465,6 @@ public class ChatViewController implements Initializable {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
 
-
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             List<File> files = Arrays.asList(file);
@@ -479,10 +481,13 @@ public class ChatViewController implements Initializable {
     public void handleSendSmile() {
         String img = "";
         File f = new File(getClass().getResource("/client/smiley").getFile());
+
         for (File fs : f.listFiles()) {
             img += fs.toURI();
-            System.out.println(img);
-            clientController.sendMessage(img);
+            //messageField .appendText(fs.getName() + "\n");
+            //clientController.sendMessage(img);
+            System.out.println(idMsg);
+            webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"50\" alt=\"lorem\"/>" +"'");
         }
     }
 
