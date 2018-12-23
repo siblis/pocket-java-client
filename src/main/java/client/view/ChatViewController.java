@@ -82,6 +82,7 @@ public class ChatViewController implements Initializable {
     private String tsOld;
 
     private int idDivMsg;
+
     private String idMsg = "msg"+idDivMsg;
 
     //ссылка на desktop
@@ -91,6 +92,14 @@ public class ChatViewController implements Initializable {
     public ChatViewController() {
     }
 
+    public String getIdMsg() {
+        return idMsg;
+    }
+
+    public void setIdMsg(String idMsg) {
+        this.idMsg = idMsg;
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         DOMdocument = null;
