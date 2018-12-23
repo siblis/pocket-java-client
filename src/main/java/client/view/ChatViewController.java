@@ -340,6 +340,7 @@ public class ChatViewController implements Initializable {
         webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
         //Подписка на событие по открытию ссылки
         addListenerLinkExternalBrowser(divTxtMsg);
+
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
@@ -475,14 +476,16 @@ public class ChatViewController implements Initializable {
             }
         }
     }
+
     //метод добавления смайликов
-    public void handleSendSmile(MouseEvent mouseEvent) {
+    public void handleSendSmile() {
         String img = "";
         File f = new File(getClass().getResource("/client/smiley").getFile());
         for (File fs : f.listFiles()) {
-            img +=  "<img src=\"" + fs.toURI() + "\" width='50' />";
-
+            //img +=  "<img src=\"" + fs.toURI() + "\" width='50' />";
+            img += fs.toURI();
             System.out.println(img);
+            clientController.sendMessage(img);
         }
     }
 
