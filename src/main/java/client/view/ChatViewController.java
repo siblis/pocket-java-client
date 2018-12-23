@@ -460,6 +460,7 @@ public class ChatViewController implements Initializable {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
 
+
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             try {
@@ -476,6 +477,13 @@ public class ChatViewController implements Initializable {
     }
     //метод добавления смайликов
     public void handleSendSmile(MouseEvent mouseEvent) {
+        String img = "";
+        File f = new File(getClass().getResource("/client/smiley").getFile());
+        for (File fs : f.listFiles()) {
+            img +=  "<img src=\"" + fs.toURI() + "\" width='50' />";
+
+            System.out.println(img);
+        }
     }
 
     /**
