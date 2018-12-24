@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -67,6 +68,9 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private Tab contacts;
+
+    @FXML
+    private Pane smilePane;
 
     //
     private WebEngine webEngine;
@@ -485,18 +489,24 @@ public class ChatViewController implements Initializable {
 
     //метод добавления смайликов
     @FXML
-    public void handleSendSmile() {
-        String img = "";
-        File f = new File(getClass().getResource("/client/smiley").getFile());
+    public void handleSendSmile() throws IOException {
+        smilePane.setVisible(true);
+        smilePane.setStyle("-fx-border-width: 5 5 5 5; " +
+        "          -fx-border-color: #3498DB #3498DB #3498DB #3498DB;" +
+                "-fx-border-insets: 0;" +
+                "          -fx-border-style: solid;");
 
-        for (File fs : f.listFiles()) {
-            img += fs.toURI();
-            //messageField .appendText(fs.getName() + "\n");
-            clientController.sendMessage(img);
-            System.out.println(getIdMsg());
-            setIdMsg(idMsg++);
-            webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"50\" alt=\"lorem\"/>" +"'");
-        }
+//        String img = "";
+//        File f = new File(getClass().getResource("/client/smiley").getFile());
+//
+//        for (File fs : f.listFiles()) {
+//            img += fs.toURI();
+//            //messageField .appendText(fs.getName() + "\n");
+//            clientController.sendMessage(img);
+//            System.out.println(getIdMsg());
+//            setIdMsg(idMsg++);
+//            webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"50\" alt=\"lorem\"/>" +"'");
+//        }
     }
 
     /**
