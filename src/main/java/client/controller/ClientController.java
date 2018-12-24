@@ -224,10 +224,9 @@ public class ClientController {
         Iterator it = contactList.iterator();
         while (it.hasNext()){
             Long id = (Long) it.next();
-            //TODO если разкомментировать с ними не работает. Не понятно почему.
-            /*if (id.equals(ClientController.getInstance().myUser.getUid())) {
+            if (id.equals(myUser.getUid())) {
                 continue;
-            }*/
+            }
             CFXListElement element = new CFXListElement();
             element.setUser(dbService.getUser(id));
 
