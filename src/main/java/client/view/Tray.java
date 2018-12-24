@@ -51,8 +51,7 @@ public class Tray {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     ClientController clientController = ClientController.getInstance();
-                    clientController.dbServiceClose();
-                    clientController.disconnect();
+                    if (clientController != null) clientController.disconnect();
                     System.out.println("Выход из приложения");
                     System.exit(0);
                 }

@@ -1,0 +1,10 @@
+.jfx-button {
+    -jxf-button-type: RAISED;
+    -fx-background-color: #FFE684;
+    -fx-text-fill: #004F70;
+    -fx-letter-spacing: 0.01em;
+}
+
+.text-field {
+    -fx-font-family: Roboto;
+}

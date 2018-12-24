@@ -97,4 +97,8 @@ public class MessageDAO {
 
         session.getTransaction().commit();
     }
+
+    void close(){
+        HibernateUtil.shutdown();
+    }
 }

@@ -6,10 +6,12 @@ import client.utils.Common;
 import client.utils.CustomTextArea;
 import client.utils.Sound;
 import client.view.customFX.CFXListElement;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -34,6 +36,7 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import java.awt.*;
+import java.awt.Label;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -66,6 +69,25 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private Tab contacts;
+
+    @FXML
+    private AnchorPane userSearchPane;
+
+    @FXML
+    private JFXButton bAddContact;
+
+    @FXML
+    private AnchorPane groupSearchPane;
+
+    @FXML
+    private AnchorPane groupListPane;
+
+    @FXML
+    private AnchorPane groupNewPane;
+
+    @FXML
+    private JFXListView<CFXListElement> listViewAddToGroup;
+
 
     //
     private WebEngine webEngine;
@@ -372,13 +394,14 @@ public class ChatViewController implements Initializable {
     private void handleDisconnectButton() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
         stage.close();
+        clientController.disconnect();
+        Tray.currentStage = null;
         Main.initRootLayout();
         Main.showOverview();
     }
 
     @FXML
     private void handleExit() {
-        clientController.dbServiceClose();
         clientController.disconnect();
         System.exit(0);
     }
@@ -406,14 +429,26 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleAddContactButton() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AddContactView.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Add contact");
-        stage.setResizable(false);
-        stage.setScene(new Scene(root));
-        stage.show();
+        contactListView.setVisible(false);
+        bAddContact.setVisible(false);
+        userSearchPane.setVisible(true);
+        userSearchPane.setFocusTraversable(true);
+
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AddContactView.fxml"));
+//        Parent root = fxmlLoader.load();
+//        Stage stage = new Stage();
+//        stage.initModality(Modality.APPLICATION_MODAL);
+//        stage.setTitle("Add contact");
+//        stage.setResizable(false);
+//        stage.setScene(new Scene(root));
+//        stage.show();
+
+    }
+    @FXML
+    private void onUserSearchButtonClicked(){
+        bAddContact.setVisible(true);
+        contactListView.setVisible(true);
+        userSearchPane.setVisible(false);
     }
 
     //подписка на обработку открытия ссылок
@@ -533,4 +568,39 @@ public class ChatViewController implements Initializable {
         return imageView;
     }
 
+    public void onGroupSearchButtonClicked(ActionEvent actionEvent) {
+        groupSearchPane.setVisible(false);
+    }
+
+    public void handleGroupSearchButton(MouseEvent mouseEvent) {
+        groupListPane.setVisible(false);
+        groupSearchPane.setVisible(true);
+    }
+
+    public void handleGroupNewButton(MouseEvent mouseEvent) {
+
+        groupListPane.setVisible(false);
+    }
+
+    public void onGroupSearchCancelButtonPressed(ActionEvent actionEvent) {
+        groupSearchPane.setVisible(false);
+        groupListPane.setVisible(true);
+    }
+
+    public void onSearchGroupButtonClicked(ActionEvent actionEvent) {
+        groupListPane.setVisible(false);
+        groupSearchPane.setVisible(true);
+    }
+
+    public void onNewGroupClicked(ActionEvent actionEvent) {
+        groupListPane.setVisible(false);
+        listViewAddToGroup.setExpanded(true);
+        listViewAddToGroup = contactListView;
+        groupNewPane.setVisible(true);
+    }
+
+    public void onGroupNewCancelButtonPressed(ActionEvent actionEvent) {
+        groupNewPane.setVisible(false);
+        groupListPane.setVisible(true);
+    }
 }

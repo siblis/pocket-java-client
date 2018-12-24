@@ -1,166 +1,193 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-        <?import client.utils.CustomTextArea?>
-        <?import javafx.geometry.Insets?>
-        <?import javafx.scene.control.Label?>
-        <?import javafx.scene.control.Menu?>
-        <?import javafx.scene.control.MenuBar?>
-        <?import javafx.scene.control.MenuItem?>
-        <?import javafx.scene.control.SeparatorMenuItem?>
-        <?import javafx.scene.control.Tab?>
-        <?import javafx.scene.control.TabPane?>
-        <?import javafx.scene.control.TextField?>
-        <?import javafx.scene.layout.AnchorPane?>
-        <?import javafx.scene.layout.BorderPane?>
-        <?import javafx.scene.web.WebView?>
-        <?import com.jfoenix.controls.JFXListView?>
+<?import client.utils.CustomTextArea?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
 
-<BorderPane prefHeight="450.0" prefWidth="600.0" stylesheets="/client/styles/ChatStyle.css"
-            xmlns="http://javafx.com/javafx/8.0.172" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="client.view.ChatViewController">
+<BorderPane prefHeight="450.0" prefWidth="600.0" stylesheets="/client/styles/ChatStyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.ChatViewController">
     <center>
 
 
-        <AnchorPane fx:id="messagePanel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" prefWidth="600.0" minWidth="400.0">
-            <AnchorPane prefHeight="49.0" styleClass="menu-bar" AnchorPane.leftAnchor="0.0"
-                        AnchorPane.rightAnchor="460.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane fx:id="messagePanel" minWidth="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane prefHeight="49.0" styleClass="menu-bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="460.0" AnchorPane.topAnchor="0.0">
                 <children>
-                    <MenuBar layoutX="26.0" layoutY="6.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                             minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="41.0"
-                             AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="6.0">
+                    <MenuBar layoutX="26.0" layoutY="6.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="41.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="6.0">
                         <menus>
                             <Menu id="menu" mnemonicParsing="false">
                                 <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#handleDisconnectButton"
-                                              text="Отключиться..."/>
-                                    <SeparatorMenuItem/>
-                                    <MenuItem mnemonicParsing="false" text="Профиль"/>
+                                    <MenuItem mnemonicParsing="false" onAction="#handleDisconnectButton" text="Отключиться..." />
+                                    <SeparatorMenuItem />
+                                    <MenuItem mnemonicParsing="false" text="Профиль" />
                                 </items>
                             </Menu>
                         </menus>
                     </MenuBar>
-                    <TextField id="find" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="230.0"
-                               promptText="Найти..." AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="9.0"/>
+                    <TextField id="find" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="230.0" promptText="Найти..." AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="9.0" />
                 </children>
             </AnchorPane>
-            <AnchorPane minWidth="-Infinity" minHeight="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0"
-                        styleClass="menu-bar" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0"
-                        AnchorPane.topAnchor="0.0">
+            <AnchorPane minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0" styleClass="menu-bar" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <children>
-                    <MenuBar layoutX="49.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                             minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" prefHeight="29.0"
-                             prefWidth="42.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="41.0"
-                             AnchorPane.topAnchor="16.0">
+                    <MenuBar layoutX="49.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" prefHeight="29.0" prefWidth="42.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="41.0" AnchorPane.topAnchor="16.0">
                         <Menu id="leftMenu">
-                            <MenuItem mnemonicParsing="false" text="Настройки связи"/>
-                            <MenuItem mnemonicParsing="false" text="Настройки внешнего вида"/>
-                            <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Выход"/>
+                            <MenuItem mnemonicParsing="false" text="Настройки связи" />
+                            <MenuItem mnemonicParsing="false" text="Настройки внешнего вида" />
+                            <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Выход" />
                         </Menu>
 
                     </MenuBar>
                 </children>
             </AnchorPane>
-            <TabPane maxWidth="410.0" minWidth="-Infinity" prefWidth="300.0" tabMaxHeight="69.0" tabMinHeight="69.0"
-                     tabMinWidth="130.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                     AnchorPane.topAnchor="49.0">
-                <tabs>
-                    <Tab fx:id="chats" closable="false" onSelectionChanged="#handleOnChatSelected" text="чаты">
-                        <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                <children>
-                                    <AnchorPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="145.0"
-                                                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-                                        <children>
-                                            <Label id="addContact" maxHeight="-Infinity" maxWidth="-Infinity"
-                                                   minHeight="-Infinity" minWidth="-Infinity"
-                                                   onMouseClicked="#handleAddContactButton" prefHeight="50.0"
-                                                   text="Добавить группу" AnchorPane.leftAnchor="11.0"
-                                                   AnchorPane.topAnchor="79.0">
-                                                <padding>
-                                                    <Insets right="70.0"/>
-                                                </padding>
-                                            </Label>
-                                            <Label id="addContact" maxHeight="-Infinity" maxWidth="-Infinity"
-                                                   minHeight="-Infinity" minWidth="-Infinity"
-                                                   onMouseClicked="#handleAddContactButton" prefHeight="50.0"
-                                                   text="Создать свою группу" AnchorPane.leftAnchor="11.0"
-                                                   AnchorPane.topAnchor="15.0">
-                                                <padding>
-                                                    <Insets right="70.0"/>
-                                                </padding>
-                                            </Label>
-                                        </children>
-                                    </AnchorPane>
-                                    <AnchorPane prefHeight="372.0" prefWidth="201.0" AnchorPane.bottomAnchor="164.0"
-                                                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                AnchorPane.topAnchor="0.0"/>
-                                </children>
-                            </AnchorPane>
-                        </content>
-                    </Tab>
-                    <Tab fx:id="contacts" closable="false" onSelectionChanged="#handleOnContactSelected"
-                         text="Контакты">
-                        <content>
+         <AnchorPane layoutY="48.0" prefHeight="353.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                  <TabPane maxWidth="410.0" minWidth="-Infinity" prefHeight="402.0" prefWidth="300.0" tabMaxHeight="69.0" tabMinHeight="69.0" tabMinWidth="130.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="49.0">
+                      <tabs>
+                          <Tab fx:id="chats" closable="false" onSelectionChanged="#handleOnChatSelected" text="чаты">
+                              <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="271.0" prefWidth="300.0">
+                                      <children>
+                                          <AnchorPane fx:id="groupListPane" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="145.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                              <children>
+                                       <JFXListView layoutY="-2.0" prefHeight="202.0" prefWidth="200.0" AnchorPane.bottomAnchor="111.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                  <JFXButton id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onSearchGroupButtonClicked" onMouseClicked="#handleGroupSearchButton" prefHeight="50.0" text="Добавить группу" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="11.0">
+                                                      <padding>
+                                                          <Insets right="70.0" />
+                                                      </padding>
+                                                  </JFXButton>
+                                                  <JFXButton id="addContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onNewGroupClicked" onMouseClicked="#handleGroupNewButton" prefHeight="50.0" text="Создать свою группу" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="11.0">
+                                                      <padding>
+                                                          <Insets right="70.0" />
+                                                      </padding>
+                                                  </JFXButton>
+                                              </children>
+                                          </AnchorPane>
+                                 <AnchorPane fx:id="groupSearchPane" prefHeight="326.0" prefWidth="300.0" snapToPixel="false" stylesheets="@../styles/searchGroupPane.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                       <JFXTextField layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Название группы..." style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
+                                          <font>
+                                             <Font name="Serif Italic" size="14.0" />
+                                          </font>
+                                       </JFXTextField>
+                                       <JFXButton mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="60.0">
+                                          <graphic>
+                                             <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          </graphic></JFXButton>
+                                       <JFXButton mnemonicParsing="false" onAction="#onGroupSearchCancelButtonPressed" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="60.0">
+                                          <graphic>
+                                             <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          </graphic>
+                                       </JFXButton>
+                                       <JFXListView prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
+                                    </children>
+                                 </AnchorPane>
+                                 <AnchorPane fx:id="groupNewPane" prefHeight="326.0" prefWidth="300.0" snapToPixel="false" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="54.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                       <JFXTextField layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Найти..." style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
+                                          <font>
+                                             <Font name="Serif Italic" size="14.0" />
+                                          </font>
+                                       </JFXTextField>
+                                       <JFXButton mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="60.0">
+                                          <graphic>
+                                             <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          </graphic>
+                                       </JFXButton>
+                                       <JFXButton mnemonicParsing="false" onAction="#onGroupNewCancelButtonPressed" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="60.0">
+                                          <graphic>
+                                             <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                          </graphic>
+                                       </JFXButton>
+                                       <JFXListView fx:id="listViewAddToGroup" prefHeight="98.0" prefWidth="300.0" AnchorPane.bottomAnchor="168.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
+                                       <JFXTextField layoutX="18.0" layoutY="218.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                       <Label layoutX="16.0" layoutY="214.0" text="Описание группы" textFill="WHITE" AnchorPane.bottomAnchor="95.0" AnchorPane.leftAnchor="10.0">
+                                          <font>
+                                             <Font name="System Bold" size="14.0" />
+                                          </font>
+                                       </Label>
+                                       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="54.0" layoutY="158.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" AnchorPane.bottomAnchor="114.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                       <Label layoutX="24.0" layoutY="163.0" text="Название группы" textFill="WHITE" AnchorPane.bottomAnchor="149.0" AnchorPane.leftAnchor="10.0">
+                                          <font>
+                                             <Font name="System Bold" size="14.0" />
+                                          </font>
+                                       </Label>
+                                       <JFXTextField layoutX="20.0" layoutY="241.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                       <JFXListView layoutY="54.0" prefHeight="104.0" prefWidth="299.0" AnchorPane.bottomAnchor="168.0" AnchorPane.topAnchor="55.0" />
+                                    </children>
+                                 </AnchorPane>
+                                      </children>
+                                  </AnchorPane>
+                              </content>
+                          </Tab>
+                          <Tab fx:id="contacts" closable="false" onSelectionChanged="#handleOnContactSelected" text="Контакты">
+                              <content>
 
-                            <AnchorPane>
-                                <children>
-                                    <AnchorPane prefHeight="372.0" prefWidth="201.0" AnchorPane.bottomAnchor="82.0"
-                                                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                AnchorPane.topAnchor="0.0">
-                                        <children>
-                                            <JFXListView fx:id="contactListView" maxWidth="410.0" minWidth="200"
-                                                         onMouseClicked="#handleClientChoice" prefHeight="400.0"
-                                                         prefWidth="410.0" styleClass="contactsListView"
-                                                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                                         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
-                                        </children>
-                                    </AnchorPane>
-                                    <AnchorPane layoutX="11.0" layoutY="334.0" maxHeight="-Infinity"
-                                                minHeight="-Infinity" prefHeight="82.0" AnchorPane.bottomAnchor="0.0"
-                                                AnchorPane.leftAnchor="0.0">
-                                        <children>
-                                            <Label id="addContact" maxHeight="-Infinity" maxWidth="-Infinity"
-                                                   minHeight="-Infinity" minWidth="-Infinity"
-                                                   onMouseClicked="#handleAddContactButton" prefHeight="50.0"
-                                                   text="Добавить контакт" AnchorPane.bottomAnchor="16.0"
-                                                   AnchorPane.leftAnchor="11.0">
-                                                <padding>
-                                                    <Insets right="70.0"/>
-                                                </padding>
-                                            </Label>
-                                        </children>
-                                    </AnchorPane>
-                                </children>
-                            </AnchorPane>
-                        </content>
-                    </Tab>
-                </tabs>
-            </TabPane>
+                                  <AnchorPane>
+                                      <children>
+                                          <AnchorPane prefHeight="372.0" prefWidth="201.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                              <children>
+                                                  <JFXListView fx:id="contactListView" maxWidth="410.0" minWidth="200" onMouseClicked="#handleClientChoice" prefHeight="400.0" prefWidth="410.0" styleClass="contactsListView" AnchorPane.bottomAnchor="66.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                              </children>
+                                          </AnchorPane>
+                                 <AnchorPane fx:id="userSearchPane" prefHeight="100.0" prefWidth="284.0" stylesheets="@../styles/searchUserPane.css" visible="false" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                       <Rectangle fill="#3498db" height="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
+                                       <TextField layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Введите e-mail пользователя" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
+                                          <font>
+                                             <Font name="Serif Italic" size="14.0" />
+                                          </font>
+                                       </TextField>
+                                       <JFXButton buttonType="RAISED" layoutX="128.0" layoutY="60.0" mnemonicParsing="false" onAction="#onUserSearchButtonClicked" ripplerFill="#ffe684" style="-fx-background-fill: FFE68; -fx-border-radius: 8px;" text="Найти" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="75.0">
+                                          <font>
+                                             <Font size="16.0" />
+                                          </font>
+                                       </JFXButton>
+                                    </children>
+                                 </AnchorPane>
+                                          <AnchorPane layoutX="11.0" layoutY="334.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="82.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                                              <children>
+                                                  <JFXButton id="addContact" fx:id="bAddContact" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleAddContactButton" prefHeight="50.0" text="Добавить контакт" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="11.0">
+                                                      <padding>
+                                                          <Insets right="70.0" />
+                                                      </padding>
+                                                  </JFXButton>
+                                              </children>
+                                          </AnchorPane>
+                                      </children>
+                                  </AnchorPane>
+                              </content>
+                          </Tab>
+                      </tabs>
+                  </TabPane>
+            </children>
+         </AnchorPane>
 
 
-            <WebView fx:id="messageWebView"
-                     prefWidth="500" minWidth="-Infinity" maxWidth="1031.0"
-                     prefHeight="400" minHeight="-Infinity" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="300.0"
-                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0"/>
-            <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0"
-                            prefWidth="500"
-                            maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50"
-                            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0">
+            <WebView fx:id="messageWebView" maxWidth="1031.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400" prefWidth="500" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0" />
+            <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0" maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50" prefWidth="500" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0">
                 <padding>
-                    <Insets left="69.0"/>
+                    <Insets left="69.0" />
                 </padding>
             </CustomTextArea>
 
-            <Label id="vector" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                   minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendMessage" prefHeight="18.0"
-                   prefWidth="20.5" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="81.5"/>
-            <Label id="smailik" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                   minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendSmile" prefHeight="24.0"
-                   prefWidth="24.0" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="31.0"/>
-            <Label id="skrepka" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                   minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendFile" prefHeight="35.0"
-                   prefWidth="35.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="316.0"/>
+            <Label id="vector" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendMessage" prefHeight="18.0" prefWidth="20.5" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="81.5" />
+            <Label id="smailik" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendSmile" prefHeight="24.0" prefWidth="24.0" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="31.0" />
+            <Label id="skrepka" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendFile" prefHeight="35.0" prefWidth="35.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="316.0" />
 
         </AnchorPane>
 
