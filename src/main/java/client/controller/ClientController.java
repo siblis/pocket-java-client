@@ -213,12 +213,10 @@ public class ClientController {
         contactListOfCards = null;
     }
 
-    private Map<String, ContactListFromServer> convertContactListToMap(String jsonText) {
+    private ContactListFromServer[] convertContactListToMap(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        Type itemsMapType = new TypeToken<Map<String, ContactListFromServer>>() {
-        }.getType();
-        return gson.fromJson(jsonText, itemsMapType);
+        return gson.fromJson(jsonText, ContactListFromServer[].class);
     }
 
     private void synchronizeContactListAsAdressBook(){
@@ -247,13 +245,10 @@ public class ClientController {
         try {
             ServerResponse response = HTTPSRequest.getContacts(token);
             if (response != null) {
-                Map<String, ContactListFromServer> map = convertContactListToMap(response.getResponseJson());
-                for (Map.Entry<String, ContactListFromServer> entry : map.entrySet()) {
-                    if (!contactList.contains(entry.getValue().getId())) {
-                        User user = new User();
-                        user.setUid(entry.getValue().getId());
-                        user.setAccount_name(entry.getValue().getName());
-                        user.setEmail(entry.getKey());
+                for (ContactListFromServer entry : convertContactListToMap(response.getResponseJson())) {
+                    if (!contactList.contains(entry.getId())) {
+                        User user = new User(entry.getId(), entry.getName(), entry.getEmail());
+//                        user.setStatus(entry.getStatus()); //TODO добавить статусы в класс пользователей?
                         CFXListElement element = new CFXListElement();
                         element.setUser(user);
                         contactListOfCards.add(element);
