@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class MessageFromServer {
     private long receiver;
-    private String message;
+    private String text;
     private long senderid;
     private String sender_name;
     private String timestamp;
@@ -21,11 +21,11 @@ public class MessageFromServer {
     }
 
     public String getMessage() {
-        return message;
+        return text;
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        this.text = message;
     }
 
     public long getSenderid() {
