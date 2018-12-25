@@ -83,7 +83,7 @@
                                              <Font name="Serif Italic" size="14.0" />
                                           </font>
                                        </JFXTextField>
-                                       <JFXButton mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="60.0">
+                                       <JFXButton mnemonicParsing="false" onAction="#handleAddButton" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="60.0">
                                           <graphic>
                                              <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
                                           </graphic></JFXButton>
@@ -103,7 +103,7 @@
                                              <Font name="Serif Italic" size="14.0" />
                                           </font>
                                        </JFXTextField>
-                                       <JFXButton mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="60.0">
+                                       <JFXButton mnemonicParsing="false" onAction="#handleAddButton" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="60.0">
                                           <graphic>
                                              <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
                                           </graphic>
