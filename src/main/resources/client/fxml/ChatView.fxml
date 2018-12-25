@@ -101,7 +101,7 @@
                                              <Font name="System Bold" size="14.0" />
                                           </font>
                                        </Label>
-                                       <JFXTextField layoutX="20.0" layoutY="241.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                       <JFXTextField fx:id="creategroupName" onAction="#handleCreateButton" layoutX="20.0" layoutY="241.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                        <JFXListView layoutY="54.0" prefHeight="104.0" prefWidth="299.0" AnchorPane.bottomAnchor="168.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0" />
                                     </children>
                                  </AnchorPane>
