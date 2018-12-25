@@ -1,5 +1,6 @@
 package client.controller;
 
+import client.model.Group;
 import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
@@ -270,6 +271,99 @@ public class ClientController {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(jsonText, User.class);
+    }
+
+    public Group getGroupInfo(String groupName){
+        Group group = new Group();
+        try {
+            ServerResponse response = HTTPSRequest.getGroupInfo(groupName,token);
+            switch (response.getResponseCode()){
+                case 200:
+                    System.out.println("получение информации о группе");
+                    GsonBuilder builder = new GsonBuilder();
+                    Gson gson = builder.create();
+                    group = gson.fromJson(response.getResponseJson(), Group.class);
+                    return group;
+                case 400:
+                    System.out.println("Проблемы с токеном");
+                    break;
+                case 404:
+                    System.out.println("группа не найдена");
+                    break;
+                case 500:
+                    System.out.println("ошибка сервера");
+                    break;
+                default:
+                    System.out.println("другая ошибка");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return group;
+    }
+
+    public void joinGroup(String groupName){
+        Group group = getGroupInfo(groupName);
+        addUserGroup(group.getGid(), Long.toString(myUser.getUid()));
+    }
+
+    public void addGroup(String group_name){
+        AddGroup addGroup = new AddGroup(group_name);
+        String requestJSON = new Gson().toJson(addGroup);
+
+        try {
+            ServerResponse response = HTTPSRequest.addGroup(requestJSON, token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    showAlert("Группа" + group_name + "успешно создана", Alert.AlertType.INFORMATION);
+                    //addContactToDB(convertJSONToUser(response.getResponseJson()));
+                    //if (chatViewController != null) chatViewController.fillContactListView();
+                    break;
+                case 400:
+                    showAlert("Ошибка запроса", Alert.AlertType.ERROR);
+                    break;
+                case 404:
+                    showAlert("Невозможно создать группу с названием: " + group_name, Alert.AlertType.ERROR);
+                    break;
+                case 500:
+                    showAlert("Ошибка сервера", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.addGroup_error", e);
+        }
+
+    }
+
+    public void addUserGroup(String group_id, String new_user_id) {
+        AddUserGroup aug = new AddUserGroup(group_id, new_user_id);
+        String requestJSON = new Gson().toJson(aug);
+
+        try {
+            ServerResponse response = HTTPSRequest.addUserGroup(requestJSON, token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    showAlert("Группа успешно добавлена", Alert.AlertType.INFORMATION);
+                    //addContactToDB(convertJSONToUser(response.getResponseJson()));
+                    //if (chatViewController != null) chatViewController.fillContactListView();
+                    break;
+                case 400:
+                    showAlert("Ошибка запроса", Alert.AlertType.ERROR);
+                    break;
+                case 404:
+                    showAlert("Группа не найдена или вы уже состоите в ней", Alert.AlertType.ERROR);
+                    break;
+                case 500:
+                    showAlert("Ошибка сервера", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.addUserGroup_error", e);
+        }
     }
 
     public void addContact(String contact) {
