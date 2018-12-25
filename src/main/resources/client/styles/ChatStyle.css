@@ -1,7 +1,7 @@
 
 #menu {
     -fx-background-color: #3498DB;
-    -fx-background-image: url("../images/chat/Shape.png");
+
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
 }
@@ -85,5 +85,9 @@
 
 #contactListView:pressed {
     -fx-background-color: #3498DB;
+}
+
+.hamburger StackPane{
+    -fx-background-color: white;
 }
 

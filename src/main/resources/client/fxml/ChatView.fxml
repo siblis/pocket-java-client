@@ -3,6 +3,7 @@
 <?import client.utils.CustomTextArea?>
 <?import client.view.customFX.CFXMyProfile?>
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXHamburger?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import com.jfoenix.controls.JFXTextField?>
@@ -167,7 +168,7 @@
                     <TextField id="find" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="230.0" promptText="Найти..." AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="9.0" />
                     <MenuBar layoutX="14.0" layoutY="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="41.0">
                         <menus>
-                            <Menu id="menu" mnemonicParsing="false">
+                            <Menu id="menu" fx:id="menuLeff" mnemonicParsing="false" onHidden="#onHideMenuLeft">
                                 <items>
                                     <MenuItem mnemonicParsing="false" onAction="#handleDisconnectButton" text="Отключиться..." />
                                     <SeparatorMenuItem />
@@ -176,6 +177,7 @@
                             </Menu>
                         </menus>
                     </MenuBar>
+               <JFXHamburger fx:id="hamburger" layoutX="53.0" onMouseClicked="#onHamburgerClicked" prefHeight="42.0" prefWidth="47.0" styleClass="hamburger" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                 </children>
             </AnchorPane>
             <AnchorPane minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0" styleClass="menu-bar" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

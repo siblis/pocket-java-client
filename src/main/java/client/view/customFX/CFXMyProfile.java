@@ -25,10 +25,13 @@ public class CFXMyProfile extends AnchorPane {
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }
+
     }
 
     @FXML
     private void closeButtonPressed(){
       PaneProvider.getMyProfileScrollPane().setVisible(false);
+      PaneProvider.getTransitionBack().setRate(-1);
+      PaneProvider.getTransitionBack().play();
     }
 }

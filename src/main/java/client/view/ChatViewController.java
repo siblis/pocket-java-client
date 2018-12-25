@@ -8,7 +8,10 @@ import client.utils.Sound;
 import client.view.customFX.CFXListElement;
 import client.view.customFX.CFXMyProfile;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -16,9 +19,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.AccessibleAction;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -94,6 +100,11 @@ public class ChatViewController implements Initializable {
     @FXML
     private JFXListView<CFXListElement> listViewAddToGroup;
 
+    @FXML
+    private Menu menuLeff;
+
+    @FXML
+    private JFXHamburger hamburger;
 
     //
     private WebEngine webEngine;
@@ -113,6 +124,8 @@ public class ChatViewController implements Initializable {
     //ссылка на desktop
     private Desktop desktop;
     ////////////////////////
+    HamburgerBasicCloseTransition transition;
+    HamburgerBackArrowBasicTransition transitionBack;
 
     public ChatViewController() {
     }
@@ -147,6 +160,9 @@ public class ChatViewController implements Initializable {
                 event.consume();
             }
         });
+        transition = new HamburgerBasicCloseTransition(hamburger);
+        transitionBack = new HamburgerBackArrowBasicTransition(hamburger);
+        PaneProvider.setTransitionBack(transitionBack);
     }
 
 
@@ -612,5 +628,30 @@ public class ChatViewController implements Initializable {
     public void onMyProfileOpen(ActionEvent actionEvent) {
         PaneProvider.setMyProfileScrollPane(myProfilePane);
         myProfilePane.setVisible(true);
+        PaneProvider.getTransitionBack().setRate(1);
+        PaneProvider.getTransitionBack().play();
+    }
+
+    public void onHamburgerClicked(MouseEvent mouseEvent) {
+        if (myProfilePane.isVisible()) {
+            myProfilePane.setVisible(false);
+            PaneProvider.getTransitionBack().setRate(-1);
+            transitionBack.play();
+        }
+        else if (!menuLeff.isShowing()){
+            transition.setRate(1);
+            transition.play();
+            menuLeff.show();
+        } else {
+            menuLeff.hide();
+        }
+
+    }
+
+    public void onHideMenuLeft(javafx.event.Event event) {
+
+        transition.setRate(-1);
+
+        transition.play();
     }
 }
