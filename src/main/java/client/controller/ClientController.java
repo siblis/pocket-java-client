@@ -146,7 +146,8 @@ public class ClientController {
                 controllerLogger.error("HTTPSRequest.getUser_error", e);
             }
         }
-        chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
+        //todo посмотреть откуда
+        chatViewController.showMessage(mfs.getSender_name(), true, mfs.getMessage(), mfs.getTimestamp(), true);
         dbService.addMessage(mfs.getReceiver(),
                 mfs.getSenderid(),
                 new Message(mfs.getMessage(),
@@ -169,7 +170,7 @@ public class ClientController {
                     myUser.getUid(),
                     new Message(message, new Timestamp(System.currentTimeMillis()))
             );
-            chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+            chatViewController.showMessage(myUser.getAccount_name(), myUser.getSex(), message, new Timestamp(System.currentTimeMillis()), false);
 
         } catch (IOException ex) {
             showAlert("Потеряно соединение с сервером", Alert.AlertType.ERROR);
@@ -184,7 +185,7 @@ public class ClientController {
 
         for (Message message :
                 converstation) {
-            chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
+            chatViewController.showMessage(message.getSender().getAccount_name(), message.getSender().getSex(), message.getText(), message.getTime(), false);
             contactListOfCards.get(getListIDbyUID(message.getSender().getUid())).setBody(message.getText());
 
         }

@@ -198,8 +198,8 @@ public class ChatViewController implements Initializable {
                         ".msgLogo { \n"+
                             "flex: none; \n"+
                             "align-self: start; \n"+
-                            "width: 35px; \n"+
-                            "height: 35px; \n"+
+                            "width: 33px; \n"+
+                            "height: 33px; \n"+
                             "background: lightgrey; \n"+
                             "border-radius: 50%; \n"+
                         "} \n"+
@@ -269,6 +269,27 @@ public class ChatViewController implements Initializable {
         }
     }
 
+    //  инициализация картинки аватара
+    //if sex = true, is a woman
+    //   sex = false, is a man
+    private String initAvatar(boolean sex) {
+        String path = "";
+        if (sex) {
+            path = "client/images/defaultAvatar/girl.png"; //картинка фона
+        }else {
+            path = "client/images/defaultAvatar/man.png"; //картинка фона
+        }
+        ClassLoader cl = this.getClass().getClassLoader();
+        String avatar = "";
+        try {
+            avatar = cl.getResource(path).toURI().toString();
+        }catch (Exception e) {
+            //todo перенести в логирование
+            e.printStackTrace();
+        }
+        return avatar;
+    }
+
     /**
      *
      * @param pattern
@@ -303,10 +324,15 @@ public class ChatViewController implements Initializable {
      * Style create in initWebView
      *
      */
-    private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
+    private void createMessageDiv(String message, String senderName, boolean senderSex, Timestamp timestamp, String attrClass){
         //ID требуется для скрипта вставки тегов
         idDivMsg+=1;
         String idMsg = "msg"+idDivMsg;
+        //получаем аватар
+        String avatar = initAvatar(senderSex);
+        String styleStr = "background-image: url(" + avatar + "); background-size: cover";
+        System.out.println(styleStr);
+        //
 
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
         SimpleDateFormat dateFormat = initDateFormat("HH:mm");
@@ -341,6 +367,7 @@ public class ChatViewController implements Initializable {
         Element divTime = DOMdocument.createElement("div");
         div.setAttribute("class", "message");
         divLogo.setAttribute("class", "msgLogo");
+        divLogo.setAttribute("style", styleStr);
         divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxtSender.setAttribute("class", attrClass+"S sender");
         divTxtMsg.setAttribute("class", attrClass+"M msg");
@@ -364,7 +391,7 @@ public class ChatViewController implements Initializable {
         addListenerLinkExternalBrowser(divTxtMsg);
     }
 
-    public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
+    public void showMessage(String senderName, boolean senderSex, String message, Timestamp timestamp, boolean isNew) {
         if (isNew) {
             Sound.playSoundNewMessage().join();
         }
@@ -382,11 +409,11 @@ public class ChatViewController implements Initializable {
             webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     DOMdocument = webEngine.getDocument();
-                    createMessageDiv(message, senderName, timestamp, attrClass2);
+                    createMessageDiv(message, senderName, senderSex, timestamp, attrClass2);
                 }
             });
         }else {
-            createMessageDiv(message, senderName, timestamp, attrClass);
+            createMessageDiv(message, senderName, senderSex, timestamp, attrClass);
         }
     }
 
