@@ -6,6 +6,7 @@ import client.utils.Common;
 import client.utils.CustomTextArea;
 import client.utils.Sound;
 import client.view.customFX.CFXListElement;
+import client.view.customFX.CFXMyProfile;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
@@ -18,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -37,6 +39,7 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import java.awt.*;
 import java.awt.Label;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -84,6 +87,9 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private AnchorPane groupNewPane;
+
+    @FXML
+    private ScrollPane myProfilePane;
 
     @FXML
     private JFXListView<CFXListElement> listViewAddToGroup;
@@ -595,12 +601,16 @@ public class ChatViewController implements Initializable {
     public void onNewGroupClicked(ActionEvent actionEvent) {
         groupListPane.setVisible(false);
         listViewAddToGroup.setExpanded(true);
-        listViewAddToGroup = contactListView;
         groupNewPane.setVisible(true);
     }
 
     public void onGroupNewCancelButtonPressed(ActionEvent actionEvent) {
         groupNewPane.setVisible(false);
         groupListPane.setVisible(true);
+    }
+
+    public void onMyProfileOpen(ActionEvent actionEvent) {
+        PaneProvider.setMyProfileScrollPane(myProfilePane);
+        myProfilePane.setVisible(true);
     }
 }
