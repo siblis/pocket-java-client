@@ -78,7 +78,7 @@
                                           </AnchorPane>
                                  <AnchorPane fx:id="groupSearchPane" prefHeight="326.0" prefWidth="300.0" snapToPixel="false" stylesheets="@../styles/searchGroupPane.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                                       <JFXTextField layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Название группы..." style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
+                                       <JFXTextField fx:id="groupName" layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Название группы..." onAction="#handleAddButton" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
                                           <font>
                                              <Font name="Serif Italic" size="14.0" />
                                           </font>

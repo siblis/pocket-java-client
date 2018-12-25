@@ -8,6 +8,7 @@ import client.utils.Sound;
 import client.view.customFX.CFXListElement;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -88,6 +89,8 @@ public class ChatViewController implements Initializable {
     @FXML
     private JFXListView<CFXListElement> listViewAddToGroup;
 
+    @FXML
+    private JFXTextField groupName;
 
     //
     private WebEngine webEngine;
@@ -602,5 +605,11 @@ public class ChatViewController implements Initializable {
     public void onGroupNewCancelButtonPressed(ActionEvent actionEvent) {
         groupNewPane.setVisible(false);
         groupListPane.setVisible(true);
+    }
+
+    @FXML
+    public void handleAddButton() {
+        clientController.joinGroup(groupName.getText());
+        System.out.println(groupName);
     }
 }
