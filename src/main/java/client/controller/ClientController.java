@@ -185,7 +185,7 @@ public class ClientController {
         for (Message message :
                 converstation) {
             chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
-            contactListOfCards.get(getListIDbyUID(message.getSender().getUid())).setBody(message.getText());
+            contactListOfCards.get((int) receiver.getUid()).setBody(message.getText());
 
         }
     }
