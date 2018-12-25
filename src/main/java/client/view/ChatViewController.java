@@ -331,7 +331,6 @@ public class ChatViewController implements Initializable {
         //получаем аватар
         String avatar = initAvatar(senderSex);
         String styleStr = "background-image: url(" + avatar + "); background-size: cover";
-        System.out.println(styleStr);
         //
 
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
