@@ -317,6 +317,36 @@ public class ClientController {
         addUserGroup(group.getGid(), Long.toString(myUser.getUid()));
     }
 
+    public void addGroup(String group_name){
+        AddGroup addGroup = new AddGroup(group_name);
+        String requestJSON = new Gson().toJson(addGroup);
+
+        try {
+            ServerResponse response = HTTPSRequest.addGroup(requestJSON, token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    showAlert("Группа" + group_name + "успешно создана", Alert.AlertType.INFORMATION);
+                    //addContactToDB(convertJSONToUser(response.getResponseJson()));
+                    //if (chatViewController != null) chatViewController.fillContactListView();
+                    break;
+                case 400:
+                    showAlert("Ошибка запроса", Alert.AlertType.ERROR);
+                    break;
+                case 404:
+                    showAlert("Невозможно создать группу с названием: " + group_name, Alert.AlertType.ERROR);
+                    break;
+                case 500:
+                    showAlert("Ошибка сервера", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.addGroup_error", e);
+        }
+
+    }
+
     public void addUserGroup(String group_id, String new_user_id) {
         AddUserGroup aug = new AddUserGroup(group_id, new_user_id);
         String requestJSON = new Gson().toJson(aug);
@@ -342,7 +372,7 @@ public class ClientController {
                     showAlert("Общая ошибка!", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
-            controllerLogger.error("HTTPSRequest.addGroup_error", e);
+            controllerLogger.error("HTTPSRequest.addUserGroup_error", e);
         }
     }
 

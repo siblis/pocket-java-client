@@ -98,12 +98,12 @@
                                  <AnchorPane fx:id="groupNewPane" prefHeight="326.0" prefWidth="300.0" snapToPixel="false" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="54.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                                       <JFXTextField layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Найти..." style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
+                                       <JFXTextField fx:id="creategroupName" onAction="#handleCreateButton" layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Найти..." style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
                                           <font>
                                              <Font name="Serif Italic" size="14.0" />
                                           </font>
                                        </JFXTextField>
-                                       <JFXButton mnemonicParsing="false" onAction="#handleAddButton" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="60.0">
+                                       <JFXButton mnemonicParsing="false" onAction="#handleCreateButton" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="60.0">
                                           <graphic>
                                              <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
                                           </graphic>
