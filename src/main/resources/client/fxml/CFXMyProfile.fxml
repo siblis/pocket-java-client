@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<fx:root id="CFXMyProfile" fx:id="myProfilePane" stylesheets="@../styles/MyProfile.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="763.0" prefWidth="411.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Rectangle fill="#3498db" height="130.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="411.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Arc fill="#3498db" layoutX="205.0" layoutY="130.0" length="180.0" radiusX="205.0" radiusY="94.0" startAngle="180.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" type="ROUND" AnchorPane.rightAnchor="0.0" />
+      <Circle fill="#7e6990" layoutX="205.0" layoutY="114.0" radius="65.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" AnchorPane.topAnchor="28.0" />
+      <Text fill="WHITE" layoutX="153.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textMyProfile" text="Мой Профиль" AnchorPane.leftAnchor="153.0" AnchorPane.rightAnchor="153.0" AnchorPane.topAnchor="176.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+         <Label fx:id="labelEmailMyProfile" alignment="CENTER" layoutX="191.0" layoutY="238.0" prefHeight="20.0" prefWidth="152.0" styleClass="labelEmailMyProfile" text="simsim28@gmail.com" textAlignment="CENTER" textFill="#34495e" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="230.0" />
+         <Label layoutX="16.0" layoutY="279.0" prefHeight="35.0" prefWidth="301.0" styleClass="labelNameMyProfile" text="Вася Васильков" textAlignment="CENTER" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="260.0" />
+         <JFXButton buttonType="RAISED" layoutX="366.0" layoutY="273.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="58.0" styleClass="btnEditLabel" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="260.0">
+       <graphic>
+           <ImageView blendMode="SRC_ATOP" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                   <Image url="@../images/profile/editPencil.png" />
+               </image>
+           </ImageView>
+       </graphic>
+         </JFXButton>
+         <JFXButton buttonType="RAISED" layoutX="367.0" layoutY="352.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="btnEditLabel" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="352.0">
+            <graphic>
+               <ImageView blendMode="SRC_ATOP" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/profile/editPencil.png" />
+                  </image>
+               </ImageView>
+            </graphic></JFXButton>
+         <Text fill="#34495e" layoutX="194.0" layoutY="333.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textWarningInfo" text="Данная информация будет видна всем пользователям в Pocket Messenger." AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="315.0" />
+         <Text fill="#34495e" layoutX="34.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textAboutMySelf" text="О себе:" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="356.0" />
+         <JFXTextArea layoutX="25.0" layoutY="382.0" prefHeight="50.0" prefWidth="294.0" promptText="тут будет место для вашей рекламы" unFocusColor="WHITE" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="94.0" AnchorPane.topAnchor="395.0">
+            <font>
+               <Font size="16.0" />
+            </font>
+         </JFXTextArea>
+         <JFXButton alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutY="482.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="411.0" styleClass="btnWriteMessage" text="Написать сообщение" textFill="#3498db" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="470.0">
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/profile/message.png" />
+                  </image>
+               </ImageView>
+            </graphic></JFXButton>
+         <JFXButton alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="411.0" styleClass="btnWriteMessage" text="Личный кабинет" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="504.0">
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/profile/login.png" />
+                  </image>
+               </ImageView>
+            </graphic>
+         </JFXButton>
+       <JFXButton alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Оповещения" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="95.0" AnchorPane.topAnchor="544.0">
+           <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../images/profile/alarm.png" />
+                   </image>
+               </ImageView>
+           </graphic>
+       </JFXButton>
+       <JFXButton alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Выйти из профиля" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="584.0">
+           <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../images/profile/logout.png" />
+                   </image>
+               </ImageView>
+           </graphic>
+       </JFXButton>
+       <JFXButton alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Очистить переписку" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="624.0">
+           <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../images/profile/ClearMessages.png" />
+                   </image>
+               </ImageView>
+           </graphic>
+       </JFXButton>
+       <JFXButton alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Удалить профиль" textFill="#F46767" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="664.0">
+           <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../images/profile/deleteProfile.png" />
+                   </image>
+               </ImageView>
+           </graphic>
+       </JFXButton>
+       <JFXButton mnemonicParsing="false" onAction="#closeButtonPressed" prefHeight="50.0" prefWidth="50.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="180.0">
+           <graphic>
+               <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
+           </graphic>
+       </JFXButton>
+         <Circle fill="DODGERBLUE" layoutY="150.0" radius="28.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" styleClass="loadAvatarButton" AnchorPane.rightAnchor="104.0" AnchorPane.topAnchor="101.0" />
+         <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="117.5" AnchorPane.topAnchor="116.0">
+            <image>
+               <Image url="@../images/profile/photo-camera3х.png" />
+            </image>
+         </ImageView>
+   </children>
+</AnchorPane>
+</fx:root>
