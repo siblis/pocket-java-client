@@ -81,7 +81,6 @@ public class CFXListElement extends GridPane {
 
     public void setAvatar(Image avatar) {
         this.avatar.setFill(new ImagePattern(avatar));
-
     }
 
     public String getUnreadMessages() {

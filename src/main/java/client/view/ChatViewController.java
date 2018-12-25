@@ -265,7 +265,11 @@ public class ChatViewController implements Initializable {
         for (CFXListElement element:contactsObservList){
             element.setUnreadMessages("0");
             element.setBody("Входящие сообщения");
-
+            //avatar
+            boolean sex = element.getUser().getSex();
+            String strAvatar = initAvatar(sex);
+            Image img = new Image(strAvatar);
+            element.setAvatar(img);
         }
     }
 
