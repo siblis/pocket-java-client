@@ -12,6 +12,7 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
+import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -105,6 +106,12 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private JFXHamburger hamburger;
+
+    @FXML
+    private JFXTextField groupName;
+
+    @FXML
+    private JFXTextField creategroupName;
 
     //
     private WebEngine webEngine;
@@ -652,5 +659,15 @@ public class ChatViewController implements Initializable {
         transition.setRate(-1);
 
         transition.play();
+    }
+
+    @FXML
+    public void handleAddButton(){
+        clientController.joinGroup(groupName.getText());
+    }
+
+    @FXML
+    public void handleCreateButton(){
+        clientController.addGroup(creategroupName.getText());
     }
 }
