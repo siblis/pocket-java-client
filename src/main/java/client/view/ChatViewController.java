@@ -391,7 +391,7 @@ public class ChatViewController implements Initializable {
             Sound.playSoundNewMessage().join();
         }
 
-        String attrClass="";
+        String attrClass;
         if (clientController.getSenderName().equals(senderName)) {
             attrClass = "myUserClass";
         } else {
@@ -400,11 +400,10 @@ public class ChatViewController implements Initializable {
 
         //Подписка на событие загрузки документа HTML in WebView
         if (DOMdocument == null) {
-            String attrClass2 = attrClass; //не понял почему, но attrClass требуется final не изменяемый дальше
             webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     DOMdocument = webEngine.getDocument();
-                    createMessageDiv(message, senderName, timestamp, attrClass2);
+                    createMessageDiv(message, senderName, timestamp, attrClass);
                 }
             });
         }else {
