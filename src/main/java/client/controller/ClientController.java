@@ -183,27 +183,10 @@ public class ClientController {
         List<Message> converstation = dbService.getChat(myUser, receiver);
         chatViewController.clearMessageWebView();
 
-        CFXListElement targetChat = getCardByUID(receiver.getUid());
-        
-        if (targetChat == null) return;
-        
-        String lastInMessage = targetChat.getBody();
-        
         for (Message message :
                 converstation) {
             chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
-            if (Long.compare(message.getSender().getUid(), receiver.getUid()) == 0)
-                lastInMessage = message.getText();
         }
-
-        targetChat.setBody(lastInMessage);
-    }
-
-    private CFXListElement getCardByUID(Long uid){
-        for (CFXListElement element : contactListOfCards){
-            if (element.getUser().getUid()==uid) return element;
-        }
-        return null;
     }
 
     public void disconnect() {

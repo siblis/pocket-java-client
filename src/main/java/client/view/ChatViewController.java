@@ -411,11 +411,23 @@ public class ChatViewController implements Initializable {
                 if (newState == Worker.State.SUCCEEDED) {
                     DOMdocument = webEngine.getDocument();
                     createMessageDiv(message, senderName, timestamp, attrClass);
+                    updateLastMessageInCardsBody(message, senderName);
                 }
             });
         }else {
             createMessageDiv(message, senderName, timestamp, attrClass);
+            updateLastMessageInCardsBody(message, senderName);
         }
+    }
+
+    private void updateLastMessageInCardsBody(String message, String senderName){
+        CFXListElement targetChat = null;
+        
+        for (CFXListElement element : contactsObservList){
+            if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
+        }
+        if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
+        targetChat.setBody(message);
     }
 
     @FXML
