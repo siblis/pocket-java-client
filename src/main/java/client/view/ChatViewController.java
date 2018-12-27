@@ -433,6 +433,10 @@ public class ChatViewController implements Initializable {
         targetChat.setBody(message);
     }
 
+    public void addNewUserToContacts(CFXListElement newUser) {
+        contactsObservList.add(newUser);
+    }
+
     @FXML
     private void handleDisconnectButton() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();

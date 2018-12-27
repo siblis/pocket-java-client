@@ -364,8 +364,14 @@ public class ClientController {
             switch (response.getResponseCode()) {
                 case 201:
                     showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
-                    addContactToDB(convertJSONToUser(response.getResponseJson()));
-                    if (chatViewController != null) chatViewController.fillContactListView();
+                    User newUser = convertJSONToUser(response.getResponseJson());
+                    addContactToDB(newUser);
+                    if (chatViewController != null) {
+                        chatViewController.fillContactListView();
+                        CFXListElement newEl = new CFXListElement();
+                        newEl.setUser(newUser);
+                        chatViewController.addNewUserToContacts(newEl);
+                    }
                     break;
                 case 404:
                     showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
