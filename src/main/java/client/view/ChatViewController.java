@@ -113,6 +113,9 @@ public class ChatViewController implements Initializable {
     @FXML
     private JFXTextField creategroupName;
 
+    @FXML
+    private JFXTextField userSearchText;
+
     //
     private WebEngine webEngine;
 
@@ -486,11 +489,13 @@ public class ChatViewController implements Initializable {
     }
     @FXML
     private void onUserSearchButtonClicked(){
+        clientController.addContact(userSearchText.getText());
+        userSearchText.clear();
         bAddContact.setVisible(true);
         contactListView.setVisible(true);
         userSearchPane.setVisible(false);
     }
-
+    
     //подписка на обработку открытия ссылок
     //Element tagElement = <div class="msg">
     private void addListenerLinkExternalBrowser(Element tagElement){
