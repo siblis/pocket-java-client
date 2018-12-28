@@ -113,6 +113,9 @@ public class ChatViewController implements Initializable {
     @FXML
     private JFXTextField creategroupName;
 
+    @FXML
+    private JFXTextField userSearchText;
+
     //
     private WebEngine webEngine;
 
@@ -398,7 +401,7 @@ public class ChatViewController implements Initializable {
             Sound.playSoundNewMessage().join();
         }
 
-        String attrClass="";
+        String attrClass;
         if (clientController.getSenderName().equals(senderName)) {
             attrClass = "myUserClass";
         } else {
@@ -407,16 +410,31 @@ public class ChatViewController implements Initializable {
 
         //Подписка на событие загрузки документа HTML in WebView
         if (DOMdocument == null) {
-            String attrClass2 = attrClass; //не понял почему, но attrClass требуется final не изменяемый дальше
+            DOMdocument = webEngine.getDocument(); // TODO исправить костыль? (см. "костыль" в ПР127)
             webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
-                    DOMdocument = webEngine.getDocument();
-                    createMessageDiv(message, senderName, timestamp, attrClass2);
+                    createMessageDiv(message, senderName, timestamp, attrClass);
+                    updateLastMessageInCardsBody(message, senderName);
                 }
             });
         }else {
             createMessageDiv(message, senderName, timestamp, attrClass);
+            updateLastMessageInCardsBody(message, senderName);
         }
+    }
+
+    private void updateLastMessageInCardsBody(String message, String senderName){
+        CFXListElement targetChat = null;
+        
+        for (CFXListElement element : contactsObservList){
+            if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
+        }
+        if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
+        targetChat.setBody(message);
+    }
+
+    public void addNewUserToContacts(CFXListElement newUser) {
+        contactsObservList.add(newUser);
     }
 
     @FXML
@@ -475,11 +493,13 @@ public class ChatViewController implements Initializable {
     }
     @FXML
     private void onUserSearchButtonClicked(){
+        clientController.addContact(userSearchText.getText());
+        userSearchText.clear();
         bAddContact.setVisible(true);
         contactListView.setVisible(true);
         userSearchPane.setVisible(false);
     }
-
+    
     //подписка на обработку открытия ссылок
     //Element tagElement = <div class="msg">
     private void addListenerLinkExternalBrowser(Element tagElement){

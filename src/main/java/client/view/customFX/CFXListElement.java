@@ -76,6 +76,9 @@ public class CFXListElement extends GridPane {
     }
 
     public void setBody(String body) {
+        int maxLenOfVisible = 20;
+        if (body.length() > maxLenOfVisible) body = body.substring(0, maxLenOfVisible - 3) + "...";
+        body = body.replace("\n", " ");
         this.body.setText(body);
     }
 

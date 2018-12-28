@@ -186,18 +186,7 @@ public class ClientController {
         for (Message message :
                 converstation) {
             chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
-            contactListOfCards.get(getListIDbyUID(message.getSender().getUid())).setBody(message.getText());
-
         }
-    }
-
-    private int getListIDbyUID(Long uid){
-        int index=-1;
-        for (CFXListElement element : contactListOfCards){
-            index++;
-            if (element.getUser().getUid()==uid) return index;
-        }
-        return -1;
     }
 
     public void disconnect() {
@@ -375,8 +364,14 @@ public class ClientController {
             switch (response.getResponseCode()) {
                 case 201:
                     showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
-                    addContactToDB(convertJSONToUser(response.getResponseJson()));
-                    if (chatViewController != null) chatViewController.fillContactListView();
+                    User newUser = convertJSONToUser(response.getResponseJson());
+                    addContactToDB(newUser);
+                    if (chatViewController != null) {
+                        chatViewController.fillContactListView();
+                        CFXListElement newEl = new CFXListElement();
+                        newEl.setUser(newUser);
+                        chatViewController.addNewUserToContacts(newEl);
+                    }
                     break;
                 case 404:
                     showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
