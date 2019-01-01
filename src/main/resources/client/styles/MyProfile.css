@@ -28,7 +28,7 @@
 }
 
 .btnEditLabel {
-   -fx-background-radius: 18px;
+   -fx-background-radius: 15px;
 }
 
 .textWarningInfo{
@@ -59,4 +59,9 @@
 .btnCancel{
     -fx-background-radius: 25px;
 
+}
+
+.btnCancelNew{
+    -fx-background-radius: 25px;
+    -fx-background-color: #3498DB;
 }

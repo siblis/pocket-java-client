@@ -26,7 +26,7 @@
          </font>
       </Text>
          <Label fx:id="labelEmailMyProfile" alignment="CENTER" layoutX="191.0" layoutY="238.0" prefHeight="20.0" prefWidth="152.0" styleClass="labelEmailMyProfile" text="simsim28@gmail.com" textAlignment="CENTER" textFill="#34495e" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="230.0" />
-         <JFXButton fx:id="btnNameEdit" buttonType="RAISED" layoutX="366.0" layoutY="273.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="58.0" styleClass="btnEditLabel" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="260.0">
+         <JFXButton fx:id="btnNameEdit" buttonType="RAISED" layoutX="366.0" layoutY="273.0" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="btnEditLabel" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="260.0">
        <graphic>
            <ImageView blendMode="SRC_ATOP" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -35,7 +35,7 @@
            </ImageView>
        </graphic>
          </JFXButton>
-         <JFXButton fx:id="btnInfoEdit" buttonType="RAISED" layoutX="367.0" layoutY="352.0" mnemonicParsing="false"  prefHeight="30.0" prefWidth="30.0" styleClass="btnEditLabel" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="352.0">
+         <JFXButton fx:id="btnInfoEdit" buttonType="RAISED" layoutX="367.0" layoutY="352.0" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="btnEditLabel" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="352.0">
             <graphic>
                <ImageView blendMode="SRC_ATOP" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                   <image>
@@ -103,11 +103,6 @@
                </ImageView>
            </graphic>
        </JFXButton>
-       <JFXButton fx:id="btnClose" cancelButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCancelNew" stylesheets="@../styles/OtherProfile.css" text="Закрыть" textFill="WHITE" visible="false" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
-           <graphic>
-               <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
-           </graphic>
-       </JFXButton>
          <Circle fx:id="circleLoadAva" accessibleRole="BUTTON" fill="DODGERBLUE" layoutY="150.0" radius="28.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" styleClass="loadAvatarButton" AnchorPane.rightAnchor="104.0" AnchorPane.topAnchor="101.0" />
          <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="117.5" AnchorPane.topAnchor="116.0">
             <image>
@@ -115,6 +110,11 @@
             </image>
          </ImageView>
          <JFXTextField fx:id="tfName" editable="false" layoutX="68.0" layoutY="254.0" styleClass="labelNameMyProfile" text="Вася Васильков" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="251.0" />
+       <JFXButton fx:id="btnClose" buttonType="RAISED" cancelButton="true" mnemonicParsing="false" onAction="#closeButtonPressed" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCancelNew" text="Закрыть" textFill="WHITE" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
+           <graphic>
+               <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
+           </graphic>
+       </JFXButton>
    </children>
 </AnchorPane>
 </fx:root>
