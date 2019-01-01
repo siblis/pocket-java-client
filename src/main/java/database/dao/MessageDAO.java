@@ -54,9 +54,9 @@ public class MessageDAO {
         session.getTransaction().begin();
 
         Query<Message> query = session.createQuery("FROM Message m where " +
-                "(m.sender = :id1Param or m.sender = :id2Param) " +
-                "and " +
-                "(m.receiver = :id1Param or m.receiver = :id2Param)");
+                "(m.sender = :id1Param and m.receiver = :id2Param) " +
+                "or " +
+                "(m.receiver = :id1Param and m.sender = :id2Param)");
         query.setParameter("id1Param", agent1id);
         query.setParameter("id2Param", agent2id);
         List<Message> messages = query.list();

@@ -123,11 +123,11 @@
                                  <AnchorPane fx:id="userSearchPane" prefHeight="100.0" prefWidth="284.0" stylesheets="@../styles/searchUserPane.css" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                        <Rectangle fill="#3498db" height="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                                       <TextField layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Введите e-mail пользователя" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
+                                       <JFXTextField fx:id="userSearchText" layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Введите e-mail пользователя" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
                                           <font>
                                              <Font name="Serif Italic" size="14.0" />
                                           </font>
-                                       </TextField>
+                                       </JFXTextField>
                                        <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="128.0" layoutY="60.0" mnemonicParsing="false" onAction="#onUserSearchButtonClicked" ripplerFill="#ffe684" style="-fx-background-fill: FFE68; -fx-border-radius: 8px;" text="Найти" AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="75.0">
                                           <font>
                                              <Font size="16.0" />
