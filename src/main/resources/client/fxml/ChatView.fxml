@@ -2,6 +2,7 @@
 
 <?import client.utils.CustomTextArea?>
 <?import client.view.customFX.CFXMyProfile?>
+<?import client.view.customFX.CFXOtherProfile?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXHamburger?>
 <?import com.jfoenix.controls.JFXListView?>
@@ -30,7 +31,7 @@
         <AnchorPane fx:id="messagePanel" minWidth="400.0" prefHeight="789.0" prefWidth="710.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <AnchorPane layoutY="48.0" prefHeight="353.0" prefWidth="410.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-               <JFXTabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="69.0" tabMaxWidth="201.0" tabMinHeight="69.0" tabMinWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
+               <JFXTabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="50.0" tabMaxWidth="201.0" tabMinHeight="50.0" tabMinWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
                   <tabs>
                           <Tab fx:id="chats" closable="false" onSelectionChanged="#handleOnChatSelected" text="чаты">
                               <content>
@@ -53,7 +54,7 @@
                                           </AnchorPane>
                                  <AnchorPane fx:id="groupSearchPane" prefHeight="326.0" prefWidth="300.0" snapToPixel="false" stylesheets="@../styles/searchGroupPane.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                                       <JFXTextField fx:id="groupName" layoutX="98.0" layoutY="18.0" prefWidth="200.0" promptText="Название группы..." onAction="#handleAddButton" style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
+                                       <JFXTextField fx:id="groupName" layoutX="98.0" layoutY="18.0" onAction="#handleAddButton" prefWidth="200.0" promptText="Название группы..." style="-fx-background-color: #FFFFFF;" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="11.0">
                                           <font>
                                              <Font name="Serif Italic" size="14.0" />
                                           </font>
@@ -101,7 +102,7 @@
                                              <Font name="System Bold" size="14.0" />
                                           </font>
                                        </Label>
-                                       <JFXTextField fx:id="creategroupName" onAction="#handleCreateButton" layoutX="20.0" layoutY="241.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                       <JFXTextField fx:id="creategroupName" layoutX="20.0" layoutY="241.0" onAction="#handleCreateButton" style="-fx-background-color: white;" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                        <JFXListView layoutY="54.0" prefHeight="104.0" prefWidth="299.0" AnchorPane.bottomAnchor="168.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0" />
                                     </children>
                                  </AnchorPane>
@@ -192,18 +193,35 @@
                     </MenuBar>
                 </children>
             </AnchorPane>
-         <ScrollPane fx:id="myProfilePane" minViewportWidth="410.0" prefHeight="600.0" prefViewportWidth="410.0" prefWidth="408.0" vbarPolicy="ALWAYS" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="119.0">
+         <ScrollPane fx:id="profileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
            <content>
-             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="763.0" prefWidth="410.0">
-                  <children>
-                      <CFXMyProfile prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+                      <CFXMyProfile fx:id="myProfile" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" >
 
              </CFXMyProfile>
-                  </children>
-               </AnchorPane>
+
+
+
+
+                       <!--<CFXOtherProfile fx:id="othersProfile" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" visible="false">-->
+
+                       <!--</CFXOtherProfile>-->
+
            </content>
          </ScrollPane>
+            <ScrollPane fx:id="otherProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
+                <content>
 
+
+
+
+
+                    <CFXOtherProfile fx:id="othersProfile" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" visible="false">
+
+                    </CFXOtherProfile>
+
+                </content>
+            </ScrollPane>
         </AnchorPane>
 
     </center>

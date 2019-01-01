@@ -1,9 +1,15 @@
 package client.view.customFX;
 
 import client.view.PaneProvider;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
+import database.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 
@@ -14,6 +20,23 @@ public class CFXMyProfile extends AnchorPane {
 
     @FXML
     private AnchorPane myProfilePane;
+    @FXML
+    private Circle circleAvatar;
+    @FXML
+    private Label labelEmailMyProfile;
+    @FXML
+    private JFXTextField tfName;
+    @FXML
+    private JFXTextArea taInfo;
+    @FXML
+    private JFXButton btnClose;
+    @FXML
+    private JFXButton btnNameEdit;
+    @FXML
+    private JFXButton btnInfoEdit;
+
+
+    private User user;
 
     public CFXMyProfile() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/CFXMyProfile.fxml"));
@@ -34,4 +57,20 @@ public class CFXMyProfile extends AnchorPane {
       PaneProvider.getTransitionBack().setRate(-1);
       PaneProvider.getTransitionBack().play();
     }
+    @FXML
+    private  void btnNameChangeClicked(){
+        tfName.setEditable(true);
+    }
+    @FXML
+    private  void btnInfoClicked(){
+        taInfo.setEditable(true);
+    }
+
+
+    public void setUser(User user){
+        tfName.setText(user.getAccount_name());
+        labelEmailMyProfile.setText(user.getEmail());
+    }
+
+
 }
