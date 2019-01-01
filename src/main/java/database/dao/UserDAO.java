@@ -79,6 +79,17 @@ class UserDAO {
         return list;
     }
 
+    List<Long> getColumnOfData(String fieldName) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.getTransaction().begin();
+
+        List<Long> list = (List<Long>) session.createQuery("select t." + fieldName + " FROM User as t").list();
+
+        session.getTransaction().commit();
+
+        return list;
+    }
+
     void close(){
         HibernateUtil.shutdown();
     }
