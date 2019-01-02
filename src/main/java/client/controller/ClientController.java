@@ -51,6 +51,10 @@ public class ClientController {
         conn = null;
     }
 
+    public User getMyUser() {
+        return myUser;
+    }
+
     public static ClientController getInstance() {
         if (instance == null) {
             instance = new ClientController();

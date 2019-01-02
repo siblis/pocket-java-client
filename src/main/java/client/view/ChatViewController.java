@@ -7,6 +7,7 @@ import client.utils.CustomTextArea;
 import client.utils.Sound;
 import client.view.customFX.CFXListElement;
 import client.view.customFX.CFXMyProfile;
+import client.view.customFX.CFXOtherProfile;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXListView;
@@ -96,7 +97,7 @@ public class ChatViewController implements Initializable {
     private AnchorPane groupNewPane;
 
     @FXML
-    private ScrollPane myProfilePane;
+    private ScrollPane profileScrollPane;
 
     @FXML
     private JFXListView<CFXListElement> listViewAddToGroup;
@@ -112,6 +113,11 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private JFXTextField creategroupName;
+
+    @FXML
+    private CFXMyProfile myProfile;
+
+
 
     @FXML
     private JFXTextField userSearchText;
@@ -425,7 +431,7 @@ public class ChatViewController implements Initializable {
 
     private void updateLastMessageInCardsBody(String message, String senderName){
         CFXListElement targetChat = null;
-        
+
         for (CFXListElement element : contactsObservList){
             if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
         }
@@ -499,7 +505,7 @@ public class ChatViewController implements Initializable {
         contactListView.setVisible(true);
         userSearchPane.setVisible(false);
     }
-    
+
     //подписка на обработку открытия ссылок
     //Element tagElement = <div class="msg">
     private void addListenerLinkExternalBrowser(Element tagElement){
@@ -653,15 +659,18 @@ public class ChatViewController implements Initializable {
     }
 
     public void onMyProfileOpen(ActionEvent actionEvent) {
-        PaneProvider.setMyProfileScrollPane(myProfilePane);
-        myProfilePane.setVisible(true);
+        PaneProvider.setMyProfileScrollPane(profileScrollPane);
+        myProfile.setUser(clientController.getMyUser());
+        myProfile.setVisible(true);
+        profileScrollPane.setVisible(true);
+
         PaneProvider.getTransitionBack().setRate(1);
         PaneProvider.getTransitionBack().play();
     }
 
     public void onHamburgerClicked(MouseEvent mouseEvent) {
-        if (myProfilePane.isVisible()) {
-            myProfilePane.setVisible(false);
+        if (profileScrollPane.isVisible()) {
+            profileScrollPane.setVisible(false);
             PaneProvider.getTransitionBack().setRate(-1);
             transitionBack.play();
         }
