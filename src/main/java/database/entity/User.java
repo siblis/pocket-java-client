@@ -18,9 +18,6 @@ public class User {
     private String email;
 
     @Column
-    private boolean sex;
-
-    @Column
     private String avatar_path;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -36,8 +33,6 @@ public class User {
         this.uid = uid;
         this.account_name = account_name;
         this.email = email;
-        this.sex = false;
-        this.avatar_path = "";
         sentMess = new ArrayList<>();
         receivedMess = new ArrayList<>();
     }
@@ -46,8 +41,6 @@ public class User {
         this.uid = uid;
         this.account_name = account_name;
         this.email = email;
-        this.sex = sex;
-        this.avatar_path = avatarPath;
         sentMess = new ArrayList<>();
         receivedMess = new ArrayList<>();
     }
@@ -91,11 +84,4 @@ public class User {
         this.email = email;
     }
 
-    public boolean getSex(){
-        return sex;
-    }
-
-    public String getAvatarPath(){
-        return avatar_path;
-    }
 }

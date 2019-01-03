@@ -265,11 +265,6 @@ public class ChatViewController implements Initializable {
         for (CFXListElement element:contactsObservList){
             element.setUnreadMessages("0");
             element.setBody("Входящие сообщения");
-            //avatar
-            boolean sex = element.getUser().getSex();
-            String strAvatar = initAvatar(sex);
-            Image img = new Image(strAvatar);
-            element.setAvatar(img);
         }
     }
 
@@ -328,12 +323,13 @@ public class ChatViewController implements Initializable {
      * Style create in initWebView
      *
      */
-    private void createMessageDiv(String message, String senderName, boolean senderSex, Timestamp timestamp, String attrClass){
+    private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
         //ID требуется для скрипта вставки тегов
         idDivMsg+=1;
         String idMsg = "msg"+idDivMsg;
         //получаем аватар
-        String avatar = initAvatar(senderSex);
+        //тут по идеи подбор по полу. Оставляю чтобы было понятно куда вставляется и настроить стили
+        String avatar = initAvatar(true);
         String styleStr = "background-image: url(" + avatar + "); background-size: cover";
         //
 
@@ -394,7 +390,7 @@ public class ChatViewController implements Initializable {
         addListenerLinkExternalBrowser(divTxtMsg);
     }
 
-    public void showMessage(String senderName, boolean senderSex, String message, Timestamp timestamp, boolean isNew) {
+    public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
         if (isNew) {
             Sound.playSoundNewMessage().join();
         }
@@ -412,11 +408,11 @@ public class ChatViewController implements Initializable {
             webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     DOMdocument = webEngine.getDocument();
-                    createMessageDiv(message, senderName, senderSex, timestamp, attrClass2);
+                    createMessageDiv(message, senderName, timestamp, attrClass2);
                 }
             });
         }else {
-            createMessageDiv(message, senderName, senderSex, timestamp, attrClass);
+            createMessageDiv(message, senderName, timestamp, attrClass);
         }
     }
 
