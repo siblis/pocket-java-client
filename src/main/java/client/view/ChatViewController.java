@@ -303,6 +303,7 @@ public class ChatViewController implements Initializable {
         for (CFXListElement element:contactsObservList){
             element.setUnreadMessages("0");
             element.setBody("Входящие сообщения");
+
         }
     }
 
@@ -367,7 +368,7 @@ public class ChatViewController implements Initializable {
         String idMsg = "msg"+idDivMsg;
         //получаем аватар
         //тут по идеи подбор по полу. Оставляю чтобы было понятно куда вставляется и настроить стили
-        String avatar = initAvatar(true);
+        String avatar = initAvatar(false); //man
         String styleStr = "background-image: url(" + avatar + "); background-size: cover";
         //
 
