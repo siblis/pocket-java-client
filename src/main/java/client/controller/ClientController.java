@@ -9,7 +9,6 @@ import client.view.ChatViewController;
 import client.view.customFX.CFXListElement;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
@@ -17,15 +16,13 @@ import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static client.utils.Common.showAlert;
-import java.io.IOException;
 
 public class ClientController {
     private static final Logger controllerLogger = LogManager.getLogger(ClientController.class);
@@ -359,7 +356,7 @@ public class ClientController {
         }
     }
 
-    public void addContact(String contact) {
+    public boolean addContact(String contact) {
         UserToServer cts = new UserToServer(contact);
         String requestJSON = new Gson().toJson(cts);
 
@@ -375,20 +372,22 @@ public class ClientController {
                         CFXListElement newEl = new CFXListElement();
                         newEl.setUser(newUser);
                         chatViewController.addNewUserToContacts(newEl);
+                        return true;
                     }
                     break;
                 case 404:
-                    showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+                   // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
                     break;
                 case 409:
-                    showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+                  //  showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
                     break;
                 default:
-                    showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+                    //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.addContact_error", e);
         }
+        return false;
     }
 
     private void addContactToDB(User contact) {

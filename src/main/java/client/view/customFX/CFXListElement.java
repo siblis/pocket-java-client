@@ -5,14 +5,14 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 
-public class CFXListElement extends GridPane {
+public class CFXListElement extends AnchorPane {
 
     @FXML
     private Text topic;
@@ -34,6 +34,9 @@ public class CFXListElement extends GridPane {
 
     @FXML
     private MaterialDesignIconView unreadGlyph;
+
+    @FXML
+    private Circle circleOnline;
 
 //    @FXML
 //    private FontAwesomeIconView unreadGlyph;
@@ -113,6 +116,14 @@ public class CFXListElement extends GridPane {
         this.user = user;
         this.topic.setText(user.getAccount_name());
 
+    }
+
+    public void setOnline(){
+        this.circleOnline.setVisible(true);
+    }
+
+    public void setOffline(){
+        this.circleOnline.setVisible(false);
     }
 
 }
