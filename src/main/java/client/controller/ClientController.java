@@ -151,7 +151,6 @@ public class ClientController {
                 controllerLogger.error("HTTPSRequest.getUser_error", e);
             }
         }
-        //todo посмотреть откуда
         chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
         dbService.addMessage(mfs.getReceiver(),
                 mfs.getSenderid(),
