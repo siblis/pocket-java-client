@@ -77,6 +77,9 @@
            <graphic>
                <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
            </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
        </JFXButton>
          <Label id="labelinfoMessage" layoutX="26.0" layoutY="243.0" prefHeight="35.0" prefWidth="301.0" styleClass="labelinfoMessage" text="Данное название будут видеть Ваши контакты в Pocket Messenger." textAlignment="CENTER" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="273.0" />
          <JFXButton fx:id="btnAddUserToGroup" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="594.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Добавить пользователя" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="544.0">

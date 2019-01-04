@@ -5,10 +5,7 @@ import client.controller.ClientController;
 import client.utils.Common;
 import client.utils.CustomTextArea;
 import client.utils.Sound;
-import client.view.customFX.CFXListElement;
-import client.view.customFX.CFXMenuLeft;
-import client.view.customFX.CFXMenuRightGroup;
-import client.view.customFX.CFXMyProfile;
+import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
@@ -28,6 +25,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -56,6 +54,10 @@ import java.util.ResourceBundle;
 public class ChatViewController implements Initializable {
 
     private static ChatViewController instance;
+
+
+    @FXML
+    private BorderPane borderPaneMain;
     @FXML
     private AnchorPane messagePanel;
 
@@ -213,6 +215,7 @@ public class ChatViewController implements Initializable {
          initListenersToButtons();
          instance=this;
          CFXMenuLeft.setParentController(instance);
+         PaneProvider.setBorderPaneMain(borderPaneMain);
 
     }
 
@@ -790,7 +793,25 @@ public class ChatViewController implements Initializable {
         if (cfxMenuRightGroup.isVisible()){
             cfxMenuRightGroup.setVisible(false);
         } else {
+
             cfxMenuRightGroup.setVisible(true);
         }
     }
+    public void alarmGroupQuitGroupExecute(){
+        new AlarmGroupQuitGroup();
+    }
+
+    public void alarmGroupDeleteGroupExecute(){
+        new AlarmDeleteGroup();
+    }
+    public void alarmDeleteMessageHistoryExecute(){
+        new AlarmDeleteMessageHistory();
+    }
+    public void alarmDeleteProfileExecute(){
+        new AlarmDeleteProfile();
+    }
+    public void alarmExirProfileExecute(){
+        new AlarmExitProfile();
+    }
+
 }

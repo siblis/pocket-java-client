@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.*?>
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Arc?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
+<?import javafx.scene.text.*?>
 <fx:root id="CFXMyProfile" fx:id="myProfilePane" stylesheets="@../styles/MyProfile.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="763.0" prefWidth="411.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -39,7 +35,10 @@
                      <Image url="@../images/profile/message.png" />
                   </image>
                </ImageView>
-            </graphic></JFXButton>
+            </graphic>
+            <font>
+               <Font size="16.0" />
+            </font></JFXButton>
        <JFXButton alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Оповещения" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="95.0" AnchorPane.topAnchor="544.0">
            <graphic>
                <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
@@ -48,6 +47,9 @@
                    </image>
                </ImageView>
            </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
        </JFXButton>
        <JFXButton alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Очистить переписку" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="584.0">
            <graphic>
@@ -57,6 +59,9 @@
                    </image>
                </ImageView>
            </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
        </JFXButton>
        <JFXButton alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Удалить пользователя" textFill="#F46767" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="624.0">
            <graphic>
@@ -66,11 +71,17 @@
                    </image>
                </ImageView>
            </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
        </JFXButton>
        <JFXButton fx:id="btnCloseCenter" cancelButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCancelNew" stylesheets="@../styles/OtherProfile.css" text="Закрыть" textFill="WHITE" visible="false" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
            <graphic>
                <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
            </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
        </JFXButton>
          <Circle fx:id="circleOnline" fill="#0f9d58" layoutY="150.0" radius="10.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" styleClass="loadAvatarButton" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="135.0" />
          <Label fx:id="labelEmailMyProfile1" alignment="CENTER" layoutX="10.0" layoutY="240.0" prefHeight="20.0" prefWidth="152.0" styleClass="labelEmailMyProfile" text="online" textAlignment="CENTER" textFill="#0f9d58" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="250.0" />
@@ -78,11 +89,17 @@
             <graphic>
                <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
             </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
          </JFXButton>
          <JFXButton fx:id="btnInvite" layoutX="217.0" layoutY="704.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="180.0" ripplerFill="#979797" styleClass="btnInviteNew" stylesheets="@../styles/OtherProfile.css" text="Пригласить" textFill="WHITE" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="19.0">
             <graphic>
                <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
             </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
          </JFXButton>
    </children>
 </AnchorPane>
