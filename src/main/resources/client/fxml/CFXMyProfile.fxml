@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXTextArea?>
-<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.*?>
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Arc?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
+<?import javafx.scene.text.*?>
 <fx:root id="CFXMyProfile" fx:id="myProfilePane" stylesheets="@../styles/MyProfile.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="763.0" prefWidth="411.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -110,7 +105,7 @@
             </image>
          </ImageView>
          <JFXTextField fx:id="tfName" editable="false" layoutX="68.0" layoutY="254.0" styleClass="labelNameMyProfile" text="Вася Васильков" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="251.0" />
-       <JFXButton fx:id="btnClose" buttonType="RAISED" cancelButton="true" mnemonicParsing="false" onAction="#closeButtonPressed" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCancelNew" text="Закрыть" textFill="WHITE" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
+       <JFXButton fx:id="btnClose" buttonType="RAISED" cancelButton="true" mnemonicParsing="false"  prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCancelNew" text="Закрыть" textFill="WHITE" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
            <graphic>
                <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
            </graphic>

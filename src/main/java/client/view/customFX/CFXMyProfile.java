@@ -5,14 +5,11 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import database.entity.User;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
-import javafx.event.ActionEvent;
 
 import java.io.IOException;
 
@@ -48,19 +45,11 @@ public class CFXMyProfile extends AnchorPane {
 
         try {
             fxmlLoader.load();
-            btnInfoEdit.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                 btnInfoClicked();
-                }
-            });
+            btnInfoEdit.setOnAction(event -> btnInfoClicked());
 
-            btnNameEdit.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                 btnNameChangeClicked();
-                }
-            });
+            btnNameEdit.setOnAction(event -> btnNameChangeClicked());
+
+            btnClose.setOnAction(event -> closeButtonPressed());
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }
