@@ -683,6 +683,7 @@ public class ChatViewController implements Initializable {
     }
 
     public void onNewGroupClicked(ActionEvent actionEvent) {
+        selectionModel.select(0);
         cfxMenuLeft.setVisible(false);
         menuLeff.hide();
         groupListPane.setVisible(false);

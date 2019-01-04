@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import client.utils.CustomTextArea?>
-<?import client.view.customFX.CFXMenuLeft?>
-<?import client.view.customFX.CFXMenuRightGroup?>
-<?import client.view.customFX.CFXMyProfile?>
-<?import client.view.customFX.CFXOtherProfile?>
+<?import client.view.customFX.*?>
 <?import com.jfoenix.controls.*?>
 <?import de.jensd.fx.glyphs.materialdesignicons.*?>
 <?import javafx.geometry.Insets?>
@@ -171,6 +168,12 @@
                 <content>
                     <CFXMyProfile fx:id="myProfile" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                     </CFXMyProfile>
+                </content>
+            </ScrollPane>
+            <ScrollPane fx:id="groupProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
+                <content>
+                    <CFXGroupProfile fx:id="groupProfile" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    </CFXGroupProfile>
                 </content>
             </ScrollPane>
             <ScrollPane fx:id="otherProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
