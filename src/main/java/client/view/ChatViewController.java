@@ -236,8 +236,8 @@ public class ChatViewController implements Initializable {
                         ".msgLogo { \n"+
                             "flex: none; \n"+
                             "align-self: start; \n"+
-                            "width: 35px; \n"+
-                            "height: 35px; \n"+
+                            "width: 33px; \n"+
+                            "height: 33px; \n"+
                             "background: lightgrey; \n"+
                             "border-radius: 50%; \n"+
                         "} \n"+
@@ -307,6 +307,27 @@ public class ChatViewController implements Initializable {
         }
     }
 
+    //  инициализация картинки аватара
+    //if sex = true, is a woman
+    //   sex = false, is a man
+    private String initAvatar(boolean sex) {
+        String path = "";
+        if (sex) {
+            path = "client/images/defaultAvatar/girl.png"; //картинка фона
+        }else {
+            path = "client/images/defaultAvatar/man.png"; //картинка фона
+        }
+        ClassLoader cl = this.getClass().getClassLoader();
+        String avatar = "";
+        try {
+            avatar = cl.getResource(path).toURI().toString();
+        }catch (Exception e) {
+            //todo перенести в логирование
+            e.printStackTrace();
+        }
+        return avatar;
+    }
+
     /**
      *
      * @param pattern
@@ -345,6 +366,11 @@ public class ChatViewController implements Initializable {
         //ID требуется для скрипта вставки тегов
         idDivMsg+=1;
         String idMsg = "msg"+idDivMsg;
+        //получаем аватар
+        //тут по идеи подбор по полу. Оставляю чтобы было понятно куда вставляется и настроить стили
+        String avatar = initAvatar(false); //man
+        String styleStr = "background-image: url(" + avatar + "); background-size: cover";
+        //
 
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
         SimpleDateFormat dateFormat = initDateFormat("HH:mm");
@@ -379,6 +405,7 @@ public class ChatViewController implements Initializable {
         Element divTime = DOMdocument.createElement("div");
         div.setAttribute("class", "message");
         divLogo.setAttribute("class", "msgLogo");
+        divLogo.setAttribute("style", styleStr);
         divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxtSender.setAttribute("class", attrClass+"S sender");
         divTxtMsg.setAttribute("class", attrClass+"M msg");
