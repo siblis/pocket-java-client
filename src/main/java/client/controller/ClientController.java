@@ -148,7 +148,11 @@ public class ClientController {
                 controllerLogger.error("HTTPSRequest.getUser_error", e);
             }
         }
-        chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
+        //Проверяем что у нас чат именно с этим пользователем, иначе сообщение не выводится
+        //Как будет с группами пока не понятно
+        if (receiver.getUid() == mfs.getSenderid()) {
+            chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
+        }
         dbService.addMessage(mfs.getReceiver(),
                 mfs.getSenderid(),
                 new Message(mfs.getMessage(),
