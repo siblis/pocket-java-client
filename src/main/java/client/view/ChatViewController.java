@@ -449,9 +449,9 @@ public class ChatViewController implements Initializable {
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
-        if (isNew) {
+        /*if (isNew) {
             Sound.playSoundNewMessage().join();
-        }
+        }*/
 
         String attrClass;
         if (clientController.getSenderName().equals(senderName)) {

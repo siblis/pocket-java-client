@@ -5,6 +5,7 @@ import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
+import client.utils.Sound;
 import client.view.ChatViewController;
 import client.view.customFX.CFXListElement;
 import com.google.gson.Gson;
@@ -153,6 +154,9 @@ public class ClientController {
         if (receiver.getUid() == mfs.getSenderid()) {
             chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
         }
+
+        Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
+
         dbService.addMessage(mfs.getReceiver(),
                 mfs.getSenderid(),
                 new Message(mfs.getMessage(),
