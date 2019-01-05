@@ -154,8 +154,9 @@ public class ClientController {
         if (receiver.getUid() == mfs.getSenderid()) {
             chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
         }
-
-        Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
+        if (mfs.getSenderid() !=0) { //отключаем звук для служебных сообщений
+            Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
+        }
 
         dbService.addMessage(mfs.getReceiver(),
                 mfs.getSenderid(),
