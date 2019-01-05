@@ -58,6 +58,11 @@ public class CFXListElement extends AnchorPane {
         }
     }
 
+    public CFXListElement(User user) {
+        this();
+        setUser(user);
+    }
+
     public String getTopic(){
         return this.topic.getText();
     }
