@@ -56,6 +56,10 @@ public class CFXListElement extends AnchorPane {
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }
+        
+        setUnreadMessages("0");
+        setBody("");
+        setOffline();
     }
 
     public CFXListElement(User user) {
