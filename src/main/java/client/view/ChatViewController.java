@@ -462,9 +462,10 @@ public class ChatViewController implements Initializable {
 
         //Подписка на событие загрузки документа HTML in WebView
         if (DOMdocument == null) {
-            DOMdocument = webEngine.getDocument(); // TODO исправить костыль? (см. "костыль" в ПР127)
+            // DOMdocument = webEngine.getDocument();// TODO исправить костыль? (см. "костыль" в ПР127)
             webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
+                    DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
                     createMessageDiv(message, senderName, timestamp, attrClass);
                     updateLastMessageInCardsBody(message, senderName);
                 }
