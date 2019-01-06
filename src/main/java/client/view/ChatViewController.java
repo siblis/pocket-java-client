@@ -479,16 +479,23 @@ public class ChatViewController implements Initializable {
             attrClass = "senderUserClass";
         }
 
+        //todo по хорошему надо переместить подписку на событие в другое место
         //Подписка на событие загрузки документа HTML in WebView
         if (DOMdocument == null) {
-            // DOMdocument = webEngine.getDocument();// TODO исправить костыль? (см. "костыль" в ПР127)
-            webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
-                if (newState == Worker.State.SUCCEEDED) {
-                    DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
-                    createMessageDiv(message, senderName, timestamp, attrClass);
-                    updateLastMessageInCardsBody(message, senderName);
-                }
-            });
+            //если пользователь только запустил клиента и локально нет ни одного сообщения
+            if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
+                DOMdocument = webEngine.getDocument();
+                createMessageDiv(message, senderName, timestamp, attrClass);
+                updateLastMessageInCardsBody(message, senderName);
+            }else {
+                webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+                    if (newState == Worker.State.SUCCEEDED) {
+                        DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
+                        createMessageDiv(message, senderName, timestamp, attrClass);
+                        updateLastMessageInCardsBody(message, senderName);
+                    }
+                });
+            }
         }else {
             createMessageDiv(message, senderName, timestamp, attrClass);
             updateLastMessageInCardsBody(message, senderName);

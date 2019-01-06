@@ -171,7 +171,6 @@ public class ClientController {
         MessageToServer MTS = new MessageToServer(receiver.getUid(), message);
 
         String jsonMessage = new Gson().toJson(MTS);
-        System.out.println("json = " + jsonMessage);
         try {
             conn.getChatClient().send(jsonMessage);
 
