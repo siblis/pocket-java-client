@@ -5,6 +5,7 @@ import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
+import client.utils.Sound;
 import client.view.ChatViewController;
 import client.view.customFX.CFXListElement;
 import com.google.gson.Gson;
@@ -148,7 +149,15 @@ public class ClientController {
                 controllerLogger.error("HTTPSRequest.getUser_error", e);
             }
         }
-        chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
+        //Проверяем что у нас чат именно с этим пользователем, иначе сообщение не выводится
+        //Как будет с группами пока не понятно
+        if (receiver.getUid() == mfs.getSenderid()) {
+            chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
+        }
+        if (mfs.getSenderid() !=0) { //отключаем звук для служебных сообщений
+            Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
+        }
+
         dbService.addMessage(mfs.getReceiver(),
                 mfs.getSenderid(),
                 new Message(mfs.getMessage(),
