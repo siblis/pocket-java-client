@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import client.utils.CustomTextArea?>
-<?import client.view.customFX.CFXMyProfile?>
-<?import client.view.customFX.CFXOtherProfile?>
+<?import client.view.customFX.*?>
 <?import com.jfoenix.controls.*?>
 <?import de.jensd.fx.glyphs.materialdesignicons.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
-<BorderPane prefHeight="600.0" prefWidth="1000.0" stylesheets="/client/styles/ChatStyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.ChatViewController">
+<BorderPane fx:id="borderPaneMain" prefHeight="600.0" prefWidth="1000.0" stylesheets="/client/styles/ChatStyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.ChatViewController">
     <center>
 
 
@@ -128,11 +129,14 @@
             <Label id="vector" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendMessage" prefHeight="18.0" prefWidth="20.5" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="81.5" />
             <Label id="smailik" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendSmile" prefHeight="24.0" prefWidth="24.0" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="31.0" />
             <Label id="skrepka" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendFile" prefHeight="35.0" prefWidth="35.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="440.0" />
-            <AnchorPane prefHeight="49.0" prefWidth="410.0" styleClass="menu-bar" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <CFXMenuLeft fx:id="cfxMenuLeft" onMouseExited="#onMouseExitMenu" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="50.0">
+                    </CFXMenuLeft>
+            <AnchorPane prefHeight="50.0" prefWidth="412.0" styleClass="menu-bar" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <children>
                     <MenuBar layoutX="14.0" layoutY="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="41.0">
+
                         <menus>
-                            <Menu id="menu" fx:id="menuLeff" mnemonicParsing="false" onHidden="#onHideMenuLeft">
+                            <Menu id="menu" fx:id="menuLeff" mnemonicParsing="false" onHidden="#onHideMenuLeft" visible="false">
                                 <items>
                                     <MenuItem mnemonicParsing="false" onAction="#handleDisconnectButton" text="Отключиться..." />
                                     <SeparatorMenuItem />
@@ -146,22 +150,30 @@
                     <JFXTextField fx:id="tfSearchInput" layoutX="84.0" onKeyReleased="#findContact" prefHeight="25.0" prefWidth="315.0" promptText="Найти..." AnchorPane.leftAnchor="76.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="9.0" />
                 </children>
             </AnchorPane>
-            <AnchorPane minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0" prefWidth="567.0" styleClass="menu-bar" AnchorPane.leftAnchor="410.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="49.0" prefWidth="567.0" styleClass="menu-bar" AnchorPane.leftAnchor="410.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <children>
-                    <MenuBar layoutX="49.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" prefHeight="29.0" prefWidth="42.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="16.0">
-                        <Menu id="leftMenu">
-                            <MenuItem mnemonicParsing="false" text="Настройки связи" />
-                            <MenuItem mnemonicParsing="false" text="Настройки внешнего вида" />
-                            <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Выход" />
-                        </Menu>
-
-                    </MenuBar>
+               <JFXButton fx:id="btnRightMenu" mnemonicParsing="false" onAction="#btnRightMenuClicked" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #3498DB; -fx-background-radius: 20;" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                  <graphic>
+                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                           <Image url="@../images/menus/menuButton.png" />
+                        </image></ImageView>
+                  </graphic>
+               </JFXButton>
                 </children>
             </AnchorPane>
+            <CFXMenuRightGroup fx:id="cfxMenuRightGroup" onMouseExited="#onMouseExitMenuRight" visible="false" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+            </CFXMenuRightGroup>
             <ScrollPane fx:id="profileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
                 <content>
                     <CFXMyProfile fx:id="myProfile" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                     </CFXMyProfile>
+                </content>
+            </ScrollPane>
+            <ScrollPane fx:id="groupProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
+                <content>
+                    <CFXGroupProfile fx:id="groupProfile" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    </CFXGroupProfile>
                 </content>
             </ScrollPane>
             <ScrollPane fx:id="otherProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">

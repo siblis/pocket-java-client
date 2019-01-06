@@ -5,8 +5,7 @@ import client.controller.ClientController;
 import client.utils.Common;
 import client.utils.CustomTextArea;
 import client.utils.Sound;
-import client.view.customFX.CFXListElement;
-import client.view.customFX.CFXMyProfile;
+import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
@@ -26,6 +25,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -53,6 +53,11 @@ import java.util.ResourceBundle;
 
 public class ChatViewController implements Initializable {
 
+    private static ChatViewController instance;
+
+
+    @FXML
+    private BorderPane borderPaneMain;
     @FXML
     private AnchorPane messagePanel;
 
@@ -145,10 +150,20 @@ public class ChatViewController implements Initializable {
     private JFXListView<CFXListElement> searchList;
     private ObservableList<CFXListElement> searchObsList;
 
+    @FXML
+    private CFXMenuLeft cfxMenuLeft;
+
+    @FXML
+    private CFXMenuRightGroup cfxMenuRightGroup;
+
     private void initListenersToButtons(){
         btnContactSearchCancel.setOnAction(event -> contactSearchButtonCancelClicked());
         btnContactSearchInvite.setOnAction(event -> contactSearchButtonInviteClicked());
 
+    }
+
+    public static ChatViewController getInstance() {
+        return instance;
     }
 
     private SingleSelectionModel<Tab> selectionModel;
@@ -198,6 +213,10 @@ public class ChatViewController implements Initializable {
         PaneProvider.setTransitionBack(transitionBack);
          selectionModel=tabPane.getSelectionModel();
          initListenersToButtons();
+         instance=this;
+         CFXMenuLeft.setParentController(instance);
+         PaneProvider.setBorderPaneMain(borderPaneMain);
+
     }
 
 
@@ -694,6 +713,9 @@ public class ChatViewController implements Initializable {
     }
 
     public void onNewGroupClicked(ActionEvent actionEvent) {
+        selectionModel.select(0);
+        cfxMenuLeft.setVisible(false);
+        menuLeff.hide();
         groupListPane.setVisible(false);
         listViewAddToGroup.setExpanded(true);
         groupNewPane.setVisible(true);
@@ -706,6 +728,8 @@ public class ChatViewController implements Initializable {
 
     public void onMyProfileOpen(ActionEvent actionEvent) {
         PaneProvider.setMyProfileScrollPane(profileScrollPane);
+        cfxMenuLeft.setVisible(false);
+        menuLeff.hide();
         myProfile.setUser(clientController.getMyUser());
         myProfile.setVisible(true);
         profileScrollPane.setVisible(true);
@@ -723,15 +747,16 @@ public class ChatViewController implements Initializable {
         else if (!menuLeff.isShowing()){
             transition.setRate(1);
             transition.play();
-            menuLeff.show();
+//            menuLeff.show();
+            cfxMenuLeft.setVisible(true);
         } else {
             menuLeff.hide();
+            cfxMenuLeft.setVisible(false);
         }
 
     }
 
     public void onHideMenuLeft(javafx.event.Event event) {
-
         transition.setRate(-1);
 
         transition.play();
@@ -775,5 +800,45 @@ public class ChatViewController implements Initializable {
         contactSearchPane.setVisible(false);
     }
 
+
+    public void onMouseExitMenu(MouseEvent mouseEvent) {
+        cfxMenuLeft.setVisible(false);
+        transition.setRate(-1);
+
+        transition.play();
+    }
+
+    public void onRightMenuButtonClicked(ActionEvent actionEvent) {
+    }
+
+
+    public void onMouseExitMenuRight(MouseEvent mouseEvent) {
+        cfxMenuRightGroup.setVisible(false);
+    }
+
+    public void btnRightMenuClicked(ActionEvent actionEvent) {
+        if (cfxMenuRightGroup.isVisible()){
+            cfxMenuRightGroup.setVisible(false);
+        } else {
+
+            cfxMenuRightGroup.setVisible(true);
+        }
+    }
+    public void alarmGroupQuitGroupExecute(){
+        new AlarmGroupQuitGroup();
+    }
+
+    public void alarmGroupDeleteGroupExecute(){
+        new AlarmDeleteGroup();
+    }
+    public void alarmDeleteMessageHistoryExecute(){
+        new AlarmDeleteMessageHistory();
+    }
+    public void alarmDeleteProfileExecute(){
+        new AlarmDeleteProfile();
+    }
+    public void alarmExirProfileExecute(){
+        new AlarmExitProfile();
+    }
 
 }

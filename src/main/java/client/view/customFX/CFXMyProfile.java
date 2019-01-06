@@ -1,5 +1,6 @@
 package client.view.customFX;
 
+import client.view.ChatViewController;
 import client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
@@ -34,9 +35,59 @@ public class CFXMyProfile extends AnchorPane {
     private JFXButton btnNameEdit;
     @FXML
     private JFXButton btnInfoEdit;
+    @FXML
+    private JFXButton btnSendMessage;
+    @FXML
+    private JFXButton btnRoom;
+    @FXML
+    private JFXButton btnInvokation;
+    @FXML
+    private JFXButton btnLogout;
+    @FXML
+    private JFXButton btnDeleteHistory;
+    @FXML
+    private JFXButton btnDeleteProfile;
 
 
     private User user;
+
+    private ChatViewController parentController;
+
+    private void initListeners(){
+        btnInfoEdit.setOnAction(event -> btnInfoClicked());
+        btnNameEdit.setOnAction(event -> btnNameChangeClicked());
+        btnClose.setOnAction(event -> closeButtonPressed());
+        btnSendMessage.setOnAction(event -> btnSendMessagePressed());
+        btnRoom.setOnAction(event -> btnRoomPressed());
+        btnInvokation.setOnAction(event -> btnInvokationPressed());
+        btnLogout.setOnAction(event -> btnLogoutPressed());
+        btnDeleteHistory.setOnAction(event -> btnDeleteHistoryPressed());
+        btnDeleteProfile.setOnAction(event -> btnDeleteProfilePressed());
+    }
+
+    private void btnDeleteProfilePressed() {
+        parentController = ChatViewController.getInstance();
+        parentController.alarmDeleteProfileExecute();
+    }
+
+    private void btnDeleteHistoryPressed() {
+        parentController = ChatViewController.getInstance();
+        parentController.alarmDeleteMessageHistoryExecute();
+    }
+
+    private void btnLogoutPressed() {
+        parentController = ChatViewController.getInstance();
+        parentController.alarmExirProfileExecute();
+    }
+
+    private void btnInvokationPressed() {
+    }
+
+    private void btnRoomPressed() {
+    }
+
+    private void btnSendMessagePressed() {
+    }
 
     public CFXMyProfile() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/CFXMyProfile.fxml"));
@@ -45,11 +96,8 @@ public class CFXMyProfile extends AnchorPane {
 
         try {
             fxmlLoader.load();
-            btnInfoEdit.setOnAction(event -> btnInfoClicked());
+            initListeners();
 
-            btnNameEdit.setOnAction(event -> btnNameChangeClicked());
-
-            btnClose.setOnAction(event -> closeButtonPressed());
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }

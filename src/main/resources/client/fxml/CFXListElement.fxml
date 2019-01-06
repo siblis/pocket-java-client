@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.*?>
-<fx:root id="CFXListElement" fx:id="CFXListElement" stylesheets="@../styles/CFXListElement.css" type="javafx.scene.layout.AnchorPane" prefHeight="55.0" prefWidth="390.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root id="CFXListElement" fx:id="CFXListElement" prefHeight="55.0" prefWidth="370.0" stylesheets="@../styles/CFXListElement.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <MaterialDesignIconView fx:id="unreadGlyph" glyphName="CHECK_ALL" size="25" style="-fx-fill: green;" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
       <Circle fx:id="avatar" fill="DODGERBLUE" radius="25.0" stroke="TRANSPARENT" strokeLineCap="ROUND" strokeType="INSIDE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0" />
