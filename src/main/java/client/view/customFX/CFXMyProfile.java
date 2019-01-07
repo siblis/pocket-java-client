@@ -106,7 +106,7 @@ public class CFXMyProfile extends AnchorPane {
 
     @FXML
     private void closeButtonPressed(){
-      PaneProvider.getMyProfileScrollPane().setVisible(false);
+      PaneProvider.getProfileScrollPane().setVisible(false);
       PaneProvider.getTransitionBack().setRate(-1);
       PaneProvider.getTransitionBack().play();
     }
