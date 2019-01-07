@@ -188,7 +188,7 @@ public class ChatViewController implements Initializable {
 
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
-        contactsObservList = FXCollections.observableList(ClientController.getInstance().getContactListOfCards());
+        contactsObservList = FXCollections.observableList(clientController.getContactListOfCards());
         contactListView.setExpanded(true);
         searchObsList = FXCollections.observableList(new ArrayList<CFXListElement>());
         searchList.setExpanded(true);

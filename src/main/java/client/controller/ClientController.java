@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static client.utils.Common.showAlert;
@@ -137,7 +136,7 @@ public class ClientController {
                 ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
                 switch (response.getResponseCode()) {
                     case 200:
-                        addContact(convertJSONToUser(response.getResponseJson()).getEmail());
+                        addContactToDbAndChat(convertJSONToUser(response.getResponseJson()));
                         break;
                     case 404:
                         showAlert("Пользователь не найден", Alert.AlertType.ERROR);//с id: " + mfs.getSenderid() + "
@@ -213,45 +212,38 @@ public class ClientController {
         contactListOfCards = null;
     }
 
-    private ContactListFromServer[] convertContactListToMap(String jsonText) {
+    private ContactListFromServer[] convertContactListFromServer(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(jsonText, ContactListFromServer[].class);
     }
 
-    private void synchronizeContactListAsAdressBook(){
-        if (contactListOfCards==null) contactListOfCards=new ArrayList<>();
-        Iterator it = contactList.iterator();
-        while (it.hasNext()){
-            Long id = (Long) it.next();
-            if (id.equals(myUser.getUid())) {
-                continue;
-            }
-            CFXListElement element = new CFXListElement();
-            element.setUser(dbService.getUser(id));
-
-            contactListOfCards.add(element);
-
-        }
-
-    }
-
     private void synchronizeContactList() {
         dbService = new DataBaseService(myUser);
         contactList = dbService.getAllUserId();
-        synchronizeContactListAsAdressBook();
+        contactListOfCards = new ArrayList<>();
+        
+        dbService.getAllUsers().forEach(user -> {
+            if (user.getUid() != myUser.getUid()) {
+                contactListOfCards.add(new CFXListElement(user));
+            }
+        });
 
         try {
             ServerResponse response = HTTPSRequest.getContacts(token);
             if (response != null) {
-                for (ContactListFromServer entry : convertContactListToMap(response.getResponseJson())) {
+                for (ContactListFromServer entry : convertContactListFromServer(response.getResponseJson())) {
                     if (!contactList.contains(entry.getId())) {
+                        //TODO: себя не должно быть в списке контактов - убрать костыль (после решения на сервере)
+                        if (entry.getId() == myUser.getUid()) continue; //костыль, который надо будет убрать
                         User user = new User(entry.getId(), entry.getName(), entry.getEmail());
-//                        user.setStatus(entry.getStatus()); //TODO добавить статусы в класс пользователей?
-                        CFXListElement element = new CFXListElement();
-                        element.setUser(user);
-                        contactListOfCards.add(element);
                         addContactToDB(user);
+                    }
+                    for (CFXListElement cont : contactListOfCards) {
+                        if (cont.getUser().getUid() == entry.getId()) {
+                            cont.setOnlineStatus(entry.isStatusOnline());
+                            break;
+                        }
                     }
                 }
             }
@@ -375,15 +367,7 @@ public class ClientController {
                 case 201:
                     showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
                     User newUser = convertJSONToUser(response.getResponseJson());
-                    addContactToDB(newUser);
-                    if (chatViewController != null) {
-                        chatViewController.fillContactListView();
-                        CFXListElement newEl = new CFXListElement();
-                        newEl.setUser(newUser);
-                        chatViewController.addNewUserToContacts(newEl);
-                        return true;
-                    }
-                    break;
+                    return addContactToDbAndChat(newUser);
                 case 404:
                    // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
                     break;
@@ -402,6 +386,16 @@ public class ClientController {
     private void addContactToDB(User contact) {
         dbService.insertUser(new User(contact.getUid(), contact.getAccount_name(), contact.getEmail()));
         contactList.add(contact.getUid());
+        contactListOfCards.add(new CFXListElement(contact));
+    }
+
+    private boolean addContactToDbAndChat(User contact) {
+        addContactToDB(contact);
+        if (chatViewController != null) {
+            chatViewController.addNewUserToContacts(contactListOfCards.get(contactListOfCards.size() - 1));
+            return true;
+        }
+        return false;
     }
 
     public void proceedRegister(String login, String password, String email) {
