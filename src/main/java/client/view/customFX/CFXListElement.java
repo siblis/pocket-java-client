@@ -11,6 +11,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class CFXListElement extends AnchorPane {
 
@@ -129,5 +130,27 @@ public class CFXListElement extends AnchorPane {
 
     public void setOnlineStatus(boolean isOnline){
         this.circleOnline.setVisible(isOnline);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 79 * hash + Objects.hashCode(this.user);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CFXListElement other = (CFXListElement) obj;
+        return Objects.equals(this.user, other.user);
     }
 }
