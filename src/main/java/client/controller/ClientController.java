@@ -10,6 +10,7 @@ import client.view.ChatViewController;
 import client.view.customFX.CFXListElement;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
@@ -264,6 +265,12 @@ public class ClientController {
         return gson.fromJson(jsonText, User.class);
     }
 
+    private List<User> convertJSONToUsers(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.fromJson(jsonText, new TypeToken<List<User>>(){}.getType());
+    }
+
     public Group getGroupInfo(String groupName){
         Group group = new Group();
         try {
@@ -381,6 +388,30 @@ public class ClientController {
             controllerLogger.error("HTTPSRequest.addContact_error", e);
         }
         return false;
+    }
+
+    public List<User> findContact(String contact) {
+        UserToServer cts = new UserToServer(contact);
+        String requestJSON = new Gson().toJson(cts);
+
+        try {
+            ServerResponse response = HTTPSRequest.getUser(requestJSON, token);
+            switch (response.getResponseCode()) {
+                case 201:
+                    return convertJSONToUsers(response.getResponseJson());
+                case 404:
+                   // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+                    break;
+                case 409:
+                  //  showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getUserByNameOrEmail_error", e);
+        }
+        return null;
     }
 
     private void addContactToDB(User contact) {
