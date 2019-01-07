@@ -59,7 +59,7 @@ public class CFXListElement extends AnchorPane {
         
         setUnreadMessages("0");
         setBody("");
-        setOffline();
+        setOnlineStatus(false);
     }
 
     public CFXListElement(User user) {
@@ -127,12 +127,7 @@ public class CFXListElement extends AnchorPane {
 
     }
 
-    public void setOnline(){
-        this.circleOnline.setVisible(true);
+    public void setOnlineStatus(boolean isOnline){
+        this.circleOnline.setVisible(isOnline);
     }
-
-    public void setOffline(){
-        this.circleOnline.setVisible(false);
-    }
-
 }
