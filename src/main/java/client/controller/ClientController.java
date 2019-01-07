@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static client.utils.Common.showAlert;
 
@@ -265,10 +266,17 @@ public class ClientController {
         return gson.fromJson(jsonText, User.class);
     }
 
-    private List<User> convertJSONToUsers(String jsonText) {
+    private List<CFXListElement> convertJSONToCFXListElements(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.fromJson(jsonText, new TypeToken<List<User>>(){}.getType());
+        Map<String, UserFromServer> users = 
+                gson.fromJson(jsonText, new TypeToken<Map<String, UserFromServer>>(){}.getType());
+        List<CFXListElement> res = new ArrayList<>();
+        if (users != null && users.size() > 0) {
+            users.forEach((id, userFS) -> res.add(new CFXListElement(
+                new User(Long.parseLong(id), userFS.getAccount_name(), userFS.getEmail()))));
+        }
+        return res.isEmpty() ? null : res;
     }
 
     public Group getGroupInfo(String groupName){
@@ -390,15 +398,15 @@ public class ClientController {
         return false;
     }
 
-    public List<User> findContact(String contact) {
+    public List<CFXListElement> findContact(String contact) {
         UserToServer cts = new UserToServer(contact);
         String requestJSON = new Gson().toJson(cts);
 
         try {
-            ServerResponse response = HTTPSRequest.getUser(requestJSON, token);
+            ServerResponse response = HTTPSRequest.getUser(contact, token);
             switch (response.getResponseCode()) {
-                case 201:
-                    return convertJSONToUsers(response.getResponseJson());
+                case 200:
+                    return convertJSONToCFXListElements(response.getResponseJson());
                 case 404:
                    // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
                     break;

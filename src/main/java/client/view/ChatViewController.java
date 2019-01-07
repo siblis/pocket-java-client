@@ -192,6 +192,7 @@ public class ChatViewController implements Initializable {
         contactListView.setExpanded(true);
         searchObsList = FXCollections.observableList(new ArrayList<CFXListElement>());
         searchList.setExpanded(true);
+        searchList.setItems(searchObsList);
         fillContactListView();
 
         desktop = Desktop.getDesktop();
@@ -775,12 +776,19 @@ public class ChatViewController implements Initializable {
 
     public void findContact(KeyEvent keyEvent) {
         if (tfSearchInput.getText().length()>0) {
+            searchObsList.clear();
             contactsViewPane.setVisible(false);
             contactSearchPane.setVisible(true);
-            if (ClientController.getInstance().getAllUserNames().contains(tfSearchInput.getText())){
-              CFXListElement newSearchElement = new CFXListElement();
-              newSearchElement.setTopic(tfSearchInput.getText());
-                searchObsList.add(newSearchElement);
+            contactsObservList.forEach(elem -> {
+                if (elem.getUser().getEmail().contains(tfSearchInput.getText()) ||
+                        elem.getUser().getAccount_name().contains(tfSearchInput.getText())) {
+                    searchObsList.add(new CFXListElement(elem.getUser()));
+                }
+            });
+            List<CFXListElement> searchFromServer = clientController.findContact(tfSearchInput.getText());
+            if (searchFromServer != null) {
+                searchFromServer.removeAll(searchObsList);
+                searchObsList.addAll(searchFromServer);
             }
             selectionModel.select(1);
         } else {
