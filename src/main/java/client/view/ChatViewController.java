@@ -511,7 +511,7 @@ public class ChatViewController implements Initializable {
     }
 
     @FXML
-    private void handleDisconnectButton() {
+    public void handleDisconnectButton() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
         stage.close();
         clientController.disconnect();
