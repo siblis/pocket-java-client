@@ -1,5 +1,6 @@
 package client.view.customFX;
 
+import client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import database.entity.User;
@@ -18,7 +19,7 @@ public class CFXOtherProfile extends AnchorPane {
     private User user;
 
     @FXML
-    private AnchorPane myProfilePane;
+    private AnchorPane otherProfilePane;
 
     @FXML
     private JFXButton btnCloseRight;
@@ -39,6 +40,14 @@ public class CFXOtherProfile extends AnchorPane {
     @FXML
     private JFXTextArea textareaInfo;
 
+    @FXML
+    private JFXButton writeMsgBtn;
+
+    @FXML
+    private JFXButton clearMsgsBtn;
+
+    @FXML
+    private JFXButton removeUserBtn;
 
     public void setOnline(){
         circleOnline.setVisible(true);
@@ -63,34 +72,43 @@ public class CFXOtherProfile extends AnchorPane {
 
         try {
             fxmlLoader.load();
-            checkIsFriend();
+            setIfFriendly(false);
+            btnCloseRight.setOnAction(event -> closeButtonPressed());
+            btnCloseCenter.setOnAction(event -> closeButtonPressed());
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }
 
     }
 
-    private void checkIsFriend() {
-        if (isFriend) {
-            btnCloseCenter.setVisible(true);
-            btnCloseRight.setVisible(false);
-            btnInvite.setVisible(false);
-        } else {
-            btnCloseCenter.setVisible(false);
-            btnCloseRight.setVisible(true);
-            btnInvite.setVisible(true);
-        }
+    public CFXOtherProfile(User user) {
+        this();
+        setUser(user);
     }
 
-
+    private void checkIsFriend() {
+        // true для контактов из адресной книги:
+        btnCloseCenter.setVisible(isFriend);
+        writeMsgBtn.setVisible(isFriend);
+        clearMsgsBtn.setVisible(isFriend);
+        removeUserBtn.setVisible(isFriend);
+        circleOnline.setVisible(isFriend);
+        // true для контактов отсутствующих в адресной книге:
+        btnCloseRight.setVisible(!isFriend);
+        btnInvite.setVisible(!isFriend);
+        labelStatus.setVisible(!isFriend);
+    }
 
     public void setIfFriendly(boolean isFriend){
         this.isFriend=isFriend;
+        checkIsFriend();
     }
 
     public boolean isFriend() {
         return isFriend;
     }
 
-
+    private void closeButtonPressed() {
+        PaneProvider.getProfileScrollPane().setVisible(false);
+    }
 }

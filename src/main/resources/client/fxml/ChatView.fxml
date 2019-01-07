@@ -97,7 +97,7 @@
                                             <AnchorPane fx:id="contactSearchPane" snapToPixel="false" stylesheets="@../styles/searchGroupPane.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                 <children>
                                                     <JFXListView fx:id="searchListView" prefHeight="200.0" prefWidth="200.0" onMouseClicked="#handleFindedClientChoice" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                    <JFXButton fx:id="btnContactSearchInvite" buttonType="RAISED" cancelButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCreateGroup" text="Пригласить" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0">
+                                                    <JFXButton fx:id="btnContactSearchInvite" visible="false" buttonType="RAISED" cancelButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCreateGroup" text="Пригласить" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0">
                                                         <graphic>
                                                             <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="btnCreateGroup" />
                                                         </graphic>
@@ -178,7 +178,7 @@
             </ScrollPane>
             <ScrollPane fx:id="otherProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
                 <content>
-                    <CFXOtherProfile fx:id="othersProfile" prefWidth="410.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <CFXOtherProfile fx:id="othersProfile" prefWidth="410.0" visible="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                     </CFXOtherProfile>
                 </content>
             </ScrollPane>
