@@ -147,7 +147,7 @@ public class ChatViewController implements Initializable {
     private JFXButton btnContactSearchInvite;
 
     @FXML
-    private JFXListView<CFXListElement> searchList;
+    private JFXListView<CFXListElement> searchListView;
     private ObservableList<CFXListElement> searchObsList;
 
     @FXML
@@ -191,8 +191,8 @@ public class ChatViewController implements Initializable {
         contactsObservList = FXCollections.observableList(clientController.getContactListOfCards());
         contactListView.setExpanded(true);
         searchObsList = FXCollections.observableList(new ArrayList<CFXListElement>());
-        searchList.setExpanded(true);
-        searchList.setItems(searchObsList);
+        searchListView.setExpanded(true);
+        searchListView.setItems(searchObsList);
         fillContactListView();
 
         desktop = Desktop.getDesktop();
