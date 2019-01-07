@@ -79,6 +79,14 @@ public class ClientController {
         loadChat();
     }
 
+    public boolean hasReceiver(long receiverId) {
+        return dbService.getUser(receiverId) != null;
+    }
+
+    public boolean hasReceiver(String receiverName) {
+        return dbService.getUser(receiverName) != null;
+    }
+
     public List<CFXListElement> getContactListOfCards() {
         return contactListOfCards;
     }
