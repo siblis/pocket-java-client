@@ -131,12 +131,12 @@ public class CFXOtherProfile extends AnchorPane {
     }
 
     private void removeUser() {
-        ClientController.getInstance().removeContact(user.getEmail()); // todo подтверждение?
         closeButtonPressed();
+        ClientController.getInstance().removeContact(user.getEmail()); // todo подтверждение?
     }
 
     private void inviteContact() {
-        ClientController.getInstance().addContact(user.getEmail());
         closeButtonPressed();
+        ClientController.getInstance().addContact(user.getEmail());
     }
 }

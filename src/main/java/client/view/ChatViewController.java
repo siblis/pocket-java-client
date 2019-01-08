@@ -356,8 +356,10 @@ public class ChatViewController implements Initializable {
     }
 
     public void updateContactListView() {
-        contactListView.refresh();
         if (!contactsViewPane.isVisible() && contactSearchPane.isVisible()) contactSearchBtnCancelClicked();
+        contactListView.setItems(null);
+        contactListView.setItems(contactsObservList);
+        contactListView.refresh();
     }
 
     //  инициализация картинки аватара
@@ -828,6 +830,7 @@ public class ChatViewController implements Initializable {
             }
             selectionModel.select(1);
             searchListView.refresh();
+            if (btnContactSearchInvite.isVisible()) btnContactSearchInvite.setVisible(false);
         } else {
             contactsViewPane.setVisible(true);
             contactSearchPane.setVisible(false);
