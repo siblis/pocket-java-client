@@ -78,6 +78,11 @@ public class HTTPSRequest {
         return getServerResponse(connection, requestJSON);
     }
 
+    public static ServerResponse deleteContact(String contastsEmailJSON, String token) throws Exception {
+        HttpsURLConnection connection = getConnection("/v1/account/contacts/", "DELETE", token);
+        return getServerResponse(connection, contastsEmailJSON);
+    }
+
     public static ServerResponse getContacts(String token) throws Exception {
         HttpsURLConnection connection = getConnection("/v1/account/contacts/", "GET", token);
         return getServerResponse(connection, null);

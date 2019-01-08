@@ -452,6 +452,45 @@ public class ClientController {
         return false;
     }
 
+    public boolean removeContact(String contactsEmail) {
+        UserToServer cts = new UserToServer(contactsEmail);
+        String requestJSON = new Gson().toJson(cts);
+
+        try {
+            ServerResponse response = HTTPSRequest.deleteContact(requestJSON, token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    showAlert("Контакт " + contactsEmail + " успешно удалён", Alert.AlertType.INFORMATION);
+                    User delUser = new UserDeletedFromServer(response.getResponseJson()).toUser();
+                    delUser.setEmail(contactsEmail); // на 08.01.2018 нет в ответе сервера
+                    removeContactFromDbAndChat(delUser);
+                    return true;
+                case 404:
+                    showAlert("Пользователя " + contactsEmail + " нет в списке контактов", Alert.AlertType.INFORMATION);
+                    break;
+                default:
+                    //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.addContact_error", e);
+        }
+        return false;
+    }
+
+    private void removeContactFromDb(User contact) {
+        dbService.deleteUser(contact);
+//        dbService.deleteChat(myUser, contact); // todo реализовать удаление переписки удалённого контакта?
+        contactList.remove(contact.getUid());
+        contactListOfCards.remove(new CFXListElement(contact));
+    }
+
+    private void removeContactFromDbAndChat(User contact) {
+        removeContactFromDb(contact);
+        if (chatViewController != null && receiver.equals(contact)) {
+            chatViewController.clearMessageWebView();
+        }
+    }
+
     public void proceedRegister(String login, String password, String email) {
         String requestJSON = "{" +
                 "\"account_name\": \"" + login + "\"," +
