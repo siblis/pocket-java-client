@@ -84,6 +84,7 @@ public class CFXOtherProfile extends AnchorPane {
     }
 
     private void initListeners(){
+        btnInvite.setOnAction(event -> inviteContact());
         btnCloseRight.setOnAction(event -> closeButtonPressed());
         btnCloseCenter.setOnAction(event -> closeButtonPressed());
         writeMsgBtn.setOnAction(event -> writeMsg());
@@ -96,6 +97,7 @@ public class CFXOtherProfile extends AnchorPane {
         // true для контактов из адресной книги:
         btnCloseCenter.setVisible(isFriend);
         writeMsgBtn.setVisible(isFriend);
+        notificationsBtn.setVisible(isFriend);
         clearMsgsBtn.setVisible(isFriend);
         removeUserBtn.setVisible(isFriend);
         circleOnline.setVisible(isFriend);
@@ -130,9 +132,11 @@ public class CFXOtherProfile extends AnchorPane {
 
     private void removeUser() {
         ClientController.getInstance().removeContact(user.getEmail()); // todo подтверждение?
+        closeButtonPressed();
     }
 
     private void inviteContact() {
         ClientController.getInstance().addContact(user.getEmail());
+        closeButtonPressed();
     }
 }

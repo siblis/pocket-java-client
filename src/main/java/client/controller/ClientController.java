@@ -82,6 +82,7 @@ public class ClientController {
     public void setReceiver(User receiver) {
         if (!contactList.contains(receiver.getUid()))
             addContactToDbAndChat(receiver); // todo поправить логику получения сообщений?
+            //NB: todo добавлять в список на сервере? addContactToDbAndChat не добавляет
         this.receiver = receiver;
         loadChat();
     }
@@ -153,7 +154,7 @@ public class ClientController {
                 ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
                 switch (response.getResponseCode()) {
                     case 200:
-                        addContactToDbAndChat(convertJSONToUser(response.getResponseJson()));
+                        addContact(convertJSONToUser(response.getResponseJson()).getEmail());
                         break;
                     case 404:
                         showAlert("Пользователь не найден", Alert.AlertType.ERROR);//с id: " + mfs.getSenderid() + "
@@ -284,12 +285,30 @@ public class ClientController {
     private List<CFXListElement> convertJSONToCFXListElements(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        Map<String, UserFromServer> users = 
-                gson.fromJson(jsonText, new TypeToken<Map<String, UserFromServer>>(){}.getType());
         List<CFXListElement> res = new ArrayList<>();
-        if (users != null && users.size() > 0) {
-            users.forEach((id, userFS) -> res.add(new CFXListElement(
-                new User(Long.parseLong(id), userFS.getAccount_name(), userFS.getEmail()))));
+        try {
+            Map<String, UserFromServer> users
+                    = gson.fromJson(jsonText, new TypeToken<Map<String, UserFromServer>>() {
+                    }.getType());
+            if (users != null && users.size() > 0) {
+                users.forEach((id, userFS) -> res.add(new CFXListElement(
+                        new User(Long.parseLong(id), userFS.getAccount_name(), userFS.getEmail()))));
+            }
+        } catch (Exception e) {
+            return convertJSONToCFXListElement(jsonText);
+        }
+        return res.isEmpty() ? null : res;
+    }
+
+    //костыль, т.к. список найденных и один контакт приходят в разном виде
+    private List<CFXListElement> convertJSONToCFXListElement(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        List<CFXListElement> res = new ArrayList<>(1);
+        try {
+            res.add(new CFXListElement(gson.fromJson(jsonText, User.class)));
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getUserByNameOrEmail_JsonParsError", e);
         }
         return res.isEmpty() ? null : res;
     }
@@ -446,7 +465,7 @@ public class ClientController {
     private boolean addContactToDbAndChat(User contact) {
         addContactToDB(contact);
         if (chatViewController != null) {
-            chatViewController.addNewUserToContacts(contactListOfCards.get(contactListOfCards.size() - 1));
+            chatViewController.updateContactListView();
             return true;
         }
         return false;
@@ -486,8 +505,9 @@ public class ClientController {
 
     private void removeContactFromDbAndChat(User contact) {
         removeContactFromDb(contact);
-        if (chatViewController != null && receiver.equals(contact)) {
-            chatViewController.clearMessageWebView();
+        if (chatViewController != null) {
+            chatViewController.updateContactListView();
+            if (receiver.equals(contact)) chatViewController.clearMessageWebView();
         }
     }
 

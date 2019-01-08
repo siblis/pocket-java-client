@@ -205,10 +205,10 @@ public class ChatViewController implements Initializable {
         // при пустом списке контактов открыть вкладку контакты //todo перепилить на список чатов?
         if (contactsObservList.isEmpty()) contacts.getTabPane().getSelectionModel().select(contacts);
         contactListView.setExpanded(true);
+        fillContactListView();
         searchObsList = FXCollections.observableList(new ArrayList<CFXListElement>());
         searchListView.setExpanded(true);
         searchListView.setItems(searchObsList);
-        fillContactListView();
 
         desktop = Desktop.getDesktop();
 
@@ -350,14 +350,14 @@ public class ChatViewController implements Initializable {
                 "</html> \n");
     }
 
-    public void fillContactListView() {
+    private void fillContactListView() {
         contactListView.setItems(contactsObservList);
-        //contactsObservList.addAll(clientController.getContactListOfCards());
-        for (CFXListElement element:contactsObservList){
-            element.setUnreadMessages("0");
-            element.setBody("Входящие сообщения");
+        //todo: загрузка последних сообщений в body элементов
+    }
 
-        }
+    public void updateContactListView() {
+        contactListView.refresh();
+        if (!contactsViewPane.isVisible() && contactSearchPane.isVisible()) contactSearchBtnCancelClicked();
     }
 
     //  инициализация картинки аватара
@@ -518,10 +518,6 @@ public class ChatViewController implements Initializable {
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(message);
-    }
-
-    public void addNewUserToContacts(CFXListElement newUser) {
-        contactsObservList.add(newUser);
     }
 
     @FXML
@@ -808,19 +804,23 @@ public class ChatViewController implements Initializable {
                     searchObsList.add(temp);
                 }
             });
-            List<CFXListElement> searchFromServer = clientController.findContact(tfSearchInput.getText());
-            //todo: статус пользователей (онлайн/офлайн) - будет приходить с сервера или запрашивать на каждого?
-            if (searchFromServer != null) {
-                searchFromServer.removeAll(searchObsList);
-                searchFromServer.remove(new CFXListElement(clientController.getMyUser()));
-                searchFromServer.forEach(elem -> {
-                    CFXListElement temp = new CFXListElement();
-                    temp.setUser(elem.getUser());
-                    temp.setBody(elem.getUser().getEmail());
-                    searchObsList.add(temp);
-                });
+            // todo: поиск на сервере от 2х символов, убрать/расширить ограничение?
+            if (tfSearchInput.getText().length()>=2) {
+                List<CFXListElement> searchFromServer = clientController.findContact(tfSearchInput.getText());
+                //todo: статус пользователей (онлайн/офлайн) - будет приходить с сервера или запрашивать на каждого?
+                if (searchFromServer != null) {
+                    searchFromServer.removeAll(searchObsList);
+                    searchFromServer.remove(new CFXListElement(clientController.getMyUser()));
+                    searchFromServer.forEach(elem -> {
+                        CFXListElement temp = new CFXListElement();
+                        temp.setUser(elem.getUser());
+                        temp.setBody(elem.getUser().getEmail());
+                        searchObsList.add(temp);
+                    });
+                }
             }
             selectionModel.select(1);
+            searchListView.refresh();
         } else {
             contactsViewPane.setVisible(true);
             contactSearchPane.setVisible(false);
@@ -830,7 +830,8 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void contactSearchBtnInviteClicked() {
-        ClientController.getInstance().addContact(tfSearchInput.getText());
+        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getEmail();
+        clientController.addContact(receiver);
         contactSearchBtnCancelClicked();
     }
 
