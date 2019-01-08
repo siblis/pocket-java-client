@@ -502,9 +502,14 @@ public class ClientController {
         return false;
     }
 
+    public void clearMessagesWithUser(User contact) {
+        if (!dbService.getChat(myUser, contact).isEmpty())
+            dbService.deleteChat(myUser, contact);
+    }
+
     private void removeContactFromDb(User contact) {
+        clearMessagesWithUser(contact);
         dbService.deleteUser(contact);
-//        dbService.deleteChat(myUser, contact); // todo реализовать удаление переписки удалённого контакта?
         contactList.remove(contact.getUid());
         contactListOfCards.remove(new CFXListElement(contact));
     }

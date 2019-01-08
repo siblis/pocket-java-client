@@ -128,6 +128,7 @@ public class CFXOtherProfile extends AnchorPane {
     }
 
     private void clearMsgs() {
+        ClientController.getInstance().clearMessagesWithUser(user); // todo подтверждение?
     }
 
     private void removeUser() {

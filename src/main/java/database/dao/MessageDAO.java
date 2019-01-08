@@ -66,6 +66,21 @@ public class MessageDAO {
         return messages;
     }
 
+    void delete(User agent1id, User agent2id){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.getTransaction().begin();
+
+        Query<Message> query = session.createQuery("DELETE Message m where " +
+                "(m.sender = :id1Param and m.receiver = :id2Param) " +
+                "or " +
+                "(m.receiver = :id1Param and m.sender = :id2Param)");
+        query.setParameter("id1Param", agent1id);
+        query.setParameter("id2Param", agent2id);
+        query.executeUpdate();
+
+        session.getTransaction().commit();
+    }
+
     Message findMessageById(long id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
