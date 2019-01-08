@@ -79,6 +79,13 @@ public class ClientController {
         loadChat();
     }
 
+    public void setReceiver(User receiver) {
+        if (!contactList.contains(receiver.getUid()))
+            addContactToDbAndChat(receiver); // todo поправить логику получения сообщений?
+        this.receiver = receiver;
+        loadChat();
+    }
+
     public boolean hasReceiver(long receiverId) {
         return dbService.getUser(receiverId) != null;
     }

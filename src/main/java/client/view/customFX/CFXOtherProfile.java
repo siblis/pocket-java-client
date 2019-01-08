@@ -1,5 +1,6 @@
 package client.view.customFX;
 
+import client.controller.ClientController;
 import client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
@@ -42,6 +43,9 @@ public class CFXOtherProfile extends AnchorPane {
 
     @FXML
     private JFXButton writeMsgBtn;
+    
+    @FXML
+    private JFXButton notificationsBtn;
 
     @FXML
     private JFXButton clearMsgsBtn;
@@ -49,14 +53,9 @@ public class CFXOtherProfile extends AnchorPane {
     @FXML
     private JFXButton removeUserBtn;
 
-    public void setOnline(){
-        circleOnline.setVisible(true);
-        labelStatus.setVisible(true);
-    }
-
-    public void setOffline(){
-        circleOnline.setVisible(false);
-        labelStatus.setVisible(false);
+    public void onlineStatusChange(boolean newIsOnlineStatus){
+        if (isFriend) circleOnline.setVisible(newIsOnlineStatus);
+        if (!isFriend) labelStatus.setVisible(newIsOnlineStatus);
     }
 
     public void setUser(User user){
@@ -73,12 +72,10 @@ public class CFXOtherProfile extends AnchorPane {
         try {
             fxmlLoader.load();
             setIfFriendly(false);
-            btnCloseRight.setOnAction(event -> closeButtonPressed());
-            btnCloseCenter.setOnAction(event -> closeButtonPressed());
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }
-
+        initListeners();
     }
 
     public CFXOtherProfile(User user) {
@@ -86,6 +83,15 @@ public class CFXOtherProfile extends AnchorPane {
         setUser(user);
     }
 
+    private void initListeners(){
+        btnCloseRight.setOnAction(event -> closeButtonPressed());
+        btnCloseCenter.setOnAction(event -> closeButtonPressed());
+        writeMsgBtn.setOnAction(event -> writeMsg());
+        notificationsBtn.setOnAction(event -> notificationsConf());
+        clearMsgsBtn.setOnAction(event -> clearMsgs());
+        removeUserBtn.setOnAction(event -> removeUser());
+    }
+    
     private void checkIsFriend() {
         // true для контактов из адресной книги:
         btnCloseCenter.setVisible(isFriend);
@@ -110,5 +116,23 @@ public class CFXOtherProfile extends AnchorPane {
 
     private void closeButtonPressed() {
         PaneProvider.getProfileScrollPane().setVisible(false);
+    }
+
+    private void writeMsg() {
+        ClientController.getInstance().setReceiver(user);
+    }
+
+    private void notificationsConf() {
+    }
+
+    private void clearMsgs() {
+    }
+
+    private void removeUser() {
+        ClientController.getInstance().removeContact(user.getEmail()); // todo подтверждение?
+    }
+
+    private void inviteContact() {
+        ClientController.getInstance().addContact(user.getEmail());
     }
 }

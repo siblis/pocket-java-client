@@ -77,7 +77,7 @@ public class CFXMyProfile extends AnchorPane {
 
     private void btnLogoutPressed() {
         parentController = ChatViewController.getInstance();
-        parentController.alarmExirProfileExecute();
+        parentController.alarmExitProfileExecute();
     }
 
     private void btnInvokationPressed() {

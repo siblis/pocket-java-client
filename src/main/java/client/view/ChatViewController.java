@@ -876,7 +876,7 @@ public class ChatViewController implements Initializable {
     public void alarmDeleteProfileExecute(){
         new AlarmDeleteProfile();
     }
-    public void alarmExirProfileExecute(){
+    public void alarmExitProfileExecute(){
         new AlarmExitProfile();
     }
 
