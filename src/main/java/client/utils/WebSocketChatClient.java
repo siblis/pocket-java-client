@@ -37,7 +37,8 @@ public class WebSocketChatClient extends WebSocketClient {
     @Override
     public void onMessage( String message ) {
         System.out.println( "got: " + message );
-        if (message.contains("receiver")){
+        //todo рубим sendMessage кавычками
+        if (message.contains("\"receiver\"")){
             Platform.runLater(() -> controller.receiveMessage(message));
         }
     }

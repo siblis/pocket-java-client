@@ -132,7 +132,7 @@ public class ClientController {
 
     public void receiveMessage(String message) {
         MessageFromServer mfs = convertMessageToMFS(message);
-        if (!contactList.contains(mfs.getSenderid())) {
+        if (!contactList.contains(mfs.getSenderid())) { //Проверяем, что осообщение пришло не от клиента в списке
             try {
                 ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
                 switch (response.getResponseCode()) {
@@ -157,7 +157,6 @@ public class ClientController {
         if (mfs.getSenderid() !=0) { //отключаем звук для служебных сообщений
             Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
         }
-
         dbService.addMessage(mfs.getReceiver(),
                 mfs.getSenderid(),
                 new Message(mfs.getMessage(),
@@ -172,7 +171,6 @@ public class ClientController {
         MessageToServer MTS = new MessageToServer(receiver.getUid(), message);
 
         String jsonMessage = new Gson().toJson(MTS);
-        System.out.println(jsonMessage);
         try {
             conn.getChatClient().send(jsonMessage);
 
