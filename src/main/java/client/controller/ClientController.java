@@ -466,9 +466,8 @@ public class ClientController {
         addContactToDB(contact);
         if (chatViewController != null) {
             chatViewController.updateContactListView();
-            return true;
         }
-        return false;
+        return true;
     }
 
     public boolean removeContact(String contactsEmail) {
