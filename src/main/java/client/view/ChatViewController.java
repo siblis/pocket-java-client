@@ -550,18 +550,41 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleClientChoice(MouseEvent event) {
+        long receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getUid();
         if (event.getClickCount() == 1) {
-            String receiver = contactListView.getSelectionModel().getSelectedItem().getTopic();
             //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
             clientController.setReceiver(receiver);
+            messageField.requestFocus();
+            messageField.selectEnd();
+        } else if (event.getClickCount() == 2) {
+            othersProfile.setUser(
+                    contactListView.getSelectionModel().getSelectedItem().getUser());
+            othersProfile.setIfFriendly(true);
+            PaneProvider.setProfileScrollPane(otherProfileScrollPane);
+            paneProvidersProfScrollPaneVisChange(true);
         }
-
-        messageField.requestFocus();
-        messageField.selectEnd();
     }
 
     @FXML
     private void handleFindedClientChoice(MouseEvent event) {
+        long receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getUid();
+        if (event.getClickCount() == 1) {
+            if (clientController.hasReceiver(receiver)) {
+                btnContactSearchInvite.setVisible(false);
+                clientController.setReceiver(receiver);
+                messageField.requestFocus();
+                messageField.selectEnd();
+            } else {
+                clearMessageWebView();
+                btnContactSearchInvite.setVisible(true);
+            }
+        } else if (event.getClickCount() == 2) {
+            othersProfile.setUser(
+                    searchListView.getSelectionModel().getSelectedItem().getUser());
+            othersProfile.setIfFriendly(clientController.hasReceiver(receiver));
+            PaneProvider.setProfileScrollPane(otherProfileScrollPane);
+            paneProvidersProfScrollPaneVisChange(true);
+        }
     }
 
     private void paneProvidersProfScrollPaneVisChange(boolean newVisStat) {
