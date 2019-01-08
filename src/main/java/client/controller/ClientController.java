@@ -248,6 +248,8 @@ public class ClientController {
         try {
             ServerResponse response = HTTPSRequest.getContacts(token);
             if (response != null) {
+                List<User> contactsToRemoveFromDb = dbService.getAllUsers();
+                contactsToRemoveFromDb.remove(myUser);
                 for (ContactListFromServer entry : convertContactListFromServer(response.getResponseJson())) {
                     if (!contactList.contains(entry.getId())) {
                         //TODO: себя не должно быть в списке контактов - убрать костыль (после решения на сервере)
@@ -261,7 +263,14 @@ public class ClientController {
                             break;
                         }
                     }
+                    //в списке останутся только контакты, которых нет на сервере
+                    contactsToRemoveFromDb.remove(
+                            new User(entry.getId(), entry.getName(), entry.getEmail()));
                 }
+
+                //удаляем из локальной базы контакты, которых нет в списке контактов на сервере
+                if (!contactsToRemoveFromDb.isEmpty()) 
+                    contactsToRemoveFromDb.forEach(entry -> removeContactFromDb(entry));
             }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getContacts_error", e);
