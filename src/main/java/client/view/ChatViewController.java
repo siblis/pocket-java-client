@@ -802,13 +802,23 @@ public class ChatViewController implements Initializable {
             contactsObservList.forEach(elem -> {
                 if (elem.getUser().getEmail().contains(tfSearchInput.getText()) ||
                         elem.getUser().getAccount_name().contains(tfSearchInput.getText())) {
-                    searchObsList.add(new CFXListElement(elem.getUser()));
+                    CFXListElement temp = new CFXListElement();
+                    temp.setUser(elem.getUser());
+                    temp.setBody(elem.getUser().getEmail());
+                    searchObsList.add(temp);
                 }
             });
             List<CFXListElement> searchFromServer = clientController.findContact(tfSearchInput.getText());
+            //todo: статус пользователей (онлайн/офлайн) - будет приходить с сервера или запрашивать на каждого?
             if (searchFromServer != null) {
                 searchFromServer.removeAll(searchObsList);
-                searchObsList.addAll(searchFromServer);
+                searchFromServer.remove(new CFXListElement(clientController.getMyUser()));
+                searchFromServer.forEach(elem -> {
+                    CFXListElement temp = new CFXListElement();
+                    temp.setUser(elem.getUser());
+                    temp.setBody(elem.getUser().getEmail());
+                    searchObsList.add(temp);
+                });
             }
             selectionModel.select(1);
         } else {
