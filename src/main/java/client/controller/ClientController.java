@@ -54,6 +54,10 @@ public class ClientController {
         return myUser;
     }
 
+    public User getReciever() {
+        return receiver;
+    }
+
     public static ClientController getInstance() {
         if (instance == null) {
             instance = new ClientController();
@@ -67,6 +71,10 @@ public class ClientController {
 
     public String getSenderName() {
         return myUser.getAccount_name();
+    }
+
+    public String getRecieverName() {
+        return receiver.getAccount_name();
     }
 
     public void setReceiver(long receiverId) {
