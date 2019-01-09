@@ -526,7 +526,7 @@ public class ChatViewController implements Initializable {
             if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
-        targetChat.setBody(message);
+        targetChat.setBody(senderName + ": " + message);
     }
 
     @FXML

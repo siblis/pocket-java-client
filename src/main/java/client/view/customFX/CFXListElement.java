@@ -89,7 +89,7 @@ public class CFXListElement extends AnchorPane {
     }
 
     public void setBody(String body) {
-        int maxLenOfVisible = 20;
+        int maxLenOfVisible = 40;
         if (body.length() > maxLenOfVisible) body = body.substring(0, maxLenOfVisible - 3) + "...";
         body = body.replace("\n", " ");
         this.body.setText(body);
