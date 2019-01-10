@@ -1,6 +1,7 @@
 package client.utils;
 
 import client.controller.ClientController;
+import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,7 +22,10 @@ public class Connector {
         }
     }
 
-    public WebSocketChatClient getChatClient() {
+    public WebSocketChatClient getChatClient() throws IOException {
+        if (chatClient == null) {
+            throw new IOException("Connection with socket is closed");
+        }
         return chatClient;
     }
 
@@ -36,4 +40,8 @@ public class Connector {
         chatClient.connectBlocking();
     }
 
+    public void disconnect() {
+        chatClient.close();
+        chatClient = null;
+    }
 }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.*?>
+<fx:root id="CFXGroupProfile" fx:id="CFXGroupProfile" stylesheets="@../styles/GroupProfile.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="763.0" prefWidth="411.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Rectangle fill="#ede6e0" height="130.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="411.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Arc fill="#ede6e0" layoutX="205.0" layoutY="130.0" length="180.0" radiusX="205.0" radiusY="94.0" startAngle="180.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" type="ROUND" AnchorPane.rightAnchor="0.0" />
+      <Circle fx:id="circleAvatar" fill="#7e6990" layoutX="205.0" layoutY="114.0" radius="65.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="4.0" AnchorPane.topAnchor="28.0" />
+      <Text id="textGroupProfile" fill="#34495e" layoutX="153.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textGroupProfile" text="Групповой профиль" AnchorPane.bottomAnchor="565.71875" AnchorPane.leftAnchor="135.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="176.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+         <Text fill="#34495e" layoutX="34.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textGroupProfile" text="Описание:" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="326.0" />
+         <JFXTextArea fx:id="taInfo" editable="false" layoutX="25.0" layoutY="382.0" prefHeight="68.0" text="Команда разработчиков десктоп - версии мессенджера “Pocket Messenger”" unFocusColor="WHITE" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="345.0">
+            <font>
+               <Font size="16.0" />
+            </font>
+         </JFXTextArea>
+         <JFXButton fx:id="btnShowMembers" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutY="482.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="411.0" styleClass="btnWriteMessage" text="Участники" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="424.0">
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/groups/members.png" />
+                  </image>
+               </ImageView>
+            </graphic>
+            <font>
+               <Font size="16.0" />
+            </font></JFXButton>
+       <JFXButton fx:id="btnNotifications" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Оповещения" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="95.0" AnchorPane.topAnchor="464.0">
+           <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../images/profile/alarm.png" />
+                   </image>
+               </ImageView>
+           </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
+       </JFXButton>
+       <JFXButton fx:id="btnLeaveGroup" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Выйти из группы" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="584.0">
+           <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../images/menus/leaveGroup.png" />
+                   </image>
+               </ImageView>
+           </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
+       </JFXButton>
+       <JFXButton fx:id="btnDismissUser" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Удалить пользователя" textFill="#F46767" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="624.0">
+           <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                       <Image url="@../images/profile/deleteProfile.png" />
+                   </image>
+               </ImageView>
+           </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
+       </JFXButton>
+       <JFXButton fx:id="btnClose" cancelButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCancelNew" stylesheets="@../styles/OtherProfile.css" text="Закрыть" textFill="WHITE" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
+           <graphic>
+               <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
+           </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
+       </JFXButton>
+         <Label id="labelinfoMessage" layoutX="26.0" layoutY="243.0" prefHeight="35.0" prefWidth="301.0" styleClass="labelinfoMessage" text="Данное название будут видеть Ваши контакты в Pocket Messenger." textAlignment="CENTER" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="273.0" />
+         <JFXButton fx:id="btnAddUserToGroup" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="594.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Добавить пользователя" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="544.0">
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/groups/addMember.png" />
+                  </image>
+               </ImageView>
+            </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
+         </JFXButton>
+         <JFXButton fx:id="btnClearHistory" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="554.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="315.0" styleClass="btnWriteMessage" text="Очистить переписку" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="504.0">
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/menus/clearHistory.png" />
+                  </image>
+               </ImageView>
+            </graphic>
+            <font>
+               <Font size="16.0" />
+            </font>
+         </JFXButton>
+         <JFXTextField fx:id="tfGroupName" editable="false" layoutX="68.0" layoutY="251.0" styleClass="labelNameGroupProfile" text="Группа стажировки GB" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="223.0" />
+   </children>
+</AnchorPane>
+   <JFXButton fx:id="btnNameEdit" buttonType="RAISED" layoutX="376.0" layoutY="283.0" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="btnEditLabel" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="230.0">
+      <graphic>
+         <ImageView blendMode="SRC_ATOP" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../images/profile/editPencil.png" />
+            </image>
+         </ImageView>
+      </graphic>
+   </JFXButton>
+   <JFXButton fx:id="btnInfoEdit" buttonType="RAISED" layoutX="376.0" layoutY="283.0" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="btnEditLabel" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="313.0">
+      <graphic>
+         <ImageView blendMode="SRC_ATOP" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../images/profile/editPencil.png" />
+            </image>
+         </ImageView>
+      </graphic>
+   </JFXButton>
+</fx:root>

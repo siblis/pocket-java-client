@@ -37,7 +37,8 @@ public class WebSocketChatClient extends WebSocketClient {
     @Override
     public void onMessage( String message ) {
         System.out.println( "got: " + message );
-        if (message.contains("receiver")){
+        //todo рубим sendMessage кавычками
+        if (message.contains("\"receiver\"")){
             Platform.runLater(() -> controller.receiveMessage(message));
         }
     }
@@ -45,7 +46,7 @@ public class WebSocketChatClient extends WebSocketClient {
     @Override
     public void onClose( int code, String reason, boolean remote ) {
         System.out.println( "Disconnected" );
-        System.exit( 0 );
+//        System.exit( 0 ); завершать JVM для закрытия сокета - не лучший выход :)
 
     }
 

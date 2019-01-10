@@ -5,27 +5,30 @@ import client.controller.ClientController;
 import client.utils.Common;
 import client.utils.CustomTextArea;
 import client.utils.Sound;
-import client.view.customFX.CFXListElement;
-import com.jfoenix.controls.JFXListView;
+import client.view.customFX.*;
+import com.jfoenix.controls.*;
+import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Menu;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,23 +37,27 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+
 import java.awt.*;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static client.utils.Common.showAlert;
-
 public class ChatViewController implements Initializable {
 
+    private static ChatViewController instance;
+
+
+    @FXML
+    private BorderPane borderPaneMain;
     @FXML
     private AnchorPane messagePanel;
 
@@ -70,8 +77,54 @@ public class ChatViewController implements Initializable {
     private Tab contacts;
 
     @FXML
-    private Pane smilePane;
+    private AnchorPane userSearchPane;
 
+    @FXML
+    private JFXButton bAddContact;
+
+    @FXML
+    private AnchorPane contactsViewPane;
+
+    @FXML
+    private AnchorPane groupSearchPane;
+    @FXML
+    private AnchorPane groupListPane;
+
+    @FXML
+    private AnchorPane groupNewPane;
+
+    @FXML
+    private AnchorPane contactSearchPane;
+
+    @FXML
+    private ScrollPane profileScrollPane;
+
+    @FXML
+    private JFXListView<CFXListElement> listViewAddToGroup;
+
+    @FXML
+    private Menu menuLeff;
+
+    @FXML
+    private JFXHamburger hamburger;
+
+    @FXML
+    private JFXTextField groupName;
+
+    @FXML
+    private JFXTextField creategroupName;
+
+    @FXML
+    private CFXMyProfile myProfile;
+
+    @FXML
+    private JFXTextField tfSearchInput;
+
+    @FXML
+    private JFXTextField userSearchText;
+
+    @FXML
+    private JFXTabPane tabPane;
     //
     private WebEngine webEngine;
 
@@ -85,11 +138,42 @@ public class ChatViewController implements Initializable {
 
     private String tsOld;
 
+    private int idDivMsg;
+
     private int idMsg;
 
+    @FXML
+    private  JFXButton btnContactSearchCancel;
+
+    @FXML
+    private JFXButton btnContactSearchInvite;
+
+    @FXML
+    private JFXListView<CFXListElement> searchList;
+    private ObservableList<CFXListElement> searchObsList;
+
+    @FXML
+    private CFXMenuLeft cfxMenuLeft;
+
+    @FXML
+    private CFXMenuRightGroup cfxMenuRightGroup;
+
+    private void initListenersToButtons(){
+        btnContactSearchCancel.setOnAction(event -> contactSearchButtonCancelClicked());
+        btnContactSearchInvite.setOnAction(event -> contactSearchButtonInviteClicked());
+
+    }
+
+    public static ChatViewController getInstance() {
+        return instance;
+    }
+
+    private SingleSelectionModel<Tab> selectionModel;
     //ссылка на desktop
     private Desktop desktop;
     ////////////////////////
+    HamburgerBasicCloseTransition transition;
+    HamburgerBackArrowBasicTransition transitionBack;
 
     public ChatViewController() {
     }
@@ -116,6 +200,8 @@ public class ChatViewController implements Initializable {
         clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableList(ClientController.getInstance().getContactListOfCards());
         contactListView.setExpanded(true);
+        searchObsList = FXCollections.observableList(new ArrayList<CFXListElement>());
+        searchList.setExpanded(true);
         fillContactListView();
 
         desktop = Desktop.getDesktop();
@@ -132,6 +218,15 @@ public class ChatViewController implements Initializable {
                 event.consume();
             }
         });
+        transition = new HamburgerBasicCloseTransition(hamburger);
+        transitionBack = new HamburgerBackArrowBasicTransition(hamburger);
+        PaneProvider.setTransitionBack(transitionBack);
+         selectionModel=tabPane.getSelectionModel();
+         initListenersToButtons();
+         instance=this;
+         CFXMenuLeft.setParentController(instance);
+         PaneProvider.setBorderPaneMain(borderPaneMain);
+
     }
 
 
@@ -189,8 +284,8 @@ public class ChatViewController implements Initializable {
                         ".msgLogo { \n"+
                             "flex: none; \n"+
                             "align-self: start; \n"+
-                            "width: 35px; \n"+
-                            "height: 35px; \n"+
+                            "width: 33px; \n"+
+                            "height: 33px; \n"+
                             "background: lightgrey; \n"+
                             "border-radius: 50%; \n"+
                         "} \n"+
@@ -260,6 +355,27 @@ public class ChatViewController implements Initializable {
         }
     }
 
+    //  инициализация картинки аватара
+    //if sex = true, is a woman
+    //   sex = false, is a man
+    private String initAvatar(boolean sex) {
+        String path = "";
+        if (sex) {
+            path = "client/images/defaultAvatar/girl.png"; //картинка фона
+        }else {
+            path = "client/images/defaultAvatar/man.png"; //картинка фона
+        }
+        ClassLoader cl = this.getClass().getClassLoader();
+        String avatar = "";
+        try {
+            avatar = cl.getResource(path).toURI().toString();
+        }catch (Exception e) {
+            //todo перенести в логирование
+            e.printStackTrace();
+        }
+        return avatar;
+    }
+
     /**
      *
      * @param pattern
@@ -294,11 +410,15 @@ public class ChatViewController implements Initializable {
      * Style create in initWebView
      *
      */
-
     private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
         //ID требуется для скрипта вставки тегов
         idMsg+=1;
         setIdMsg(idMsg);
+        //получаем аватар
+        //тут по идеи подбор по полу. Оставляю чтобы было понятно куда вставляется и настроить стили
+        String avatar = initAvatar(false); //man
+        String styleStr = "background-image: url(" + avatar + "); background-size: cover";
+        //
 
         SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
         SimpleDateFormat dateFormat = initDateFormat("HH:mm");
@@ -333,6 +453,7 @@ public class ChatViewController implements Initializable {
         Element divTime = DOMdocument.createElement("div");
         div.setAttribute("class", "message");
         divLogo.setAttribute("class", "msgLogo");
+        divLogo.setAttribute("style", styleStr);
         divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxtSender.setAttribute("class", attrClass+"S sender");
         divTxtMsg.setAttribute("class", attrClass+"M msg");
@@ -354,46 +475,69 @@ public class ChatViewController implements Initializable {
         webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
         //Подписка на событие по открытию ссылки
         addListenerLinkExternalBrowser(divTxtMsg);
-
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
-        if (isNew) {
+        /*if (isNew) {
             Sound.playSoundNewMessage().join();
-        }
+        }*/
 
-        String attrClass="";
+        String attrClass;
         if (clientController.getSenderName().equals(senderName)) {
             attrClass = "myUserClass";
         } else {
             attrClass = "senderUserClass";
         }
 
+        //todo по хорошему надо переместить подписку на событие в другое место
         //Подписка на событие загрузки документа HTML in WebView
         if (DOMdocument == null) {
-            String attrClass2 = attrClass; //не понял почему, но attrClass требуется final не изменяемый дальше
-            webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
-                if (newState == Worker.State.SUCCEEDED) {
-                    DOMdocument = webEngine.getDocument();
-                    createMessageDiv(message, senderName, timestamp, attrClass2);
-                }
-            });
+            //если пользователь только запустил клиента и локально нет ни одного сообщения
+            if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
+                DOMdocument = webEngine.getDocument();
+                createMessageDiv(message, senderName, timestamp, attrClass);
+                updateLastMessageInCardsBody(message, senderName);
+            }else {
+                webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+                    if (newState == Worker.State.SUCCEEDED) {
+                        DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
+                        createMessageDiv(message, senderName, timestamp, attrClass);
+                        updateLastMessageInCardsBody(message, senderName);
+                    }
+                });
+            }
         }else {
             createMessageDiv(message, senderName, timestamp, attrClass);
+            updateLastMessageInCardsBody(message, senderName);
         }
+    }
+
+    private void updateLastMessageInCardsBody(String message, String senderName){
+        CFXListElement targetChat = null;
+
+        for (CFXListElement element : contactsObservList){
+            if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
+        }
+        if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
+        targetChat.setBody(message);
+    }
+
+    public void addNewUserToContacts(CFXListElement newUser) {
+        contactsObservList.add(newUser);
     }
 
     @FXML
     private void handleDisconnectButton() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
         stage.close();
+        clientController.disconnect();
+        Tray.currentStage = null;
         Main.initRootLayout();
         Main.showOverview();
     }
 
     @FXML
     private void handleExit() {
-        clientController.dbServiceClose();
         clientController.disconnect();
         System.exit(0);
     }
@@ -420,15 +564,29 @@ public class ChatViewController implements Initializable {
     }
 
     @FXML
-    private void handleAddContactButton() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AddContactView.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Add contact");
-        stage.setResizable(false);
-        stage.setScene(new Scene(root));
-        stage.show();
+    private void handleAddContactButton() {
+        contactListView.setVisible(false);
+        bAddContact.setVisible(false);
+        userSearchPane.setVisible(true);
+        userSearchPane.setFocusTraversable(true);
+
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AddContactView.fxml"));
+//        Parent root = fxmlLoader.load();
+//        Stage stage = new Stage();
+//        stage.initModality(Modality.APPLICATION_MODAL);
+//        stage.setTitle("Add contact");
+//        stage.setResizable(false);
+//        stage.setScene(new Scene(root));
+//        stage.show();
+
+    }
+    @FXML
+    private void onUserSearchButtonClicked(){
+        clientController.addContact(userSearchText.getText());
+        userSearchText.clear();
+        bAddContact.setVisible(true);
+        contactListView.setVisible(true);
+        userSearchPane.setVisible(false);
     }
 
     //подписка на обработку открытия ссылок
@@ -470,7 +628,6 @@ public class ChatViewController implements Initializable {
         return listener;
     }
 
-    //метод загрузки файла
     @FXML
     public void handleSendFile() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
@@ -478,35 +635,33 @@ public class ChatViewController implements Initializable {
 
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
+            try {
+                this.desktop.open(file);//открывается файл на компьютере
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             List<File> files = Arrays.asList(file);
             if (files == null || files.isEmpty()) return;
             for(File f : files) {
-                //messageField .appendText(f.getAbsolutePath() + "\n");
-                clientController.sendMessage(f.getName());
+                messageField .appendText(f.getAbsolutePath() + "\n");
             }
         }
     }
-
     //метод добавления смайликов
     @FXML
-    public void handleSendSmile() throws IOException {
-        smilePane.setVisible(true);
-        smilePane.setStyle("-fx-border-width: 5 5 5 5; " +
-        "          -fx-border-color: #3498DB #3498DB #3498DB #3498DB;" +
-                "-fx-border-insets: 0;" +
-                "          -fx-border-style: solid;");
+    public void handleSendSmile() {
+        String img = "";
+        File f = new File(getClass().getResource("/client/smiley").getFile());
 
-//        String img = "";
-//        File f = new File(getClass().getResource("/client/smiley").getFile());
-//
-//        for (File fs : f.listFiles()) {
-//            img += fs.toURI();
-//            //messageField .appendText(fs.getName() + "\n");
-//            clientController.sendMessage(img);
-//            System.out.println(getIdMsg());
-//            setIdMsg(idMsg++);
-//            webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"50\" alt=\"lorem\"/>" +"'");
-//        }
+        for (File fs : f.listFiles()) {
+            img += fs.toURI();
+            //messageField .appendText(fs.getName() + "\n");
+            //clientController.sendMessage(img);
+            clientController.sendMessage(img);
+            webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"30\" alt=\"lorem\"/>" +"'");
+            setIdMsg(idMsg++);
+            webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"30\" alt=\"lorem\"/>" +"'");
+        }
     }
 
     /**
@@ -526,7 +681,7 @@ public class ChatViewController implements Initializable {
         }
 
         tsOld = null; //чистка даты
-        idMsg =0; //присваивание ID
+        idDivMsg =0; //присваивание ID
     }
 
     //метод смены иконки
@@ -562,6 +717,159 @@ public class ChatViewController implements Initializable {
         ImageView imageView = new ImageView();
         imageView.setImage(i);
         return imageView;
+    }
+
+    public void onGroupSearchButtonClicked(ActionEvent actionEvent) {
+        groupSearchPane.setVisible(false);
+    }
+
+    public void handleGroupSearchButton(MouseEvent mouseEvent) {
+        groupListPane.setVisible(false);
+        groupSearchPane.setVisible(true);
+    }
+
+    public void handleGroupNewButton(MouseEvent mouseEvent) {
+
+        groupListPane.setVisible(false);
+    }
+
+    public void onGroupSearchCancelButtonPressed(ActionEvent actionEvent) {
+        groupSearchPane.setVisible(false);
+        groupListPane.setVisible(true);
+    }
+
+    public void onSearchGroupButtonClicked(ActionEvent actionEvent) {
+        groupListPane.setVisible(false);
+        groupSearchPane.setVisible(true);
+    }
+
+    public void onNewGroupClicked(ActionEvent actionEvent) {
+        selectionModel.select(0);
+        cfxMenuLeft.setVisible(false);
+        menuLeff.hide();
+        groupListPane.setVisible(false);
+        listViewAddToGroup.setExpanded(true);
+        groupNewPane.setVisible(true);
+    }
+
+    public void onGroupNewCancelButtonPressed(ActionEvent actionEvent) {
+        groupNewPane.setVisible(false);
+        groupListPane.setVisible(true);
+    }
+
+    public void onMyProfileOpen(ActionEvent actionEvent) {
+        PaneProvider.setMyProfileScrollPane(profileScrollPane);
+        cfxMenuLeft.setVisible(false);
+        menuLeff.hide();
+        myProfile.setUser(clientController.getMyUser());
+        myProfile.setVisible(true);
+        profileScrollPane.setVisible(true);
+
+        PaneProvider.getTransitionBack().setRate(1);
+        PaneProvider.getTransitionBack().play();
+    }
+
+    public void onHamburgerClicked(MouseEvent mouseEvent) {
+        if (profileScrollPane.isVisible()) {
+            profileScrollPane.setVisible(false);
+            PaneProvider.getTransitionBack().setRate(-1);
+            transitionBack.play();
+        }
+        else if (!menuLeff.isShowing()){
+            transition.setRate(1);
+            transition.play();
+//            menuLeff.show();
+            cfxMenuLeft.setVisible(true);
+        } else {
+            menuLeff.hide();
+            cfxMenuLeft.setVisible(false);
+        }
+
+    }
+
+    public void onHideMenuLeft(javafx.event.Event event) {
+        transition.setRate(-1);
+
+        transition.play();
+    }
+
+    @FXML
+    public void handleAddButton(){
+        clientController.joinGroup(groupName.getText());
+    }
+
+    @FXML
+    public void handleCreateButton(){
+        clientController.addGroup(creategroupName.getText());
+    }
+
+    public void findContact(KeyEvent keyEvent) {
+        if (tfSearchInput.getText().length()>0) {
+            contactsViewPane.setVisible(false);
+            contactSearchPane.setVisible(true);
+            if (ClientController.getInstance().getAllUserNames().contains(tfSearchInput.getText())){
+              CFXListElement newSearchElement = new CFXListElement();
+              newSearchElement.setTopic(tfSearchInput.getText());
+                searchObsList.add(newSearchElement);
+            }
+            selectionModel.select(1);
+        } else {
+            contactsViewPane.setVisible(true);
+            contactSearchPane.setVisible(false);
+        }
+
+    }
+
+    private void contactSearchButtonInviteClicked() {
+        ClientController.getInstance().addContact(tfSearchInput.getText());
+        contactSearchButtonCancelClicked();
+    }
+
+    private void contactSearchButtonCancelClicked() {
+        contactsViewPane.setVisible(true);
+        tfSearchInput.setText("");
+        contactSearchPane.setVisible(false);
+    }
+
+
+    public void onMouseExitMenu(MouseEvent mouseEvent) {
+        cfxMenuLeft.setVisible(false);
+        transition.setRate(-1);
+
+        transition.play();
+    }
+
+    public void onRightMenuButtonClicked(ActionEvent actionEvent) {
+    }
+
+
+    public void onMouseExitMenuRight(MouseEvent mouseEvent) {
+        cfxMenuRightGroup.setVisible(false);
+    }
+
+    public void btnRightMenuClicked(ActionEvent actionEvent) {
+        if (cfxMenuRightGroup.isVisible()){
+            cfxMenuRightGroup.setVisible(false);
+        } else {
+
+            cfxMenuRightGroup.setVisible(true);
+        }
+    }
+    public void alarmGroupQuitGroupExecute(){
+        new AlarmGroupQuitGroup();
+    }
+
+    public void alarmGroupDeleteGroupExecute(){
+        new AlarmDeleteGroup();
+    }
+    public void alarmDeleteMessageHistoryExecute(){
+        new AlarmDeleteMessageHistory();
+    }
+    public void alarmDeleteProfileExecute(){
+        new AlarmDeleteProfile();
+    }
+    public void alarmExirProfileExecute(){
+        new AlarmExitProfile();
     }
 
 }
