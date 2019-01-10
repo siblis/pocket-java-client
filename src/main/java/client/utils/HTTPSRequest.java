@@ -67,9 +67,20 @@ public class HTTPSRequest {
         return getServerResponse(connection, null);
     }
 
+    //todo разделить поиск по имени от поиска по почте? сейчас это не разделено на сервере
+    public static ServerResponse getUser(String nameOrEmail, String token) throws Exception {
+        HttpsURLConnection connection = getConnection("/v1/users/" + nameOrEmail, "GET", token);
+        return getServerResponse(connection, null);
+    }
+
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
         HttpsURLConnection connection = getConnection("/v1/account/contacts/", "POST", token);
         return getServerResponse(connection, requestJSON);
+    }
+
+    public static ServerResponse deleteContact(String contastsEmailJSON, String token) throws Exception {
+        HttpsURLConnection connection = getConnection("/v1/account/contacts/", "DELETE", token);
+        return getServerResponse(connection, contastsEmailJSON);
     }
 
     public static ServerResponse getContacts(String token) throws Exception {

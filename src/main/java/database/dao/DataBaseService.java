@@ -60,11 +60,7 @@ public class DataBaseService {
     }
 
     public List<Long> getAllUserId() {
-        List<Long> ides = new ArrayList<>();
-        for (User user : usersDao.get()) {
-            ides.add(user.getUid());
-        }
-        return ides;
+        return usersDao.getColumnOfData("user_id");
     }
 
     public void addMessage(long receiverId, long senderID, Message message) {
@@ -75,6 +71,10 @@ public class DataBaseService {
 
     public List<Message> getChat(User user1, User user2){
         return messageDao.get(user1, user2);
+    }
+
+    public void deleteChat(User user1, User user2){
+        messageDao.delete(user1, user2);
     }
 
     public Message findMessageById(long id) {

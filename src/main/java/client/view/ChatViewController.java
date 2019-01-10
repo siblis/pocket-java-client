@@ -80,13 +80,11 @@ public class ChatViewController implements Initializable {
     private AnchorPane userSearchPane;
 
     @FXML
-    private JFXButton bAddContact;
-
-    @FXML
     private AnchorPane contactsViewPane;
 
     @FXML
     private AnchorPane groupSearchPane;
+
     @FXML
     private AnchorPane groupListPane;
 
@@ -97,7 +95,19 @@ public class ChatViewController implements Initializable {
     private AnchorPane contactSearchPane;
 
     @FXML
-    private ScrollPane profileScrollPane;
+    private ScrollPane myProfileScrollPane;
+
+    @FXML
+    private ScrollPane groupProfileScrollPane;
+
+    @FXML
+    private ScrollPane otherProfileScrollPane;
+
+    @FXML
+    private JFXListView<?> groupListView;
+
+    @FXML
+    private JFXListView<?> groupSearchListView;
 
     @FXML
     private JFXListView<CFXListElement> listViewAddToGroup;
@@ -109,13 +119,16 @@ public class ChatViewController implements Initializable {
     private JFXHamburger hamburger;
 
     @FXML
-    private JFXTextField groupName;
-
-    @FXML
     private JFXTextField creategroupName;
 
     @FXML
     private CFXMyProfile myProfile;
+
+    @FXML
+    private CFXGroupProfile groupProfile;
+
+    @FXML
+    private CFXOtherProfile othersProfile;
 
     @FXML
     private JFXTextField tfSearchInput;
@@ -141,13 +154,16 @@ public class ChatViewController implements Initializable {
     private int idDivMsg;
 
     @FXML
+    private JFXButton btnAddNewGroup;
+
+    @FXML
     private  JFXButton btnContactSearchCancel;
 
     @FXML
     private JFXButton btnContactSearchInvite;
 
     @FXML
-    private JFXListView<CFXListElement> searchList;
+    private JFXListView<CFXListElement> searchListView;
     private ObservableList<CFXListElement> searchObsList;
 
     @FXML
@@ -156,11 +172,8 @@ public class ChatViewController implements Initializable {
     @FXML
     private CFXMenuRightGroup cfxMenuRightGroup;
 
-    private void initListenersToButtons(){
-        btnContactSearchCancel.setOnAction(event -> contactSearchButtonCancelClicked());
-        btnContactSearchInvite.setOnAction(event -> contactSearchButtonInviteClicked());
-
-    }
+    @FXML
+    private JFXButton btnRightMenu;
 
     public static ChatViewController getInstance() {
         return instance;
@@ -188,11 +201,14 @@ public class ChatViewController implements Initializable {
 
         clientController = ClientController.getInstance();
         clientController.setChatViewController(this);
-        contactsObservList = FXCollections.observableList(ClientController.getInstance().getContactListOfCards());
+        contactsObservList = FXCollections.observableList(clientController.getContactListOfCards());
+        // при пустом списке контактов открыть вкладку контакты //todo перепилить на список чатов?
+        if (contactsObservList.isEmpty()) contacts.getTabPane().getSelectionModel().select(contacts);
         contactListView.setExpanded(true);
-        searchObsList = FXCollections.observableList(new ArrayList<CFXListElement>());
-        searchList.setExpanded(true);
         fillContactListView();
+        searchObsList = FXCollections.observableList(new ArrayList<CFXListElement>());
+        searchListView.setExpanded(true);
+        searchListView.setItems(searchObsList);
 
         desktop = Desktop.getDesktop();
 
@@ -212,7 +228,6 @@ public class ChatViewController implements Initializable {
         transitionBack = new HamburgerBackArrowBasicTransition(hamburger);
         PaneProvider.setTransitionBack(transitionBack);
          selectionModel=tabPane.getSelectionModel();
-         initListenersToButtons();
          instance=this;
          CFXMenuLeft.setParentController(instance);
          PaneProvider.setBorderPaneMain(borderPaneMain);
@@ -335,14 +350,16 @@ public class ChatViewController implements Initializable {
                 "</html> \n");
     }
 
-    public void fillContactListView() {
+    private void fillContactListView() {
         contactListView.setItems(contactsObservList);
-        //contactsObservList.addAll(clientController.getContactListOfCards());
-        for (CFXListElement element:contactsObservList){
-            element.setUnreadMessages("0");
-            element.setBody("Входящие сообщения");
+        //todo: загрузка последних сообщений в body элементов
+    }
 
-        }
+    public void updateContactListView() {
+        if (!contactsViewPane.isVisible() && contactSearchPane.isVisible()) contactSearchBtnCancelClicked();
+        contactListView.setItems(null);
+        contactListView.setItems(contactsObservList);
+        contactListView.refresh();
     }
 
     //  инициализация картинки аватара
@@ -509,15 +526,11 @@ public class ChatViewController implements Initializable {
             if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
-        targetChat.setBody(message);
-    }
-
-    public void addNewUserToContacts(CFXListElement newUser) {
-        contactsObservList.add(newUser);
+        targetChat.setBody(senderName + ": " + message);
     }
 
     @FXML
-    private void handleDisconnectButton() {
+    public void handleDisconnectButton() {
         Stage stage = (Stage) messagePanel.getScene().getWindow();
         stage.close();
         clientController.disconnect();
@@ -526,7 +539,6 @@ public class ChatViewController implements Initializable {
         Main.showOverview();
     }
 
-    @FXML
     private void handleExit() {
         clientController.disconnect();
         System.exit(0);
@@ -543,40 +555,46 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleClientChoice(MouseEvent event) {
+        long receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getUid();
         if (event.getClickCount() == 1) {
-            String receiver = contactListView.getSelectionModel().getSelectedItem().getTopic();
             //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
             clientController.setReceiver(receiver);
+            messageField.requestFocus();
+            messageField.selectEnd();
+        } else if (event.getClickCount() == 2) {
+            othersProfile.setUser(
+                    contactListView.getSelectionModel().getSelectedItem().getUser());
+            othersProfile.setIfFriendly(true);
+            PaneProvider.setProfileScrollPane(otherProfileScrollPane);
+            paneProvidersProfScrollPaneVisChange(true);
         }
-
-        messageField.requestFocus();
-        messageField.selectEnd();
     }
 
     @FXML
-    private void handleAddContactButton() {
-        contactListView.setVisible(false);
-        bAddContact.setVisible(false);
-        userSearchPane.setVisible(true);
-        userSearchPane.setFocusTraversable(true);
-
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AddContactView.fxml"));
-//        Parent root = fxmlLoader.load();
-//        Stage stage = new Stage();
-//        stage.initModality(Modality.APPLICATION_MODAL);
-//        stage.setTitle("Add contact");
-//        stage.setResizable(false);
-//        stage.setScene(new Scene(root));
-//        stage.show();
-
+    private void handleFindedClientChoice(MouseEvent event) {
+        long receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getUid();
+        if (event.getClickCount() == 1) {
+            if (clientController.hasReceiver(receiver)) {
+                btnContactSearchInvite.setVisible(false);
+                clientController.setReceiver(receiver);
+                messageField.requestFocus();
+                messageField.selectEnd();
+            } else {
+                clearMessageWebView();
+                btnContactSearchInvite.setVisible(true);
+            }
+        } else if (event.getClickCount() == 2) {
+            othersProfile.setUser(
+                    searchListView.getSelectionModel().getSelectedItem().getUser());
+            othersProfile.setIfFriendly(clientController.hasReceiver(receiver));
+            PaneProvider.setProfileScrollPane(otherProfileScrollPane);
+            paneProvidersProfScrollPaneVisChange(true);
+        }
     }
-    @FXML
-    private void onUserSearchButtonClicked(){
-        clientController.addContact(userSearchText.getText());
-        userSearchText.clear();
-        bAddContact.setVisible(true);
-        contactListView.setVisible(true);
-        userSearchPane.setVisible(false);
+
+    private void paneProvidersProfScrollPaneVisChange(boolean newVisStat) {
+        PaneProvider.getProfileScrollPane().setVisible(newVisStat);
+        if (newVisStat) PaneProvider.getProfileScrollPane().setVvalue(0f); //scroll to top
     }
 
     //подписка на обработку открытия ссылок
@@ -637,7 +655,9 @@ public class ChatViewController implements Initializable {
             }
         }
     }
+
     //метод добавления смайликов
+    @FXML
     public void handleSendSmile(MouseEvent mouseEvent) {
     }
 
@@ -662,6 +682,7 @@ public class ChatViewController implements Initializable {
     }
 
     //метод смены иконки
+    @FXML
     public void handleOnChatSelected() {
         chats.setGraphic(buildImage("/client/images/chat/chatsActive.png"));
         if (contacts != null) {
@@ -676,6 +697,8 @@ public class ChatViewController implements Initializable {
                 "-fx-border-insets: 0;" +
                         "-fx-border-style: solid;");
     }
+
+    @FXML
     public void handleOnContactSelected() {
         contacts.setGraphic(buildImage("/client/images/chat/contactsActive.png"));
         chats.setGraphic(buildImage("/client/images/chat/chats.png"));
@@ -696,15 +719,7 @@ public class ChatViewController implements Initializable {
         return imageView;
     }
 
-    public void onGroupSearchButtonClicked(ActionEvent actionEvent) {
-        groupSearchPane.setVisible(false);
-    }
-
-    public void handleGroupSearchButton(MouseEvent mouseEvent) {
-        groupListPane.setVisible(false);
-        groupSearchPane.setVisible(true);
-    }
-
+    @FXML
     public void handleGroupNewButton(MouseEvent mouseEvent) {
 
         groupListPane.setVisible(false);
@@ -720,6 +735,7 @@ public class ChatViewController implements Initializable {
         groupSearchPane.setVisible(true);
     }
 
+    @FXML
     public void onNewGroupClicked(ActionEvent actionEvent) {
         selectionModel.select(0);
         cfxMenuLeft.setVisible(false);
@@ -729,26 +745,28 @@ public class ChatViewController implements Initializable {
         groupNewPane.setVisible(true);
     }
 
+    @FXML
     public void onGroupNewCancelButtonPressed(ActionEvent actionEvent) {
         groupNewPane.setVisible(false);
         groupListPane.setVisible(true);
     }
 
+    @FXML
     public void onMyProfileOpen(ActionEvent actionEvent) {
-        PaneProvider.setMyProfileScrollPane(profileScrollPane);
+        PaneProvider.setProfileScrollPane(myProfileScrollPane);
         cfxMenuLeft.setVisible(false);
         menuLeff.hide();
         myProfile.setUser(clientController.getMyUser());
-        myProfile.setVisible(true);
-        profileScrollPane.setVisible(true);
+        paneProvidersProfScrollPaneVisChange(true);
 
         PaneProvider.getTransitionBack().setRate(1);
         PaneProvider.getTransitionBack().play();
     }
 
+    @FXML
     public void onHamburgerClicked(MouseEvent mouseEvent) {
-        if (profileScrollPane.isVisible()) {
-            profileScrollPane.setVisible(false);
+        if (myProfileScrollPane.isVisible()) {
+            myProfileScrollPane.setVisible(false);
             PaneProvider.getTransitionBack().setRate(-1);
             transitionBack.play();
         }
@@ -764,32 +782,55 @@ public class ChatViewController implements Initializable {
 
     }
 
+    @FXML
     public void onHideMenuLeft(javafx.event.Event event) {
         transition.setRate(-1);
 
         transition.play();
     }
 
-    @FXML
-    public void handleAddButton(){
-        clientController.joinGroup(groupName.getText());
+    public void handleGroupJoinButton(){
+//        clientController.joinGroup(groupName.getText());
     }
 
     @FXML
-    public void handleCreateButton(){
+    public void handleGroupCreateButton(){
         clientController.addGroup(creategroupName.getText());
     }
 
+    @FXML
     public void findContact(KeyEvent keyEvent) {
         if (tfSearchInput.getText().length()>0) {
+            searchObsList.clear();
             contactsViewPane.setVisible(false);
             contactSearchPane.setVisible(true);
-            if (ClientController.getInstance().getAllUserNames().contains(tfSearchInput.getText())){
-              CFXListElement newSearchElement = new CFXListElement();
-              newSearchElement.setTopic(tfSearchInput.getText());
-                searchObsList.add(newSearchElement);
+            contactsObservList.forEach(elem -> {
+                if (elem.getUser().getEmail().contains(tfSearchInput.getText()) ||
+                        elem.getUser().getAccount_name().contains(tfSearchInput.getText())) {
+                    CFXListElement temp = new CFXListElement();
+                    temp.setUser(elem.getUser());
+                    temp.setBody(elem.getUser().getEmail());
+                    searchObsList.add(temp);
+                }
+            });
+            // todo: поиск на сервере от 2х символов, убрать/расширить ограничение?
+            if (tfSearchInput.getText().length()>=2) {
+                List<CFXListElement> searchFromServer = clientController.findContact(tfSearchInput.getText());
+                //todo: статус пользователей (онлайн/офлайн) - будет приходить с сервера или запрашивать на каждого?
+                if (searchFromServer != null) {
+                    searchFromServer.removeAll(searchObsList);
+                    searchFromServer.remove(new CFXListElement(clientController.getMyUser()));
+                    searchFromServer.forEach(elem -> {
+                        CFXListElement temp = new CFXListElement();
+                        temp.setUser(elem.getUser());
+                        temp.setBody(elem.getUser().getEmail());
+                        searchObsList.add(temp);
+                    });
+                }
             }
             selectionModel.select(1);
+            searchListView.refresh();
+            if (btnContactSearchInvite.isVisible()) btnContactSearchInvite.setVisible(false);
         } else {
             contactsViewPane.setVisible(true);
             contactSearchPane.setVisible(false);
@@ -797,18 +838,21 @@ public class ChatViewController implements Initializable {
 
     }
 
-    private void contactSearchButtonInviteClicked() {
-        ClientController.getInstance().addContact(tfSearchInput.getText());
-        contactSearchButtonCancelClicked();
+    @FXML
+    private void contactSearchBtnInviteClicked() {
+        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getEmail();
+        clientController.addContact(receiver);
+        contactSearchBtnCancelClicked();
     }
 
-    private void contactSearchButtonCancelClicked() {
+    @FXML
+    private void contactSearchBtnCancelClicked() {
         contactsViewPane.setVisible(true);
         tfSearchInput.setText("");
         contactSearchPane.setVisible(false);
     }
 
-
+    @FXML
     public void onMouseExitMenu(MouseEvent mouseEvent) {
         cfxMenuLeft.setVisible(false);
         transition.setRate(-1);
@@ -816,14 +860,12 @@ public class ChatViewController implements Initializable {
         transition.play();
     }
 
-    public void onRightMenuButtonClicked(ActionEvent actionEvent) {
-    }
-
-
+    @FXML
     public void onMouseExitMenuRight(MouseEvent mouseEvent) {
         cfxMenuRightGroup.setVisible(false);
     }
 
+    @FXML
     public void btnRightMenuClicked(ActionEvent actionEvent) {
         if (cfxMenuRightGroup.isVisible()){
             cfxMenuRightGroup.setVisible(false);
@@ -845,7 +887,7 @@ public class ChatViewController implements Initializable {
     public void alarmDeleteProfileExecute(){
         new AlarmDeleteProfile();
     }
-    public void alarmExirProfileExecute(){
+    public void alarmExitProfileExecute(){
         new AlarmExitProfile();
     }
 

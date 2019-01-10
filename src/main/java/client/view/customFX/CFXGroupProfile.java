@@ -1,6 +1,7 @@
 package client.view.customFX;
 
 import client.model.Group;
+import client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
@@ -80,7 +81,7 @@ private JFXTextField tfGroupName;
     }
 
     private void btnCloseClicked() {
-
+        PaneProvider.getProfileScrollPane().setVisible(false);
     }
 
     private void btnDismissUserClicked() {

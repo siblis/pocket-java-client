@@ -1,5 +1,7 @@
 package client.view.customFX;
 
+import client.controller.ClientController;
+import client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import database.entity.User;
@@ -18,7 +20,7 @@ public class CFXOtherProfile extends AnchorPane {
     private User user;
 
     @FXML
-    private AnchorPane myProfilePane;
+    private AnchorPane otherProfilePane;
 
     @FXML
     private JFXButton btnCloseRight;
@@ -39,15 +41,21 @@ public class CFXOtherProfile extends AnchorPane {
     @FXML
     private JFXTextArea textareaInfo;
 
+    @FXML
+    private JFXButton writeMsgBtn;
+    
+    @FXML
+    private JFXButton notificationsBtn;
 
-    public void setOnline(){
-        circleOnline.setVisible(true);
-        labelStatus.setVisible(true);
-    }
+    @FXML
+    private JFXButton clearMsgsBtn;
 
-    public void setOffline(){
-        circleOnline.setVisible(false);
-        labelStatus.setVisible(false);
+    @FXML
+    private JFXButton removeUserBtn;
+
+    public void onlineStatusChange(boolean newIsOnlineStatus){
+        if (isFriend) circleOnline.setVisible(newIsOnlineStatus);
+        if (!isFriend) labelStatus.setVisible(newIsOnlineStatus);
     }
 
     public void setUser(User user){
@@ -63,34 +71,73 @@ public class CFXOtherProfile extends AnchorPane {
 
         try {
             fxmlLoader.load();
-            checkIsFriend();
+            setIfFriendly(false);
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }
-
+        initListeners();
     }
 
+    public CFXOtherProfile(User user) {
+        this();
+        setUser(user);
+    }
+
+    private void initListeners(){
+        btnInvite.setOnAction(event -> inviteContact());
+        btnCloseRight.setOnAction(event -> closeButtonPressed());
+        btnCloseCenter.setOnAction(event -> closeButtonPressed());
+        writeMsgBtn.setOnAction(event -> writeMsg());
+        notificationsBtn.setOnAction(event -> notificationsConf());
+        clearMsgsBtn.setOnAction(event -> clearMsgs());
+        removeUserBtn.setOnAction(event -> removeUser());
+    }
+    
     private void checkIsFriend() {
-        if (isFriend) {
-            btnCloseCenter.setVisible(true);
-            btnCloseRight.setVisible(false);
-            btnInvite.setVisible(false);
-        } else {
-            btnCloseCenter.setVisible(false);
-            btnCloseRight.setVisible(true);
-            btnInvite.setVisible(true);
-        }
+        // true для контактов из адресной книги:
+        btnCloseCenter.setVisible(isFriend);
+        writeMsgBtn.setVisible(isFriend);
+        notificationsBtn.setVisible(isFriend);
+        clearMsgsBtn.setVisible(isFriend);
+        removeUserBtn.setVisible(isFriend);
+        circleOnline.setVisible(isFriend);
+        // true для контактов отсутствующих в адресной книге:
+        btnCloseRight.setVisible(!isFriend);
+        btnInvite.setVisible(!isFriend);
+        labelStatus.setVisible(!isFriend);
     }
-
-
 
     public void setIfFriendly(boolean isFriend){
         this.isFriend=isFriend;
+        checkIsFriend();
     }
 
     public boolean isFriend() {
         return isFriend;
     }
 
+    private void closeButtonPressed() {
+        PaneProvider.getProfileScrollPane().setVisible(false);
+    }
 
+    private void writeMsg() {
+        ClientController.getInstance().setReceiver(user);
+    }
+
+    private void notificationsConf() {
+    }
+
+    private void clearMsgs() {
+        ClientController.getInstance().clearMessagesWithUser(user); // todo подтверждение?
+    }
+
+    private void removeUser() {
+        closeButtonPressed();
+        ClientController.getInstance().removeContact(user.getEmail()); // todo подтверждение?
+    }
+
+    private void inviteContact() {
+        closeButtonPressed();
+        ClientController.getInstance().addContact(user.getEmail());
+    }
 }

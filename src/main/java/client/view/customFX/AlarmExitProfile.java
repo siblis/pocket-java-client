@@ -1,5 +1,6 @@
 package client.view.customFX;
 
+import client.view.ChatViewController;
 import client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
@@ -56,7 +57,6 @@ public class AlarmExitProfile extends AnchorPane {
     }
 
     private void btnConfirmOnPressed() {
-        dialogStage.close();
-
+        ChatViewController.getInstance().handleDisconnectButton();
     }
 }
