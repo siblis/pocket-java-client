@@ -153,8 +153,7 @@ public class ChatViewController implements Initializable {
 
     private int idDivMsg;
 
-    @FXML
-    private JFXButton btnAddNewGroup;
+    private int idMsg;
 
     @FXML
     private  JFXButton btnContactSearchCancel;
@@ -189,11 +188,19 @@ public class ChatViewController implements Initializable {
     public ChatViewController() {
     }
 
+    public int getIdMsg() {
+        return idMsg;
+    }
+
+    public void setIdMsg(int idMsg) {
+        this.idMsg = idMsg;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         DOMdocument = null;
         tsOld = null; //чистка даты
-        idDivMsg = 0; //присваивание ID
+        idMsg = 0; //присваивание ID
 
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
         initBackgroundWebView();
@@ -419,8 +426,8 @@ public class ChatViewController implements Initializable {
      */
     private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
         //ID требуется для скрипта вставки тегов
-        idDivMsg+=1;
-        String idMsg = "msg"+idDivMsg;
+        idMsg+=1;
+        setIdMsg(idMsg);
         //получаем аватар
         //тут по идеи подбор по полу. Оставляю чтобы было понятно куда вставляется и настроить стили
         String avatar = initAvatar(false); //man
@@ -464,7 +471,7 @@ public class ChatViewController implements Initializable {
         divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxtSender.setAttribute("class", attrClass+"S sender");
         divTxtMsg.setAttribute("class", attrClass+"M msg");
-        divTxtMsg.setAttribute("id", idMsg); //id
+        divTxtMsg.setAttribute("id", String.valueOf(idMsg)); //id
         divTime.setAttribute("class", attrClass+"T msgTime");
         divTxtSender.setTextContent(senderName);
         divTxtMsg.setTextContent(message);
@@ -482,6 +489,8 @@ public class ChatViewController implements Initializable {
         webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
         //Подписка на событие по открытию ссылки
         addListenerLinkExternalBrowser(divTxtMsg);
+        //проверяет, есть ли у нас в сообщениях картинки
+        addImageMessageListener(divTxtMsg);
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
@@ -597,6 +606,14 @@ public class ChatViewController implements Initializable {
         if (newVisStat) PaneProvider.getProfileScrollPane().setVvalue(0f); //scroll to top
     }
 
+    //обработка воспроизведения картинок
+    private void addImageMessageListener(Element tagElement) {
+        NodeList nodeList = tagElement.getElementsByTagName("img");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            initSmile();
+        }
+    }
+
     //подписка на обработку открытия ссылок
     //Element tagElement = <div class="msg">
     private void addListenerLinkExternalBrowser(Element tagElement){
@@ -656,9 +673,35 @@ public class ChatViewController implements Initializable {
         }
     }
 
+    //метод для инициализации картинок. Временны пока нет загрузки картинок из бд
+    public void initSmile() {
+        String path = "client/smiley/wink.png";//пока имеем возможность загружать только один вид смайлика
+
+        ClassLoader cl = this.getClass().getClassLoader();
+        String emoji = "";
+        try {
+            emoji = cl.getResource(path).toURI().toString();
+            webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + emoji + "\" width=\"30\" alt=\"lorem\"/>" +"'");
+        }catch (Exception e) {
+            //todo перенести в логирование
+            e.printStackTrace();
+        }
+
+    }
+
     //метод добавления смайликов
     @FXML
-    public void handleSendSmile(MouseEvent mouseEvent) {
+    public void handleSendSmile() {
+        String img = "";
+        File f = new File(getClass().getResource("/client/smiley").getFile());
+
+        for (File fs : f.listFiles()) {
+            img += fs.toURI();
+            clientController.sendMessage(img);
+            webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + "<img src = \"" + img + "\" width=\"30\" alt=\"lorem\"/>" +"'");
+            setIdMsg(idMsg++);
+            webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + img + "\" width=\"30\" alt=\"lorem\"/>" +"'");
+        }
     }
 
     /**
