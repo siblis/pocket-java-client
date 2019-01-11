@@ -655,8 +655,6 @@ public class ChatViewController implements Initializable {
 
         for (File fs : f.listFiles()) {
             img += fs.toURI();
-            //messageField .appendText(fs.getName() + "\n");
-            //clientController.sendMessage(img);
             clientController.sendMessage(img);
             webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"30\" alt=\"lorem\"/>" +"'");
             setIdMsg(idMsg++);
