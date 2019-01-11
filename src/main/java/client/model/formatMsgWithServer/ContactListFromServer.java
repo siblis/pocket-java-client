@@ -32,8 +32,8 @@ public class ContactListFromServer {
         this.email = email;
     }
 
-    public String getStatus() {
-        return status;
+    public boolean isStatusOnline() {
+        return status.equals("online");
     }
 
     public void setStatus(String status) {

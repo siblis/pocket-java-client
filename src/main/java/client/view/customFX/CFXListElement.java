@@ -11,6 +11,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class CFXListElement extends AnchorPane {
 
@@ -56,6 +57,15 @@ public class CFXListElement extends AnchorPane {
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }
+        
+        setUnreadMessages("0");
+        setBody("");
+        setOnlineStatus(false);
+    }
+
+    public CFXListElement(User user) {
+        this();
+        setUser(user);
     }
 
     public String getTopic(){
@@ -79,7 +89,7 @@ public class CFXListElement extends AnchorPane {
     }
 
     public void setBody(String body) {
-        int maxLenOfVisible = 20;
+        int maxLenOfVisible = 40;
         if (body.length() > maxLenOfVisible) body = body.substring(0, maxLenOfVisible - 3) + "...";
         body = body.replace("\n", " ");
         this.body.setText(body);
@@ -118,12 +128,29 @@ public class CFXListElement extends AnchorPane {
 
     }
 
-    public void setOnline(){
-        this.circleOnline.setVisible(true);
+    public void setOnlineStatus(boolean isOnline){
+        this.circleOnline.setVisible(isOnline);
     }
 
-    public void setOffline(){
-        this.circleOnline.setVisible(false);
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 79 * hash + Objects.hashCode(this.user);
+        return hash;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CFXListElement other = (CFXListElement) obj;
+        return Objects.equals(this.user, other.user);
+    }
 }

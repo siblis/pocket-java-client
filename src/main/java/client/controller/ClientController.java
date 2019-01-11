@@ -10,6 +10,7 @@ import client.view.ChatViewController;
 import client.view.customFX.CFXListElement;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
@@ -20,8 +21,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static client.utils.Common.showAlert;
 
@@ -53,6 +54,10 @@ public class ClientController {
         return myUser;
     }
 
+    public User getReciever() {
+        return receiver;
+    }
+
     public static ClientController getInstance() {
         if (instance == null) {
             instance = new ClientController();
@@ -68,6 +73,10 @@ public class ClientController {
         return myUser.getAccount_name();
     }
 
+    public String getRecieverName() {
+        return receiver.getAccount_name();
+    }
+
     public void setReceiver(long receiverId) {
         this.receiver = dbService.getUser(receiverId);
         loadChat();
@@ -76,6 +85,22 @@ public class ClientController {
     public void setReceiver(String receiverName) {
         this.receiver = dbService.getUser(receiverName);
         loadChat();
+    }
+
+    public void setReceiver(User receiver) {
+        if (!contactList.contains(receiver.getUid()))
+            addContactToDbAndChat(receiver); // todo поправить логику получения сообщений?
+            //NB: todo добавлять в список на сервере? addContactToDbAndChat не добавляет
+        this.receiver = receiver;
+        loadChat();
+    }
+
+    public boolean hasReceiver(long receiverId) {
+        return dbService.getUser(receiverId) != null;
+    }
+
+    public boolean hasReceiver(String receiverName) {
+        return dbService.getUser(receiverName) != null;
     }
 
     public List<CFXListElement> getContactListOfCards() {
@@ -211,47 +236,49 @@ public class ClientController {
         contactListOfCards = null;
     }
 
-    private ContactListFromServer[] convertContactListToMap(String jsonText) {
+    private ContactListFromServer[] convertContactListFromServer(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(jsonText, ContactListFromServer[].class);
     }
 
-    private void synchronizeContactListAsAdressBook(){
-        if (contactListOfCards==null) contactListOfCards=new ArrayList<>();
-        Iterator it = contactList.iterator();
-        while (it.hasNext()){
-            Long id = (Long) it.next();
-            if (id.equals(myUser.getUid())) {
-                continue;
-            }
-            CFXListElement element = new CFXListElement();
-            element.setUser(dbService.getUser(id));
-
-            contactListOfCards.add(element);
-
-        }
-
-    }
-
     private void synchronizeContactList() {
         dbService = new DataBaseService(myUser);
         contactList = dbService.getAllUserId();
-        synchronizeContactListAsAdressBook();
+        contactListOfCards = new ArrayList<>();
+        
+        dbService.getAllUsers().forEach(user -> {
+            if (user.getUid() != myUser.getUid()) {
+                contactListOfCards.add(new CFXListElement(user));
+            }
+        });
 
         try {
             ServerResponse response = HTTPSRequest.getContacts(token);
             if (response != null) {
-                for (ContactListFromServer entry : convertContactListToMap(response.getResponseJson())) {
+                List<User> contactsToRemoveFromDb = dbService.getAllUsers();
+                contactsToRemoveFromDb.remove(myUser);
+                for (ContactListFromServer entry : convertContactListFromServer(response.getResponseJson())) {
                     if (!contactList.contains(entry.getId())) {
+                        //TODO: себя не должно быть в списке контактов - убрать костыль (после решения на сервере)
+                        if (entry.getId() == myUser.getUid()) continue; //костыль, который надо будет убрать
                         User user = new User(entry.getId(), entry.getName(), entry.getEmail());
-//                        user.setStatus(entry.getStatus()); //TODO добавить статусы в класс пользователей?
-                        CFXListElement element = new CFXListElement();
-                        element.setUser(user);
-                        contactListOfCards.add(element);
                         addContactToDB(user);
                     }
+                    for (CFXListElement cont : contactListOfCards) {
+                        if (cont.getUser().getUid() == entry.getId()) {
+                            cont.setOnlineStatus(entry.isStatusOnline());
+                            break;
+                        }
+                    }
+                    //в списке останутся только контакты, которых нет на сервере
+                    contactsToRemoveFromDb.remove(
+                            new User(entry.getId(), entry.getName(), entry.getEmail()));
                 }
+
+                //удаляем из локальной базы контакты, которых нет в списке контактов на сервере
+                if (!contactsToRemoveFromDb.isEmpty()) 
+                    contactsToRemoveFromDb.forEach(entry -> removeContactFromDb(entry));
             }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getContacts_error", e);
@@ -268,6 +295,37 @@ public class ClientController {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(jsonText, User.class);
+    }
+
+    private List<CFXListElement> convertJSONToCFXListElements(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        List<CFXListElement> res = new ArrayList<>();
+        try {
+            Map<String, UserFromServer> users
+                    = gson.fromJson(jsonText, new TypeToken<Map<String, UserFromServer>>() {
+                    }.getType());
+            if (users != null && users.size() > 0) {
+                users.forEach((id, userFS) -> res.add(new CFXListElement(
+                        new User(Long.parseLong(id), userFS.getAccount_name(), userFS.getEmail()))));
+            }
+        } catch (Exception e) {
+            return convertJSONToCFXListElement(jsonText);
+        }
+        return res.isEmpty() ? null : res;
+    }
+
+    //костыль, т.к. список найденных и один контакт приходят в разном виде
+    private List<CFXListElement> convertJSONToCFXListElement(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        List<CFXListElement> res = new ArrayList<>(1);
+        try {
+            res.add(new CFXListElement(gson.fromJson(jsonText, User.class)));
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getUserByNameOrEmail_JsonParsError", e);
+        }
+        return res.isEmpty() ? null : res;
     }
 
     public Group getGroupInfo(String groupName){
@@ -373,15 +431,7 @@ public class ClientController {
                 case 201:
                     showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
                     User newUser = convertJSONToUser(response.getResponseJson());
-                    addContactToDB(newUser);
-                    if (chatViewController != null) {
-                        chatViewController.fillContactListView();
-                        CFXListElement newEl = new CFXListElement();
-                        newEl.setUser(newUser);
-                        chatViewController.addNewUserToContacts(newEl);
-                        return true;
-                    }
-                    break;
+                    return addContactToDbAndChat(newUser);
                 case 404:
                    // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
                     break;
@@ -397,9 +447,87 @@ public class ClientController {
         return false;
     }
 
+    public List<CFXListElement> findContact(String contact) {
+        UserToServer cts = new UserToServer(contact);
+        String requestJSON = new Gson().toJson(cts);
+
+        try {
+            ServerResponse response = HTTPSRequest.getUser(contact, token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    return convertJSONToCFXListElements(response.getResponseJson());
+                case 404:
+                   // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+                    break;
+                case 409:
+                  //  showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getUserByNameOrEmail_error", e);
+        }
+        return null;
+    }
+
     private void addContactToDB(User contact) {
         dbService.insertUser(new User(contact.getUid(), contact.getAccount_name(), contact.getEmail()));
         contactList.add(contact.getUid());
+        contactListOfCards.add(new CFXListElement(contact));
+    }
+
+    private boolean addContactToDbAndChat(User contact) {
+        addContactToDB(contact);
+        if (chatViewController != null) {
+            chatViewController.updateContactListView();
+        }
+        return true;
+    }
+
+    public boolean removeContact(String contactsEmail) {
+        UserToServer cts = new UserToServer(contactsEmail);
+        String requestJSON = new Gson().toJson(cts);
+
+        try {
+            ServerResponse response = HTTPSRequest.deleteContact(requestJSON, token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    showAlert("Контакт " + contactsEmail + " успешно удалён", Alert.AlertType.INFORMATION);
+                    User delUser = new UserDeletedFromServer(response.getResponseJson()).toUser();
+                    delUser.setEmail(contactsEmail); // на 08.01.2018 нет в ответе сервера
+                    removeContactFromDbAndChat(delUser);
+                    return true;
+                case 404:
+                    showAlert("Пользователя " + contactsEmail + " нет в списке контактов", Alert.AlertType.INFORMATION);
+                    break;
+                default:
+                    //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.addContact_error", e);
+        }
+        return false;
+    }
+
+    public void clearMessagesWithUser(User contact) {
+        if (!dbService.getChat(myUser, contact).isEmpty())
+            dbService.deleteChat(myUser, contact);
+    }
+
+    private void removeContactFromDb(User contact) {
+        clearMessagesWithUser(contact);
+        dbService.deleteUser(contact);
+        contactList.remove(contact.getUid());
+        contactListOfCards.remove(new CFXListElement(contact));
+    }
+
+    private void removeContactFromDbAndChat(User contact) {
+        removeContactFromDb(contact);
+        if (chatViewController != null) {
+            chatViewController.updateContactListView();
+            if (receiver.equals(contact)) chatViewController.clearMessageWebView();
+        }
     }
 
     public void proceedRegister(String login, String password, String email) {

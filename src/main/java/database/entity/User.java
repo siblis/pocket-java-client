@@ -3,6 +3,7 @@ package database.entity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -77,5 +78,35 @@ public class User {
     @Override
     public String toString() {
         return "User{" + "user_id=" + user_id + ", account_name=" + account_name + ", email=" + email + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 41 * hash + (int) (this.user_id ^ (this.user_id >>> 32));
+        hash = 41 * hash + Objects.hashCode(this.account_name);
+        hash = 41 * hash + Objects.hashCode(this.email);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (this.user_id != other.user_id) {
+            return false;
+        }
+        if (!Objects.equals(this.account_name, other.account_name)) {
+            return false;
+        }
+        return Objects.equals(this.email, other.email);
     }
 }

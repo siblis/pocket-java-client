@@ -27,17 +27,22 @@
                                         <children>
                                             <AnchorPane fx:id="groupListPane" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="647.0" prefWidth="410.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                 <children>
-                                                    <JFXButton id="e" fx:id="btnClose" buttonType="RAISED" cancelButton="true" mnemonicParsing="false" onAction="#onNewGroupClicked" onMouseClicked="#handleGroupNewButton" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCreateGroup" text="Создать группу" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="120.0">
+                                                    <JFXButton id="e" fx:id="btnAddNewGroup" buttonType="RAISED" cancelButton="true" mnemonicParsing="false" onAction="#onNewGroupClicked" onMouseClicked="#handleGroupNewButton" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCreateGroup" text="Создать группу" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="120.0">
                                                         <graphic>
                                                             <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="btnCreateGroup" />
                                                         </graphic>
                                                     </JFXButton>
-                                                    <JFXListView layoutY="-2.0" prefWidth="410.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                    <JFXListView fx:id="groupListView" layoutY="-2.0" prefWidth="410.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                </children>
+                                            </AnchorPane>
+                                            <AnchorPane fx:id="groupSearchPane" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="647.0" prefWidth="410.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <children>
+                                                    <JFXListView fx:id="groupSearchListView" layoutY="-2.0" prefWidth="410.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                 </children>
                                             </AnchorPane>
                                             <AnchorPane fx:id="groupNewPane" prefHeight="326.0" prefWidth="300.0" snapToPixel="false" stylesheets="@../styles/searchGroupPane.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                 <children>
-                                                    <JFXButton mnemonicParsing="false" onAction="#handleCreateButton" prefHeight="40.0" prefWidth="160.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" text="Создать группу" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="20.0">
+                                                    <JFXButton mnemonicParsing="false" onAction="#handleGroupCreateButton" prefHeight="40.0" prefWidth="160.0" ripplerFill="#979797" stylesheets="@../styles/searchGroupPane.css" text="Создать группу" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="20.0">
                                                         <graphic>
                                                             <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" />
                                                         </graphic>
@@ -61,7 +66,7 @@
                                                     <JFXListView layoutY="54.0" prefHeight="104.0" prefWidth="299.0" AnchorPane.bottomAnchor="168.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="35.0" layoutX="10.0" stroke="#3498db" strokeType="INSIDE" strokeWidth="3.0" width="388.0" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="12.0" />
                                                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="35.0" layoutX="20.0" layoutY="415.0" stroke="#3498db" strokeType="INSIDE" strokeWidth="3.0" width="388.0" AnchorPane.bottomAnchor="110.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="12.0" />
-                                                    <JFXTextField fx:id="creategroupName" layoutX="17.0" layoutY="241.0" onAction="#handleCreateButton" prefHeight="9.0" prefWidth="374.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="115.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="19.0" />
+                                                    <JFXTextField fx:id="creategroupName" layoutX="17.0" layoutY="241.0" onAction="#handleGroupCreateButton" prefHeight="9.0" prefWidth="374.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="115.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="19.0" />
                                                     <JFXTextField layoutX="17.0" layoutY="409.0" prefHeight="9.0" prefWidth="374.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="19.0" />
                                                 </children>
                                             </AnchorPane>
@@ -96,13 +101,13 @@
                                             </AnchorPane>
                                             <AnchorPane fx:id="contactSearchPane" snapToPixel="false" stylesheets="@../styles/searchGroupPane.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                 <children>
-                                                    <JFXListView fx:id="searchList" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                    <JFXButton fx:id="btnContactSearchInvite" buttonType="RAISED" cancelButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCreateGroup" text="Пригласить" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0">
+                                                    <JFXListView fx:id="searchListView" prefHeight="200.0" prefWidth="200.0" onMouseClicked="#handleFindedClientChoice" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                    <JFXButton fx:id="btnContactSearchInvite" visible="false" onAction="#contactSearchBtnInviteClicked" buttonType="RAISED" cancelButton="true" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCreateGroup" text="Пригласить" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0">
                                                         <graphic>
                                                             <MaterialDesignIconView fill="WHITE" glyphName="CHECK" size="20" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="btnCreateGroup" />
                                                         </graphic>
                                                     </JFXButton>
-                                                    <JFXButton fx:id="btnContactSearchCancel" buttonType="RAISED" cancelButton="true" layoutX="22.0" layoutY="459.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCancel" text="Отменить" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="12.0">
+                                                    <JFXButton fx:id="btnContactSearchCancel" onAction="#contactSearchBtnCancelClicked" buttonType="RAISED" cancelButton="true" layoutX="22.0" layoutY="459.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" ripplerFill="#979797" styleClass="btnCancel" text="Отменить" textFill="WHITE" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="12.0">
                                                         <graphic>
                                                             <MaterialDesignIconView fill="WHITE" glyphName="CLOSE" size="20" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="btnCreateGroup" />
                                                         </graphic>
@@ -120,7 +125,7 @@
 
 
             <WebView fx:id="messageWebView" maxWidth="1031.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400" prefWidth="500" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="410.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0" />
-            <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0" maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50" prefWidth="500" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="425.0" AnchorPane.rightAnchor="0.0">
+            <CustomTextArea id="customTextArea" fx:id="messageField" layoutX="200.0" layoutY="375.0" maxHeight="-Infinity" prefColumnCount="45" prefHeight="50.0" prefRowCount="50" prefWidth="500" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="410.0" AnchorPane.rightAnchor="0.0">
                 <padding>
                     <Insets left="69.0" />
                 </padding>
@@ -128,7 +133,7 @@
 
             <Label id="vector" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendMessage" prefHeight="18.0" prefWidth="20.5" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="81.5" />
             <Label id="smailik" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendSmile" prefHeight="24.0" prefWidth="24.0" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="31.0" />
-            <Label id="skrepka" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendFile" prefHeight="35.0" prefWidth="35.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="440.0" />
+            <Label id="skrepka" layoutX="648.5" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleSendFile" prefHeight="35.0" prefWidth="35.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="425.0" />
               <CFXMenuLeft fx:id="cfxMenuLeft" onMouseExited="#onMouseExitMenu" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="50.0">
                     </CFXMenuLeft>
             <AnchorPane prefHeight="50.0" prefWidth="412.0" styleClass="menu-bar" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -164,21 +169,21 @@
             </AnchorPane>
             <CFXMenuRightGroup fx:id="cfxMenuRightGroup" onMouseExited="#onMouseExitMenuRight" visible="false" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
             </CFXMenuRightGroup>
-            <ScrollPane fx:id="profileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
+            <ScrollPane fx:id="myProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="395.0" prefHeight="502.0" prefViewportWidth="395.0" prefWidth="410.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
                 <content>
-                    <CFXMyProfile fx:id="myProfile" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <CFXMyProfile fx:id="myProfile" prefWidth="395.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                     </CFXMyProfile>
                 </content>
             </ScrollPane>
-            <ScrollPane fx:id="groupProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
+            <ScrollPane fx:id="groupProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="395.0" prefHeight="502.0" prefViewportWidth="395.0" prefWidth="410.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
                 <content>
-                    <CFXGroupProfile fx:id="groupProfile" prefWidth="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <CFXGroupProfile fx:id="groupProfile" prefWidth="395.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                     </CFXGroupProfile>
                 </content>
             </ScrollPane>
-            <ScrollPane fx:id="otherProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="410.0" prefHeight="502.0" prefViewportWidth="410.0" prefWidth="425.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
+            <ScrollPane fx:id="otherProfileScrollPane" hbarPolicy="NEVER" layoutY="98.0" minViewportWidth="395.0" prefHeight="502.0" prefViewportWidth="395.0" prefWidth="410.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0">
                 <content>
-                    <CFXOtherProfile fx:id="othersProfile" prefWidth="410.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <CFXOtherProfile fx:id="othersProfile" prefWidth="395.0" visible="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                     </CFXOtherProfile>
                 </content>
             </ScrollPane>
