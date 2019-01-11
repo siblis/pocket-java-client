@@ -475,6 +475,8 @@ public class ChatViewController implements Initializable {
         webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
         //Подписка на событие по открытию ссылки
         addListenerLinkExternalBrowser(divTxtMsg);
+        //проверяет, есть ли у нас в сообщениях картинки
+        addImageMessageListener(divTxtMsg);
     }
 
     public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
@@ -589,6 +591,14 @@ public class ChatViewController implements Initializable {
         userSearchPane.setVisible(false);
     }
 
+    //обработка воспроизведения картинок
+    private void addImageMessageListener(Element tagElement) {
+        NodeList nodeList = tagElement.getElementsByTagName("img");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            initSmile();
+        }
+    }
+
     //подписка на обработку открытия ссылок
     //Element tagElement = <div class="msg">
     private void addListenerLinkExternalBrowser(Element tagElement){
@@ -647,6 +657,23 @@ public class ChatViewController implements Initializable {
             }
         }
     }
+
+    //метод для инициализации картинок. Временны пока нет загрузки картинок из бд
+    public void initSmile() {
+        String path = "client/smiley/wink.png";//пока имеем возможность загружать только один вид смайлика
+
+        ClassLoader cl = this.getClass().getClassLoader();
+        String emoji = "";
+        try {
+            emoji = cl.getResource(path).toURI().toString();
+            webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + emoji + "\" width=\"30\" alt=\"lorem\"/>" +"'");
+        }catch (Exception e) {
+            //todo перенести в логирование
+            e.printStackTrace();
+        }
+
+    }
+
     //метод добавления смайликов
     @FXML
     public void handleSendSmile() {
@@ -656,9 +683,9 @@ public class ChatViewController implements Initializable {
         for (File fs : f.listFiles()) {
             img += fs.toURI();
             clientController.sendMessage(img);
-            webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"30\" alt=\"lorem\"/>" +"'");
+            webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + "<img src = \"" + img + "\" width=\"30\" alt=\"lorem\"/>" +"'");
             setIdMsg(idMsg++);
-            webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + fs.toURI() + "\" width=\"30\" alt=\"lorem\"/>" +"'");
+            webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + img + "\" width=\"30\" alt=\"lorem\"/>" +"'");
         }
     }
 
