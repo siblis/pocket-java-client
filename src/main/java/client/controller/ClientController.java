@@ -204,6 +204,10 @@ public class ClientController {
                     new Message(message, new Timestamp(System.currentTimeMillis()))
             );
             chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+            //обновляем последнюю запись
+            chatViewController.updateLastMessageInCardsBody(message,
+                    myUser.getAccount_name(),
+                    receiver.getAccount_name());
 
         } catch (IOException ex) {
             showAlert("Потеряно соединение с сервером", Alert.AlertType.ERROR);
@@ -258,7 +262,7 @@ public class ClientController {
                 String msg = "";
                 //todo если будет последним сообщением смайлик, то выводится путь к файлику
                 if (messages.size() > 0) {
-                    msg = messages.get(0).getText();
+                    msg = messages.get(0).getSender().getAccount_name() + ": " + messages.get(0).getText();
                     newElement.setBody(msg);
                 }
             }
