@@ -77,6 +77,10 @@ public class DataBaseService {
         messageDao.delete(user1, user2);
     }
 
+    public Message getLastMessage(User user1, User user2){
+        return messageDao.getLastMessage(user1, user2);
+    }
+
     public Message findMessageById(long id) {
         return messageDao.findMessageById(id);
     }
