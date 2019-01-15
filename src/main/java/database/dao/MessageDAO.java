@@ -81,18 +81,23 @@ public class MessageDAO {
         session.getTransaction().commit();
     }
 
-    Message getLastMessage(User agent1id, User agent2id){
+    List<Message> getLastMessage(User agent1id, User agent2id){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        Query<Message> query = session.createQuery("FROM Message m where " +
-                "((m.sender = :id1Param and m.receiver = :id2Param) " +
-                "or " +
-                "(m.receiver = :id1Param and m.sender = :id2Param)" +
-                "and id=(select max(id) from messages))");
+        String querySQL = "FROM Message as m WHERE" +
+                "((m.sender = :id1Param AND m.receiver = :id2Param)" +
+                " OR " +
+                "(m.receiver = :id1Param AND m.sender = :id2Param))" +
+                " AND " +
+                "id=(SELECT max(id) FROM Message " +
+                "     WHERE (sender = :id1Param AND receiver = :id2Param)" +
+                "       OR (receiver = :id1Param AND sender = :id2Param))";
+
+        Query<Message> query = session.createQuery(querySQL);
         query.setParameter("id1Param", agent1id);
         query.setParameter("id2Param", agent2id);
-        Message message = query.list().get(0);
+        List<Message> message = query.list();
 
         session.getTransaction().commit();
 

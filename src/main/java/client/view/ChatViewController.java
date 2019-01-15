@@ -512,23 +512,23 @@ public class ChatViewController implements Initializable {
             if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
                 DOMdocument = webEngine.getDocument();
                 createMessageDiv(message, senderName, timestamp, attrClass);
-                updateLastMessageInCardsBody(message, senderName);
+                //updateLastMessageInCardsBody(message, senderName);
             }else {
                 webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
                         DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
                         createMessageDiv(message, senderName, timestamp, attrClass);
-                        updateLastMessageInCardsBody(message, senderName);
+                        //updateLastMessageInCardsBody(message, senderName);
                     }
                 });
             }
         }else {
             createMessageDiv(message, senderName, timestamp, attrClass);
-            updateLastMessageInCardsBody(message, senderName);
+            //updateLastMessageInCardsBody(message, senderName);
         }
     }
 
-    private void updateLastMessageInCardsBody(String message, String senderName){
+    /*private void updateLastMessageInCardsBody(String message, String senderName){
         CFXListElement targetChat = null;
 
         for (CFXListElement element : contactsObservList){
@@ -536,7 +536,7 @@ public class ChatViewController implements Initializable {
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message);
-    }
+    }*/
 
     @FXML
     public void handleDisconnectButton() {

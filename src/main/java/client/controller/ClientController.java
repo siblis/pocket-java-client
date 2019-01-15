@@ -246,12 +246,23 @@ public class ClientController {
         dbService = new DataBaseService(myUser);
         contactList = dbService.getAllUserId();
         contactListOfCards = new ArrayList<>();
-        
-        dbService.getAllUsers().forEach(user -> {
-            if (user.getUid() != myUser.getUid()) {
-                contactListOfCards.add(new CFXListElement(user));
+
+        CFXListElement newElement = null;
+        for (User user1 : dbService.getAllUsers()) {
+            if (user1.getUid() != myUser.getUid()) {
+                newElement = new CFXListElement(user1);
+                contactListOfCards.add(newElement);
+
+                //todo: загрузка последних сообщений в body
+                List<Message> messages = dbService.getLastMessage(user1, myUser);
+                String msg = "";
+                //todo если будет последним сообщением смайлик, то выводится путь к файлику
+                if (messages.size() > 0) {
+                    msg = messages.get(0).getText();
+                    newElement.setBody(msg);
+                }
             }
-        });
+        }
 
         try {
             ServerResponse response = HTTPSRequest.getContacts(token);
