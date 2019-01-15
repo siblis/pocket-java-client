@@ -541,7 +541,7 @@ public class ChatViewController implements Initializable {
         }
 
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
-        targetChat.setBody(senderName + ": " + message); //
+        targetChat.setBody(senderName + ": " + message);
 
     }
 
