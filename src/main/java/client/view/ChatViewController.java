@@ -527,12 +527,19 @@ public class ChatViewController implements Initializable {
         }
     }
 
-    public void updateLastMessageInCardsBody(String message, String senderName, String receiverName){
+    public void updateLastMessageInCardsBody(String message, String senderName, String receiverName, boolean send){
         CFXListElement targetChat = null;
 
-        for (CFXListElement element : contactsObservList){
-            if (element.getUser().getAccount_name().equals(receiverName)) targetChat = element;
+        if (send) {
+            for (CFXListElement element : contactsObservList) {
+                if (element.getUser().getAccount_name().equals(receiverName)) targetChat = element;
+            }
+        }else {
+            for (CFXListElement element : contactsObservList) {
+                if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
+            }
         }
+
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message); //
 

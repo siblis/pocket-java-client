@@ -186,6 +186,11 @@ public class ClientController {
                 mfs.getSenderid(),
                 new Message(mfs.getMessage(),
                         mfs.getTimestamp()));
+
+        //обновляем последнюю запись
+        chatViewController.updateLastMessageInCardsBody(mfs.getMessage(),
+                mfs.getSender_name(),
+                myUser.getAccount_name(), false);
     }
 
     public void sendMessage(String message) {
@@ -207,7 +212,7 @@ public class ClientController {
             //обновляем последнюю запись
             chatViewController.updateLastMessageInCardsBody(message,
                     myUser.getAccount_name(),
-                    receiver.getAccount_name());
+                    receiver.getAccount_name(), true);
 
         } catch (IOException ex) {
             showAlert("Потеряно соединение с сервером", Alert.AlertType.ERROR);
