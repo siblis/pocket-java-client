@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MessageDAO {
 
-    public void insert(Message message) {
+    void insert(Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -19,7 +19,7 @@ public class MessageDAO {
         session.getTransaction().commit();
     }
 
-    public void update(Message message) {
+    void update(Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -28,7 +28,7 @@ public class MessageDAO {
         session.getTransaction().commit();
     }
 
-    public void delete(int id) {
+    void delete(int id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -38,7 +38,7 @@ public class MessageDAO {
         session.getTransaction().commit();
     }
 
-    public List<Message> get() {
+    List<Message> get() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
