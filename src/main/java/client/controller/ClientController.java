@@ -518,15 +518,17 @@ public class ClientController {
         }
     }
 
-    public void proceedRegister(String login, String password, String email) {
+    public void proceedRegister(String name, String password, String email) {
         String requestJSON = "{" +
-                "\"account_name\": \"" + login + "\"," +
                 "\"email\": \"" + email + "\"," +
-                "\"password\": \"" + password + "\"" +
+                "\"password\": \"" + password + "\"," +
+                "\"name\": \"" + name + "\"" +
                 "}";
         try {
             int responseCode = HTTPSRequest.registration(requestJSON);
             if (responseCode == 201) {
+                //todo: результаты содержат токен и данные пользователя
+                // можно запускать клиент? (после переделки возрата из HTTPSRequest.registration)
                 showAlert("Вы успешно зарегистрированы", Alert.AlertType.INFORMATION);
             } else
                 showAlert("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);

@@ -40,7 +40,7 @@
                <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-               <TextField fx:id="regLoginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Ваш никнейм" GridPane.rowIndex="0" />
+               <TextField fx:id="regNameField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Ваш никнейм" GridPane.rowIndex="0" />
                <TextField fx:id="regEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="E-mail" GridPane.rowIndex="1" />
                <PasswordField fx:id="regPasswordField" onKeyReleased="#handleKeyReleased" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="2" />
                <PasswordField fx:id="regPasswordFieldDouble" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="232.0" promptText="Подтверждение пароля" GridPane.rowIndex="3" />

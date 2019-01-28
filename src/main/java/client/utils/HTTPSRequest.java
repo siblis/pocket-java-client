@@ -42,7 +42,7 @@ public class HTTPSRequest {
     }
 
     public static int registration(String requestJSON) throws Exception {
-        URL obj = new URL(serverURL + "/v1/auth/register/");
+        URL obj = new URL(serverURL + "/v1/auth/registration/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
 

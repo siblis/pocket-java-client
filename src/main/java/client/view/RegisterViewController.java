@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 public class RegisterViewController implements Initializable {
 
     @FXML
-    private TextField regLoginField;
+    private TextField regNameField;
 
     @FXML
     private PasswordField regPasswordField;
@@ -44,16 +44,16 @@ public class RegisterViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         controller = ClientController.getInstance();
-        Platform.runLater(() -> regLoginField.requestFocus());
+        Platform.runLater(() -> regNameField.requestFocus());
         okRegisterButton.disableProperty().bind(
                 Bindings.createBooleanBinding(
-                        () -> regLoginField.getText().length() == 0
+                        () -> regNameField.getText().length() == 0
                                 || regPasswordField.getText().length() == 0
                                 || regPasswordFieldDouble.getText().length() == 0
                                 || regEmailField.getText().length() == 0
                                 || !regPasswordField.getText().equals(regPasswordFieldDouble.getText())
                                 || !Correct.isValidEmail(regEmailField.getText()),
-                        regLoginField.textProperty(),
+                        regNameField.textProperty(),
                         regPasswordField.textProperty(),
                         regPasswordFieldDouble.textProperty(),
                         regEmailField.textProperty()));
@@ -66,7 +66,7 @@ public class RegisterViewController implements Initializable {
 
     @FXML
     private void handleOkRegisterButton() {
-        controller.proceedRegister(regLoginField.getText(), regPasswordField.getText(), regEmailField.getText());
+        controller.proceedRegister(regNameField.getText(), regPasswordField.getText(), regEmailField.getText());
         Stage stage = (Stage) okRegisterButton.getScene().getWindow();
         stage.close();
     }
