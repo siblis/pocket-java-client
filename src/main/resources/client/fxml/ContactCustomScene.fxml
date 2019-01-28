@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="60.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.ContactCustomSceneController">
+   <children>
+
+      <ImageView fx:id="avatar" fitHeight="50.0" fitWidth="50.0" layoutX="11.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="nameLabel" layoutX="81.0" layoutY="12.0" prefHeight="17.0" prefWidth="85.0" text="User Name" />
+      <Label fx:id="messageDateLabel" layoutY="14.0" prefHeight="15.0" prefWidth="46.0" text="Date" AnchorPane.rightAnchor="9.0" />
+      <Label fx:id="lastMessageLabel" layoutX="81.0" layoutY="34.0" prefHeight="15.0" prefWidth="189.0" text="Last message" />
+      <Label fx:id="isGetMessageLabel" layoutY="33.0" text="Label" AnchorPane.rightAnchor="9.4" />
+   </children>
+</AnchorPane>

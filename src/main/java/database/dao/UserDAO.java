@@ -1,9 +1,9 @@
 package database.dao;
 
 import database.HibernateUtil;
-import database.entity.Message;
 import database.entity.User;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -13,12 +13,11 @@ import java.util.List;
  * приложении слой, который отвечает только за доступ к данным, и больше
  * ни за что. Достать данные из БД, обновить данные, удалить данные - и все.
  * Однако, мы не будем создавать DAO напрямую и вызывать его методы в нашем
- * приложении. Вся логика будет помещена в класс UserService.
- *
+ * приложении. Вся логика будет помещена в класс DataBaseService.
  */
-public class UserDAO {
+class UserDAO {
 
-    public void insert(User user){
+    void insert(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -27,7 +26,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public void update(User user){
+    void update(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -36,7 +35,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public void delete(User user){
+    void delete(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -45,7 +44,7 @@ public class UserDAO {
         session.getTransaction().commit();
     }
 
-    public User get(int id){
+    User get(long id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -56,7 +55,20 @@ public class UserDAO {
         return user;
     }
 
-    public List<User> get(){
+    User get(String userName) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.getTransaction().begin();
+
+        Query<User> query = session.createQuery("from User u where u.account_name = :userNameParam");
+        query.setParameter("userNameParam", userName);
+        User user = query.getSingleResult();
+
+        session.getTransaction().commit();
+
+        return user;
+    }
+
+    List<User> get() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -67,11 +79,18 @@ public class UserDAO {
         return list;
     }
 
-    public User findById(int id) {
-        return HibernateUtil.getSessionFactory().openSession().get(User.class, id);
+    List<Long> getColumnOfData(String fieldName) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.getTransaction().begin();
+
+        List<Long> list = (List<Long>) session.createQuery("select t." + fieldName + " FROM User as t").list();
+
+        session.getTransaction().commit();
+
+        return list;
     }
 
-    public Message findAutoById(int id) {
-        return HibernateUtil.getSessionFactory().openSession().get(Message.class, id);
+    void close(){
+        HibernateUtil.shutdown();
     }
 }

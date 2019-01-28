@@ -1,49 +1,51 @@
 package database.entity;
 
+
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "messages")
 public class Message {
 
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column
     private String text;
 
     @Column
-    private String time;
+    private Timestamp time;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sender_id")
     private User sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "receiver_id")
     private User receiver;
 
     public Message() {}
 
-    public Message(int id, String text, String time, User sender, User receiver) {
-        this.id = id;
+    public Message(String text, Timestamp time, User receiver, User sender) {
         this.text = text;
         this.time = time;
         this.sender = sender;
         this.receiver = receiver;
     }
 
-    public Message(int id, String text, String time) {
-        this.id = id;
+    public Message(String text, Timestamp time) {
         this.text = text;
         this.time = time;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -55,11 +57,11 @@ public class Message {
         this.text = text;
     }
 
-    public String getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 
@@ -77,5 +79,10 @@ public class Message {
 
     public void setReceiver(User receiver) {
         this.receiver = receiver;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" + "id=" + id + ", text=" + text + ", time=" + time + ", sender=" + sender + ", receiver=" + receiver + '}';
     }
 }

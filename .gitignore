@@ -2,3 +2,6 @@
 /.idea/
 /out/
 /DesktopClient.iml
+/deploy/
+*/*.db
+/logs

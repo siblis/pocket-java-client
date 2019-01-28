@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.*?>
+<fx:root id="CFXMenuRightGroup" fx:id="CFXMenuRightPane" prefHeight="250.0" prefWidth="410.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+      <Rectangle arcHeight="5.0" fill="WHITE" height="250.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="410.0" />
+    <JFXButton fx:id="btnGroupProfile" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="0.0" styleClass="btnWriteMessage" text="Профиль группы" textFill="#3498db" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <graphic>
+        <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../images/menus/GroupInfo.png" />
+            </image>
+        </ImageView>
+    </graphic>
+    <font>
+        <Font size="16.0" />
+    </font>
+</JFXButton>
+    <JFXButton fx:id="btnClearHistory" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="0.0" styleClass="btnWriteMessage" text="Очистить историю" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+        <graphic>
+            <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/menus/clearHistory.png" />
+                </image>
+            </ImageView>
+        </graphic>
+        <font>
+            <Font size="16.0" />
+        </font>
+    </JFXButton>
+    <JFXButton fx:id="btnNotification" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="410.0" styleClass="btnWriteMessage" text="Отключить/включить уведомления" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+        <graphic>
+            <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/menus/Notification.png" />
+                </image>
+            </ImageView>
+        </graphic>
+        <font>
+            <Font size="16.0" />
+        </font>
+    </JFXButton>
+    <JFXButton fx:id="btnLeaveGroup" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="410.0" styleClass="btnWriteMessage" text="Покинуть группу" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0">
+        <graphic>
+            <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/menus/leaveGroup.png" />
+                </image>
+            </ImageView>
+        </graphic>
+        <font>
+            <Font size="16.0" />
+        </font>
+    </JFXButton>
+    <JFXButton fx:id="btnDeleteGroup" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="410.0" styleClass="btnWriteMessage" text="Удалить группу" textFill="#f46767" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+        <graphic>
+            <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/menus/deleteGroup.png" />
+                </image>
+            </ImageView>
+        </graphic>
+        <font>
+            <Font size="16.0" />
+        </font>
+    </JFXButton>
+</children>
+</fx:root>

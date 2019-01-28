@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="590.0" stylesheets="/client/styles/LoginStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.RootLayoutController">
+    <!--<top>-->
+        <!--<MenuBar minWidth="-Infinity" prefWidth="600.0" BorderPane.alignment="CENTER">-->
+            <!--<menus>-->
+                <!--<Menu id="menu" mnemonicParsing="false" text="Меню">-->
+                    <!--<items>-->
+                        <!--&lt;!&ndash;<MenuItem mnemonicParsing="false" text="Настройки внешнего вида" onAction="#handleViewSettings"/>&ndash;&gt;-->
+                        <!--<MenuItem mnemonicParsing="false" onAction="#handleExit" text="Выход" />-->
+                        <!--<MenuItem mnemonicParsing="false" onAction="#handleConnectingSettings" text="Настройки связи" />-->
+                    <!--</items>-->
+                <!--</Menu>-->
+            <!--</menus>-->
+        <!--</MenuBar>-->
+    <!--</top>-->
+
+</BorderPane>
