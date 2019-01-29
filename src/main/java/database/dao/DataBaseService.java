@@ -63,12 +63,12 @@ public class DataBaseService {
         return null;
     }
 
-    public List<Long> getAllUserId() {
+    public List<String> getAllUserId() {
 //        return usersDao.getColumnOfData("user_id");
         return null;
     }
 
-    public void addMessage(long receiverId, long senderID, Message message) {
+    public void addMessage(String receiverId, String senderID, Message message) {
 //        messageDao.addSentMessage(senderID, message);
 //        messageDao.addReceivedMessage(receiverId, message);
         System.out.println("BD addMessage "+ receiverId+" "+senderID+" "+message);

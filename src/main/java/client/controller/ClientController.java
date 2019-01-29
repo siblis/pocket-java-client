@@ -35,7 +35,7 @@ public class ClientController {
     private User receiver;
     private User myUser;
     private Connector conn;
-    private List<Long> contactList;
+    private List<String> contactList;
     private List<CFXListElement> contactListOfCards;
 
     private DataBaseService dbService;
@@ -164,7 +164,7 @@ public class ClientController {
         }
         //Проверяем что у нас чат именно с этим пользователем, иначе сообщение не выводится
         //Как будет с группами пока не понятно
-        if (receiver.getUid() == mfs.getSenderid()) {
+        if (receiver.getUid().equals(mfs.getSenderid())) {
             chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
         }
         if (mfs.getSenderid() !=0) { //отключаем звук для служебных сообщений
@@ -249,19 +249,19 @@ public class ClientController {
                 for (ContactListFromServer entry : convertContactListFromServer(response.getResponseJson())) {
                     if (!contactList.contains(entry.getId())) {
                         //TODO: себя не должно быть в списке контактов - убрать костыль (после решения на сервере)
-                        if (entry.getId() == myUser.getUid()) continue; //костыль, который надо будет убрать
-                        User user = new User(entry.getId(), entry.getName(), entry.getEmail());
+                        if (entry.getId().equals(myUser.getUid())) continue; //костыль, который надо будет убрать
+                        User user = new User(entry.getName(), entry.getEmail());
                         addContactToDB(user);
                     }
                     for (CFXListElement cont : contactListOfCards) {
-                        if (cont.getUser().getUid() == entry.getId()) {
+                        if (cont.getUser().getUid().equals(entry.getId())) {
                             cont.setOnlineStatus(entry.isStatusOnline());
                             break;
                         }
                     }
                     //в списке останутся только контакты, которых нет на сервере
                     contactsToRemoveFromDb.remove(
-                            new User(entry.getId(), entry.getName(), entry.getEmail()));
+                            new User(entry.getName(), entry.getEmail()));
                 }
 
                 //удаляем из локальной базы контакты, которых нет в списке контактов на сервере
@@ -295,7 +295,7 @@ public class ClientController {
                     }.getType());
             if (users != null && users.size() > 0) {
                 users.forEach((id, userFS) -> res.add(new CFXListElement(
-                        new User(Long.parseLong(id), userFS.getAccount_name(), userFS.getEmail()))));
+                        new User(userFS.getAccount_name(), userFS.getEmail()))));
             }
         } catch (Exception e) {
             return convertJSONToCFXListElement(jsonText);
@@ -347,7 +347,7 @@ public class ClientController {
 
     public void joinGroup(String groupName){
         Group group = getGroupInfo(groupName);
-        addUserGroup(group.getGid(), Long.toString(myUser.getUid()));
+        addUserGroup(group.getGid(), myUser.getUid());
     }
 
     public void addGroup(String group_name){
@@ -460,7 +460,7 @@ public class ClientController {
     }
 
     private void addContactToDB(User contact) {
-        dbService.insertUser(new User(contact.getUid(), contact.getAccount_name(), contact.getEmail()));
+        dbService.insertUser(contact);
         contactList.add(contact.getUid());
         contactListOfCards.add(new CFXListElement(contact));
     }

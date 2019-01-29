@@ -59,7 +59,7 @@ class UserDAO {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        Query<User> query = session.createQuery("from User u where u.account_name = :userNameParam");
+        Query<User> query = session.createQuery("from User u where u.profile.username = :userNameParam");
         query.setParameter("userNameParam", userName);
         User user = query.getSingleResult();
 
