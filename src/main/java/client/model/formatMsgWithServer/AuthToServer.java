@@ -1,15 +1,21 @@
 package client.model.formatMsgWithServer;
 
+import com.google.gson.Gson;
+
 public class AuthToServer {
-    public String account_name;
+    public String email;
     public String password;
 
     public AuthToServer() {
 
     }
 
-    public AuthToServer(String account_name, String password) {
-        this.account_name = account_name;
+    public AuthToServer(String email, String password) {
+        this.email = email;
         this.password = password;
+    }
+    
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 }

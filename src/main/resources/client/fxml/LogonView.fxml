@@ -32,7 +32,7 @@
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
-                    <TextField fx:id="loginField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" promptText="nickname" />
+                    <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" promptText="E-mail" />
                     <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleLogInButton" prefHeight="32.0" prefWidth="232.0" promptText="Пароль" GridPane.rowIndex="1">
                         <GridPane.margin>
                             <Insets bottom="20.0" />

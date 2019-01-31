@@ -107,33 +107,21 @@ public class ClientController {
         return contactListOfCards;
     }
 
-    private boolean authentication(String login, String password) {
-        if (!login.isEmpty() && !password.isEmpty()) {
+    private boolean authentication(String email, String password) {
+        if (!email.isEmpty() && !password.isEmpty()) {
             String answer = "0";
-            AuthToServer ATS = new AuthToServer(login, password);
-            String reqJSON = new Gson().toJson(ATS);
             try {
-                answer = HTTPSRequest.authorization(reqJSON);
+                answer = HTTPSRequest.authorization(new AuthToServer(email, password).toJson());
             } catch (Exception e) {
                 controllerLogger.error("HTTPSRequest.authorization_error", e);
             }
             if (answer.contains("token")) {
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-                AuthFromServer AFS = gson.fromJson(answer, AuthFromServer.class);
-                System.out.println(" answer server " + AFS.token);
-                token = AFS.token;
+                AuthFromServer auth = AuthFromServer.fromJson(answer);
+                System.out.println(" answer server " + auth.token + "\n" + auth.myUser);
+                token = auth.token;
                 connect(token);
+                myUser = auth.myUser;
 
-                try {
-                    ServerResponse response = HTTPSRequest.getMySelf(token);
-                    myUser = convertJSONToUser(response.getResponseJson());
-                    System.out.println("info myUser id "+myUser.getUid()+
-                            " acc name "+myUser.getAccount_name());
-                } catch (Exception e) {
-                    controllerLogger.error("HTTPSRequest.getMySelf_error", e);
-                }
-                myUser.setAccount_name(login);
                 synchronizeContactList();
 
                 return true;

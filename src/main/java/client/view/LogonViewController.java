@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class LogonViewController implements Initializable {
 
     @FXML
-    private TextField loginField;
+    private TextField emailField;
 
     @FXML
     private PasswordField passwordField;
@@ -34,7 +34,7 @@ public class LogonViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         controller = ClientController.getInstance();
-        Platform.runLater(() -> loginField.requestFocus());
+        Platform.runLater(() -> emailField.requestFocus());
     }
 
     private void handleLogIn(String login, String password) throws IOException {
@@ -58,29 +58,29 @@ public class LogonViewController implements Initializable {
                 Tray.trayON(chatStage);
             });
         } else {
-            loginField.clear();
+            emailField.clear();
             passwordField.clear();
-            loginField.requestFocus();
+            emailField.requestFocus();
         }
     }
 
     @FXML
     private void handleLogInButton() throws IOException {
-        handleLogIn(loginField.getText(), passwordField.getText());
+        handleLogIn(emailField.getText(), passwordField.getText());
     }
 
     @FXML
     private void handleGuestC2Button() throws IOException {
         // id = 24
-        handleLogIn("tester2", "123");
-        controller.setReceiver(25L);
+        /*handleLogIn("tester2", "123");
+        controller.setReceiver(25L);*/
     }
 
     @FXML
     private void handleGuestC3Button() throws IOException {
         //id = 25
-        handleLogIn("tester3", "123");
-        controller.setReceiver(24L);
+        /*handleLogIn("tester3", "123");
+        controller.setReceiver(24L);*/
     }
 
     @FXML
