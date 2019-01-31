@@ -22,64 +22,70 @@ public class DataBaseService {
     private MessageDAO messageDao;
 
     public DataBaseService(User myUser) {
-        HibernateUtil.setUserName(myUser.getAccount_name());
+//        HibernateUtil.setUserName(myUser.getAccount_name());
         usersDao = new UserDAO();
         messageDao = new MessageDAO();
     }
 
     public void insertUser(User user) {
-        usersDao.insert(user);
+//        usersDao.insert(user);
     }
 
     public void deleteUser(User user) {
-        usersDao.delete(user);
+//        usersDao.delete(user);
     }
 
     public void updateUser(User user) {
-        usersDao.update(user);
+//        usersDao.update(user);
     }
 
     public User getUser(long id) {
-        return usersDao.get(id);
+//        return usersDao.get(id);
+        return null;
     }
 
     public User getUser(String userName) {
-        return usersDao.get(userName);
+//        return usersDao.get(userName);
+        return null;
     }
 
     public List<User> getAllUsers() {
-        return usersDao.get();
+//        return usersDao.get();
+        return null;
     }
 
     public List<String> getAllUserNames() {
-        List<String> names = new ArrayList<>();
-        for (User user : usersDao.get()) {
-            names.add(user.getAccount_name());
-        }
-        return names;
+//        List<String> names = new ArrayList<>();
+//        for (User user : usersDao.get()) {
+//            names.add(user.getAccount_name());
+//        }
+//        return names;
+        return null;
     }
 
     public List<Long> getAllUserId() {
-        return usersDao.getColumnOfData("user_id");
+//        return usersDao.getColumnOfData("user_id");
+        return null;
     }
 
     public void addMessage(long receiverId, long senderID, Message message) {
-        messageDao.addSentMessage(senderID, message);
-        messageDao.addReceivedMessage(receiverId, message);
+//        messageDao.addSentMessage(senderID, message);
+//        messageDao.addReceivedMessage(receiverId, message);
         System.out.println("BD addMessage "+ receiverId+" "+senderID+" "+message);
     }
 
     public List<Message> getChat(User user1, User user2){
-        return messageDao.get(user1, user2);
+//        return messageDao.get(user1, user2);
+        return new ArrayList<>();
     }
 
     public void deleteChat(User user1, User user2){
-        messageDao.delete(user1, user2);
+//        messageDao.delete(user1, user2);
     }
 
-    public Message findMessageById(long id) {
-        return messageDao.findMessageById(id);
-    }
+//    public Message findMessageById(long id) {
+//        return messageDao.findMessageById(id);
+//    }
 
     public void close(){
         usersDao.close();

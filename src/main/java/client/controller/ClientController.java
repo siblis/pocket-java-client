@@ -78,12 +78,12 @@ public class ClientController {
     }
 
     public void setReceiver(long receiverId) {
-        this.receiver = dbService.getUser(receiverId);
+//        this.receiver = dbService.getUser(receiverId);
         loadChat();
     }
 
     public void setReceiver(String receiverName) {
-        this.receiver = dbService.getUser(receiverName);
+//        this.receiver = dbService.getUser(receiverName);
         loadChat();
     }
 
@@ -170,10 +170,10 @@ public class ClientController {
         if (mfs.getSenderid() !=0) { //отключаем звук для служебных сообщений
             Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
         }
-        dbService.addMessage(mfs.getReceiver(),
-                mfs.getSenderid(),
-                new Message(mfs.getMessage(),
-                        mfs.getTimestamp()));
+//        dbService.addMessage(mfs.getReceiver(),
+//                mfs.getSenderid(),
+//                new Message(mfs.getMessage(),
+//                        mfs.getTimestamp()));
     }
 
     public void sendMessage(String message) {
@@ -187,10 +187,10 @@ public class ClientController {
         try {
             conn.getChatClient().send(jsonMessage);
 
-            dbService.addMessage(receiver.getUid(),
-                    myUser.getUid(),
-                    new Message(message, new Timestamp(System.currentTimeMillis()))
-            );
+//            dbService.addMessage(receiver.getUid(),
+//                    myUser.getUid(),
+//                    new Message(message, new Timestamp(System.currentTimeMillis()))
+//            );
             chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
 
         } catch (IOException ex) {
@@ -235,11 +235,11 @@ public class ClientController {
         contactList = dbService.getAllUserId();
         contactListOfCards = new ArrayList<>();
         
-        dbService.getAllUsers().forEach(user -> {
-            if (user.getUid() != myUser.getUid()) {
-                contactListOfCards.add(new CFXListElement(user));
-            }
-        });
+//        dbService.getAllUsers().forEach(user -> {
+//            if (user.getUid() != myUser.getUid()) {
+//                contactListOfCards.add(new CFXListElement(user));
+//            }
+//        });
 
         try {
             ServerResponse response = HTTPSRequest.getContacts(token);

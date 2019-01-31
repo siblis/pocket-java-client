@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ExampleUsage2 {
     public static void main(String[] args) {
-        DataBaseService dataBaseService = new DataBaseService(new User(1, "testName", "testEmail"));
+        /*DataBaseService dataBaseService = new DataBaseService(new User(1, "testName", "testEmail"));
 
 //        clearBase(dataBaseService);
 
@@ -26,7 +26,7 @@ public class ExampleUsage2 {
 
         dataBaseService.addMessage(user2.getUid(), user1.getUid(), message2);
 
-        HibernateUtil.shutdown();
+        HibernateUtil.shutdown();*/
     }
 
     private static void clearBase(DataBaseService dataBaseService) {

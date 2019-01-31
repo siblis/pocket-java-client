@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ExampleUsage {
     public static void main(String[] args) {
-        DataBaseService dataBaseService = new DataBaseService(new User(1, "test2Name", "test2Email"));
+        /*DataBaseService dataBaseService = new DataBaseService(new User(1, "test2Name", "test2Email"));
 
         clearBase(dataBaseService);
 
@@ -33,7 +33,7 @@ public class ExampleUsage {
         dataBaseService.updateUser(user2);
         dataBaseService.updateUser(user1);
 
-        HibernateUtil.shutdown();
+        HibernateUtil.shutdown();*/
     }
 
     private static void clearBase(DataBaseService dataBaseService) {
