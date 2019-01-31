@@ -1,42 +1,33 @@
 package client.model.formatMsgWithServer;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import database.entity.User.UserProfile;
+import java.sql.Timestamp;
+
 public class ContactListFromServer {
-    private long user_id;
-    private String account_name;
-    private String email;
-    private String status;
+
+    public static ContactListFromServer fromJson(String jsonAnswer) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.fromJson(jsonAnswer, ContactListFromServer.class);
+    }
+
+    private String user; //id пользователя которому принадлежит коллекция!?
+    private int offset;
+    private ContactFromServer[] data;
 
     public ContactListFromServer() {}
 
-    public long getId() {
-        return user_id;
+    public String getUserId() {
+        return user;
     }
 
-    public void setId(long user_id) {
-        this.user_id = user_id;
+    public int getOffset() {
+        return offset;
     }
 
-    public String getName() {
-        return account_name;
-    }
-
-    public void setName(String name) {
-        this.account_name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean isStatusOnline() {
-        return status.equals("online");
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public ContactFromServer[] getContacts() {
+        return data;
     }
 }

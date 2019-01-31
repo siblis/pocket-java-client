@@ -78,13 +78,14 @@ public class HTTPSRequest {
         return getServerResponse(connection, requestJSON);
     }
 
-    public static ServerResponse deleteContact(String contastsEmailJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/account/contacts/", "DELETE", token);
-        return getServerResponse(connection, contastsEmailJSON);
+    public static ServerResponse deleteContact(String userId, String token) throws Exception {
+        HttpsURLConnection connection = getConnection("/v1/account/contacts/" + userId, "DELETE", token);
+        return getServerResponse(connection, null);
     }
 
-    public static ServerResponse getContacts(String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/account/contacts/", "GET", token);
+    public static ServerResponse getContacts(String token, int offset) throws Exception {
+        HttpsURLConnection connection = 
+                getConnection("/v1/account/contacts/?offset:" + offset, "GET", token);
         return getServerResponse(connection, null);
     }
 

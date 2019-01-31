@@ -150,7 +150,7 @@ public class ClientController {
                 ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
                 switch (response.getResponseCode()) {
                     case 200:
-                        addContact(convertJSONToUser(response.getResponseJson()).getEmail());
+                        addContact(convertJSONToUser(response.getResponseJson()));
                         break;
                     case 404:
                         showAlert("Пользователь не найден", Alert.AlertType.ERROR);//с id: " + mfs.getSenderid() + "
@@ -224,12 +224,6 @@ public class ClientController {
         contactListOfCards = null;
     }
 
-    private ContactListFromServer[] convertContactListFromServer(String jsonText) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        return gson.fromJson(jsonText, ContactListFromServer[].class);
-    }
-
     private void synchronizeContactList() {
         dbService = new DataBaseService(myUser);
         contactList = dbService.getAllUserId();
@@ -242,32 +236,20 @@ public class ClientController {
 //        });
 
         try {
-            ServerResponse response = HTTPSRequest.getContacts(token);
-            if (response != null) {
-                List<User> contactsToRemoveFromDb = dbService.getAllUsers();
-                contactsToRemoveFromDb.remove(myUser);
-                for (ContactListFromServer entry : convertContactListFromServer(response.getResponseJson())) {
-                    if (!contactList.contains(entry.getId())) {
-                        //TODO: себя не должно быть в списке контактов - убрать костыль (после решения на сервере)
-                        if (entry.getId().equals(myUser.getUid())) continue; //костыль, который надо будет убрать
-                        User user = new User(entry.getName(), entry.getEmail());
-                        addContactToDB(user);
-                    }
-                    for (CFXListElement cont : contactListOfCards) {
-                        if (cont.getUser().getUid().equals(entry.getId())) {
-                            cont.setOnlineStatus(entry.isStatusOnline());
-                            break;
-                        }
-                    }
-                    //в списке останутся только контакты, которых нет на сервере
-                    contactsToRemoveFromDb.remove(
-                            new User(entry.getName(), entry.getEmail()));
-                }
-
-                //удаляем из локальной базы контакты, которых нет в списке контактов на сервере
-                if (!contactsToRemoveFromDb.isEmpty()) 
-                    contactsToRemoveFromDb.forEach(entry -> removeContactFromDb(entry));
+            List<User> contactsToRemoveFromDb = dbService.getAllUsers();
+            contactsToRemoveFromDb.remove(myUser);
+            ServerResponse response;
+            int pageOfContacts = 0;
+            while (true) {
+                response = HTTPSRequest.getContacts(token, pageOfContacts);
+                ContactListFromServer clfs = ContactListFromServer.fromJson(response.getResponseJson());
+                if (clfs.getContacts().length == 0) break;
+                synchronizePageOfContListFromServ(clfs.getContacts(), contactsToRemoveFromDb);
             }
+
+            //удаляем из локальной базы контакты, которых нет в списке контактов на сервере
+            if (!contactsToRemoveFromDb.isEmpty()) 
+                contactsToRemoveFromDb.forEach(entry -> removeContactFromDb(entry));
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getContacts_error", e);
         }
@@ -276,6 +258,24 @@ public class ClientController {
         User user = dbService.getUser(myUser.getUid());
         if (user == null) {
             dbService.insertUser(myUser);
+        }
+    }
+
+    private void synchronizePageOfContListFromServ(ContactFromServer[] contacts, List<User> contactsToRemoveFromDb) {
+        for (ContactFromServer entry : contacts) {
+            User curUser = entry.toUser();
+            if (!contactList.contains(curUser.getUid())) {
+                addContactToDB(curUser);
+            }
+            //todo в новом апи пока нет статусов
+//            for (CFXListElement cont : contactListOfCards) {
+//                if (cont.getUser().getUid().equals(entry.getUserProfile().getId())) {
+//                    cont.setOnlineStatus(entry.isStatusOnline());
+//                    break;
+//                }
+//            }
+            //в списке останутся только контакты, которых нет на сервере
+            contactsToRemoveFromDb.remove(curUser);
         }
     }
 
@@ -409,23 +409,16 @@ public class ClientController {
         }
     }
 
-    public boolean addContact(String contact) {
-        UserToServer cts = new UserToServer(contact);
-        String requestJSON = new Gson().toJson(cts);
-
+    public boolean addContact(User user) {
+        //todo ответа сервера не предусмотрено => убрать return и добавить проброс ошибок
+        UserToServer uts = new UserToServer(user.getUid(), user.getAccount_name());
         try {
-            ServerResponse response = HTTPSRequest.addContact(requestJSON, token);
+            ServerResponse response = HTTPSRequest.addContact(uts.toJson(), token);
             switch (response.getResponseCode()) {
-                case 201:
-                    showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
-                    User newUser = convertJSONToUser(response.getResponseJson());
+                case 200:
+                    showAlert("Контакт " + user.getAccount_name() + " успешно добавлен", Alert.AlertType.INFORMATION);
+                    User newUser = ContactFromServer.fromJson(response.getResponseJson()).toUser();
                     return addContactToDbAndChat(newUser);
-                case 404:
-                   // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
-                    break;
-                case 409:
-                  //  showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
-                    break;
                 default:
                     //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
             }
@@ -473,22 +466,16 @@ public class ClientController {
         return true;
     }
 
-    public boolean removeContact(String contactsEmail) {
-        UserToServer cts = new UserToServer(contactsEmail);
-        String requestJSON = new Gson().toJson(cts);
-
+    public boolean removeContact(User user) {
+        //todo ответа сервера не предусмотрено => убрать return и добавить проброс ошибок
         try {
-            ServerResponse response = HTTPSRequest.deleteContact(requestJSON, token);
+            ServerResponse response = HTTPSRequest.deleteContact(user.getUid(), token);
             switch (response.getResponseCode()) {
                 case 200:
-                    showAlert("Контакт " + contactsEmail + " успешно удалён", Alert.AlertType.INFORMATION);
-                    User delUser = new UserDeletedFromServer(response.getResponseJson()).toUser();
-                    delUser.setEmail(contactsEmail); // на 08.01.2018 нет в ответе сервера
-                    removeContactFromDbAndChat(delUser);
+                    showAlert("Контакт " + user.getAccount_name() + " успешно удалён", 
+                            Alert.AlertType.INFORMATION);
+                    removeContactFromDbAndChat(user);
                     return true;
-                case 404:
-                    showAlert("Пользователя " + contactsEmail + " нет в списке контактов", Alert.AlertType.INFORMATION);
-                    break;
                 default:
                     //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
             }

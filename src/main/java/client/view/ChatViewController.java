@@ -883,8 +883,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void contactSearchBtnInviteClicked() {
-        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getEmail();
-        clientController.addContact(receiver);
+        clientController.addContact(searchListView.getSelectionModel().getSelectedItem().getUser());
         contactSearchBtnCancelClicked();
     }
 
