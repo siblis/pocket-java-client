@@ -137,17 +137,11 @@ public class ClientController {
         return false;
     }
 
-    private MessageFromServer convertMessageToMFS(String jsonText) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        return gson.fromJson(jsonText, MessageFromServer.class);
-    }
-
     public void receiveMessage(String message) {
-        MessageFromServer mfs = convertMessageToMFS(message);
-        if (!contactList.contains(mfs.getSenderid())) { //Проверяем, что осообщение пришло не от клиента в списке
+        MessageFromServer mfs = MessageFromServer.fromJson(message);
+        if (!contactList.contains(mfs.getSenderId())) { //Проверяем, что осообщение пришло не от клиента в списке
             try {
-                ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), null, token);
+                ServerResponse response = HTTPSRequest.getUser(mfs.getSenderId(), null, token);
                 switch (response.getResponseCode()) {
                     case 200:
                         addContact(convertUserProfileJSONToUser(response.getResponseJson()));
@@ -164,10 +158,11 @@ public class ClientController {
         }
         //Проверяем что у нас чат именно с этим пользователем, иначе сообщение не выводится
         //Как будет с группами пока не понятно
-        if (receiver.getUid().equals(mfs.getSenderid())) {
-            chatViewController.showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp(), true);
+        if (receiver.getUid().equals(mfs.getSenderId())) {
+            //todo на данный момент showMessage принимает senderName, а не senderId => допилить
+            chatViewController.showMessage(mfs.getSenderId(), mfs.getMessage(), mfs.getTimestamp(), true);
         }
-        if (mfs.getSenderid() !=0) { //отключаем звук для служебных сообщений
+        if (mfs.getSenderId() != null) { //отключаем звук для служебных сообщений
             Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
         }
 //        dbService.addMessage(mfs.getReceiver(),
@@ -181,11 +176,12 @@ public class ClientController {
             showAlert("Выберите контакт для отправки сообщения", Alert.AlertType.ERROR);
             return;
         }
-        MessageToServer MTS = new MessageToServer(receiver.getUid(), message);
-
-        String jsonMessage = new Gson().toJson(MTS);
+        
+        String jsonMessage = 
+                new MessageToServer(message, null, receiver.getUid(), null).toJson();
         try {
             conn.getChatClient().send(jsonMessage);
+            //todo допилить получение Success/Error и MessageId из ответа
 
 //            dbService.addMessage(receiver.getUid(),
 //                    myUser.getUid(),
