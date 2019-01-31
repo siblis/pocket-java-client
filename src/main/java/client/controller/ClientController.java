@@ -147,10 +147,10 @@ public class ClientController {
         MessageFromServer mfs = convertMessageToMFS(message);
         if (!contactList.contains(mfs.getSenderid())) { //Проверяем, что осообщение пришло не от клиента в списке
             try {
-                ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
+                ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), null, token);
                 switch (response.getResponseCode()) {
                     case 200:
-                        addContact(convertJSONToUser(response.getResponseJson()));
+                        addContact(convertUserProfileJSONToUser(response.getResponseJson()));
                         break;
                     case 404:
                         showAlert("Пользователь не найден", Alert.AlertType.ERROR);//с id: " + mfs.getSenderid() + "
@@ -279,10 +279,10 @@ public class ClientController {
         }
     }
 
-    private User convertJSONToUser(String jsonText) {
+    private User convertUserProfileJSONToUser(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.fromJson(jsonText, User.class);
+        return new User(null, gson.fromJson(jsonText, User.UserProfile.class));
     }
 
     private List<CFXListElement> convertJSONToCFXListElements(String jsonText) {
@@ -290,26 +290,9 @@ public class ClientController {
         Gson gson = builder.create();
         List<CFXListElement> res = new ArrayList<>();
         try {
-            Map<String, UserFromServer> users
-                    = gson.fromJson(jsonText, new TypeToken<Map<String, UserFromServer>>() {
-                    }.getType());
-            if (users != null && users.size() > 0) {
-                users.forEach((id, userFS) -> res.add(new CFXListElement(
-                        new User(userFS.getAccount_name(), userFS.getEmail()))));
-            }
-        } catch (Exception e) {
-            return convertJSONToCFXListElement(jsonText);
-        }
-        return res.isEmpty() ? null : res;
-    }
-
-    //костыль, т.к. список найденных и один контакт приходят в разном виде
-    private List<CFXListElement> convertJSONToCFXListElement(String jsonText) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        List<CFXListElement> res = new ArrayList<>(1);
-        try {
-            res.add(new CFXListElement(gson.fromJson(jsonText, User.class)));
+            List<User.UserProfile> finded = gson.fromJson(jsonText, 
+                    new TypeToken<List<User.UserProfile>>(){}.getType());
+            finded.forEach(user -> res.add(new CFXListElement(new User(null, user))));
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getUserByNameOrEmail_JsonParsError", e);
         }
@@ -429,11 +412,8 @@ public class ClientController {
     }
 
     public List<CFXListElement> findContact(String contact) {
-        UserToServer cts = new UserToServer(contact);
-        String requestJSON = new Gson().toJson(cts);
-
         try {
-            ServerResponse response = HTTPSRequest.getUser(contact, token);
+            ServerResponse response = HTTPSRequest.getUser(null, contact, token);
             switch (response.getResponseCode()) {
                 case 200:
                     return convertJSONToCFXListElements(response.getResponseJson());

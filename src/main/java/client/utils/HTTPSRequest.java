@@ -62,14 +62,23 @@ public class HTTPSRequest {
         return answerRequest(con);
     }
 
-    public static ServerResponse getUser(long id, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/users/" + id, "GET", token);
-        return getServerResponse(connection, null);
-    }
-
-    //todo разделить поиск по имени от поиска по почте? сейчас это не разделено на сервере
-    public static ServerResponse getUser(String nameOrEmail, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/users/" + nameOrEmail, "GET", token);
+    /**
+     * Получение пользователя по {@code id != null} ({@code email == null}), 
+     * либо по {@code email} ({@code id == null}).
+     *
+     * @param id id пользователя для поиска (приоритетно)
+     * @param email email пользователя для поиска (при {@code id == null})
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    public static ServerResponse getUser(String id, String email, String token) throws Exception {
+        String query;
+        if (id != null)
+            query = id;
+        else
+            query = "?email:" + email;
+        HttpsURLConnection connection = getConnection("/v1/users/" + query, "GET", token);
         return getServerResponse(connection, null);
     }
 
