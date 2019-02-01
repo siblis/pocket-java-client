@@ -1,28 +1,29 @@
 package client;
 
-import client.controller.ClientController;
-import client.utils.Common;
+import client.view.Tray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 
 public class Main extends Application {
 
-    private static Stage primaryStage;
+    public static Stage primaryStage;
     private static BorderPane rootLayout;
+    private static final Logger mainLogger = LogManager.getLogger(Main.class);
 
     @Override
     public void start(Stage stage) {
         primaryStage = stage;
         primaryStage.setTitle("Pocket desktop client");
-
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
 
         //инициализируем главную сцену
@@ -31,10 +32,14 @@ public class Main extends Application {
         //показываем общий вид
         showOverview();
 
+        //значек в трее
+        Tray tray = new Tray();
+        tray.setTrayIcon();
+
+
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
-            //primaryStage.setTitle("Закрывайте через кнопку Выход");
-            Common.showAlert("Закрывайте через кнопку Выход", Alert.AlertType.ERROR);
+            Tray.trayON(primaryStage);
         });
     }
 
@@ -52,7 +57,7 @@ public class Main extends Application {
             primaryStage.setResizable(false);
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            mainLogger.error("initRootLayout_error", e);
         }
     }
 
@@ -63,11 +68,9 @@ public class Main extends Application {
             AnchorPane overview = loader.load();
             rootLayout.setCenter(overview);
         } catch (IOException e) {
-            e.printStackTrace();
+            mainLogger.error("showOverview_error", e);
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args){launch(args);}
 }

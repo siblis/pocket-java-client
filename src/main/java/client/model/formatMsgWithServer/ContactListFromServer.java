@@ -1,24 +1,33 @@
 package client.model.formatMsgWithServer;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import database.entity.User.UserProfile;
+import java.sql.Timestamp;
+
 public class ContactListFromServer {
-    private long id;
-    private String name;
+
+    public static ContactListFromServer fromJson(String jsonAnswer) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.fromJson(jsonAnswer, ContactListFromServer.class);
+    }
+
+    private String user; //id пользователя которому принадлежит коллекция!?
+    private int offset;
+    private ContactFromServer[] data;
 
     public ContactListFromServer() {}
 
-    public long getId() {
-        return id;
+    public String getUserId() {
+        return user;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public int getOffset() {
+        return offset;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public ContactFromServer[] getContacts() {
+        return data;
     }
 }

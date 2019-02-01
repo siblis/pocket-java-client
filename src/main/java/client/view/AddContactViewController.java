@@ -43,7 +43,7 @@ public class AddContactViewController implements Initializable {
 
     @FXML
     public void handleAddButton() {
-        controller.addContact(addContactTextField.getText());
+//        controller.addContact(addContactTextField.getText());
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();
     }

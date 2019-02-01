@@ -1,11 +1,8 @@
 package database.dao;
 
 import database.HibernateUtil;
-import database.entity.Message;
 import database.entity.User;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.query.Query;
 
 import java.util.List;
@@ -62,7 +59,7 @@ class UserDAO {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        Query<User> query = session.createQuery("from User u where u.account_name = :userNameParam");
+        Query<User> query = session.createQuery("from User u where u.profile.username = :userNameParam");
         query.setParameter("userNameParam", userName);
         User user = query.getSingleResult();
 
@@ -76,6 +73,17 @@ class UserDAO {
         session.getTransaction().begin();
 
         List<User> list = (List<User>) session.createQuery("FROM User").list();
+
+        session.getTransaction().commit();
+
+        return list;
+    }
+
+    List<Long> getColumnOfData(String fieldName) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.getTransaction().begin();
+
+        List<Long> list = (List<Long>) session.createQuery("select t." + fieldName + " FROM User as t").list();
 
         session.getTransaction().commit();
 

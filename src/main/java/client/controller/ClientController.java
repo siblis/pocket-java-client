@@ -1,38 +1,42 @@
 package client.controller;
 
+import client.model.Group;
 import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
-import client.utils.Common;
 import client.utils.Connector;
 import client.utils.HTTPSRequest;
+import client.utils.Sound;
 import client.view.ChatViewController;
+import client.view.customFX.CFXListElement;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static client.utils.Common.showAlert;
 
 public class ClientController {
-
+    private static final Logger controllerLogger = LogManager.getLogger(ClientController.class);
     private static ClientController instance;
     private static String token;
     private ChatViewController chatViewController;
 
-    private String msgArea = "";
-    private User receiver = null;
-    private User sender = null;
-    private Connector conn = null;
-    private List<Long> contactList;
+    private User receiver;
+    private User myUser;
+    private Connector conn;
+    private List<String> contactList;
+    private List<CFXListElement> contactListOfCards;
 
     private DataBaseService dbService;
 
@@ -41,6 +45,17 @@ public class ClientController {
     }
 
     private ClientController() {
+        receiver = null;
+        myUser = null;
+        conn = null;
+    }
+
+    public User getMyUser() {
+        return myUser;
+    }
+
+    public User getReciever() {
+        return receiver;
     }
 
     public static ClientController getInstance() {
@@ -51,75 +66,85 @@ public class ClientController {
     }
 
     private void connect(String token) {
-        conn = new Connector(token, ClientController.getInstance());
+        conn = new Connector(token, getInstance());
     }
 
     public String getSenderName() {
-        return sender.getAccount_name();
+        return myUser.getAccount_name();
+    }
+
+    public String getRecieverName() {
+        return receiver.getAccount_name();
     }
 
     public void setReceiver(long receiverId) {
-        this.receiver = dbService.getUser(receiverId);
+//        this.receiver = dbService.getUser(receiverId);
         loadChat();
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = dbService.getUserByName(receiver);
+    public void setReceiver(String receiverName) {
+//        this.receiver = dbService.getUser(receiverName);
         loadChat();
     }
 
-    private boolean authentication(String login, String password) {
-        if (!login.isEmpty() && !password.isEmpty()) {
+    public void setReceiver(User receiver) {
+        if (!contactList.contains(receiver.getUid()))
+            addContactToDbAndChat(receiver); // todo поправить логику получения сообщений?
+            //NB: todo добавлять в список на сервере? addContactToDbAndChat не добавляет
+        this.receiver = receiver;
+        loadChat();
+    }
+
+    public boolean hasReceiver(long receiverId) {
+        return dbService.getUser(receiverId) != null;
+    }
+
+    public boolean hasReceiver(String receiverName) {
+        return dbService.getUser(receiverName) != null;
+    }
+
+    public List<CFXListElement> getContactListOfCards() {
+        return contactListOfCards;
+    }
+
+    private boolean authentication(String email, String password) {
+        if (!email.isEmpty() && !password.isEmpty()) {
             String answer = "0";
-            AuthToServer ATS = new AuthToServer(login, password);
-            String reqJSON = new Gson().toJson(ATS);
             try {
-                answer = HTTPSRequest.authorization(reqJSON);
+                answer = HTTPSRequest.authorization(new AuthToServer(email, password).toJson());
             } catch (Exception e) {
-                e.printStackTrace();
+                controllerLogger.error("HTTPSRequest.authorization_error", e);
             }
             if (answer.contains("token")) {
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-                AuthFromServer AFS = gson.fromJson(answer, AuthFromServer.class);
-                System.out.println(" answer server " + AFS.token);
-                token = AFS.token;
+                AuthFromServer auth = AuthFromServer.fromJson(answer);
+                System.out.println(" answer server " + auth.token + "\n" + auth.myUser);
+                token = auth.token;
                 connect(token);
+                myUser = auth.myUser;
 
-                try {
-                    ServerResponse response = HTTPSRequest.getMySelf(token);
-                    sender = convertJSONToUser(response.getResponseJson());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                sender.setAccount_name(login);
                 synchronizeContactList();
 
                 return true;
             } else {
-                showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
+//                showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
+                controllerLogger.info("Ошибка авторизации!", Alert.AlertType.ERROR);
             }
         } else {
-            showAlert("Неполные данные для авторизации!", Alert.AlertType.ERROR);
+//            showAlert("Неполные данные для авторизации!", Alert.AlertType.ERROR);
+            controllerLogger.info("Неполные данные для авторизации!", Alert.AlertType.ERROR);
             return false;
         }
         return false;
     }
 
-    private MessageFromServer convertMessageToMFS(String jsonText) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        return gson.fromJson(jsonText, MessageFromServer.class);
-    }
-
     public void receiveMessage(String message) {
-        MessageFromServer mfs = convertMessageToMFS(message);
-        if (!contactList.contains(mfs.getSenderid())) {
+        MessageFromServer mfs = MessageFromServer.fromJson(message);
+        if (!contactList.contains(mfs.getSenderId())) { //Проверяем, что осообщение пришло не от клиента в списке
             try {
-                ServerResponse response = HTTPSRequest.getUser(mfs.getSenderid(), token);
+                ServerResponse response = HTTPSRequest.getUser(mfs.getSenderId(), null, token);
                 switch (response.getResponseCode()) {
                     case 200:
-                        addContact(convertJSONToUser(response.getResponseJson()).getEmail());
+                        addContact(convertUserProfileJSONToUser(response.getResponseJson()));
                         break;
                     case 404:
                         showAlert("Пользователь не найден", Alert.AlertType.ERROR);//с id: " + mfs.getSenderid() + "
@@ -128,167 +153,350 @@ public class ClientController {
                         showAlert("Общая ошибка!", Alert.AlertType.ERROR);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                controllerLogger.error("HTTPSRequest.getUser_error", e);
             }
         }
-        showMessage(mfs.getSender_name(), mfs.getMessage(), mfs.getTimestamp());
-
-        dbService.addMessage(mfs.getReceiver(),
-                mfs.getSenderid(),
-                new Message(mfs.getMessage(),
-                        mfs.getTimestamp()));
-    }
-
-    private void showMessage(String senderName, String message, Timestamp timestamp) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        String formatSender = "<b><font color = " + (sender.getAccount_name().equals(senderName) ? "green" : "red") + ">"
-                + senderName
-                + "</font></b>";
-
-        message = message.replaceAll("\n", "<br/>");
-        message = Common.urlToHyperlink(message);
-
-        msgArea += dateFormat.format(timestamp) + " " + formatSender + " " + message + "<br>";
-
-        chatViewController.webEngine.loadContent("<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" +
-                "</head>\n" +
-
-                "    <body style=\"background-image: url(https://s3-alpha.figma.com/img/0f65/df21/9351ace9280e6668b235304d7ceaf426)\">\n" +
-
-                "        <div id=\"messageArea\">" +
-                            msgArea +
-                "       </div>\n" +
-
-                "    </body>\n" +
-                "</html>");
+        //Проверяем что у нас чат именно с этим пользователем, иначе сообщение не выводится
+        //Как будет с группами пока не понятно
+        if (receiver.getUid().equals(mfs.getSenderId())) {
+            //todo на данный момент showMessage принимает senderName, а не senderId => допилить
+            chatViewController.showMessage(mfs.getSenderId(), mfs.getMessage(), mfs.getTimestamp(), true);
+        }
+        if (mfs.getSenderId() != null) { //отключаем звук для служебных сообщений
+            Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
+        }
+//        dbService.addMessage(mfs.getReceiver(),
+//                mfs.getSenderid(),
+//                new Message(mfs.getMessage(),
+//                        mfs.getTimestamp()));
     }
 
     public void sendMessage(String message) {
-        if (receiver == null){
+        if (receiver == null) {
             showAlert("Выберите контакт для отправки сообщения", Alert.AlertType.ERROR);
             return;
         }
-        MessageToServer MTS = new MessageToServer(receiver.getUid(), message);
+        
+        String jsonMessage = 
+                new MessageToServer(message, null, receiver.getUid(), null).toJson();
+        try {
+            conn.getChatClient().send(jsonMessage);
+            //todo допилить получение Success/Error и MessageId из ответа
 
-        String jsonMessage = new Gson().toJson(MTS);
-        System.out.println(jsonMessage);
-        conn.getChatClient().send(jsonMessage);
+//            dbService.addMessage(receiver.getUid(),
+//                    myUser.getUid(),
+//                    new Message(message, new Timestamp(System.currentTimeMillis()))
+//            );
+            chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
 
-        dbService.addMessage(receiver.getUid(),
-                sender.getUid(),
-                new Message(message, new Timestamp(System.currentTimeMillis()))
-        );
-        showMessage(sender.getAccount_name(), message, new Timestamp(System.currentTimeMillis()));
+        } catch (IOException ex) {
+            showAlert("Потеряно соединение с сервером", Alert.AlertType.ERROR);
+            controllerLogger.error(ex);
+        }
+
     }
 
     private void loadChat() {
-        List<Message> converstation = dbService.getChat(sender, receiver);
-        msgArea = "";
-        showMessage("", "", new Timestamp(0));// не очень удачная (плохая) попытка очистить WebView
+        List<Message> converstation = dbService.getChat(myUser, receiver);
+        chatViewController.clearMessageWebView();
+
         for (Message message :
                 converstation) {
-            showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime());
+            chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
         }
     }
 
     public void disconnect() {
-        if (conn != null)
-            conn.getChatClient().close();
-    }
-
-    private Map<String, ContactListFromServer> convertContactListToMap(String jsonText) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        Type itemsMapType = new TypeToken<Map<String, ContactListFromServer>>() {
-        }.getType();
-        return gson.fromJson(jsonText, itemsMapType);
+        if (conn != null) {
+            conn.disconnect();
+            conn = null;
+        }
+        if (dbService != null) {
+            dbService.close();
+            dbService = null;
+        }
+        instance = null;
+        contactList = null;
+        contactListOfCards = null;
     }
 
     private void synchronizeContactList() {
-        dbService = new DataBaseService();
+        dbService = new DataBaseService(myUser);
         contactList = dbService.getAllUserId();
+        contactListOfCards = new ArrayList<>();
+        
+//        dbService.getAllUsers().forEach(user -> {
+//            if (user.getUid() != myUser.getUid()) {
+//                contactListOfCards.add(new CFXListElement(user));
+//            }
+//        });
 
         try {
-            ServerResponse response = HTTPSRequest.getContacts(token);
-            if (response != null) {
-                Map<String, ContactListFromServer> map = convertContactListToMap(response.getResponseJson());
-                for (Map.Entry<String, ContactListFromServer> entry : map.entrySet()) {
-                    if (!contactList.contains(entry.getValue().getId())) {
-                        User user = new User();
-                        user.setUid(entry.getValue().getId());
-                        user.setAccount_name(entry.getValue().getName());
-                        user.setEmail(entry.getKey());
+            List<User> contactsToRemoveFromDb = dbService.getAllUsers();
+            contactsToRemoveFromDb.remove(myUser);
+            ServerResponse response;
+            int pageOfContacts = 0;
+            while (true) {
+                response = HTTPSRequest.getContacts(token, pageOfContacts);
+                ContactListFromServer clfs = ContactListFromServer.fromJson(response.getResponseJson());
+                if (clfs.getContacts().length == 0) break;
+                synchronizePageOfContListFromServ(clfs.getContacts(), contactsToRemoveFromDb);
+            }
 
-                        addContactToDB(user);
-                    }
-                }
+            //удаляем из локальной базы контакты, которых нет в списке контактов на сервере
+            if (!contactsToRemoveFromDb.isEmpty()) 
+                contactsToRemoveFromDb.forEach(entry -> removeContactFromDb(entry));
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getContacts_error", e);
+        }
+
+        // проверяем, есть ли наш пользователь в БД
+        User user = dbService.getUser(myUser.getUid());
+        if (user == null) {
+            dbService.insertUser(myUser);
+        }
+    }
+
+    private void synchronizePageOfContListFromServ(ContactFromServer[] contacts, List<User> contactsToRemoveFromDb) {
+        for (ContactFromServer entry : contacts) {
+            User curUser = entry.toUser();
+            if (!contactList.contains(curUser.getUid())) {
+                addContactToDB(curUser);
+            }
+            //todo в новом апи пока нет статусов
+//            for (CFXListElement cont : contactListOfCards) {
+//                if (cont.getUser().getUid().equals(entry.getUserProfile().getId())) {
+//                    cont.setOnlineStatus(entry.isStatusOnline());
+//                    break;
+//                }
+//            }
+            //в списке останутся только контакты, которых нет на сервере
+            contactsToRemoveFromDb.remove(curUser);
+        }
+    }
+
+    private User convertUserProfileJSONToUser(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return new User(null, gson.fromJson(jsonText, User.UserProfile.class));
+    }
+
+    private List<CFXListElement> convertJSONToCFXListElements(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        List<CFXListElement> res = new ArrayList<>();
+        try {
+            List<User.UserProfile> finded = gson.fromJson(jsonText, 
+                    new TypeToken<List<User.UserProfile>>(){}.getType());
+            finded.forEach(user -> res.add(new CFXListElement(new User(null, user))));
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getUserByNameOrEmail_JsonParsError", e);
+        }
+        return res.isEmpty() ? null : res;
+    }
+
+    public Group getGroupInfo(String groupName){
+        Group group = new Group();
+        try {
+            ServerResponse response = HTTPSRequest.getGroupInfo(groupName,token);
+            switch (response.getResponseCode()){
+                case 200:
+                    System.out.println("получение информации о группе");
+                    GsonBuilder builder = new GsonBuilder();
+                    Gson gson = builder.create();
+                    group = gson.fromJson(response.getResponseJson(), Group.class);
+                    return group;
+                case 400:
+                    System.out.println("Проблемы с токеном");
+                    break;
+                case 404:
+                    System.out.println("группа не найдена");
+                    break;
+                case 500:
+                    System.out.println("ошибка сервера");
+                    break;
+                default:
+                    System.out.println("другая ошибка");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // проверяем, есть ли наш пользователь в БД
-        User user = dbService.getUser(sender.getUid());
-        if (user == null){
-            dbService.insertUser(sender);
-        }
+        return group;
     }
 
-    private User convertJSONToUser(String jsonText) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        return gson.fromJson(jsonText, User.class);
+    public void joinGroup(String groupName){
+        Group group = getGroupInfo(groupName);
+        addUserGroup(group.getGid(), myUser.getUid());
     }
 
-    public void addContact(String contact) {
-        UserToServer cts = new UserToServer(contact);
-        String requestJSON = new Gson().toJson(cts);
+    public void addGroup(String group_name){
+        AddGroup addGroup = new AddGroup(group_name);
+        String requestJSON = new Gson().toJson(addGroup);
 
         try {
-            ServerResponse response = HTTPSRequest.addContact(requestJSON, token);
+            ServerResponse response = HTTPSRequest.addGroup(requestJSON, token);
             switch (response.getResponseCode()) {
-                case 201:
-                    showAlert("Контакт " + contact + " успешно добавлен", Alert.AlertType.INFORMATION);
-                    addContactToDB(convertJSONToUser(response.getResponseJson()));
-                    if (chatViewController != null) chatViewController.fillContactListView();
+                case 200:
+                    showAlert("Группа" + group_name + "успешно создана", Alert.AlertType.INFORMATION);
+                    //addContactToDB(convertJSONToUser(response.getResponseJson()));
+                    //if (chatViewController != null) chatViewController.fillContactListView();
+                    break;
+                case 400:
+                    showAlert("Ошибка запроса", Alert.AlertType.ERROR);
                     break;
                 case 404:
-                    showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+                    showAlert("Невозможно создать группу с названием: " + group_name, Alert.AlertType.ERROR);
                     break;
-                case 409:
-                    showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+                case 500:
+                    showAlert("Ошибка сервера", Alert.AlertType.ERROR);
                     break;
                 default:
                     showAlert("Общая ошибка!", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            controllerLogger.error("HTTPSRequest.addGroup_error", e);
+        }
+
+    }
+
+    public void addUserGroup(String group_id, String new_user_id) {
+        AddUserGroup aug = new AddUserGroup(group_id, new_user_id);
+        String requestJSON = new Gson().toJson(aug);
+
+        try {
+            ServerResponse response = HTTPSRequest.addUserGroup(requestJSON, token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    showAlert("Группа успешно добавлена", Alert.AlertType.INFORMATION);
+                    //addContactToDB(convertJSONToUser(response.getResponseJson()));
+                    //if (chatViewController != null) chatViewController.fillContactListView();
+                    break;
+                case 400:
+                    showAlert("Ошибка запроса", Alert.AlertType.ERROR);
+                    break;
+                case 404:
+                    showAlert("Группа не найдена или вы уже состоите в ней", Alert.AlertType.ERROR);
+                    break;
+                case 500:
+                    showAlert("Ошибка сервера", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.addUserGroup_error", e);
         }
     }
 
-    private void addContactToDB(User contact) {
-        dbService.insertUser(new User(contact.getUid(), contact.getAccount_name(), contact.getEmail()));
-        contactList.add(contact.getUid());
+    public boolean addContact(User user) {
+        //todo ответа сервера не предусмотрено => убрать return и добавить проброс ошибок
+        UserToServer uts = new UserToServer(user.getUid(), user.getAccount_name());
+        try {
+            ServerResponse response = HTTPSRequest.addContact(uts.toJson(), token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    showAlert("Контакт " + user.getAccount_name() + " успешно добавлен", Alert.AlertType.INFORMATION);
+                    User newUser = ContactFromServer.fromJson(response.getResponseJson()).toUser();
+                    return addContactToDbAndChat(newUser);
+                default:
+                    //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.addContact_error", e);
+        }
+        return false;
     }
 
-    public void proceedRegister(String login, String password, String email) {
+    public List<CFXListElement> findContact(String contact) {
+        try {
+            ServerResponse response = HTTPSRequest.getUser(null, contact, token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    return convertJSONToCFXListElements(response.getResponseJson());
+                case 404:
+                   // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
+                    break;
+                case 409:
+                  //  showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getUserByNameOrEmail_error", e);
+        }
+        return null;
+    }
+
+    private void addContactToDB(User contact) {
+        dbService.insertUser(contact);
+        contactList.add(contact.getUid());
+        contactListOfCards.add(new CFXListElement(contact));
+    }
+
+    private boolean addContactToDbAndChat(User contact) {
+        addContactToDB(contact);
+        if (chatViewController != null) {
+            chatViewController.updateContactListView();
+        }
+        return true;
+    }
+
+    public boolean removeContact(User user) {
+        //todo ответа сервера не предусмотрено => убрать return и добавить проброс ошибок
+        try {
+            ServerResponse response = HTTPSRequest.deleteContact(user.getUid(), token);
+            switch (response.getResponseCode()) {
+                case 200:
+                    showAlert("Контакт " + user.getAccount_name() + " успешно удалён", 
+                            Alert.AlertType.INFORMATION);
+                    removeContactFromDbAndChat(user);
+                    return true;
+                default:
+                    //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.addContact_error", e);
+        }
+        return false;
+    }
+
+    public void clearMessagesWithUser(User contact) {
+        if (!dbService.getChat(myUser, contact).isEmpty())
+            dbService.deleteChat(myUser, contact);
+    }
+
+    private void removeContactFromDb(User contact) {
+        clearMessagesWithUser(contact);
+        dbService.deleteUser(contact);
+        contactList.remove(contact.getUid());
+        contactListOfCards.remove(new CFXListElement(contact));
+    }
+
+    private void removeContactFromDbAndChat(User contact) {
+        removeContactFromDb(contact);
+        if (chatViewController != null) {
+            chatViewController.updateContactListView();
+            if (receiver.equals(contact)) chatViewController.clearMessageWebView();
+        }
+    }
+
+    public void proceedRegister(String name, String password, String email) {
         String requestJSON = "{" +
-                "\"account_name\": \"" + login + "\"," +
                 "\"email\": \"" + email + "\"," +
-                "\"password\": \"" + password + "\"" +
+                "\"password\": \"" + password + "\"," +
+                "\"name\": \"" + name + "\"" +
                 "}";
         try {
             int responseCode = HTTPSRequest.registration(requestJSON);
             if (responseCode == 201) {
+                //todo: результаты содержат токен и данные пользователя
+                // можно запускать клиент? (после переделки возрата из HTTPSRequest.registration)
                 showAlert("Вы успешно зарегистрированы", Alert.AlertType.INFORMATION);
             } else
                 showAlert("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);
         } catch (Exception e) {
-            e.printStackTrace();
+            controllerLogger.error("HTTPSRequest.registration", e);
         }
     }
 
@@ -300,10 +508,6 @@ public class ClientController {
         return dbService.getAllUserNames();
     }
 
-    public void dbServiceClose() {
-        dbService.close();
-    }
-
     public String proceedRestorePassword(String email) {
         String answer = "0";
         String requestJSON = "{" +
@@ -312,7 +516,7 @@ public class ClientController {
         try {
             answer = HTTPSRequest.restorePassword(requestJSON);
         } catch (Exception e) {
-            e.printStackTrace();
+            controllerLogger.error("proceedRestorePassword_error", e);
         }
         return answer;
     }
@@ -327,7 +531,7 @@ public class ClientController {
         try {
             answer = HTTPSRequest.changePassword(requestJSON);
         } catch (Exception e) {
-            e.printStackTrace();
+            controllerLogger.error("proceedChangePassword_error", e);
         }
         return answer;
     }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<fx:root id="CFXMenuLeft" fx:id="CFXMenuLeftPane" prefHeight="150.0" prefWidth="410.0" stylesheets="@../styles/CFXListElement.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+      <Rectangle arcHeight="5.0" fill="WHITE" height="150.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="410.0" />
+    <JFXButton fx:id="btnMyProfile" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="0.0" styleClass="btnWriteMessage" text="Мой профиль" textFill="#3498db" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <graphic>
+        <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../images/menus/myProfile.png" />
+            </image>
+        </ImageView>
+    </graphic>
+    <font>
+        <Font size="16.0" />
+    </font>
+</JFXButton>
+    <JFXButton fx:id="btnNewGroup" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="0.0" styleClass="btnWriteMessage" text="Создать группу" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+        <graphic>
+            <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/menus/newGroup.png" />
+                </image>
+            </ImageView>
+        </graphic>
+        <font>
+            <Font size="16.0" />
+        </font>
+    </JFXButton>
+    <JFXButton fx:id="btnNewSuperGroup" alignment="BASELINE_LEFT" graphicTextGap="21.0" layoutX="10.0" layoutY="480.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="410.0" styleClass="btnWriteMessage" text="Создать коллекцию групп" textFill="#34495e" textOverrun="CLIP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+        <graphic>
+            <ImageView fitHeight="20.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/menus/newSuperGroup.png" />
+                </image>
+            </ImageView>
+        </graphic>
+        <font>
+            <Font size="16.0" />
+        </font>
+    </JFXButton>
+</children>
+</fx:root>

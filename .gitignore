@@ -3,4 +3,5 @@
 /out/
 /DesktopClient.iml
 /deploy/
-/client.db
+*/*.db
+/logs
