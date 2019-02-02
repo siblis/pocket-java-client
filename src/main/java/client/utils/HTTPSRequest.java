@@ -141,6 +141,7 @@ public class HTTPSRequest {
 
     private static int sendRequest(HttpsURLConnection con, String requestJSON) throws Exception {
         if (requestJSON != null) {
+            con.setRequestProperty("content-type", "application/json");
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.writeBytes(requestJSON);
