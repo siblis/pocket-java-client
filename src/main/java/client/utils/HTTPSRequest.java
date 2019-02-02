@@ -13,7 +13,7 @@ import java.net.URL;
 
 public class HTTPSRequest {
     private static final Logger requestLogger = LogManager.getLogger(HTTPSRequest.class.getName());
-    private static String serverURL = "https://pocketmsg.ru:8888";
+    private static String serverURL = "https://" + Connector.connectTo;
 
     public static String restorePassword(String requestJSON) throws Exception {
         //TODO нужен API на сервере
