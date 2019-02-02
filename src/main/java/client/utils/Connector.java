@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class Connector {
     private static final Logger connectorLogger = LogManager.getLogger(Connector.class.getName());
-    static final String connectTo = "pocketmsg.ru:8888";
+    static final String connectTo = "localhost:8888";
     private WebSocketChatClient chatClient;
 
     public Connector(String token, ClientController controller){
