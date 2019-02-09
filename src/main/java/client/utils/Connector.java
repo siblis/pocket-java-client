@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class Connector {
     private static final Logger connectorLogger = LogManager.getLogger(Connector.class.getName());
+    static final String connectTo = "localhost:8888";
     private WebSocketChatClient chatClient;
 
     public Connector(String token, ClientController controller){
@@ -31,7 +32,7 @@ public class Connector {
 
     public void connect(String token, ClientController controller) throws Exception {
         chatClient = new WebSocketChatClient(
-                new URI("wss://pocketmsg.ru:8888/v1/socket/token:" + token), null, controller);
+                new URI("wss://" + connectTo + "/v1/socket/token:" + token), null, controller);
         SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
         chatClient.setSocketFactory(factory);
         chatClient.connectBlocking();

@@ -13,7 +13,7 @@ import java.net.URL;
 
 public class HTTPSRequest {
     private static final Logger requestLogger = LogManager.getLogger(HTTPSRequest.class.getName());
-    private static String serverURL = "https://pocketmsg.ru:8888";
+    private static String serverURL = "https://localhost:8888";
 
     public static String restorePassword(String requestJSON) throws Exception {
         //TODO нужен API на сервере
@@ -57,7 +57,10 @@ public class HTTPSRequest {
     public static String authorization(String requestJSON) throws Exception {
         URL obj = new URL(serverURL + "/v1/auth/login/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestProperty("content-type", "application/json");
         con.setRequestMethod("POST");
+        //String s= con.getHeaderField("content-type");
+
         sendRequest(con, requestJSON);
         return answerRequest(con);
     }
@@ -141,7 +144,9 @@ public class HTTPSRequest {
 
     private static int sendRequest(HttpsURLConnection con, String requestJSON) throws Exception {
         if (requestJSON != null) {
+            con.setRequestProperty("content-type", "application/json");
             con.setDoOutput(true);
+
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.writeBytes(requestJSON);
             wr.flush();

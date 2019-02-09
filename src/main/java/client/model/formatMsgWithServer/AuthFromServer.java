@@ -13,5 +13,5 @@ public class AuthFromServer {
     }
 
     public String token;
-    public User myUser;
+    public User user;
 }

@@ -22,7 +22,7 @@ public class DataBaseService {
     private MessageDAO messageDao;
 
     public DataBaseService(User myUser) {
-//        HibernateUtil.setUserName(myUser.getAccount_name());
+//        HibernateUtil.setUserName(user.getAccount_name());
         usersDao = new UserDAO();
         messageDao = new MessageDAO();
     }
