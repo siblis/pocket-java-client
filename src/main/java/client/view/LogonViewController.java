@@ -72,14 +72,14 @@ public class LogonViewController implements Initializable {
     @FXML
     private void handleGuestC2Button() throws IOException {
         // id = 24 - старое
-        handleLogIn("b@mail.ru", "123");//Bob
+        handleLogIn("b@mail.ru", "Abc12345");//Bob
 //        controller.setReceiver("Alex"); - пока не работает (без локальной базы)
     }
 
     @FXML
     private void handleGuestC3Button() throws IOException {
         //id = 25 - старое
-        handleLogIn("a@mail.ru", "123");//Alex
+        handleLogIn("a@mail.ru", "Abc12345");//Alex
 //        controller.setReceiver("Bob"); - пока не работает (без локальной базы)
     }
 

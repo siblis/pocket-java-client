@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static client.utils.Common.showAlert;
 
@@ -117,10 +116,10 @@ public class ClientController {
             }
             if (answer.contains("token")) {
                 AuthFromServer auth = AuthFromServer.fromJson(answer);
-                System.out.println(" answer server " + auth.token + "\n" + auth.myUser);
+                System.out.println(" answer server " + auth.token + "\n" + auth.user);
                 token = auth.token;
                 connect(token);
-                myUser = auth.myUser;
+                myUser = auth.user;
 
                 synchronizeContactList();
 
@@ -184,7 +183,7 @@ public class ClientController {
             //todo допилить получение Success/Error и MessageId из ответа
 
 //            dbService.addMessage(receiver.getUid(),
-//                    myUser.getUid(),
+//                    user.getUid(),
 //                    new Message(message, new Timestamp(System.currentTimeMillis()))
 //            );
             chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
@@ -226,7 +225,7 @@ public class ClientController {
         contactListOfCards = new ArrayList<>();
         
 //        dbService.getAllUsers().forEach(user -> {
-//            if (user.getUid() != myUser.getUid()) {
+//            if (user.getUid() != user.getUid()) {
 //                contactListOfCards.add(new CFXListElement(user));
 //            }
 //        });
