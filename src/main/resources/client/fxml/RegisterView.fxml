@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Circle?>
 
 <?import javafx.scene.shape.Rectangle?>
-<AnchorPane fx:id="parentPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="380.0" styleClass="anchor-pane" stylesheets="/client/styles/RegisterStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.RegisterViewController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="parentPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="380.0" styleClass="anchor-pane" stylesheets="/client/styles/RegisterStyle.css" xmlns="http://javafx.com/javafx/8.0.121" fx:controller="ru.geekbrains.pocket.messenger.client.view.RegisterViewController">
    <AnchorPane fx:id="regPanel" layoutX="-71.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="288.0" styleClass="opacityClass" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="0.0">
       <children>
          <AnchorPane id="ellipse" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="304.0" AnchorPane.bottomAnchor="440.0" AnchorPane.leftAnchor="-10.0">

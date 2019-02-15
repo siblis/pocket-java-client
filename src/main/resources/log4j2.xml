@@ -35,7 +35,7 @@
         </Async>
     </Appenders>
     <Loggers>
-        <Logger name="ru.geekbrains.pocket.client" level="debug" additivity="false">
+        <Logger name="ru.geekbrains.pocket.messenger" level="debug" additivity="false">
             <AppenderRef ref="ASYNC"/>
         </Logger>
         <Root level="debug">
