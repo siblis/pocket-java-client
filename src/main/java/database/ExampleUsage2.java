@@ -1,10 +1,8 @@
 package database;
 
 import database.dao.DataBaseService;
-import database.entity.Message;
 import database.entity.User;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**

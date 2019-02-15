@@ -2,8 +2,6 @@ package client.model.formatMsgWithServer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import database.entity.User.UserProfile;
-import java.sql.Timestamp;
 
 public class ContactListFromServer {
 

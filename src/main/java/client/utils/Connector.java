@@ -1,14 +1,12 @@
 package client.utils;
 
 import client.controller.ClientController;
-import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.SSLSocketFactory;
+import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Connector {
     private static final Logger connectorLogger = LogManager.getLogger(Connector.class.getName());

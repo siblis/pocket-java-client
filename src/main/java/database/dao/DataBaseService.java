@@ -1,6 +1,5 @@
 package database.dao;
 
-import database.HibernateUtil;
 import database.entity.Message;
 import database.entity.User;
 
@@ -50,8 +49,8 @@ public class DataBaseService {
     }
 
     public List<User> getAllUsers() {
-//        return usersDao.get();
-        return null;
+        return usersDao.get();
+        //return null;
     }
 
     public List<String> getAllUserNames() {

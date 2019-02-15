@@ -1,8 +1,5 @@
 package client.view;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import client.controller.ClientController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,6 +13,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class LogonViewController implements Initializable {
 

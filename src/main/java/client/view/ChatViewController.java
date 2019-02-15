@@ -4,7 +4,6 @@ import client.Main;
 import client.controller.ClientController;
 import client.utils.Common;
 import client.utils.CustomTextArea;
-import client.utils.Sound;
 import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;

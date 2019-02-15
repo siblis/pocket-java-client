@@ -3,6 +3,8 @@ package client.model.formatMsgWithServer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import database.entity.User;
+import database.entity.UserProfile;
+
 import java.sql.Timestamp;
 
 public class ContactFromServer {
@@ -13,13 +15,13 @@ public class ContactFromServer {
         return gson.fromJson(jsonAnswer, ContactFromServer.class);
     }
 
-    private User.UserProfile contact;
+    private UserProfile contact;
     private String byname;
     private Timestamp added_at;
 
     public ContactFromServer() {}
 
-    public User.UserProfile getUserProfile() {
+    public UserProfile getUserProfile() {
         return contact;
     }
 

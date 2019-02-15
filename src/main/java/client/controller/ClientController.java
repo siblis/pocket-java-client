@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import database.dao.DataBaseService;
 import database.entity.Message;
 import database.entity.User;
+import database.entity.UserProfile;
 import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -277,7 +278,7 @@ public class ClientController {
     private User convertUserProfileJSONToUser(String jsonText) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return new User(null, gson.fromJson(jsonText, User.UserProfile.class));
+        return new User(null, gson.fromJson(jsonText, UserProfile.class));
     }
 
     private List<CFXListElement> convertJSONToCFXListElements(String jsonText) {
@@ -285,8 +286,8 @@ public class ClientController {
         Gson gson = builder.create();
         List<CFXListElement> res = new ArrayList<>();
         try {
-            List<User.UserProfile> finded = gson.fromJson(jsonText, 
-                    new TypeToken<List<User.UserProfile>>(){}.getType());
+            List<UserProfile> finded = gson.fromJson(jsonText,
+                    new TypeToken<List<UserProfile>>(){}.getType());
             finded.forEach(user -> res.add(new CFXListElement(new User(null, user))));
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getUserByNameOrEmail_JsonParsError", e);

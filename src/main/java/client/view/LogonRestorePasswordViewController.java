@@ -1,16 +1,10 @@
 package client.view;
 
 import client.controller.ClientController;
-import client.utils.Common;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,7 +12,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static client.utils.Common.showAlert;
-import static client.utils.Correct.*;
+import static client.utils.Correct.checkPasswordStrength;
+import static client.utils.Correct.isValidEmail;
 
 public class LogonRestorePasswordViewController implements Initializable {
 
