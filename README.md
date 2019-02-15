@@ -1,2 +1,2 @@
-# pocket-java-client
-разработка desktop client корпоративного мессенжера Pocket messenger.
+# pocket-java-ru.geekbrains.pocket.messenger.client
+разработка desktop ru.geekbrains.pocket.messenger.client корпоративного мессенжера Pocket messenger.
