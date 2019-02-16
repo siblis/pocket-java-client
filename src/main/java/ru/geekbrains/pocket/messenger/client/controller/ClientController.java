@@ -1,27 +1,26 @@
 package ru.geekbrains.pocket.messenger.client.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import javafx.scene.control.Alert;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.geekbrains.pocket.messenger.client.model.Group;
 import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.*;
-import ru.geekbrains.pocket.messenger.client.model.fromServer.RegistrationFromServer;
+import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationFromServer;
 import ru.geekbrains.pocket.messenger.client.model.pub.UserPub;
-import ru.geekbrains.pocket.messenger.client.model.toServer.RegistrationToServer;
+import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationToServer;
 import ru.geekbrains.pocket.messenger.client.utils.Connector;
 import ru.geekbrains.pocket.messenger.client.utils.HTTPSRequest;
 import ru.geekbrains.pocket.messenger.client.utils.Sound;
 import ru.geekbrains.pocket.messenger.client.view.ChatViewController;
 import ru.geekbrains.pocket.messenger.client.view.customFX.CFXListElement;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import ru.geekbrains.pocket.messenger.database.dao.DataBaseService;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 import ru.geekbrains.pocket.messenger.database.entity.UserProfile;
-import javafx.scene.control.Alert;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -52,6 +51,7 @@ public class ClientController {
         receiver = null;
         myUser = null;
         conn = null;
+        dbService = new DataBaseService();
     }
 
     public User getMyUser() {
@@ -120,15 +120,26 @@ public class ClientController {
                 controllerLogger.error("HTTPSRequest.authorization_error", e);
             }
             if (answer.contains("token")) {
-                AuthFromServer auth = AuthFromServer.fromJson(answer);
-                System.out.println(" answer server " + auth.token + "\n" + auth.user);
-                token = auth.token;
-                connect(token);
-                myUser = auth.user;
+                AuthFromServer authFromServer = AuthFromServer.fromJson(answer);
+                token = authFromServer.getToken();
+                UserPub userPub = authFromServer.getUser();
+                if (userPub != null) {
+                    System.out.println("answer server " + token + "\n" + userPub);
+                    dbService.setUserDB(userPub.getProfile().getUsername());
+                    User user = dbService.getUserByEmail(userPub.getEmail());
+                    if (user == null) {
+                        user = new User(userPub);
+                        dbService.insertUser(user);
+                    } else {
+                        user = user.update(userPub);
+                        dbService.updateUser(user);
+                    }
+                    myUser = user;
+                    connect(token);
+                    synchronizeContactList();
 
-                synchronizeContactList();
-
-                return true;
+                    return true;
+                }
             } else {
 //                showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
                 controllerLogger.info("Ошибка авторизации!", Alert.AlertType.ERROR);
@@ -225,7 +236,8 @@ public class ClientController {
     }
 
     private void synchronizeContactList() {
-        dbService = new DataBaseService(myUser);
+        //dbService = new DataBaseService(myUser);
+        dbService.setUserDB(myUser);
         contactList = dbService.getAllUserId();
         contactListOfCards = new ArrayList<>();
         
@@ -500,16 +512,12 @@ public class ClientController {
             RegistrationFromServer registrationFromServer = HTTPSRequest.registration(registrationToServer);
             if (registrationFromServer != null) {
                 UserPub userPub = registrationFromServer.getUser();
-                String token = registrationFromServer.getToken();
-                //TODO записать в бд
+                token = registrationFromServer.getToken();
                 if (userPub != null && token != null) {
-                    User user = new User(userPub, token);
-                    user.setPassword(password);
+                    User user = new User(userPub);
                     myUser = user;
-                    dbService = new DataBaseService(myUser);
-                    contactList = dbService.getAllUserId();
-                    contactListOfCards = new ArrayList<>();
-                    addContactToDB(user);
+                    dbService.setUserDB(user);
+                    dbService.insertUser(user);
                     dbService.close();
 
                     return true;

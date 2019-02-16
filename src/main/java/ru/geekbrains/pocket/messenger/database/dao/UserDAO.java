@@ -5,6 +5,7 @@ import ru.geekbrains.pocket.messenger.database.entity.User;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 
 /**
@@ -59,9 +60,14 @@ class UserDAO {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
+        User user = null;
         Query<User> query = session.createQuery("from User u where u.email = :email");
         query.setParameter("email", email);
-        User user = query.getSingleResult();
+        try {
+            user = query.getSingleResult();
+        } catch (NoResultException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         session.getTransaction().commit();
 
