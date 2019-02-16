@@ -26,19 +26,12 @@ public class User {
     private Long id;
 
     //@NotNull
+    //TODO index unique
     @Column
     private String email;
 
-    //@NotNull
-    @JsonIgnore
-    @Column
-    private String password;
-
     @Column
     private String uid; //serverUserId
-
-    @Column
-    private String token;
 
     @Column
     private Timestamp created_at = new Timestamp(new Date().getTime());
@@ -60,11 +53,17 @@ public class User {
         this.profile = new UserProfile(userPub.getProfile());
     }
 
-    public User(@NotNull UserPub userPub, @NotNull String token) {
-        this.email = userPub.getEmail();
-        this.uid = userPub.getId();
-        this.profile = new UserProfile(userPub.getProfile());
-        this.token = token;
+    //проверка полей полученного юзера с полями имеющегося в бд
+    public User update(@NotNull UserPub userPub) {
+        if (email.equals(userPub.getEmail())) {
+            this.uid = userPub.getId();
+            this.getProfile().setUid(userPub.getProfile().getId());
+            this.getProfile().setUsername(userPub.getProfile().getUsername());
+            this.getProfile().setFullname(userPub.getProfile().getFullname());
+            if (userPub.getProfile().getLastSeen() != null)
+                this.getProfile().setLastSeen(new Timestamp(userPub.getProfile().getLastSeen().getTime()));
+        }
+        return this;
     }
 
     public User(String email, UserProfile profile) {
@@ -96,7 +95,6 @@ public class User {
     public void setAccount_name(String name) {
         this.profile.setUsername(name) ;
     }
-
 
     @Override
     public String toString() {

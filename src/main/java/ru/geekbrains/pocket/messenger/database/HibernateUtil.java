@@ -32,7 +32,7 @@ public class HibernateUtil {
 
     public static SessionFactory getSessionFactory() {
         makeDirectoryForDB();
-
+//TODO а если юзер изменился, то нужно новую сессию
         if (sessionFactory == null) {
             try {
                 Configuration configuration = new Configuration();
@@ -42,7 +42,7 @@ public class HibernateUtil {
                         .setProperty("hibernate.connection.url", "jdbc:sqlite:" + DATABASE_DIR + File.separator + username + ".db")
                         .setProperty("hibernate.show_sql", "true")
                         .setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect")
-                        .setProperty("hibernate.hbm2ddl.auto", "create-drop")
+                        .setProperty("hibernate.hbm2ddl.auto", "update")
                         .addAnnotatedClass(ru.geekbrains.pocket.messenger.database.entity.UserProfile.class)
                         .addAnnotatedClass(ru.geekbrains.pocket.messenger.database.entity.User.class)
                         .addAnnotatedClass(ru.geekbrains.pocket.messenger.database.entity.Message.class);

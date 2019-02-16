@@ -1,4 +1,4 @@
-package ru.geekbrains.pocket.messenger.client.model.fromServer;
+package ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

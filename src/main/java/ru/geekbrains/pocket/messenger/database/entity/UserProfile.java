@@ -27,6 +27,7 @@ public class UserProfile {
 
     //@NotNull
     @Column
+    //TODO index unique
     private String username;
 
     @Column

@@ -1,13 +1,11 @@
 package ru.geekbrains.pocket.messenger.client.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.Alert;
-import ru.geekbrains.pocket.messenger.client.model.fromServer.RegistrationFromServer;
-import ru.geekbrains.pocket.messenger.client.model.pub.UserPub;
+import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationFromServer;
 import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.geekbrains.pocket.messenger.client.model.toServer.RegistrationToServer;
+import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationToServer;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.validation.constraints.NotNull;
