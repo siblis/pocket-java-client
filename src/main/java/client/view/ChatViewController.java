@@ -925,13 +925,12 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-        new AlarmDeleteMessageHistory();
+        new AlarmDeleteMessageHistory("MyProfile");
     }
     public void alarmDeleteProfileExecute(){
-        new AlarmDeleteProfile();
+        new AlarmDeleteProfile("MyProfile");
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();
     }
-
 }
