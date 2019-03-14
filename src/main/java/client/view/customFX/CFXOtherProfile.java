@@ -128,12 +128,14 @@ public class CFXOtherProfile extends AnchorPane {
     }
 
     private void clearMsgs() {
-        ClientController.getInstance().clearMessagesWithUser(user); // todo подтверждение?
+        new AlarmDeleteMessageHistory("OtherProfile", user);
+//        ClientController.getInstance().clearMessagesWithUser(user); // todo подтверждение?
     }
 
     private void removeUser() {
         closeButtonPressed();
-        ClientController.getInstance().removeContact(user.getEmail()); // todo подтверждение?
+        new AlarmDeleteProfile("OtherProfile", user);
+//        ClientController.getInstance().removeContact(user.getEmail()); // todo подтверждение?
     }
 
     private void inviteContact() {

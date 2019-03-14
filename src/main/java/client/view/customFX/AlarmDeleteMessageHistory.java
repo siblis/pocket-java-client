@@ -64,12 +64,12 @@ public class AlarmDeleteMessageHistory extends AnchorPane {
 
     private void btnConfirmOnPressed() {
         switch (profile) {
-            case "MyProfile":
+            case "MyProfile":  // todo очистку?
                 System.out.println("Очистка истории пользователя"); //сообщение для контроля и тестирования
                 break;
             case "OtherProfile":
                 System.out.println("Очистка истории контакта"); //сообщение для контроля и тестирования
-                ClientController.getInstance().clearMessagesWithUser(user); // todo подтверждение?
+                ClientController.getInstance().clearMessagesWithUser(user); // todo отображения пустого списка сообщений до закрытия контакта?
                 break;
         }
         dialogStage.close();
