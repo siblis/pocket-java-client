@@ -66,10 +66,8 @@ public class AlarmDeleteMessageHistory extends AnchorPane {
     private void btnConfirmOnPressed() {
         switch (prof) {
             case MY:  // todo очистку?
-                System.out.println("Очистка истории пользователя"); //сообщение для контроля и тестирования
                 break;
             case OTHER:
-                System.out.println("Очистка истории контакта"); //сообщение для контроля и тестирования
                 ClientController.getInstance().clearMessagesWithUser(user); // todo отображения пустого списка сообщений до закрытия контакта?
                 break;
         }

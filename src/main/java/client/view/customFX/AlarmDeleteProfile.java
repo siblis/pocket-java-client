@@ -66,10 +66,8 @@ public class AlarmDeleteProfile extends AnchorPane {
     private void btnConfirmOnPressed() {
         switch (prof) {
             case MY: // todo удаление?
-                System.out.println("Удаление профиля пользователя"); //сообщение для контроля и тестирования
                 break;
             case OTHER:
-                System.out.println("Удаление профиля контакта"); //сообщение для контроля и тестирования
                 ClientController.getInstance().removeContact(user.getEmail());
                 break;
         }
