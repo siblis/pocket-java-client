@@ -4,7 +4,6 @@ import client.Main;
 import client.controller.ClientController;
 import client.utils.Common;
 import client.utils.CustomTextArea;
-import client.utils.Sound;
 import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
@@ -154,6 +153,13 @@ public class ChatViewController implements Initializable {
     private int idDivMsg;
 
     private int idMsg;
+
+    enum Profile{
+        MY,
+        OTHER,
+        GROUP
+    }
+
 
     @FXML
     private  JFXButton btnContactSearchCancel;
@@ -925,10 +931,10 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-        new AlarmDeleteMessageHistory("MyProfile", null);
+        new AlarmDeleteMessageHistory(client.view.Profile.MY, null);
     }
     public void alarmDeleteProfileExecute(){
-        new AlarmDeleteProfile("MyProfile", null);
+        new AlarmDeleteProfile(client.view.Profile.MY, null);
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();
