@@ -154,13 +154,6 @@ public class ChatViewController implements Initializable {
 
     private int idMsg;
 
-    enum Profile{
-        MY,
-        OTHER,
-        GROUP
-    }
-
-
     @FXML
     private  JFXButton btnContactSearchCancel;
 
