@@ -512,23 +512,23 @@ public class ChatViewController implements Initializable {
             if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
                 DOMdocument = webEngine.getDocument();
                 createMessageDiv(message, senderName, timestamp, attrClass);
-                updateLastMessageInCardsBody(message, senderName, recieverName);
+                updateLastMessageInCardsBody(message, senderName, recieverName, timestamp);
             }else {
                 webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
                         DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
                         createMessageDiv(message, senderName, timestamp, attrClass);
-                        updateLastMessageInCardsBody(message, senderName, recieverName);
+                        updateLastMessageInCardsBody(message, senderName, recieverName, timestamp);
                     }
                 });
             }
         }else {
             createMessageDiv(message, senderName, timestamp, attrClass);
-            updateLastMessageInCardsBody(message, senderName, recieverName);
+            updateLastMessageInCardsBody(message, senderName, recieverName, timestamp);
         }
     }
 
-    private void updateLastMessageInCardsBody(String message, String senderName, String recieverName){
+    private void updateLastMessageInCardsBody(String message, String senderName, String recieverName, Timestamp timestamp){
         CFXListElement targetChat = null;
 
         String myUser = clientController.getMyUser().getAccount_name();
@@ -539,6 +539,8 @@ public class ChatViewController implements Initializable {
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message);
+        SimpleDateFormat dateFormatDay = initDateFormat("dd.MM.YYYY");
+        targetChat.setDateText(dateFormatDay.format(timestamp));
     }
 
     @FXML
