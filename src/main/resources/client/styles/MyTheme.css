@@ -3,9 +3,7 @@
     -fx-background-color: #009E8E;
 }
 
-.list-cell:even{
-    -fx-background-color: #ddffe2;
-}
+
 
 .label {
     -fx-font-size: 11pt;

@@ -1,0 +1,12 @@
+.btnCancelNew{
+    -fx-background-color: #BABABA;
+    -fx-background-radius: 25px;
+    -fx-stroke: mixed;
+}
+
+.btnInviteNew {
+    -fx-background-color: #3498DB;
+    -fx-background-radius: 25px;
+    -fx-stroke: mixed;
+
+}

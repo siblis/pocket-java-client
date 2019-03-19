@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<fx:root id="AlarmWindowQuitGroup" fx:id="AlarmWindowQuitGroup" prefHeight="206.0" prefWidth="400.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="206.0" stroke="BLACK" strokeType="OUTSIDE" width="400.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3498db" height="49.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="400.0" />
+      <Label alignment="CENTER" text="Действительно выйти из профиля?" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="77.0">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <JFXButton fx:id="btnConfirm" layoutX="45.0" layoutY="134.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" style="-fx-background-color: #3498DB; -fx-background-radius: 25px;" text="Да" textFill="WHITE" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="144.0">
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/Alarms/confirm.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font size="16.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="btnDecline" layoutX="55.0" layoutY="144.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="161.0" style="-fx-background-color: #BABABA; -fx-background-radius: 25px;" text="Нет" textFill="WHITE" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="144.0">
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/Alarms/cancel.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font size="16.0" />
+         </font>
+      </JFXButton>
+      <Label text="Выйти из профиля" textFill="WHITE" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="35.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/Alarms/leaveProfileWhite.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
+   </children>
+</fx:root>
