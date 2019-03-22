@@ -731,14 +731,16 @@ public class ChatViewController implements Initializable {
         if (contacts != null) {
             contacts.setGraphic(buildImage("/client/images/chat/contacts.png"));
             contacts.setStyle("-fx-border-width: 0 0 5 0; " +
-                    "          -fx-border-color: #3498DB #3498DB transparent #3498DB;" +
+                    "-fx-border-color: #3498DB #3498DB transparent #3498DB;" +
                     "-fx-border-insets: 0;" +
-                    "          -fx-border-style: solid;");
+                    "-fx-border-style: solid;" +
+                    "-tab-text-color: #FFFFFF;");
         }
         chats.setStyle("-fx-border-width: 0 0 5 0; " +
-                        "-fx-border-color: transparent transparent #F8D57D transparent;" +
+                "-fx-border-color: transparent transparent #F8D57D transparent;" +
                 "-fx-border-insets: 0;" +
-                        "-fx-border-style: solid;");
+                "-fx-border-style: solid;" +
+                "-tab-text-color: #F8D57D;");
     }
 
     @FXML
@@ -748,11 +750,13 @@ public class ChatViewController implements Initializable {
         contacts.setStyle("-fx-border-width: 0 0 5 0; " +
                 "-fx-border-color: transparent transparent #F8D57D transparent;" +
                 "-fx-border-insets: 0;" +
-                "-fx-border-style: solid;");
+                "-fx-border-style: solid;" +
+                "-tab-text-color: #F8D57D;");
         chats.setStyle("-fx-border-width: 0 0 5 0; " +
-                "       -fx-border-color: #3498DB #3498DB transparent #3498DB;" +
+                "-fx-border-color: #3498DB #3498DB transparent #3498DB;" +
                 "-fx-border-insets: 0;" +
-                "       -fx-border-style: solid;");
+                "-fx-border-style: solid;" +
+                "-tab-text-color: #FFFFFF;");
     }
 
     private ImageView buildImage(String s) {

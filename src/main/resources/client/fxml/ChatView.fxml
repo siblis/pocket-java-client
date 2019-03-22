@@ -21,7 +21,7 @@
                 <children>
                     <JFXTabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="50.0" tabMaxWidth="201.0" tabMinHeight="50.0" tabMinWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
                         <tabs>
-                            <Tab fx:id="chats" closable="false" onSelectionChanged="#handleOnChatSelected" text="чаты">
+                            <Tab fx:id="chats" closable="false" onSelectionChanged="#handleOnChatSelected" text="Чаты">
                                 <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="271.0" prefWidth="300.0">
                                         <children>
