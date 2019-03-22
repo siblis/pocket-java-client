@@ -112,7 +112,7 @@ public class ChatViewController implements Initializable {
     private JFXListView<CFXListElement> listViewAddToGroup;
 
     @FXML
-    private Menu menuLeff;
+    private Menu menuLeft;
 
     @FXML
     private JFXHamburger hamburger;
@@ -781,7 +781,7 @@ public class ChatViewController implements Initializable {
     public void onNewGroupClicked(ActionEvent actionEvent) {
         selectionModel.select(0);
         cfxMenuLeft.setVisible(false);
-        menuLeff.hide();
+        menuLeft.hide();
         groupListPane.setVisible(false);
         listViewAddToGroup.setExpanded(true);
         groupNewPane.setVisible(true);
@@ -797,7 +797,7 @@ public class ChatViewController implements Initializable {
     public void onMyProfileOpen(ActionEvent actionEvent) {
         PaneProvider.setProfileScrollPane(myProfileScrollPane);
         cfxMenuLeft.setVisible(false);
-        menuLeff.hide();
+        menuLeft.hide();
         myProfile.setUser(clientController.getMyUser());
         paneProvidersProfScrollPaneVisChange(true);
 
@@ -812,13 +812,13 @@ public class ChatViewController implements Initializable {
             PaneProvider.getTransitionBack().setRate(-1);
             transitionBack.play();
         }
-        else if (!menuLeff.isShowing()){
+        else if (!menuLeft.isShowing()){
             transition.setRate(1);
             transition.play();
-//            menuLeff.show();
+//            menuLeft.show();
             cfxMenuLeft.setVisible(true);
         } else {
-            menuLeff.hide();
+            menuLeft.hide();
             cfxMenuLeft.setVisible(false);
         }
 

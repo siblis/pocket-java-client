@@ -141,7 +141,7 @@
                     <MenuBar layoutX="14.0" layoutY="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="41.0">
 
                         <menus>
-                            <Menu id="menu" fx:id="menuLeff" mnemonicParsing="false" onHidden="#onHideMenuLeft" visible="false">
+                            <Menu id="menu" fx:id="menuLeft" mnemonicParsing="false" onHidden="#onHideMenuLeft" visible="false">
                                 <items>
                                     <MenuItem mnemonicParsing="false" onAction="#handleDisconnectButton" text="Отключиться..." />
                                     <SeparatorMenuItem />
