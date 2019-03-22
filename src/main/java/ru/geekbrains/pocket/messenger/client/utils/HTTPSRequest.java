@@ -56,8 +56,6 @@ public class HTTPSRequest {
                 String response = answerRequest(con);
                 //TODO response to UserPub
 
-                //  ObjectMapper mapper = new ObjectMapper();
-//                RegistrationFromServer registrationFromServer = mapper.readValue(response, RegistrationFromServer.class);
                 return Converter.toJavaObject(response, RegistrationFromServer.class);
             }
             case 429:

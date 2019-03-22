@@ -1,6 +1,6 @@
 package ru.geekbrains.pocket.messenger.client.model.pub;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class UserProfilePub {
 
     private String fullname;
 
-    @JsonProperty("last_seen")
+    @SerializedName("last_seen")
     private Date lastSeen;
 
 //    public UserProfilePub(@NotNull User user) {
