@@ -5,6 +5,7 @@ import client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXSlider;
 import database.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,9 +43,13 @@ public class CFXMyProfile extends AnchorPane {
     @FXML
     private JFXButton btnInvokation;
     @FXML
-    private JFXButton btnLogout;
+    private JFXButton btnInvokationOff;
     @FXML
-    private JFXButton btnDeleteHistory;
+    private JFXButton btnInvokationOn;
+    @FXML
+    private JFXButton btnLogout;
+//    @FXML
+//    private JFXButton btnDeleteHistory;
     @FXML
     private JFXButton btnDeleteProfile;
 
@@ -60,8 +65,10 @@ public class CFXMyProfile extends AnchorPane {
         btnSendMessage.setOnAction(event -> btnSendMessagePressed());
         btnRoom.setOnAction(event -> btnRoomPressed());
         btnInvokation.setOnAction(event -> btnInvokationPressed());
+        btnInvokationOff.setOnAction(event -> btnInvokationOffPressed());
+        btnInvokationOn.setOnAction(event -> btnInvokationOnPressed());
         btnLogout.setOnAction(event -> btnLogoutPressed());
-        btnDeleteHistory.setOnAction(event -> btnDeleteHistoryPressed());
+//        btnDeleteHistory.setOnAction(event -> btnDeleteHistoryPressed());
         btnDeleteProfile.setOnAction(event -> btnDeleteProfilePressed());
     }
 
@@ -70,10 +77,10 @@ public class CFXMyProfile extends AnchorPane {
         parentController.alarmDeleteProfileExecute();
     }
 
-    private void btnDeleteHistoryPressed() {
-        parentController = ChatViewController.getInstance();
-        parentController.alarmDeleteMessageHistoryExecute();
-    }
+//    private void btnDeleteHistoryPressed() {
+//        parentController = ChatViewController.getInstance();
+//        parentController.alarmDeleteMessageHistoryExecute();
+//    }
 
     private void btnLogoutPressed() {
         parentController = ChatViewController.getInstance();
@@ -81,6 +88,16 @@ public class CFXMyProfile extends AnchorPane {
     }
 
     private void btnInvokationPressed() {
+    }
+
+    private void btnInvokationOffPressed() {
+        btnInvokationOff.setVisible(false);
+        btnInvokationOn.setVisible(true);
+    }
+
+    private void btnInvokationOnPressed() {
+        btnInvokationOff.setVisible(true);
+        btnInvokationOn.setVisible(false);
     }
 
     private void btnRoomPressed() {
@@ -101,6 +118,9 @@ public class CFXMyProfile extends AnchorPane {
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }
+
+        btnInvokationOn.setVisible(false);
+        btnInvokationOff.setVisible(true);
 
     }
 
