@@ -8,7 +8,6 @@ import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
-import database.entity.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -930,10 +929,10 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-        new AlarmDeleteMessageHistory(client.view.Profile.MY, null);
+        new AlarmDeleteMessageHistory(ProfileType.MY, null);
     }
     public void alarmDeleteProfileExecute(){
-        new AlarmDeleteProfile(client.view.Profile.MY, null);
+        new AlarmDeleteProfile(ProfileType.MY, null);
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();

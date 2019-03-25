@@ -2,7 +2,7 @@ package client.view.customFX;
 
 import client.controller.ClientController;
 import client.view.PaneProvider;
-import client.view.Profile;
+import client.view.ProfileType;
 import com.jfoenix.controls.JFXButton;
 import database.entity.User;
 import javafx.fxml.FXML;
@@ -26,9 +26,9 @@ public class AlarmDeleteProfile extends AnchorPane {
     Stage dialogStage=null;
     String profile;
     User user;
-    Profile prof;
+    ProfileType prof;
 
-    public AlarmDeleteProfile(Profile prof, User user) {
+    public AlarmDeleteProfile(ProfileType prof, User user) {
 
         this.prof = prof;
         this.user = user;

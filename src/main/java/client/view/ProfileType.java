@@ -1,6 +1,6 @@
 package client.view;
 
-public enum Profile {
+public enum ProfileType {
     MY,
     OTHER,
     GROUP
