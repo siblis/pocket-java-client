@@ -77,6 +77,12 @@ public class ChatViewController implements Initializable {
     private Tab contacts;
 
     @FXML
+    private ImageView contactsImage;
+
+    @FXML
+    private ImageView chatsImage;
+
+    @FXML
     private AnchorPane userSearchPane;
 
     @FXML
@@ -210,7 +216,11 @@ public class ChatViewController implements Initializable {
         clientController.setChatViewController(this);
         contactsObservList = FXCollections.observableList(clientController.getContactListOfCards());
         // при пустом списке контактов открыть вкладку контакты //todo перепилить на список чатов?
-        if (contactsObservList.isEmpty()) contacts.getTabPane().getSelectionModel().select(contacts);
+        if (contactsObservList.isEmpty()) {
+            contactsImage.setImage(new Image("/client/images/chat/contactsActive.png"));
+            contacts.getTabPane().getSelectionModel().select(contacts);
+        }
+
         contactListView.setExpanded(true);
         fillContactListView();
         searchObsList = FXCollections.observableList(new ArrayList<CFXListElement>());
@@ -727,9 +737,9 @@ public class ChatViewController implements Initializable {
     //метод смены иконки
     @FXML
     public void handleOnChatSelected() {
-        chats.setGraphic(buildImage("/client/images/chat/chatsActive.png"));
+        chatsImage.setImage(new Image("/client/images/chat/chatsActive.png"));
         if (contacts != null) {
-            contacts.setGraphic(buildImage("/client/images/chat/contacts.png"));
+            contactsImage.setImage(new Image("/client/images/chat/contacts.png"));
             contacts.setStyle("-fx-border-width: 0 0 5 0; " +
                     "-fx-border-color: #3498DB #3498DB transparent #3498DB;" +
                     "-fx-border-insets: 0;" +
@@ -745,8 +755,8 @@ public class ChatViewController implements Initializable {
 
     @FXML
     public void handleOnContactSelected() {
-        contacts.setGraphic(buildImage("/client/images/chat/contactsActive.png"));
-        chats.setGraphic(buildImage("/client/images/chat/chats.png"));
+        contactsImage.setImage(new Image("/client/images/chat/contactsActive.png"));
+        chatsImage.setImage(new Image("/client/images/chat/chats.png"));
         contacts.setStyle("-fx-border-width: 0 0 5 0; " +
                 "-fx-border-color: transparent transparent #F8D57D transparent;" +
                 "-fx-border-insets: 0;" +
@@ -757,13 +767,6 @@ public class ChatViewController implements Initializable {
                 "-fx-border-insets: 0;" +
                 "-fx-border-style: solid;" +
                 "-tab-text-color: #FFFFFF;");
-    }
-
-    private ImageView buildImage(String s) {
-        Image i = new Image(s);
-        ImageView imageView = new ImageView();
-        imageView.setImage(i);
-        return imageView;
     }
 
     @FXML

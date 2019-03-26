@@ -81,10 +81,6 @@
     -fx-font-family: Roboto;
 }
 
-#contacts .tab-label {
-    -fx-graphic: url("../images/chat/contacts.png");
-}
-
 .tab-header-background {
     -fx-background-color: #3498DB;
 
