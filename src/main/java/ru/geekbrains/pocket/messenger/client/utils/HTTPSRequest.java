@@ -109,7 +109,7 @@ public class HTTPSRequest {
 
     public static ServerResponse getContacts(String token, int offset) throws Exception {
         HttpsURLConnection connection = 
-                getConnection("/v1/account/contacts/?offset:" + offset, "GET", token);
+                getConnection("/v1/account/contacts/?offset=" + offset, "GET", token);
         return getServerResponse(connection, null);
     }
 
@@ -143,7 +143,7 @@ public class HTTPSRequest {
         URL url = new URL(serverURL + urlPath);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod(method);
-        connection.setRequestProperty("Token", token);
+        connection.setRequestProperty("Authorization", "Bearer " + token);
         return connection;
     }
 
