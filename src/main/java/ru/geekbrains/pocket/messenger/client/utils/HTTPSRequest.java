@@ -92,7 +92,7 @@ public class HTTPSRequest {
         if (id != null)
             query = id;
         else
-            query = "?email:" + email;
+            query = "?email=" + email;
         HttpsURLConnection connection = getConnection("/v1/users/" + query, "GET", token);
         return getServerResponse(connection, null);
     }

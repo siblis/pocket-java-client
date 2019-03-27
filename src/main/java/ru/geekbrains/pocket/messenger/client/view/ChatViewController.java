@@ -856,7 +856,7 @@ public class ChatViewController implements Initializable {
                 }
             });
             // todo: поиск на сервере от 2х символов, убрать/расширить ограничение?
-            if (tfSearchInput.getText().length()>=2) {
+            if (tfSearchInput.getText().length()>=6) {
                 List<CFXListElement> searchFromServer = clientController.findContact(tfSearchInput.getText());
                 //todo: статус пользователей (онлайн/офлайн) - будет приходить с сервера или запрашивать на каждого?
                 if (searchFromServer != null) {
