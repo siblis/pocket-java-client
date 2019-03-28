@@ -580,7 +580,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleFindedClientChoice(MouseEvent event) {
-        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getId().toString();
+        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getAccount_name();
         if (event.getClickCount() == 1) {
             if (clientController.hasReceiver(receiver)) {
                 btnContactSearchInvite.setVisible(false);
@@ -857,18 +857,19 @@ public class ChatViewController implements Initializable {
             });
             // todo: поиск на сервере от 2х символов, убрать/расширить ограничение?
             if (tfSearchInput.getText().length()>=6) {
-                List<CFXListElement> searchFromServer = clientController.findContact(tfSearchInput.getText());
+                CFXListElement searchFromServer = clientController.findContact(tfSearchInput.getText());
                 //todo: статус пользователей (онлайн/офлайн) - будет приходить с сервера или запрашивать на каждого?
-                if (searchFromServer != null) {
-                    searchFromServer.removeAll(searchObsList);
-                    searchFromServer.remove(new CFXListElement(clientController.getMyUser()));
-                    searchFromServer.forEach(elem -> {
-                        CFXListElement temp = new CFXListElement();
-                        temp.setUser(elem.getUser());
-                        temp.setBody(elem.getUser().getEmail());
-                        searchObsList.add(temp);
-                    });
-                }
+//                if (searchFromServer != null) {
+//                    searchFromServer.removeAll(searchObsList);
+//                    searchFromServer.remove(new CFXListElement(clientController.getMyUser()));
+//                    searchFromServer.forEach(elem -> {
+//                        CFXListElement temp = new CFXListElement();
+//                        temp.setUser(elem.getUser());
+//                        temp.setBody(elem.getUser().getEmail());
+//                        searchObsList.add(temp);
+//                    });
+//                }
+                if (searchFromServer != null) searchObsList.add(searchFromServer);
             }
             selectionModel.select(1);
             searchListView.refresh();
