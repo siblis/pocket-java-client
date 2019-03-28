@@ -10,6 +10,7 @@ import ru.geekbrains.pocket.messenger.client.model.Group;
 import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.*;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationFromServer;
+import ru.geekbrains.pocket.messenger.client.model.pub.UserProfilePub;
 import ru.geekbrains.pocket.messenger.client.model.pub.UserPub;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationToServer;
 import ru.geekbrains.pocket.messenger.client.utils.Connector;
@@ -311,6 +312,19 @@ public class ClientController {
         return res.isEmpty() ? null : res;
     }
 
+    private CFXListElement convertJSONToCFXListElement(String jsonText) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        CFXListElement res = null;
+        try {
+            UserProfilePub finded = gson.fromJson(jsonText, UserProfilePub.class);
+            res = new CFXListElement(new User(null, new UserProfile(finded)));
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getUserByNameOrEmail_JsonParsError", e);
+        }
+        return res;
+    }
+
     public Group getGroupInfo(String groupName){
         Group group = new Group();
         try {
@@ -423,12 +437,12 @@ public class ClientController {
         return false;
     }
 
-    public List<CFXListElement> findContact(String contact) {
+    public CFXListElement findContact(String contact) {
         try {
             ServerResponse response = HTTPSRequest.getUser(null, contact, token);
             switch (response.getResponseCode()) {
                 case 200:
-                    return convertJSONToCFXListElements(response.getResponseJson());
+                    return convertJSONToCFXListElement(response.getResponseJson());
                 case 404:
                    // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
                     break;
