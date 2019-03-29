@@ -10,6 +10,7 @@ import database.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 
@@ -43,9 +44,7 @@ public class CFXMyProfile extends AnchorPane {
     @FXML
     private JFXButton btnInvokation;
     @FXML
-    private JFXButton btnInvokationOff;
-    @FXML
-    private JFXButton btnInvokationOn;
+    private JFXButton btnInvokationSwitch;
     @FXML
     private JFXButton btnLogout;
 //    @FXML
@@ -58,6 +57,8 @@ public class CFXMyProfile extends AnchorPane {
 
     private ChatViewController parentController;
 
+    private Boolean InvokationSwitch = false;
+
     private void initListeners(){
         btnInfoEdit.setOnAction(event -> btnInfoClicked());
         btnNameEdit.setOnAction(event -> btnNameChangeClicked());
@@ -65,8 +66,7 @@ public class CFXMyProfile extends AnchorPane {
         btnSendMessage.setOnAction(event -> btnSendMessagePressed());
         btnRoom.setOnAction(event -> btnRoomPressed());
         btnInvokation.setOnAction(event -> btnInvokationPressed());
-        btnInvokationOff.setOnAction(event -> btnInvokationOffPressed());
-        btnInvokationOn.setOnAction(event -> btnInvokationOnPressed());
+        btnInvokationSwitch.setOnAction(event -> btnInvokationSwitchPressed());
         btnLogout.setOnAction(event -> btnLogoutPressed());
 //        btnDeleteHistory.setOnAction(event -> btnDeleteHistoryPressed());
         btnDeleteProfile.setOnAction(event -> btnDeleteProfilePressed());
@@ -88,16 +88,25 @@ public class CFXMyProfile extends AnchorPane {
     }
 
     private void btnInvokationPressed() {
+        if (InvokationSwitch) {
+            AnchorPane.setRightAnchor(btnInvokationSwitch, 40.0);
+            InvokationSwitch = false;
+        }
+        else {
+            AnchorPane.setRightAnchor(btnInvokationSwitch, 54.0);
+            InvokationSwitch = true;
+        }
     }
 
-    private void btnInvokationOffPressed() {
-        btnInvokationOff.setVisible(false);
-        btnInvokationOn.setVisible(true);
-    }
-
-    private void btnInvokationOnPressed() {
-        btnInvokationOff.setVisible(true);
-        btnInvokationOn.setVisible(false);
+    private void btnInvokationSwitchPressed() {
+        if (InvokationSwitch) {
+            AnchorPane.setRightAnchor(btnInvokationSwitch, 40.0);
+            InvokationSwitch = false;
+        }
+        else {
+            AnchorPane.setRightAnchor(btnInvokationSwitch, 54.0);
+            InvokationSwitch = true;
+        }
     }
 
     private void btnRoomPressed() {
@@ -118,10 +127,6 @@ public class CFXMyProfile extends AnchorPane {
         } catch (IOException exception){
             throw new RuntimeException(exception);
         }
-
-        btnInvokationOn.setVisible(false);
-        btnInvokationOff.setVisible(true);
-
     }
 
     @FXML
@@ -144,6 +149,4 @@ public class CFXMyProfile extends AnchorPane {
         tfName.setText(user.getAccount_name());
         labelEmailMyProfile.setText(user.getEmail());
     }
-
-
 }
