@@ -847,11 +847,11 @@ public class ChatViewController implements Initializable {
             contactsViewPane.setVisible(false);
             contactSearchPane.setVisible(true);
             contactsObservList.forEach(elem -> {
-                if (elem.getUser().getEmail().contains(tfSearchInput.getText()) ||
+                if ( //elem.getUser().getEmail().contains(tfSearchInput.getText()) ||
                         elem.getUser().getAccount_name().contains(tfSearchInput.getText())) {
                     CFXListElement temp = new CFXListElement();
                     temp.setUser(elem.getUser());
-                    temp.setBody(elem.getUser().getEmail());
+                    //temp.setBody(elem.getUser().getEmail());
                     searchObsList.add(temp);
                 }
             });
