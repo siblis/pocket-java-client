@@ -68,6 +68,7 @@ public class User {
     public User(String email, UserProfile profile) {
         this.email = email;
         this.profile = profile;
+        this.uid = profile.getUid();
         sentMess = new ArrayList<>();
         receivedMess = new ArrayList<>();
     }
@@ -121,12 +122,12 @@ public class User {
             return false;
         }
         final User other = (User) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
+//        if (!Objects.equals(this.id, other.id)) {
+//            return false;
+//        }
+//        if (!Objects.equals(this.email, other.email)) {
+//            return false;
+//        }
         return Objects.equals(this.profile, other.profile);
     }
 

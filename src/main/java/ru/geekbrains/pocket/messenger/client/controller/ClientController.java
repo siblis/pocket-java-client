@@ -39,7 +39,7 @@ public class ClientController {
     private User receiver;
     private User myUser;
     private Connector conn;
-    private List<Long> contactList;
+    private List<String> contactList;
     private List<CFXListElement> contactListOfCards;
 
     private DataBaseService dbService;
@@ -87,13 +87,13 @@ public class ClientController {
         loadChat();
     }
 
-    public void setReceiver(String receiverName) {
-        this.receiver = dbService.getUser(receiverName);
+    public void setReceiver(String receiverUid) {
+        this.receiver = dbService.getUserbyUid(receiverUid);
         loadChat();
     }
 
     public void setReceiver(User receiver) {
-        if (!contactList.contains(receiver.getId()))
+        if (!contactList.contains(receiver.getUid()))
             addContactToDbAndChat(receiver); // todo поправить логику получения сообщений?
             //NB: todo добавлять в список на сервере? addContactToDbAndChat не добавляет
         this.receiver = receiver;
@@ -104,8 +104,8 @@ public class ClientController {
         return dbService.getUser(receiverId) != null;
     }
 
-    public boolean hasReceiver(String receiverName) {
-        return dbService.getUser(receiverName) != null;
+    public boolean hasReceiver(String receiverUid) {
+        return dbService.getUserbyUid(receiverUid) != null;
     }
 
     public List<CFXListElement> getContactListOfCards() {
@@ -239,7 +239,7 @@ public class ClientController {
     private void synchronizeContactList() {
         //dbService = new DataBaseService(myUser);
         dbService.setUserDB(myUser);
-        contactList = dbService.getAllUserId();
+        contactList = dbService.getAllUserUid();
         contactListOfCards = new ArrayList<>();
         
 //        dbService.getAllUsers().forEach(user -> {
@@ -254,10 +254,13 @@ public class ClientController {
             ServerResponse response;
             int pageOfContacts = 0;
             while (true) {
-                response = HTTPSRequest.getContacts(token, pageOfContacts);
+                response = HTTPSRequest.getContacts(token, pageOfContacts++);
                 ContactListFromServer clfs = ContactListFromServer.fromJson(response.getResponseJson());
                 if (clfs.getContacts().length == 0) break;
                 synchronizePageOfContListFromServ(clfs.getContacts(), contactsToRemoveFromDb);
+
+                //заглушка, пока на сервере не реализована постраничная отправка списка контактов
+                break;
             }
 
             //удаляем из локальной базы контакты, которых нет в списке контактов на сервере
@@ -277,9 +280,10 @@ public class ClientController {
     private void synchronizePageOfContListFromServ(ContactFromServer[] contacts, List<User> contactsToRemoveFromDb) {
         for (ContactFromServer entry : contacts) {
             User curUser = entry.toUser();
-            if (!contactList.contains(curUser.getId())) {
+            if (!contactList.contains(curUser.getUid())) {
                 addContactToDB(curUser);
             }
+            addContactToContactList(curUser);
             //todo в новом апи пока нет статусов
 //            for (CFXListElement cont : contactListOfCards) {
 //                if (cont.getUser().getId().equals(entry.getUserProfile().getId())) {
@@ -420,7 +424,7 @@ public class ClientController {
 
     public boolean addContact(User user) {
         //todo ответа сервера не предусмотрено => убрать return и добавить проброс ошибок
-        UserToServer uts = new UserToServer(user.getId().toString(), user.getAccount_name());
+        UserToServer uts = new UserToServer(user.getUid(), user.getAccount_name());
         try {
             ServerResponse response = HTTPSRequest.addContact(uts.toJson(), token);
             switch (response.getResponseCode()) {
@@ -460,12 +464,16 @@ public class ClientController {
 
     private void addContactToDB(User contact) {
         dbService.insertUser(contact);
-        contact = dbService.getUserByEmail(contact.getEmail());
-        if (contact != null) {
-            Long id = contact.getId();
-            contactList.add(id);
-            contactListOfCards.add(new CFXListElement(contact));
-        }
+//        contact = dbService.getUserByEmail(contact.getEmail());
+//        if (contact != null) {
+//            Long id = contact.getId();
+        addContactToContactList(contact);
+//        }
+    }
+
+    private void addContactToContactList(User contact) {
+        contactList.add(contact.getUid());
+        contactListOfCards.add(new CFXListElement(contact));
     }
 
     private boolean addContactToDbAndChat(User contact) {
@@ -503,7 +511,7 @@ public class ClientController {
     private void removeContactFromDb(User contact) {
         clearMessagesWithUser(contact);
         dbService.deleteUser(contact);
-        contactList.remove(contact.getId());
+        contactList.remove(contact.getUid());
         contactListOfCards.remove(new CFXListElement(contact));
     }
 

@@ -66,6 +66,10 @@ public class DataBaseService {
         return usersDao.getByUsername(username);
     }
 
+    public User getUserbyUid(String uid) {
+        return usersDao.getByUid(uid);
+    }
+
     public List<User> getAllUsers() {
         return usersDao.get();
     }
@@ -80,6 +84,10 @@ public class DataBaseService {
 
     public List<Long> getAllUserId() {
         return usersDao.getColumnOfData("id");
+    }
+
+    public List<String> getAllUserUid() {
+        return usersDao.getColumnOfDataAsStringList("uid");
     }
 
     public void addMessage(Long receiverId, Long senderID, Message message) {

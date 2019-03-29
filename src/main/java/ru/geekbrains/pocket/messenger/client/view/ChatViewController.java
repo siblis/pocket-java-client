@@ -563,7 +563,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleClientChoice(MouseEvent event) {
-        String receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getId().toString();
+        String receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getUid();
         if (event.getClickCount() == 1) {
             //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
             clientController.setReceiver(receiver);
@@ -580,7 +580,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleFindedClientChoice(MouseEvent event) {
-        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getAccount_name();
+        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getUid();
         if (event.getClickCount() == 1) {
             if (clientController.hasReceiver(receiver)) {
                 btnContactSearchInvite.setVisible(false);
