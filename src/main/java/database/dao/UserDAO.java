@@ -15,7 +15,7 @@ import java.util.List;
  * Однако, мы не будем создавать DAO напрямую и вызывать его методы в нашем
  * приложении. Вся логика будет помещена в класс DataBaseService.
  */
-class UserDAO {
+public class UserDAO {
 
     void insert(User user) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -44,7 +44,7 @@ class UserDAO {
         session.getTransaction().commit();
     }
 
-    User get(long id) {
+    public User get(long id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 

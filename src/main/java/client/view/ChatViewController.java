@@ -8,6 +8,7 @@ import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
+import database.entity.Message;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -492,10 +493,15 @@ public class ChatViewController implements Initializable {
         addImageMessageListener(divTxtMsg);
     }
 
-    public void showMessage(String recieverName, String senderName, String message, Timestamp timestamp, boolean isNew) {
+    public void showMessage(Message mess, boolean isNew) {
         /*if (isNew) {
             Sound.playSoundNewMessage().join();
         }*/
+
+        String recieverName = mess.getReceiver().getAccount_name();
+        String senderName = mess.getSender().getAccount_name();
+        String message = mess.getText();
+        Timestamp timestamp = mess.getTime();
 
         String attrClass;
         if (clientController.getSenderName().equals(senderName)) {
