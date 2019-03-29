@@ -16,7 +16,7 @@ import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
 
 public class HTTPSRequest {
     private static final Logger requestLogger = LogManager.getLogger(HTTPSRequest.class.getName());
-    private static String serverURL = "https://localhost:8888";
+    private static String serverURL = "https://pocket-java-backend.herokuapp.com";
 
     public static String restorePassword(String requestJSON) throws Exception {
         //TODO нужен API на сервере
