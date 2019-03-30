@@ -5,12 +5,10 @@ import client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXSlider;
 import database.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 
@@ -42,13 +40,11 @@ public class CFXMyProfile extends AnchorPane {
     @FXML
     private JFXButton btnRoom;
     @FXML
-    private JFXButton btnInvokation;
+    private Label lblInvokation;
     @FXML
     private JFXButton btnInvokationSwitch;
     @FXML
     private JFXButton btnLogout;
-//    @FXML
-//    private JFXButton btnDeleteHistory;
     @FXML
     private JFXButton btnDeleteProfile;
 
@@ -65,10 +61,8 @@ public class CFXMyProfile extends AnchorPane {
         btnClose.setOnAction(event -> closeButtonPressed());
         btnSendMessage.setOnAction(event -> btnSendMessagePressed());
         btnRoom.setOnAction(event -> btnRoomPressed());
-        btnInvokation.setOnAction(event -> btnInvokationPressed());
         btnInvokationSwitch.setOnAction(event -> btnInvokationSwitchPressed());
         btnLogout.setOnAction(event -> btnLogoutPressed());
-//        btnDeleteHistory.setOnAction(event -> btnDeleteHistoryPressed());
         btnDeleteProfile.setOnAction(event -> btnDeleteProfilePressed());
     }
 
@@ -77,34 +71,18 @@ public class CFXMyProfile extends AnchorPane {
         parentController.alarmDeleteProfileExecute();
     }
 
-//    private void btnDeleteHistoryPressed() {
-//        parentController = ChatViewController.getInstance();
-//        parentController.alarmDeleteMessageHistoryExecute();
-//    }
-
     private void btnLogoutPressed() {
         parentController = ChatViewController.getInstance();
         parentController.alarmExitProfileExecute();
     }
 
-    private void btnInvokationPressed() {
-        if (InvokationSwitch) {
-            AnchorPane.setRightAnchor(btnInvokationSwitch, 40.0);
-            InvokationSwitch = false;
-        }
-        else {
-            AnchorPane.setRightAnchor(btnInvokationSwitch, 54.0);
-            InvokationSwitch = true;
-        }
-    }
-
     private void btnInvokationSwitchPressed() {
         if (InvokationSwitch) {
-            AnchorPane.setRightAnchor(btnInvokationSwitch, 40.0);
+            AnchorPane.setRightAnchor(btnInvokationSwitch, 16.0);
             InvokationSwitch = false;
         }
         else {
-            AnchorPane.setRightAnchor(btnInvokationSwitch, 54.0);
+            AnchorPane.setRightAnchor(btnInvokationSwitch, 30.0);
             InvokationSwitch = true;
         }
     }
