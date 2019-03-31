@@ -282,8 +282,7 @@ public class ClientController {
             User curUser = entry.toUser();
             if (!contactList.contains(curUser.getUid())) {
                 addContactToDB(curUser);
-            }
-            addContactToContactList(curUser);
+            } else contactListOfCards.add(new CFXListElement(curUser));
             //todo в новом апи пока нет статусов
 //            for (CFXListElement cont : contactListOfCards) {
 //                if (cont.getUser().getId().equals(entry.getUserProfile().getId())) {
@@ -467,11 +466,11 @@ public class ClientController {
 //        contact = dbService.getUserByEmail(contact.getEmail());
 //        if (contact != null) {
 //            Long id = contact.getId();
-        addContactToContactList(contact);
+        addContactToContactLists(contact);
 //        }
     }
 
-    private void addContactToContactList(User contact) {
+    private void addContactToContactLists(User contact) {
         contactList.add(contact.getUid());
         contactListOfCards.add(new CFXListElement(contact));
     }
