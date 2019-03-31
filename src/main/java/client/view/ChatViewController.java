@@ -4,11 +4,11 @@ import client.Main;
 import client.controller.ClientController;
 import client.utils.Common;
 import client.utils.CustomTextArea;
+import client.utils.Sound;
 import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
-import database.entity.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -493,7 +493,7 @@ public class ChatViewController implements Initializable {
         addImageMessageListener(divTxtMsg);
     }
 
-    public void showMessage(String recieverName, String senderName, String message, Timestamp timestamp, boolean isNew) {
+    public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
         /*if (isNew) {
             Sound.playSoundNewMessage().join();
         }*/
@@ -512,35 +512,30 @@ public class ChatViewController implements Initializable {
             if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
                 DOMdocument = webEngine.getDocument();
                 createMessageDiv(message, senderName, timestamp, attrClass);
-                updateLastMessageInCardsBody(message, senderName, recieverName, timestamp);
+                updateLastMessageInCardsBody(message, senderName);
             }else {
                 webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
                         DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
                         createMessageDiv(message, senderName, timestamp, attrClass);
-                        updateLastMessageInCardsBody(message, senderName, recieverName, timestamp);
+                        updateLastMessageInCardsBody(message, senderName);
                     }
                 });
             }
         }else {
             createMessageDiv(message, senderName, timestamp, attrClass);
-            updateLastMessageInCardsBody(message, senderName, recieverName, timestamp);
+            updateLastMessageInCardsBody(message, senderName);
         }
     }
 
-    private void updateLastMessageInCardsBody(String message, String senderName, String recieverName, Timestamp timestamp){
+    private void updateLastMessageInCardsBody(String message, String senderName){
         CFXListElement targetChat = null;
 
-        String myUser = clientController.getMyUser().getAccount_name();
-
         for (CFXListElement element : contactsObservList){
-
-            if ((element.getUser().getAccount_name().equals(senderName) & myUser.equals(recieverName)) | (element.getUser().getAccount_name().equals(recieverName) & myUser.equals(senderName))) targetChat = element;
+            if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message);
-        SimpleDateFormat dateFormatDay = initDateFormat("dd.MM.YYYY");
-        targetChat.setDateText(dateFormatDay.format(timestamp));
     }
 
     @FXML
@@ -930,12 +925,13 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-        new AlarmDeleteMessageHistory(client.view.Profile.MY, null);
+        new AlarmDeleteMessageHistory();
     }
     public void alarmDeleteProfileExecute(){
-        new AlarmDeleteProfile(client.view.Profile.MY, null);
+        new AlarmDeleteProfile();
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();
     }
+
 }

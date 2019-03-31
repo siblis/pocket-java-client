@@ -1,10 +1,7 @@
 package client.view.customFX;
 
-import client.controller.ClientController;
 import client.view.PaneProvider;
-import client.view.Profile;
 import com.jfoenix.controls.JFXButton;
-import database.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,14 +21,9 @@ public class AlarmDeleteMessageHistory extends AnchorPane {
     private  JFXButton btnDecline;
 
     Stage dialogStage=null;
-    String profile;
-    User user;
-    Profile prof;
 
-    public AlarmDeleteMessageHistory(Profile prof, User user) {
+    public AlarmDeleteMessageHistory() {
 
-        this.prof = prof;
-        this.user = user;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AlarmWindowDeleteMessageHistory.fxml"));
         fxmlLoader.setRoot(this);
@@ -64,13 +56,6 @@ public class AlarmDeleteMessageHistory extends AnchorPane {
     }
 
     private void btnConfirmOnPressed() {
-        switch (prof) {
-            case MY:  // todo очистку?
-                break;
-            case OTHER:
-                ClientController.getInstance().clearMessagesWithUser(user); // todo отображения пустого списка сообщений до закрытия контакта?
-                break;
-        }
         dialogStage.close();
 
     }
