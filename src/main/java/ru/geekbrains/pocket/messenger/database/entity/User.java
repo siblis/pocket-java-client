@@ -36,7 +36,7 @@ public class User {
     private Timestamp created_at = new Timestamp(new Date().getTime());
 
     //@NotNull
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "profile_id")
     private UserProfile profile;
 

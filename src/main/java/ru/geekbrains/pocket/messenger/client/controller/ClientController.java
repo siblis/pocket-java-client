@@ -487,7 +487,7 @@ public class ClientController {
     public boolean removeContact(User user) {
         //todo ответа сервера не предусмотрено => убрать return и добавить проброс ошибок
         try {
-            ServerResponse response = HTTPSRequest.deleteContact(user.getId().toString(), token);
+            ServerResponse response = HTTPSRequest.deleteContact(user.getUid(), token);
             switch (response.getResponseCode()) {
                 case 200:
                     showAlert("Контакт " + user.getAccount_name() + " успешно удалён", 
