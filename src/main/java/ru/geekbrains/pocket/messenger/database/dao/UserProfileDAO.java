@@ -6,6 +6,7 @@ import ru.geekbrains.pocket.messenger.database.HibernateUtil;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 import ru.geekbrains.pocket.messenger.database.entity.UserProfile;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 
 /**
@@ -62,7 +63,12 @@ class UserProfileDAO {
 
         Query<UserProfile> query = session.createQuery("from UserProfile u where u.username = :userNameParam");
         query.setParameter("userNameParam", username);
-        UserProfile userProfile = query.getSingleResult();
+        UserProfile userProfile = null;
+        try {
+            userProfile = query.getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+        }
 
         session.getTransaction().commit();
 

@@ -1,6 +1,5 @@
 package ru.geekbrains.pocket.messenger.database.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,7 +36,7 @@ public class User {
     private Timestamp created_at = new Timestamp(new Date().getTime());
 
     //@NotNull
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "profile_id")
     private UserProfile profile;
 
@@ -69,6 +68,7 @@ public class User {
     public User(String email, UserProfile profile) {
         this.email = email;
         this.profile = profile;
+        this.uid = profile.getUid();
         sentMess = new ArrayList<>();
         receivedMess = new ArrayList<>();
     }
@@ -122,12 +122,12 @@ public class User {
             return false;
         }
         final User other = (User) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
+//        if (!Objects.equals(this.id, other.id)) {
+//            return false;
+//        }
+//        if (!Objects.equals(this.email, other.email)) {
+//            return false;
+//        }
         return Objects.equals(this.profile, other.profile);
     }
 

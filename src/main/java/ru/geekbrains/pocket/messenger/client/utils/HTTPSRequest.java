@@ -16,7 +16,7 @@ import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
 
 public class HTTPSRequest {
     private static final Logger requestLogger = LogManager.getLogger(HTTPSRequest.class.getName());
-    private static String serverURL = "https://localhost:8888";
+    private static String serverURL = "https://pocket-java-backend.herokuapp.com";
 
     public static String restorePassword(String requestJSON) throws Exception {
         //TODO нужен API на сервере
@@ -56,8 +56,6 @@ public class HTTPSRequest {
                 String response = answerRequest(con);
                 //TODO response to UserPub
 
-                //  ObjectMapper mapper = new ObjectMapper();
-//                RegistrationFromServer registrationFromServer = mapper.readValue(response, RegistrationFromServer.class);
                 return Converter.toJavaObject(response, RegistrationFromServer.class);
             }
             case 429:
@@ -94,7 +92,7 @@ public class HTTPSRequest {
         if (id != null)
             query = id;
         else
-            query = "?email:" + email;
+            query = "?email=" + email;
         HttpsURLConnection connection = getConnection("/v1/users/" + query, "GET", token);
         return getServerResponse(connection, null);
     }
@@ -111,7 +109,7 @@ public class HTTPSRequest {
 
     public static ServerResponse getContacts(String token, int offset) throws Exception {
         HttpsURLConnection connection = 
-                getConnection("/v1/account/contacts/?offset:" + offset, "GET", token);
+                getConnection("/v1/account/contacts/?offset=" + offset, "GET", token);
         return getServerResponse(connection, null);
     }
 
@@ -145,7 +143,7 @@ public class HTTPSRequest {
         URL url = new URL(serverURL + urlPath);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod(method);
-        connection.setRequestProperty("Token", token);
+        connection.setRequestProperty("Authorization", "Bearer " + token);
         return connection;
     }
 

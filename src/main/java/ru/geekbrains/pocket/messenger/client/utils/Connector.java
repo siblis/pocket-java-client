@@ -10,7 +10,7 @@ import java.net.URI;
 
 public class Connector {
     private static final Logger connectorLogger = LogManager.getLogger(Connector.class.getName());
-    static final String connectTo = "localhost:8888";
+    static final String connectTo = "pocket-java-backend.herokuapp.com";
     private WebSocketChatClient chatClient;
 
     public Connector(String token, ClientController controller){
