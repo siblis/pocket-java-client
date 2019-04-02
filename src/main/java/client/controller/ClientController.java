@@ -1,6 +1,5 @@
 package client.controller;
 
-import database.dao.UserDAO;
 import client.model.Group;
 import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
@@ -179,8 +178,7 @@ public class ClientController {
         //Как будет с группами пока не понятно
         if (receiver.getUid() == mfs.getSenderid()) {
             Message mess = new Message();
-            UserDAO ud = new UserDAO();
-            mess.setSender(ud.get(mfs.getSenderid()));
+            mess.setSender(dbService.getUser(mfs.getSenderid()));
             mess.setText(mfs.getMessage());
             mess.setTime(mfs.getTimestamp());
             chatViewController.showMessage(mess, true);
