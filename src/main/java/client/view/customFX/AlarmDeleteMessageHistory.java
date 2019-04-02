@@ -1,5 +1,6 @@
 package client.view.customFX;
 
+import database.entity.User;
 import client.view.PaneProvider;
 import client.view.ProfileType;
 import com.jfoenix.controls.JFXButton;
