@@ -1,10 +1,8 @@
 package client.view.customFX;
 
-import client.controller.ClientController;
 import client.view.PaneProvider;
 import client.view.ProfileType;
 import com.jfoenix.controls.JFXButton;
-import database.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,14 +22,12 @@ public class AlarmDeleteProfile extends AnchorPane {
     private  JFXButton btnDecline;
 
     Stage dialogStage=null;
+
     String profile;
     User user;
     ProfileType prof;
 
     public AlarmDeleteProfile(ProfileType prof, User user) {
-
-        this.prof = prof;
-        this.user = user;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AlarmWindowDeleteProfile.fxml"));
         fxmlLoader.setRoot(this);
@@ -64,13 +60,7 @@ public class AlarmDeleteProfile extends AnchorPane {
     }
 
     private void btnConfirmOnPressed() {
-        switch (prof) {
-            case MY: // todo удаление?
-                break;
-            case OTHER:
-                ClientController.getInstance().removeContact(user.getEmail());
-                break;
-        }
         dialogStage.close();
+
     }
 }
