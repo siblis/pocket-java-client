@@ -4,7 +4,6 @@ import client.Main;
 import client.controller.ClientController;
 import client.utils.Common;
 import client.utils.CustomTextArea;
-import client.utils.Sound;
 import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
@@ -521,23 +520,18 @@ public class ChatViewController implements Initializable {
             //если пользователь только запустил клиента и локально нет ни одного сообщения
             if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
                 DOMdocument = webEngine.getDocument();
-
                 createMessageDiv(mess, attrClass);
                 updateLastMessageInCardsBody(mess);
-
             }else {
                 webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
                         DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
-
                         createMessageDiv(mess, attrClass);
                         updateLastMessageInCardsBody(mess);
-
                     }
                 });
             }
         }else {
-
             createMessageDiv(mess, attrClass);
             updateLastMessageInCardsBody(mess);
         }
@@ -554,7 +548,8 @@ public class ChatViewController implements Initializable {
         String myUser = clientController.getMyUser().getAccount_name();
 
         for (CFXListElement element : contactsObservList){
-            if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
+
+            if ((element.getUser().getAccount_name().equals(senderName) & myUser.equals(recieverName)) | (element.getUser().getAccount_name().equals(recieverName) & myUser.equals(senderName))) targetChat = element;
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message);
@@ -951,15 +946,12 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-
         new AlarmDeleteMessageHistory(ProfileType.MY, null);
     }
     public void alarmDeleteProfileExecute(){
         new AlarmDeleteProfile(ProfileType.MY, null);
-
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();
     }
-
 }
