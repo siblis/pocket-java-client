@@ -498,9 +498,7 @@ public class ChatViewController implements Initializable {
         addImageMessageListener(divTxtMsg);
     }
 
-
     public void showMessage(Message mess, boolean isNew) {
-
         /*if (isNew) {
             Sound.playSoundNewMessage().join();
         }*/
@@ -553,6 +551,8 @@ public class ChatViewController implements Initializable {
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message);
+        SimpleDateFormat dateFormatDay = initDateFormat("dd.MM.YYYY");
+        targetChat.setDateText(dateFormatDay.format(timestamp));
     }
 
     @FXML
