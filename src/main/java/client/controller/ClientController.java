@@ -1,6 +1,5 @@
 package client.controller;
 
-import database.dao.UserDAO;
 import client.model.Group;
 import client.model.ServerResponse;
 import client.model.formatMsgWithServer.*;
