@@ -1,6 +1,8 @@
 package client.view.customFX;
 
+import database.entity.User;
 import client.view.PaneProvider;
+import client.view.ProfileType;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,8 +24,11 @@ public class AlarmDeleteProfile extends AnchorPane {
 
     Stage dialogStage=null;
 
-    public AlarmDeleteProfile() {
+    String profile;
+    User user;
+    ProfileType prof;
 
+    public AlarmDeleteProfile(ProfileType prof, User user) {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AlarmWindowDeleteProfile.fxml"));
         fxmlLoader.setRoot(this);

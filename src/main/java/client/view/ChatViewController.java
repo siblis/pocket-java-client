@@ -4,11 +4,11 @@ import client.Main;
 import client.controller.ClientController;
 import client.utils.Common;
 import client.utils.CustomTextArea;
-import client.utils.Sound;
 import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
+import database.entity.Message;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -402,9 +402,9 @@ public class ChatViewController implements Initializable {
 
     /**
      *
-     * @param message
-     * @param senderName
-     * @param timestamp     *
+//     * @param message
+//     * @param senderName
+//     * @param timestamp     *
      * @param attrClass
      * ****
      * /* Create module DIV for messenger
@@ -424,7 +424,12 @@ public class ChatViewController implements Initializable {
      * Style create in initWebView
      *
      */
-    private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
+    private void createMessageDiv(Message mess, String attrClass){
+
+        String message = mess.getText();
+        String senderName = mess.getSender().getAccount_name();
+        Timestamp timestamp = mess.getTime();
+
         //ID требуется для скрипта вставки тегов
         idMsg+=1;
         setIdMsg(idMsg);
@@ -493,10 +498,12 @@ public class ChatViewController implements Initializable {
         addImageMessageListener(divTxtMsg);
     }
 
-    public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
+    public void showMessage(Message mess, boolean isNew) {
         /*if (isNew) {
             Sound.playSoundNewMessage().join();
         }*/
+
+        String senderName = mess.getSender().getAccount_name();
 
         String attrClass;
         if (clientController.getSenderName().equals(senderName)) {
@@ -511,31 +518,41 @@ public class ChatViewController implements Initializable {
             //если пользователь только запустил клиента и локально нет ни одного сообщения
             if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
                 DOMdocument = webEngine.getDocument();
-                createMessageDiv(message, senderName, timestamp, attrClass);
-                updateLastMessageInCardsBody(message, senderName);
+                createMessageDiv(mess, attrClass);
+                updateLastMessageInCardsBody(mess);
             }else {
                 webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
                         DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
-                        createMessageDiv(message, senderName, timestamp, attrClass);
-                        updateLastMessageInCardsBody(message, senderName);
+                        createMessageDiv(mess, attrClass);
+                        updateLastMessageInCardsBody(mess);
                     }
                 });
             }
         }else {
-            createMessageDiv(message, senderName, timestamp, attrClass);
-            updateLastMessageInCardsBody(message, senderName);
+            createMessageDiv(mess, attrClass);
+            updateLastMessageInCardsBody(mess);
         }
     }
 
-    private void updateLastMessageInCardsBody(String message, String senderName){
+    private void updateLastMessageInCardsBody(Message mess){
         CFXListElement targetChat = null;
 
+        String message = mess.getText();
+        String senderName = mess.getSender().getAccount_name();
+        String recieverName = mess.getReceiver().getAccount_name();
+        Timestamp timestamp = mess.getTime();
+
+        String myUser = clientController.getMyUser().getAccount_name();
+
         for (CFXListElement element : contactsObservList){
-            if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
+
+            if ((element.getUser().getAccount_name().equals(senderName) & myUser.equals(recieverName)) | (element.getUser().getAccount_name().equals(recieverName) & myUser.equals(senderName))) targetChat = element;
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message);
+        SimpleDateFormat dateFormatDay = initDateFormat("dd.MM.YYYY");
+        targetChat.setDateText(dateFormatDay.format(timestamp));
     }
 
     @FXML
@@ -929,13 +946,12 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-        new AlarmDeleteMessageHistory();
+        new AlarmDeleteMessageHistory(ProfileType.MY, null);
     }
     public void alarmDeleteProfileExecute(){
-        new AlarmDeleteProfile();
+        new AlarmDeleteProfile(ProfileType.MY, null);
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();
     }
-
 }

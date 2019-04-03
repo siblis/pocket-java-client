@@ -2,6 +2,7 @@ package client.view.customFX;
 
 import client.controller.ClientController;
 import client.view.PaneProvider;
+import client.view.ProfileType;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import database.entity.User;
@@ -128,12 +129,18 @@ public class CFXOtherProfile extends AnchorPane {
     }
 
     private void clearMsgs() {
-        ClientController.getInstance().clearMessagesWithUser(user); // todo подтверждение?
+
+        new AlarmDeleteMessageHistory(ProfileType.OTHER, user);
+//        ClientController.getInstance().clearMessagesWithUser(user); // todo подтверждение?
+
     }
 
     private void removeUser() {
         closeButtonPressed();
-        ClientController.getInstance().removeContact(user.getEmail()); // todo подтверждение?
+
+        new AlarmDeleteProfile(ProfileType.OTHER, user);
+//        ClientController.getInstance().removeContact(user.getEmail()); // todo подтверждение?
+
     }
 
     private void inviteContact() {
