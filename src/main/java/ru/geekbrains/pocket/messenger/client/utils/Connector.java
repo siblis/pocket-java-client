@@ -9,16 +9,36 @@ import java.io.IOException;
 import java.net.URI;
 
 public class Connector {
-    private static final Logger connectorLogger = LogManager.getLogger(Connector.class.getName());
+    private static final Logger log = LogManager.getLogger(Connector.class.getName());
     static final String connectTo = "pocket-java-backend.herokuapp.com";
+
+    private static Connector instance;
+    private ClientController clientController;
     private WebSocketChatClient chatClient;
 
-    public Connector(String token, ClientController controller){
-        try {
-            connect(token,controller);
-        } catch (Exception e) {
-            connectorLogger.error("Connector_error", e);
+
+    public Connector(){
+        clientController = ClientController.getInstance();
+//        try {
+//            connect(clientController.getToken(),clientController);
+//        } catch (Exception e) {
+//            log.error("Connector_error", e);
+//        }
+    }
+
+//    public Connector(String token, ClientController controller){
+//        try {
+//            connect(token,controller);
+//        } catch (Exception e) {
+//            log.error("Connector_error", e);
+//        }
+//    }
+
+    public static Connector getInstance() {
+        if (instance == null) {
+            instance = new Connector();
         }
+        return instance;
     }
 
     public WebSocketChatClient getChatClient() throws IOException {
@@ -28,16 +48,27 @@ public class Connector {
         return chatClient;
     }
 
-    public void connect(String token, ClientController controller) throws Exception {
+    public void connect() throws Exception {
         chatClient = new WebSocketChatClient(
-                new URI("wss://" + connectTo + "/v1/socket/token:" + token), null, controller);
+                new URI("wss://" + connectTo + "/v1/socket/token:" + clientController.getToken()),
+                null, clientController);
         SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
         chatClient.setSocketFactory(factory);
         chatClient.connectBlocking();
     }
 
+//    public void connect(String token, ClientController controller) throws Exception {
+//        chatClient = new WebSocketChatClient(
+//                new URI("wss://" + connectTo + "/v1/socket/token:" + token), null, controller);
+//        SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+//        chatClient.setSocketFactory(factory);
+//        chatClient.connectBlocking();
+//    }
+
     public void disconnect() {
         chatClient.close();
         chatClient = null;
+        clientController = null;
+        instance = null;
     }
 }

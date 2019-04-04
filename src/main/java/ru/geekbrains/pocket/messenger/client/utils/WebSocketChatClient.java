@@ -4,6 +4,7 @@ import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import javafx.application.Platform;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import ru.geekbrains.pocket.messenger.client.controller.MessageController;
 
 import javax.net.SocketFactory;
 import java.net.URI;
@@ -11,7 +12,8 @@ import java.util.Map;
 
 public class WebSocketChatClient extends WebSocketClient {
     private SocketFactory socketFactory = null;
-    private ClientController controller = null;
+    private ClientController clientController = null;
+    private MessageController messageController;
 
 //    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, TestEnterViewController controller) {
 //        super( serverUri );
@@ -23,9 +25,9 @@ public class WebSocketChatClient extends WebSocketClient {
     }
 
 
-    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, ClientController conn) {
+    public WebSocketChatClient(URI serverUri, Map<String, String> httpHeaders, ClientController clientController) {
         super(serverUri, httpHeaders);
-        controller = conn;
+        this.clientController = clientController;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class WebSocketChatClient extends WebSocketClient {
         System.out.println( "got: " + message );
         //todo рубим sendMessage кавычками
         if (message.contains("\"receiver\"")){
-            Platform.runLater(() -> controller.receiveMessage(message));
+            Platform.runLater(() -> messageController.receiveMessage(clientController.getMyUser(), message, clientController.getToken()));
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.geekbrains.pocket.messenger.client.view;
 
+import ru.geekbrains.pocket.messenger.client.controller.AuthController;
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import static ru.geekbrains.pocket.messenger.client.utils.Correct.checkPasswordS
 import static ru.geekbrains.pocket.messenger.client.utils.Correct.isValidEmail;
 
 public class LogonRestorePasswordViewController implements Initializable {
+    private AuthController authController;
 
     @FXML
     private TextField emailField;
@@ -44,11 +46,9 @@ public class LogonRestorePasswordViewController implements Initializable {
     @FXML
     private Button changePassword;
 
-    private ClientController controller;
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        controller = ClientController.getInstance();
+        authController = AuthController.getInstance();
         Platform.runLater(() -> emailField.requestFocus());
         emailErrorLabel.setVisible(false);
         codeSendMessageLabel.setVisible(false);
@@ -72,7 +72,7 @@ public class LogonRestorePasswordViewController implements Initializable {
         //отправляем указанный email на сервер
         //если он там есть, то возращается код ??? и на email отправляется код восстановления
         //TODO установить правильные коды возвратов сервера
-        String answer = controller.proceedRestorePassword(emailField.getText());
+        String answer = authController.proceedRestorePassword(emailField.getText());
         if (answer.equals("201")) {
             //ответ сервера об успешной проверке email и отправки кода восстановления
             recoveryButton.setDisable(true);
@@ -118,7 +118,7 @@ public class LogonRestorePasswordViewController implements Initializable {
             return;
         //если новый пароль совпадает с повтором, то отправляем его на сервер
         //TODO установить правильные коды возвратов сервера
-        String answer = controller.proceedChangePassword(emailField.getText(), codeRecovery.getText(), newPasswordField.getText());
+        String answer = authController.proceedChangePassword(emailField.getText(), codeRecovery.getText(), newPasswordField.getText());
         if (answer.equals("201")) {
             //ответ сервера об успешной смене пароля
             showAlert("Пароль успешно изменён.", Alert.AlertType.INFORMATION);

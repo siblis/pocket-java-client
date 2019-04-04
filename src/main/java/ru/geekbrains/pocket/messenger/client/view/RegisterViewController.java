@@ -1,6 +1,7 @@
 package ru.geekbrains.pocket.messenger.client.view;
 
 import javafx.scene.control.Alert;
+import ru.geekbrains.pocket.messenger.client.controller.AuthController;
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import ru.geekbrains.pocket.messenger.client.utils.Correct;
 import javafx.application.Platform;
@@ -20,6 +21,8 @@ import java.util.ResourceBundle;
 import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
 
 public class RegisterViewController implements Initializable {
+
+    private AuthController authController;
 
     @FXML
     private TextField regNameField;
@@ -42,11 +45,9 @@ public class RegisterViewController implements Initializable {
     @FXML
     private Rectangle rectPass;
 
-    private ClientController controller;
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        controller = ClientController.getInstance();
+        authController = AuthController.getInstance();
         Platform.runLater(() -> regNameField.requestFocus());
         okRegisterButton.disableProperty().bind(
                 Bindings.createBooleanBinding(
@@ -69,7 +70,7 @@ public class RegisterViewController implements Initializable {
 
     @FXML
     private void handleOkRegisterButton() {
-        boolean isRegister = controller.proceedRegister(regNameField.getText(), regPasswordField.getText(), regEmailField.getText());
+        boolean isRegister = authController.proceedRegister(regNameField.getText(), regPasswordField.getText(), regEmailField.getText());
         if (isRegister) {
             showAlert("Вы успешно зарегистрированы", Alert.AlertType.INFORMATION);
             Stage stage = (Stage) okRegisterButton.getScene().getWindow();
