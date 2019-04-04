@@ -112,7 +112,7 @@ public class ChatViewController implements Initializable {
     private JFXListView<CFXListElement> listViewAddToGroup;
 
     @FXML
-    private Menu menuLeff;
+    private Menu menuLeft;
 
     @FXML
     private JFXHamburger hamburger;
@@ -563,7 +563,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleClientChoice(MouseEvent event) {
-        String receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getId().toString();
+        String receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getUid();
         if (event.getClickCount() == 1) {
             //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
             clientController.setReceiver(receiver);
@@ -580,7 +580,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleFindedClientChoice(MouseEvent event) {
-        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getId().toString();
+        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getUid();
         if (event.getClickCount() == 1) {
             if (clientController.hasReceiver(receiver)) {
                 btnContactSearchInvite.setVisible(false);
@@ -781,7 +781,7 @@ public class ChatViewController implements Initializable {
     public void onNewGroupClicked(ActionEvent actionEvent) {
         selectionModel.select(0);
         cfxMenuLeft.setVisible(false);
-        menuLeff.hide();
+        menuLeft.hide();
         groupListPane.setVisible(false);
         listViewAddToGroup.setExpanded(true);
         groupNewPane.setVisible(true);
@@ -797,7 +797,7 @@ public class ChatViewController implements Initializable {
     public void onMyProfileOpen(ActionEvent actionEvent) {
         PaneProvider.setProfileScrollPane(myProfileScrollPane);
         cfxMenuLeft.setVisible(false);
-        menuLeff.hide();
+        menuLeft.hide();
         myProfile.setUser(clientController.getMyUser());
         paneProvidersProfScrollPaneVisChange(true);
 
@@ -812,13 +812,13 @@ public class ChatViewController implements Initializable {
             PaneProvider.getTransitionBack().setRate(-1);
             transitionBack.play();
         }
-        else if (!menuLeff.isShowing()){
+        else if (!menuLeft.isShowing()){
             transition.setRate(1);
             transition.play();
-//            menuLeff.show();
+//            menuLeft.show();
             cfxMenuLeft.setVisible(true);
         } else {
-            menuLeff.hide();
+            menuLeft.hide();
             cfxMenuLeft.setVisible(false);
         }
 
@@ -847,28 +847,29 @@ public class ChatViewController implements Initializable {
             contactsViewPane.setVisible(false);
             contactSearchPane.setVisible(true);
             contactsObservList.forEach(elem -> {
-                if (elem.getUser().getEmail().contains(tfSearchInput.getText()) ||
+                if ( //elem.getUser().getEmail().contains(tfSearchInput.getText()) ||
                         elem.getUser().getAccount_name().contains(tfSearchInput.getText())) {
                     CFXListElement temp = new CFXListElement();
                     temp.setUser(elem.getUser());
-                    temp.setBody(elem.getUser().getEmail());
+                    //temp.setBody(elem.getUser().getEmail());
                     searchObsList.add(temp);
                 }
             });
             // todo: поиск на сервере от 2х символов, убрать/расширить ограничение?
-            if (tfSearchInput.getText().length()>=2) {
-                List<CFXListElement> searchFromServer = clientController.findContact(tfSearchInput.getText());
+            if (tfSearchInput.getText().length()>=6) {
+                CFXListElement searchFromServer = clientController.findContact(tfSearchInput.getText());
                 //todo: статус пользователей (онлайн/офлайн) - будет приходить с сервера или запрашивать на каждого?
-                if (searchFromServer != null) {
-                    searchFromServer.removeAll(searchObsList);
-                    searchFromServer.remove(new CFXListElement(clientController.getMyUser()));
-                    searchFromServer.forEach(elem -> {
-                        CFXListElement temp = new CFXListElement();
-                        temp.setUser(elem.getUser());
-                        temp.setBody(elem.getUser().getEmail());
-                        searchObsList.add(temp);
-                    });
-                }
+//                if (searchFromServer != null) {
+//                    searchFromServer.removeAll(searchObsList);
+//                    searchFromServer.remove(new CFXListElement(clientController.getMyUser()));
+//                    searchFromServer.forEach(elem -> {
+//                        CFXListElement temp = new CFXListElement();
+//                        temp.setUser(elem.getUser());
+//                        temp.setBody(elem.getUser().getEmail());
+//                        searchObsList.add(temp);
+//                    });
+//                }
+                if (searchFromServer != null) searchObsList.add(searchFromServer);
             }
             selectionModel.select(1);
             searchListView.refresh();

@@ -77,7 +77,7 @@ public class UserProfile {
             return false;
         }
         final UserProfile other = (UserProfile) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        if (!Objects.equals(this.uid, other.uid)) {
             return false;
         }
         if (!Objects.equals(this.username, other.username)) {

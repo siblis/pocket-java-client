@@ -1,30 +1,31 @@
 package ru.geekbrains.pocket.messenger.client.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+
+import java.io.*;
 
 public class Converter {
 
     private final static String baseFile = "user.json";
 
-    public static <T> T toJavaObject(String json, Class<T> valueType) throws IOException {
-        return new ObjectMapper().readValue(json, valueType);
+    public static <T> T toJavaObject(String json, Class<T> valueType) throws JsonSyntaxException {
+        return new Gson().fromJson(json, valueType);
     }
 
-    public static String toJson(Object object) throws IOException {
-        return new ObjectMapper().writeValueAsString(object);
+    public static String toJson(Object object) {
+        return new Gson().toJson(object);
     }
 
     public static String toJson2(Object object){
 
-        ObjectMapper mapper = new ObjectMapper();
+        Gson mapper = new Gson();
         StringWriter writer = new StringWriter();
         try {
-            mapper.writeValue(writer, object);
-        } catch (IOException e) {
+            mapper.toJson(object, writer);
+        } catch (JsonIOException e) {
             e.printStackTrace();
         }
         return writer.toString();
@@ -32,14 +33,14 @@ public class Converter {
     }
 
     public static void toJSONinFile(Object object) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(new File(baseFile), object);
+        Gson mapper = new Gson();
+        mapper.toJson(object, new FileWriter(new File(baseFile)));
         System.out.println("json created!");
     }
 
     public static <T> T toJavaObject(Class<T> valueType) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(new File(baseFile), valueType);
+        Gson mapper = new Gson();
+        return mapper.fromJson(new FileReader(new File(baseFile)), valueType);
     }
 
 }
