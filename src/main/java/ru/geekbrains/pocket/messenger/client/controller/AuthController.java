@@ -29,6 +29,7 @@ public class AuthController {
         clientController = ClientController.getInstance();
         connector = Connector.getInstance();
         contactController = ContactController.getInstance();
+        dbService = DataBaseService.getInstance();
     }
 
     public static AuthController getInstance() {

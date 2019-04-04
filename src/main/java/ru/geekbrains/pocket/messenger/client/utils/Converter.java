@@ -8,7 +8,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import ru.geekbrains.pocket.messenger.client.model.pub.UserProfilePub;
 import ru.geekbrains.pocket.messenger.client.view.customFX.CFXListElement;
 import ru.geekbrains.pocket.messenger.database.entity.User;

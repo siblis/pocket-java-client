@@ -25,7 +25,6 @@ import ru.geekbrains.pocket.messenger.database.entity.User;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.List;
 
 import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
 
