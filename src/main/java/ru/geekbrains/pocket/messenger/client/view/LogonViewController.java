@@ -1,6 +1,6 @@
 package ru.geekbrains.pocket.messenger.client.view;
 
-import ru.geekbrains.pocket.messenger.client.controller.ClientController;
+import ru.geekbrains.pocket.messenger.client.controller.AuthController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,12 +13,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LogonViewController implements Initializable {
+    private AuthController authController;
 
     @FXML
     private TextField emailField;
@@ -29,17 +31,14 @@ public class LogonViewController implements Initializable {
     @FXML
     private Button logInButton;
 
-    private ClientController controller;
-
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        controller = ClientController.getInstance();
+        authController = AuthController.getInstance();
         Platform.runLater(() -> emailField.requestFocus());
     }
 
     private void handleLogIn(String login, String password) throws IOException {
-        if (controller.proceedLogIn(login, password)) {
+        if (authController.proceedLogIn(login, password)) {
             Stage stage = (Stage) logInButton.getScene().getWindow();
             stage.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/ChatView.fxml"));
@@ -49,7 +48,7 @@ public class LogonViewController implements Initializable {
             chatStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
             chatStage.setMinWidth(750.0);
             chatStage.setMinHeight(430.0);
-            chatStage.setTitle("Pocket desktop ru.geekbrains.pocket.messenger.client. \t\t Logged as: [" + controller.getSenderName() + "]");
+            chatStage.setTitle("Pocket desktop ru.geekbrains.pocket.messenger.client. \t\t Logged as: [" + ClientController.getInstance().getSenderName() + "]");
             chatStage.setScene(new Scene(root));
             chatStage.show();
             Tray.currentStage = chatStage;
@@ -74,14 +73,14 @@ public class LogonViewController implements Initializable {
     private void handleGuestC2Button() throws IOException {
         // id = 24 - старое
         handleLogIn("b@mail.ru", "Abc12345");//Bob
-//        controller.setReceiver("Alex"); - пока не работает (без локальной базы)
+//        authController.setReceiver("Alex"); - пока не работает (без локальной базы)
     }
 
     @FXML
     private void handleGuestC3Button() throws IOException {
         //id = 25 - старое
         handleLogIn("a@mail.ru", "Abc12345");//Alex
-//        controller.setReceiver("Bob"); - пока не работает (без локальной базы)
+//        authController.setReceiver("Bob"); - пока не работает (без локальной базы)
     }
 
     @FXML
