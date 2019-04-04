@@ -175,8 +175,11 @@ public class ClientController {
         //Проверяем что у нас чат именно с этим пользователем, иначе сообщение не выводится
         //Как будет с группами пока не понятно
         if (receiver.getId().equals(mfs.getSenderId())) {
-            //todo на данный момент showMessage принимает senderName, а не senderId => допилить
-            chatViewController.showMessage(mfs.getSenderId(), mfs.getMessage(), mfs.getTimestamp(), true);
+            Message mess = new Message();
+            mess.setSender(dbService.getUser(mfs.getSenderid()));
+            mess.setText(mfs.getMessage());
+            mess.setTime(mfs.getTimestamp());
+            chatViewController.showMessage(mess, true);
         }
         if (mfs.getSenderId() != null) { //отключаем звук для служебных сообщений
             Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
@@ -199,11 +202,15 @@ public class ClientController {
             conn.getChatClient().send(jsonMessage);
             //todo допилить получение Success/Error и MessageId из ответа
 
-//            dbService.addMessage(receiver.getId(),
-//                    user.getId(),
-//                    new Message(message, new Timestamp(System.currentTimeMillis()))
-//            );
-            chatViewController.showMessage(myUser.getAccount_name(), message, new Timestamp(System.currentTimeMillis()), false);
+            Message mess = new Message();
+            mess.setReceiver(receiver);
+            mess.setSender(myUser);
+            mess.setText(message);
+            mess.setTime(new Timestamp(System.currentTimeMillis()));
+
+            dbService.addMessage(receiver.getUid(), myUser.getUid(), mess);
+
+            chatViewController.showMessage(mess, false);
 
         } catch (IOException ex) {
             showAlert("Потеряно соединение с сервером", Alert.AlertType.ERROR);
@@ -218,7 +225,7 @@ public class ClientController {
 
         for (Message message :
                 converstation) {
-            chatViewController.showMessage(message.getSender().getAccount_name(), message.getText(), message.getTime(), false);
+            chatViewController.showMessage(message, false);
         }
     }
 

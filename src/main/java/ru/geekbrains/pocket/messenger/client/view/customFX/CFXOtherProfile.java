@@ -2,6 +2,9 @@ package ru.geekbrains.pocket.messenger.client.view.customFX;
 
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import ru.geekbrains.pocket.messenger.client.view.PaneProvider;
+import client.controller.ClientController;
+import client.view.PaneProvider;
+import client.view.ProfileType;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import ru.geekbrains.pocket.messenger.database.entity.User;
@@ -128,12 +131,12 @@ public class CFXOtherProfile extends AnchorPane {
     }
 
     private void clearMsgs() {
-        ClientController.getInstance().clearMessagesWithUser(user); // todo подтверждение?
+        new AlarmDeleteMessageHistory(ProfileType.OTHER, user);
     }
 
     private void removeUser() {
         closeButtonPressed();
-        ClientController.getInstance().removeContact(user); // todo подтверждение?
+        new AlarmDeleteProfile(ProfileType.OTHER, user);
     }
 
     private void inviteContact() {
