@@ -7,7 +7,6 @@ import ru.geekbrains.pocket.messenger.client.controller.GroupController;
 import ru.geekbrains.pocket.messenger.client.controller.MessageController;
 import ru.geekbrains.pocket.messenger.client.utils.Common;
 import ru.geekbrains.pocket.messenger.client.utils.CustomTextArea;
-import ru.geekbrains.pocket.messenger.client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
@@ -39,6 +38,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import ru.geekbrains.pocket.messenger.client.view.customFX.*;
+import ru.geekbrains.pocket.messenger.database.entity.Message;
 
 import java.awt.*;
 import java.io.File;
@@ -88,6 +89,12 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private Tab contacts;
+
+    @FXML
+    private ImageView contactsImage;
+
+    @FXML
+    private ImageView chatsImage;
 
     @FXML
     private AnchorPane userSearchPane;
@@ -531,11 +538,15 @@ public class ChatViewController implements Initializable {
     private void updateLastMessageInCardsBody(String message, String senderName){
         CFXListElement targetChat = null;
 
+        String myUser = clientController.getMyUser().getAccount_name();
+
         for (CFXListElement element : contactsObservList){
             if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message);
+        SimpleDateFormat dateFormatDay = initDateFormat("dd.MM.YYYY");
+        //targetChat.setDateText(dateFormatDay.format(timestamp));
     }
 
     @FXML
@@ -925,13 +936,12 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-        new AlarmDeleteMessageHistory();
+        //new AlarmDeleteMessageHistory();
     }
     public void alarmDeleteProfileExecute(){
-        new AlarmDeleteProfile();
+        //new AlarmDeleteProfile();
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();
     }
-
 }

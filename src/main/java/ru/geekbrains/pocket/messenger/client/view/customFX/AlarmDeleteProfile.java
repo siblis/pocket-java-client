@@ -1,5 +1,7 @@
 package ru.geekbrains.pocket.messenger.client.view.customFX;
 
+import ru.geekbrains.pocket.messenger.client.controller.ClientController;
+import ru.geekbrains.pocket.messenger.client.controller.ContactController;
 import ru.geekbrains.pocket.messenger.client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
@@ -9,6 +11,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import ru.geekbrains.pocket.messenger.client.view.ProfileType;
+import ru.geekbrains.pocket.messenger.database.entity.User;
 
 import java.io.IOException;
 
@@ -22,8 +26,11 @@ public class AlarmDeleteProfile extends AnchorPane {
 
     Stage dialogStage=null;
 
-    public AlarmDeleteProfile() {
+    String profile;
+    User user;
+    ProfileType prof;
 
+    public AlarmDeleteProfile(ProfileType prof, User user) {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AlarmWindowDeleteProfile.fxml"));
         fxmlLoader.setRoot(this);
@@ -57,6 +64,13 @@ public class AlarmDeleteProfile extends AnchorPane {
 
     private void btnConfirmOnPressed() {
         dialogStage.close();
-
+        switch (prof) {
+            case MY:
+                //todo: допилить удаление профиля (с БД)
+                break;
+            case OTHER:
+                ContactController.getInstance().removeContact(user);
+                break;
+        }
     }
 }

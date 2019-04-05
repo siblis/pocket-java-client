@@ -5,6 +5,7 @@ import ru.geekbrains.pocket.messenger.client.controller.ContactController;
 import ru.geekbrains.pocket.messenger.client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
+import ru.geekbrains.pocket.messenger.client.view.ProfileType;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

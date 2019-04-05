@@ -1,5 +1,7 @@
 package ru.geekbrains.pocket.messenger.client.view.customFX;
 
+import ru.geekbrains.pocket.messenger.client.controller.ClientController;
+import ru.geekbrains.pocket.messenger.client.controller.ContactController;
 import ru.geekbrains.pocket.messenger.client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
@@ -9,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import ru.geekbrains.pocket.messenger.database.entity.User;
 
 import java.io.IOException;
 
@@ -22,9 +25,12 @@ public class AlarmDeleteMessageHistory extends AnchorPane {
 
     Stage dialogStage=null;
 
-    public AlarmDeleteMessageHistory() {
+    User user;
 
+    public AlarmDeleteMessageHistory(User user) {
 
+        this.user = user;
+        
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AlarmWindowDeleteMessageHistory.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -56,7 +62,7 @@ public class AlarmDeleteMessageHistory extends AnchorPane {
     }
 
     private void btnConfirmOnPressed() {
+        ContactController.getInstance().clearMessagesWithUser(user);
         dialogStage.close();
-
     }
 }
