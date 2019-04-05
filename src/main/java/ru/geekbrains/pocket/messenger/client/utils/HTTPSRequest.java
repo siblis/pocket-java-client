@@ -1,15 +1,18 @@
 package ru.geekbrains.pocket.messenger.client.utils;
 
 import javafx.scene.control.Alert;
-import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationFromServer;
-import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
+import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationToServer;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.validation.constraints.NotNull;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 
 import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
