@@ -176,7 +176,7 @@ public class ClientController {
         //Как будет с группами пока не понятно
         if (receiver.getId().equals(mfs.getSenderId())) {
             Message mess = new Message();
-            mess.setSender(dbService.getUser(mfs.getSenderid()));
+            mess.setSender(dbService.getUser(mfs.getSenderId()));
             mess.setText(mfs.getMessage());
             mess.setTime(mfs.getTimestamp());
             chatViewController.showMessage(mess, true);
@@ -208,7 +208,7 @@ public class ClientController {
             mess.setText(message);
             mess.setTime(new Timestamp(System.currentTimeMillis()));
 
-            dbService.addMessage(receiver.getUid(), myUser.getUid(), mess);
+            dbService.addMessage(receiver.getId(), myUser.getId(), mess);
 
             chatViewController.showMessage(mess, false);
 
