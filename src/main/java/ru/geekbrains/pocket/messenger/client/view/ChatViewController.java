@@ -4,18 +4,9 @@ import ru.geekbrains.pocket.messenger.client.Main;
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import ru.geekbrains.pocket.messenger.client.utils.Common;
 import ru.geekbrains.pocket.messenger.client.utils.CustomTextArea;
-import ru.geekbrains.pocket.messenger.client.view.customFX.*;
-package client.view;
-
-import client.Main;
-import client.controller.ClientController;
-import client.utils.Common;
-import client.utils.CustomTextArea;
-import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
-import database.entity.Message;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -44,6 +35,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import ru.geekbrains.pocket.messenger.client.view.customFX.*;
+import ru.geekbrains.pocket.messenger.database.entity.Message;
 
 import java.awt.*;
 import java.io.File;
@@ -61,7 +54,6 @@ import java.util.ResourceBundle;
 public class ChatViewController implements Initializable {
 
     private static ChatViewController instance;
-
 
     @FXML
     private BorderPane borderPaneMain;
@@ -963,7 +955,7 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-        new AlarmDeleteMessageHistory(ProfileType.MY, null);
+        //new AlarmDeleteMessageHistory(ProfileType.MY, null);
     }
     public void alarmDeleteProfileExecute(){
         new AlarmDeleteProfile(ProfileType.MY, null);
