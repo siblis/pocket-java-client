@@ -505,8 +505,6 @@ public class ChatViewController implements Initializable {
             Sound.playSoundNewMessage().join();
         }*/
 
-        String senderName = mess.getSender().getAccount_name();
-
         String attrClass;
         if (clientController.getSenderName().equals(senderName)) {
             attrClass = "myUserClass";
@@ -540,11 +538,6 @@ public class ChatViewController implements Initializable {
     private void updateLastMessageInCardsBody(String message, String senderName){
         CFXListElement targetChat = null;
 
-        String message = mess.getText();
-        String senderName = mess.getSender().getAccount_name();
-        String recieverName = mess.getReceiver().getAccount_name();
-        Timestamp timestamp = mess.getTime();
-
         String myUser = clientController.getMyUser().getAccount_name();
 
         for (CFXListElement element : contactsObservList){
@@ -553,7 +546,7 @@ public class ChatViewController implements Initializable {
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message);
         SimpleDateFormat dateFormatDay = initDateFormat("dd.MM.YYYY");
-        targetChat.setDateText(dateFormatDay.format(timestamp));
+        //targetChat.setDateText(dateFormatDay.format(timestamp));
     }
 
     @FXML
@@ -943,10 +936,10 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-        new AlarmDeleteMessageHistory();
+        //new AlarmDeleteMessageHistory();
     }
     public void alarmDeleteProfileExecute(){
-        new AlarmDeleteProfile();
+        //new AlarmDeleteProfile();
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();
