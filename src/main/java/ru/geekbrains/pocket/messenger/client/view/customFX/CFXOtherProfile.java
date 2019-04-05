@@ -1,12 +1,11 @@
 package ru.geekbrains.pocket.messenger.client.view.customFX;
 
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
+import ru.geekbrains.pocket.messenger.client.controller.ContactController;
 import ru.geekbrains.pocket.messenger.client.view.PaneProvider;
-import client.controller.ClientController;
-import client.view.PaneProvider;
-import client.view.ProfileType;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
+import ru.geekbrains.pocket.messenger.client.view.ProfileType;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,12 +18,10 @@ import java.io.IOException;
 public class CFXOtherProfile extends AnchorPane {
 
     private boolean isFriend = false;
-
     private User user;
 
     @FXML
     private AnchorPane otherProfilePane;
-
     @FXML
     private JFXButton btnCloseRight;
     @FXML
@@ -43,16 +40,12 @@ public class CFXOtherProfile extends AnchorPane {
     private Label labelName;
     @FXML
     private JFXTextArea textareaInfo;
-
     @FXML
     private JFXButton writeMsgBtn;
-    
     @FXML
     private JFXButton notificationsBtn;
-
     @FXML
     private JFXButton clearMsgsBtn;
-
     @FXML
     private JFXButton removeUserBtn;
 
@@ -124,23 +117,23 @@ public class CFXOtherProfile extends AnchorPane {
     }
 
     private void writeMsg() {
-        ClientController.getInstance().setReceiver(user);
+        ContactController.getInstance().setReceiver(user);
     }
 
     private void notificationsConf() {
     }
 
     private void clearMsgs() {
-        new AlarmDeleteMessageHistory(ProfileType.OTHER, user);
+        ContactController.getInstance().clearMessagesWithUser(user); // todo подтверждение?
     }
 
     private void removeUser() {
         closeButtonPressed();
-        new AlarmDeleteProfile(ProfileType.OTHER, user);
+        ContactController.getInstance().removeContact(user); // todo подтверждение?
     }
 
     private void inviteContact() {
         closeButtonPressed();
-        ClientController.getInstance().addContact(user);
+        ContactController.getInstance().addContact(user);
     }
 }

@@ -1,9 +1,8 @@
 package ru.geekbrains.pocket.messenger.client.view.customFX;
 
+import ru.geekbrains.pocket.messenger.client.controller.ClientController;
+import ru.geekbrains.pocket.messenger.client.controller.ContactController;
 import ru.geekbrains.pocket.messenger.client.view.PaneProvider;
-import database.entity.User;
-import client.view.PaneProvider;
-import client.view.ProfileType;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +11,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import ru.geekbrains.pocket.messenger.client.view.ProfileType;
+import ru.geekbrains.pocket.messenger.database.entity.User;
 
 import java.io.IOException;
 
@@ -67,8 +68,8 @@ public class AlarmDeleteProfile extends AnchorPane {
             case MY:
                 //todo: допилить удаление профиля (с БД)
                 break;
-            case other:
-                ClientController.getInstance().removeContact(user);
+            case OTHER:
+                ContactController.getInstance().removeContact(user);
                 break;
         }
     }
