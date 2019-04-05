@@ -427,7 +427,7 @@ public class ClientController {
         }
         
         String jsonMessage = 
-                new MessageToServer(message, null, receiver.getId().toString(), null).toJson();
+                new MessageToServer(message, null, receiver.getUid(), null).toJson();
         try {
             conn.getChatClient().send(jsonMessage);
             //todo допилить получение Success/Error и MessageId из ответа
