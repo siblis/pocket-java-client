@@ -2,14 +2,20 @@ package ru.geekbrains.pocket.messenger.client.view;
 
 import ru.geekbrains.pocket.messenger.client.Main;
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
-import ru.geekbrains.pocket.messenger.client.controller.ContactController;
-import ru.geekbrains.pocket.messenger.client.controller.GroupController;
-import ru.geekbrains.pocket.messenger.client.controller.MessageController;
 import ru.geekbrains.pocket.messenger.client.utils.Common;
 import ru.geekbrains.pocket.messenger.client.utils.CustomTextArea;
+import ru.geekbrains.pocket.messenger.client.view.customFX.*;
+package client.view;
+
+import client.Main;
+import client.controller.ClientController;
+import client.utils.Common;
+import client.utils.CustomTextArea;
+import client.view.customFX.*;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
+import database.entity.Message;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -38,8 +44,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
-import ru.geekbrains.pocket.messenger.client.view.customFX.*;
-import ru.geekbrains.pocket.messenger.database.entity.Message;
 
 import java.awt.*;
 import java.io.File;
@@ -57,18 +61,7 @@ import java.util.ResourceBundle;
 public class ChatViewController implements Initializable {
 
     private static ChatViewController instance;
-    private ClientController clientController;
-    private ContactController contactController;
-    private MessageController messageController;
-    private GroupController groupController;
 
-    private WebEngine webEngine;
-    private ObservableList<CFXListElement> contactsObservList;
-    private String backgroundImage;
-    private Document DOMdocument;
-    private String tsOld;
-    private int idDivMsg;
-    private int idMsg;
 
     @FXML
     private BorderPane borderPaneMain;
@@ -158,6 +151,22 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private JFXTabPane tabPane;
+    //
+    private WebEngine webEngine;
+
+    private ObservableList<CFXListElement> contactsObservList;
+
+    private ClientController clientController;
+
+    private String backgroundImage;
+
+    private Document DOMdocument;
+
+    private String tsOld;
+
+    private int idDivMsg;
+
+    private int idMsg;
 
     @FXML
     private  JFXButton btnContactSearchCancel;
@@ -211,13 +220,12 @@ public class ChatViewController implements Initializable {
         initWebView();
 
         clientController = ClientController.getInstance();
-        contactController = ContactController.getInstance();
-        messageController = MessageController.getInstance();
-        groupController = GroupController.getInstance();
-        contactController.setChatViewController(this);
-        contactsObservList = FXCollections.observableList(contactController.getContactListOfCards());
+        clientController.setChatViewController(this);
+        contactsObservList = FXCollections.observableList(clientController.getContactListOfCards());
         // при пустом списке контактов открыть вкладку контакты //todo перепилить на список чатов?
-        if (contactsObservList.isEmpty()) contacts.getTabPane().getSelectionModel().select(contacts);
+        if (contactsObservList.isEmpty()) 
+            contacts.getTabPane().getSelectionModel().select(contacts);
+
         contactListView.setExpanded(true);
         fillContactListView();
         searchObsList = FXCollections.observableList(new ArrayList<CFXListElement>());
@@ -231,7 +239,7 @@ public class ChatViewController implements Initializable {
                 String text = messageField.getText().trim();
                 if (!text.isEmpty()) {
 //                    messageField.appendText(System.lineSeparator());
-                    messageController.sendMessage(clientController.getMyUser(), contactController.getReciever(), messageField.getText());
+                    clientController.sendMessage(messageField.getText());
                     messageField.clear();
                     messageField.requestFocus();
                 }
@@ -409,9 +417,6 @@ public class ChatViewController implements Initializable {
 
     /**
      *
-     * @param message
-     * @param senderName
-     * @param timestamp     *
      * @param attrClass
      * ****
      * /* Create module DIV for messenger
@@ -431,7 +436,12 @@ public class ChatViewController implements Initializable {
      * Style create in initWebView
      *
      */
-    private void createMessageDiv(String message, String senderName, Timestamp timestamp, String attrClass){
+    private void createMessageDiv(Message mess, String attrClass){
+
+        String message = mess.getText();
+        String senderName = mess.getSender().getAccount_name();
+        Timestamp timestamp = mess.getTime();
+
         //ID требуется для скрипта вставки тегов
         idMsg+=1;
         setIdMsg(idMsg);
@@ -500,10 +510,12 @@ public class ChatViewController implements Initializable {
         addImageMessageListener(divTxtMsg);
     }
 
-    public void showMessage(String senderName, String message, Timestamp timestamp, boolean isNew) {
+    public void showMessage(Message mess, boolean isNew) {
         /*if (isNew) {
             Sound.playSoundNewMessage().join();
         }*/
+
+        String senderName = mess.getSender().getAccount_name();
 
         String attrClass;
         if (clientController.getSenderName().equals(senderName)) {
@@ -518,35 +530,46 @@ public class ChatViewController implements Initializable {
             //если пользователь только запустил клиента и локально нет ни одного сообщения
             if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
                 DOMdocument = webEngine.getDocument();
-                createMessageDiv(message, senderName, timestamp, attrClass);
-                updateLastMessageInCardsBody(message, senderName);
+                createMessageDiv(mess, attrClass);
+                updateLastMessageInCardsBody(mess);
             }else {
                 webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
                     if (newState == Worker.State.SUCCEEDED) {
                         DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
-                        createMessageDiv(message, senderName, timestamp, attrClass);
-                        updateLastMessageInCardsBody(message, senderName);
+                        createMessageDiv(mess, attrClass);
+                        updateLastMessageInCardsBody(mess);
                     }
                 });
             }
         }else {
-            createMessageDiv(message, senderName, timestamp, attrClass);
-            updateLastMessageInCardsBody(message, senderName);
+            createMessageDiv(mess, attrClass);
+            updateLastMessageInCardsBody(mess);
         }
     }
 
-    private void updateLastMessageInCardsBody(String message, String senderName){
+    private void updateLastMessageInCardsBody(Message mess){
         CFXListElement targetChat = null;
+
+        String message = mess.getText();
+        String senderName = mess.getSender().getAccount_name();
+        String recieverName = mess.getReceiver().getAccount_name();
+        Timestamp timestamp = mess.getTime();
 
         String myUser = clientController.getMyUser().getAccount_name();
 
         for (CFXListElement element : contactsObservList){
-            if (element.getUser().getAccount_name().equals(senderName)) targetChat = element;
+            if ((element.getUser().getAccount_name().equals(senderName)
+                    & myUser.equals(recieverName))
+                    | (element.getUser().getAccount_name().equals(recieverName)
+                    & myUser.equals(senderName))) {
+                targetChat = element;
+                break;
+            }
         }
         if (targetChat == null) return; //TODO определить вероятность и доделать (вывод ошибки пользователю, лог)
         targetChat.setBody(senderName + ": " + message);
         SimpleDateFormat dateFormatDay = initDateFormat("dd.MM.YYYY");
-        //targetChat.setDateText(dateFormatDay.format(timestamp));
+        targetChat.setDateText(dateFormatDay.format(timestamp));
     }
 
     @FXML
@@ -567,7 +590,7 @@ public class ChatViewController implements Initializable {
     @FXML
     private void handleSendMessage() {
         if (!messageField.getText().isEmpty()) {
-            messageController.sendMessage(clientController.getMyUser(), contactController.getReciever(), messageField.getText());
+            clientController.sendMessage(messageField.getText());
             messageField.clear();
             messageField.requestFocus();
         }
@@ -578,7 +601,7 @@ public class ChatViewController implements Initializable {
         String receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getUid();
         if (event.getClickCount() == 1) {
             //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
-            contactController.setReceiver(receiver);
+            clientController.setReceiver(receiver);
             messageField.requestFocus();
             messageField.selectEnd();
         } else if (event.getClickCount() == 2) {
@@ -594,9 +617,9 @@ public class ChatViewController implements Initializable {
     private void handleFindedClientChoice(MouseEvent event) {
         String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getUid();
         if (event.getClickCount() == 1) {
-            if (contactController.hasReceiver(receiver)) {
+            if (clientController.hasReceiver(receiver)) {
                 btnContactSearchInvite.setVisible(false);
-                contactController.setReceiver(receiver);
+                clientController.setReceiver(receiver);
                 messageField.requestFocus();
                 messageField.selectEnd();
             } else {
@@ -606,7 +629,7 @@ public class ChatViewController implements Initializable {
         } else if (event.getClickCount() == 2) {
             othersProfile.setUser(
                     searchListView.getSelectionModel().getSelectedItem().getUser());
-            othersProfile.setIfFriendly(contactController.hasReceiver(receiver));
+            othersProfile.setIfFriendly(clientController.hasReceiver(receiver));
             PaneProvider.setProfileScrollPane(otherProfileScrollPane);
             paneProvidersProfScrollPaneVisChange(true);
         }
@@ -708,7 +731,7 @@ public class ChatViewController implements Initializable {
 
         for (File fs : f.listFiles()) {
             img += fs.toURI();
-            messageController.sendMessage(clientController.getMyUser(), contactController.getReciever(), img);
+            clientController.sendMessage(img);
             webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + "<img src = \"" + img + "\" width=\"30\" alt=\"lorem\"/>" +"'");
             setIdMsg(idMsg++);
             webEngine.executeScript("document.getElementById(\"" + (getIdMsg()) + "\").innerHTML = '" + "<img src = \"" + img + "\" width=\"30\" alt=\"lorem\"/>" +"'");
@@ -738,32 +761,36 @@ public class ChatViewController implements Initializable {
     //метод смены иконки
     @FXML
     public void handleOnChatSelected() {
-        chats.setGraphic(buildImage("/client/images/chat/chatsActive.png"));
+        chatsImage.setImage(new Image("/client/images/chat/chatsActive.png"));
         if (contacts != null) {
-            contacts.setGraphic(buildImage("/client/images/chat/contacts.png"));
+            contactsImage.setImage(new Image("/client/images/chat/contacts.png"));
             contacts.setStyle("-fx-border-width: 0 0 5 0; " +
-                    "          -fx-border-color: #3498DB #3498DB transparent #3498DB;" +
+                    "-fx-border-color: #3498DB #3498DB transparent #3498DB;" +
                     "-fx-border-insets: 0;" +
-                    "          -fx-border-style: solid;");
+                    "-fx-border-style: solid;" +
+                    "-tab-text-color: #FFFFFF;");
         }
         chats.setStyle("-fx-border-width: 0 0 5 0; " +
-                        "-fx-border-color: transparent transparent #F8D57D transparent;" +
+                "-fx-border-color: transparent transparent #F8D57D transparent;" +
                 "-fx-border-insets: 0;" +
-                        "-fx-border-style: solid;");
+                "-fx-border-style: solid;" +
+                "-tab-text-color: #F8D57D;");
     }
 
     @FXML
     public void handleOnContactSelected() {
-        contacts.setGraphic(buildImage("/client/images/chat/contactsActive.png"));
-        chats.setGraphic(buildImage("/client/images/chat/chats.png"));
+        contactsImage.setImage(new Image("/client/images/chat/contactsActive.png"));
+        chatsImage.setImage(new Image("/client/images/chat/chats.png"));
         contacts.setStyle("-fx-border-width: 0 0 5 0; " +
                 "-fx-border-color: transparent transparent #F8D57D transparent;" +
                 "-fx-border-insets: 0;" +
-                "-fx-border-style: solid;");
+                "-fx-border-style: solid;" +
+                "-tab-text-color: #F8D57D;");
         chats.setStyle("-fx-border-width: 0 0 5 0; " +
-                "       -fx-border-color: #3498DB #3498DB transparent #3498DB;" +
+                "-fx-border-color: #3498DB #3498DB transparent #3498DB;" +
                 "-fx-border-insets: 0;" +
-                "       -fx-border-style: solid;");
+                "-fx-border-style: solid;" +
+                "-tab-text-color: #FFFFFF;");
     }
 
     private ImageView buildImage(String s) {
@@ -849,7 +876,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     public void handleGroupCreateButton(){
-        groupController.addGroup(creategroupName.getText(), clientController.getToken());
+        clientController.addGroup(creategroupName.getText());
     }
 
     @FXML
@@ -869,7 +896,7 @@ public class ChatViewController implements Initializable {
             });
             // todo: поиск на сервере от 2х символов, убрать/расширить ограничение?
             if (tfSearchInput.getText().length()>=6) {
-                CFXListElement searchFromServer = contactController.findContact(tfSearchInput.getText(), clientController.getToken());
+                CFXListElement searchFromServer = clientController.findContact(tfSearchInput.getText());
                 //todo: статус пользователей (онлайн/офлайн) - будет приходить с сервера или запрашивать на каждого?
 //                if (searchFromServer != null) {
 //                    searchFromServer.removeAll(searchObsList);
@@ -895,7 +922,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void contactSearchBtnInviteClicked() {
-        contactController.addContact(searchListView.getSelectionModel().getSelectedItem().getUser());
+        clientController.addContact(searchListView.getSelectionModel().getSelectedItem().getUser());
         contactSearchBtnCancelClicked();
     }
 
@@ -936,10 +963,10 @@ public class ChatViewController implements Initializable {
         new AlarmDeleteGroup();
     }
     public void alarmDeleteMessageHistoryExecute(){
-        //new AlarmDeleteMessageHistory();
+        new AlarmDeleteMessageHistory(ProfileType.MY, null);
     }
     public void alarmDeleteProfileExecute(){
-        //new AlarmDeleteProfile();
+        new AlarmDeleteProfile(ProfileType.MY, null);
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();

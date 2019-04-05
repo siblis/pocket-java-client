@@ -1,4 +1,4 @@
-package ru.geekbrains.pocket.messenger.client.view;
+package client.view;
 
 public enum ProfileType {
     MY,

@@ -1,8 +1,5 @@
 package ru.geekbrains.pocket.messenger.database.dao;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import ru.geekbrains.pocket.messenger.client.controller.AuthController;
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import ru.geekbrains.pocket.messenger.database.HibernateUtil;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
@@ -22,9 +19,6 @@ import java.util.List;
  *
  */
 public class DataBaseService {
-    private static final Logger log = LogManager.getLogger(DataBaseService.class);
-
-    private static DataBaseService instance;
 
     private UserDAO usersDao;
     private UserProfileDAO usersProfileDao;
@@ -34,13 +28,6 @@ public class DataBaseService {
         usersDao = new UserDAO();
         usersProfileDao = new UserProfileDAO();
         messageDao = new MessageDAO();
-    }
-
-    public static DataBaseService getInstance() {
-        if (instance == null) {
-            instance = new DataBaseService();
-        }
-        return instance;
     }
 
     public void setUserDB(String username) {

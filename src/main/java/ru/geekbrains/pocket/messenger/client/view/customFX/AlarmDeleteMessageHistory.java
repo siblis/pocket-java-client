@@ -1,8 +1,8 @@
 package ru.geekbrains.pocket.messenger.client.view.customFX;
 
-import ru.geekbrains.pocket.messenger.client.controller.ClientController;
-import ru.geekbrains.pocket.messenger.client.controller.ContactController;
 import ru.geekbrains.pocket.messenger.client.view.PaneProvider;
+import database.entity.User;
+import client.view.PaneProvider;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import ru.geekbrains.pocket.messenger.database.entity.User;
 
 import java.io.IOException;
 
@@ -62,7 +61,7 @@ public class AlarmDeleteMessageHistory extends AnchorPane {
     }
 
     private void btnConfirmOnPressed() {
-        ContactController.getInstance().clearMessagesWithUser(user);
+        ClientController.getInstance().clearMessagesWithUser(user);
         dialogStage.close();
     }
 }

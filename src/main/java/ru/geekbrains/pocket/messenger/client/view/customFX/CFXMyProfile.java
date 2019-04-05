@@ -14,6 +14,9 @@ import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 
+
+
+
 public class CFXMyProfile extends AnchorPane {
 
     @FXML
@@ -43,6 +46,7 @@ public class CFXMyProfile extends AnchorPane {
     @FXML
     private JFXButton btnDeleteProfile;
 
+
     private User user;
 
     private ChatViewController parentController;
@@ -54,7 +58,7 @@ public class CFXMyProfile extends AnchorPane {
         btnNameEdit.setOnAction(event -> btnNameChangeClicked());
         btnClose.setOnAction(event -> closeButtonPressed());
         btnSendMessage.setOnAction(event -> btnSendMessagePressed());
-        //btnRoom.setOnAction(event -> btnRoomPressed());
+        btnRoom.setOnAction(event -> btnRoomPressed());
         btnInvokationSwitch.setOnAction(event -> btnInvokationSwitchPressed());
         btnLogout.setOnAction(event -> btnLogoutPressed());
         btnDeleteProfile.setOnAction(event -> btnDeleteProfilePressed());
