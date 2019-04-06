@@ -9,7 +9,10 @@ import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.Registrat
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.validation.constraints.NotNull;
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import java.net.URL;
 
 import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
@@ -69,9 +72,7 @@ public class HTTPSRequest {
     public static String authorization(String requestJSON) throws Exception {
         URL obj = new URL(serverURL + "/v1/auth/login/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestProperty("content-type", "application/json");
         con.setRequestMethod("POST");
-        //String s= con.getHeaderField("content-type");
 
         sendRequest(con, requestJSON);
         return answerRequest(con);
@@ -166,27 +167,27 @@ public class HTTPSRequest {
         }
 
         int responseCode = con.getResponseCode();
-        System.out.println("\nSending " + con.getRequestMethod() + " request to URL : " + con.getURL());
-        System.out.println("Put parameters : " + requestJSON);
-        System.out.println("Response Code : " + responseCode);
+        requestLogger.info("\nSending " + con.getRequestMethod() + 
+                " request to URL : " + con.getURL() + "\nPut parameters : " + 
+                requestJSON + "\nResponse Code : " + responseCode);
 
         return responseCode;
     }
 
-    private static String answerRequest(HttpsURLConnection con) {
+    private static String answerRequest(HttpsURLConnection con) throws Exception {
         StringBuilder response = new StringBuilder();
         try (BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()))) {
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-
                 response.append(inputLine);
             }
 
-            System.out.println(response.toString());
+            requestLogger.info(response.toString());
         } catch (IOException e) {
             requestLogger.error("answerRequest_error", e);
+            throw e;
         }
         return response.toString();
     }
