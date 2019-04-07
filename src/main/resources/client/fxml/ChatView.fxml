@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import client.utils.CustomTextArea?>
-<?import client.view.customFX.*?>
+<?import ru.geekbrains.pocket.messenger.client.utils.CustomTextArea?>
+<?import ru.geekbrains.pocket.messenger.client.view.customFX.*?>
 <?import com.jfoenix.controls.*?>
 <?import de.jensd.fx.glyphs.materialdesignicons.*?>
 <?import javafx.geometry.Insets?>
@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
-<BorderPane fx:id="borderPaneMain" prefHeight="600.0" prefWidth="1000.0" stylesheets="/client/styles/ChatStyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.ChatViewController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="borderPaneMain" prefHeight="600.0" prefWidth="1000.0" stylesheets="/client/styles/ChatStyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="ru.geekbrains.pocket.messenger.client.view.ChatViewController">
     <center>
 
 
@@ -155,7 +155,7 @@
                     <MenuBar layoutX="14.0" layoutY="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="41.0">
 
                         <menus>
-                            <Menu id="menu" fx:id="menuLeff" mnemonicParsing="false" onHidden="#onHideMenuLeft" visible="false">
+                            <Menu id="menu" fx:id="menuLeft" mnemonicParsing="false" onHidden="#onHideMenuLeft" visible="false">
                                 <items>
                                     <MenuItem mnemonicParsing="false" onAction="#handleDisconnectButton" text="Отключиться..." />
                                     <SeparatorMenuItem />

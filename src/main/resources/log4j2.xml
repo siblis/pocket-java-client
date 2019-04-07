@@ -9,13 +9,13 @@
     <Appenders>
 
         <!-- Console Appender -->
-        <Console name="Console" target="SYSTEM_OUT">
+        <Console name="stdout" target="SYSTEM_OUT">
             <PatternLayout
                     pattern="${LOG_PATTERN}"/>
         </Console>
 
         <!-- File Appender -->
-        <RollingFile name="pocketLog" fileName="${APP_LOG_ROOT}/pocketmessenger_log-${date:yyyy-MM-dd}.log"
+        <RollingFile name="fout" fileName="${APP_LOG_ROOT}/pocketmessenger_log-${date:yyyy-MM-dd}.log"
                      filePattern="${APP_LOG_ROOT}/pocketmessenger_log-%d{yyyy-MM-dd}-%i.log">
             <LevelRangeFilter minLevel="FATAL" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
@@ -29,11 +29,17 @@
             </DefaultRolloverStrategy>
         </RollingFile>
 
+        <Async name="ASYNC">
+            <AppenderRef ref="stdout"/>
+            <AppenderRef ref="fout"/>
+        </Async>
     </Appenders>
     <Loggers>
-        <Root level="trace">
-            <!--<AppenderRef ref="Console"/>-->
-            <AppenderRef ref="pocketLog"/>
+        <Logger name="ru.geekbrains.pocket.messenger" level="debug" additivity="false">
+            <AppenderRef ref="ASYNC"/>
+        </Logger>
+        <Root level="debug">
+            <AppenderRef ref="ASYNC"/>
         </Root>
     </Loggers>
 </Configuration>
