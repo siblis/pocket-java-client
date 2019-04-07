@@ -115,7 +115,7 @@ public class CFXMyProfile extends AnchorPane {
     }
 
     public void setUser(User user){
-        tfName.setText(user.getAccount_name());
+        tfName.setText(user.getUserName());
         labelEmailMyProfile.setText(user.getEmail());
     }
 }

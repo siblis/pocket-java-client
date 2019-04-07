@@ -1,14 +1,11 @@
 package ru.geekbrains.pocket.messenger.client.utils;
 
 import javafx.scene.control.Alert;
-import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationFromServer;
 import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationToServer;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.validation.constraints.NotNull;
 import java.io.DataOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -47,21 +44,18 @@ public class HTTPSRequest {
         return answerRequest(con);
     }
 
-    public static RegistrationFromServer registration(@NotNull RegistrationToServer registrationToServer) throws Exception {
+    public static String registration(String requestJSON) throws Exception {
 
         URL obj = new URL(serverURL + "/v1/auth/registration/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
 
-        int responseCode = sendRequest(con, Converter.toJson(registrationToServer));
+        int responseCode = sendRequest(con, requestJSON);
         switch (responseCode) {
             case 201: {
-                String response = answerRequest(con);
-                //TODO response to UserPub
-
-                return Converter.toJavaObject(response, RegistrationFromServer.class);
+                return answerRequest(con);
             }
-            case 429:
+            case 429: //todo: обработать другие ошибки
             case 409:
             case 400:
                 showAlert("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);

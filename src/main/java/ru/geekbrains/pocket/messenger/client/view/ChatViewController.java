@@ -431,7 +431,7 @@ public class ChatViewController implements Initializable {
     private void createMessageDiv(Message mess, String attrClass){
 
         String message = mess.getText();
-        String senderName = mess.getSender().getAccount_name();
+        String senderName = mess.getSender().getUserName();
         Timestamp timestamp = mess.getTime();
 
         //ID требуется для скрипта вставки тегов
@@ -507,7 +507,7 @@ public class ChatViewController implements Initializable {
             Sound.playSoundNewMessage().join();
         }*/
 
-        String senderName = mess.getSender().getAccount_name();
+        String senderName = mess.getSender().getUserName();
 
         String attrClass;
         if (clientController.getSenderName().equals(senderName)) {
@@ -543,16 +543,16 @@ public class ChatViewController implements Initializable {
         CFXListElement targetChat = null;
 
         String message = mess.getText();
-        String senderName = mess.getSender().getAccount_name();
-        String recieverName = mess.getReceiver().getAccount_name();
+        String senderName = mess.getSender().getUserName();
+        String recieverName = mess.getReceiver().getUserName();
         Timestamp timestamp = mess.getTime();
 
-        String myUser = clientController.getMyUser().getAccount_name();
+        String myUser = clientController.getMyUser().getUserName();
 
         for (CFXListElement element : contactsObservList){
-            if ((element.getUser().getAccount_name().equals(senderName)
+            if ((element.getUser().getUserName().equals(senderName)
                     & myUser.equals(recieverName))
-                    | (element.getUser().getAccount_name().equals(recieverName)
+                    | (element.getUser().getUserName().equals(recieverName)
                     & myUser.equals(senderName))) {
                 targetChat = element;
                 break;
@@ -590,7 +590,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleClientChoice(MouseEvent event) {
-        String receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getUid();
+        String receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getId();
         if (event.getClickCount() == 1) {
             //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
             clientController.setReceiver(receiver);
@@ -607,7 +607,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private void handleFindedClientChoice(MouseEvent event) {
-        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getUid();
+        String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getId();
         if (event.getClickCount() == 1) {
             if (clientController.hasReceiver(receiver)) {
                 btnContactSearchInvite.setVisible(false);
@@ -879,7 +879,7 @@ public class ChatViewController implements Initializable {
             contactSearchPane.setVisible(true);
             contactsObservList.forEach(elem -> {
                 if ( //elem.getUser().getEmail().contains(tfSearchInput.getText()) ||
-                        elem.getUser().getAccount_name().contains(tfSearchInput.getText())) {
+                        elem.getUser().getUserName().contains(tfSearchInput.getText())) {
                     CFXListElement temp = new CFXListElement();
                     temp.setUser(elem.getUser());
                     //temp.setBody(elem.getUser().getEmail());

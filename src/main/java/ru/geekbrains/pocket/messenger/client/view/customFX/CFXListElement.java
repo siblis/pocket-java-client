@@ -124,7 +124,7 @@ public class CFXListElement extends AnchorPane {
 
     public void setUser(User user){
         this.user = user;
-        this.topic.setText(user.getAccount_name());
+        this.topic.setText(user.getUserName());
 
     }
 

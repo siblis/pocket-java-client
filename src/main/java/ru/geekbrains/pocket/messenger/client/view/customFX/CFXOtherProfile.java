@@ -62,7 +62,7 @@ public class CFXOtherProfile extends AnchorPane {
     public void setUser(User user){
         this.user = user;
         labelEmailOtherProfile.setText(user.getEmail());
-        labelName.setText(user.getAccount_name());
+        labelName.setText(user.getUserName());
     }
 
     public CFXOtherProfile() {
