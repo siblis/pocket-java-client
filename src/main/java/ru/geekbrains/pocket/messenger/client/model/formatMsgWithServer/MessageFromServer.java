@@ -1,17 +1,13 @@
 package ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.sql.Timestamp;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import ru.geekbrains.pocket.messenger.database.entity.Message;
 
+@Getter
+@NoArgsConstructor
 public class MessageFromServer {
-
-    public static MessageFromServer fromJson(String jsonAnswer) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        return gson.fromJson(jsonAnswer, MessageFromServer.class);
-    }
 
     private String id;
     private String type;
@@ -21,39 +17,8 @@ public class MessageFromServer {
     private String text;
     private boolean read;
     private Timestamp sent_at;
-
-    public MessageFromServer() {
-    }
-
-    public String getMessageId() {
-        return id;
-    }
-
-    public String getMessageType() {
-        return type;
-    }
-
-    public String getSenderId() {
-        return sender;
-    }
-
-    public String getReceiverId() {
-        return recipient;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public String getMessage() {
-        return text;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public Timestamp getTimestamp() {
-        return sent_at;
+    
+    public Message toMessageWithoutUsers() {
+        return new Message(id, text, sent_at, null, null);
     }
 }

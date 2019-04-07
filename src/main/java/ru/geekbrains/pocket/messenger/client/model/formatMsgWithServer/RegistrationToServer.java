@@ -1,13 +1,11 @@
 package ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Size;
 
-@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor

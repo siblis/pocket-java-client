@@ -1,33 +1,23 @@
 package ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import ru.geekbrains.pocket.messenger.database.entity.User;
+
+@Getter
+@NoArgsConstructor
 public class UserFromServer {
-    private long uid;
-    private String account_name;
+    private String id;
     private String email;
-
-    public UserFromServer() {}
-
-    public long getUid() {
-        return uid;
+    private UserProfileFromServer profile;
+    
+    public User toUser() {
+        return new User(email, profile.toUserProfile());
     }
 
-    public void setUid(long uid) {
-        this.uid = uid;
-    }
-
-    public String getAccount_name() {
-        return account_name;
-    }
-
-    public void setAccount_name(String account_name) {
-        this.account_name = account_name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public String toString() {
+        return "UserFromServer{" + "id=" + id + ", email=" + email + ", " + 
+                (profile == null ? "UserProfileFromServer=null" : profile) + '}';
     }
 }
