@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.geekbrains.pocket.messenger.client.model.pub.UserProfilePub;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -15,53 +18,49 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "profiles")
+@Table(name = "userprofiles")
 public class UserProfile {
+    
+    public enum UPFields {
+        id, userName, fullName, lastSeen
+    }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column
+    private String id; //serverUserId
 
     @Column
-    private String uid; //serverUserId
-
-    //@NotNull
-    @Column
-    //TODO index unique
-    private String username;
+    private String userName;
 
     @Column
-    private String fullname;
+    private String fullName;
 
-    @Column(name = "last_seen")
+    @Column
     private Timestamp lastSeen;
 
     @OneToOne(mappedBy = "profile")
     private User user;
 
-    public UserProfile(@NotNull UserProfile userProfile) {
-        this.id = userProfile.getId();
-        this.uid = userProfile.getUid();
-        this.username = userProfile.getUsername();
-        this.fullname = userProfile.getFullname();
-        this.lastSeen = userProfile.getLastSeen();
-        this.user = userProfile.getUser();
+    public UserProfile(String id, String userName, String fullName, Timestamp lastSeen) {
+        this.id = id;
+        this.userName = userName;
+        this.fullName = fullName;
+        this.lastSeen = lastSeen;
     }
 
-    public UserProfile(@NotNull UserProfilePub userProfilePub) {
-        this.uid = userProfilePub.getId();
-        this.username = userProfilePub.getUsername();
-        this.fullname = userProfilePub.getFullname();
-        this.lastSeen = userProfilePub.getLastSeen() == null ? null :
-                new Timestamp(userProfilePub.getLastSeen().getTime());
+    public UserProfile(@NotNull UserProfile userProfile) {
+        this.id = userProfile.getId();
+        this.userName = userProfile.getUserName();
+        this.fullName = userProfile.getFullName();
+        this.lastSeen = userProfile.getLastSeen();
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 41 * hash + Objects.hashCode(this.id);
-        hash = 41 * hash + Objects.hashCode(this.username);
-        hash = 41 * hash + Objects.hashCode(this.fullname);
+        hash = 41 * hash + Objects.hashCode(this.userName);
+        hash = 41 * hash + Objects.hashCode(this.fullName);
         return hash;
     }
 
@@ -77,18 +76,19 @@ public class UserProfile {
             return false;
         }
         final UserProfile other = (UserProfile) obj;
-        if (!Objects.equals(this.uid, other.uid)) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        if (!Objects.equals(this.username, other.username)) {
+        if (!Objects.equals(this.userName, other.userName)) {
             return false;
         }
-        return Objects.equals(this.fullname, other.fullname);
+        return Objects.equals(this.fullName, other.fullName);
     }
 
     @Override
     public String toString() {
-        return "UserProfile{" + "id=" + id + ", username=" + username + ", fullname=" + fullname + ", last_seen=" + lastSeen + '}';
+        return "UserProfile{" + "id=" + id + ", userName=" + userName + 
+                ", fullName=" + fullName + ", lastSeen=" + lastSeen + '}';
     }
 
 }

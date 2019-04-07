@@ -3,10 +3,8 @@ package ru.geekbrains.pocket.messenger.database.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.geekbrains.pocket.messenger.client.model.pub.UserPub;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,55 +18,40 @@ import java.util.Objects;
 @Table(name = "users")
 public class User {
 
+    public enum UFields {
+        id, email, createdAt, profile, sentMess, receivedMess
+    }
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column
+    private String id; //serverUserId
 
     //@NotNull
     //TODO index unique
     @Column
-    private String email;
+    private String email; 
+    //(на 06.04.2019) для всех (кроме текущего аккаунта), часть адреса закрыта звёздочками
 
     @Column
-    private String uid; //serverUserId
+    private Timestamp createdAt = new Timestamp(new Date().getTime());
 
-    @Column
-    private Timestamp created_at = new Timestamp(new Date().getTime());
-
-    //@NotNull
-    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, 
+            orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")
     private UserProfile profile;
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, 
+            orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Message> sentMess;
 
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, 
+            orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Message> receivedMess;
 
-    public User(@NotNull UserPub userPub) {
-        this.email = userPub.getEmail();
-        this.uid = userPub.getId();
-        this.profile = new UserProfile(userPub.getProfile());
-    }
-
-    //проверка полей полученного юзера с полями имеющегося в бд
-    public User update(@NotNull UserPub userPub) {
-        if (email.equals(userPub.getEmail())) {
-            this.uid = userPub.getId();
-            this.getProfile().setUid(userPub.getProfile().getId());
-            this.getProfile().setUsername(userPub.getProfile().getUsername());
-            this.getProfile().setFullname(userPub.getProfile().getFullname());
-            if (userPub.getProfile().getLastSeen() != null)
-                this.getProfile().setLastSeen(new Timestamp(userPub.getProfile().getLastSeen().getTime()));
-        }
-        return this;
-    }
-
     public User(String email, UserProfile profile) {
+        this.id = profile.getId();
         this.email = email;
         this.profile = profile;
-        this.uid = profile.getUid();
         sentMess = new ArrayList<>();
         receivedMess = new ArrayList<>();
     }
@@ -88,17 +71,19 @@ public class User {
         receivedMess.clear();
     }
 
-    public String getAccount_name() {
-        return profile.getUsername();
+    public String getUserName() {
+        return profile.getUserName();
     }
 
-    public void setAccount_name(String name) {
-        this.profile.setUsername(name) ;
+    public void setUserName(String name) {
+        if (profile == null) profile = new UserProfile();
+        profile.setUserName(name);
     }
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", email=" + email + ", profile=" + profile + '}';
+        return "User{" + "id=" + id + ", email=" + email + ", " + 
+                (profile == null ? "UserProfile=null" : profile) + '}';
     }
 
     @Override
@@ -122,13 +107,15 @@ public class User {
             return false;
         }
         final User other = (User) obj;
-//        if (!Objects.equals(this.id, other.id)) {
-//            return false;
-//        }
-//        if (!Objects.equals(this.email, other.email)) {
-//            return false;
-//        }
-        return Objects.equals(this.profile, other.profile);
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.profile, other.profile)) {
+            return false;
+        }
+        //email последний, т.к. данные (на 06.04.2019) могут быть не полными
+        //(на 06.04.2019) для всех (кроме текущего аккаунта), часть адреса закрыта звёздочками
+        return Objects.equals(this.email, other.email);
     }
 
 }
