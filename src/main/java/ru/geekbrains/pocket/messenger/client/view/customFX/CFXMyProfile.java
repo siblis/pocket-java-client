@@ -39,7 +39,7 @@ public class CFXMyProfile extends AnchorPane {
     @FXML
     private JFXButton btnInvokationSwitch;
     @FXML
-    private JFXButton btnInvokationSwitch;
+    private JFXButton btnLogout;
     @FXML
     private JFXButton btnDeleteProfile;
 
