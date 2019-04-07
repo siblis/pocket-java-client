@@ -1,13 +1,15 @@
 package ru.geekbrains.pocket.messenger.database.dao;
 
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import ru.geekbrains.pocket.messenger.database.HibernateUtil;
-import ru.geekbrains.pocket.messenger.database.entity.User;
 import ru.geekbrains.pocket.messenger.database.entity.UserProfile;
 
-import javax.persistence.NoResultException;
 import java.util.List;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * DAO (data access object) - один из наиболее распространенных паттернов
@@ -46,7 +48,7 @@ class UserProfileDAO {
         session.getTransaction().commit();
     }
 
-    UserProfile get(long id) {
+    UserProfile get(String id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -57,47 +59,49 @@ class UserProfileDAO {
         return userProfile;
     }
 
-    UserProfile getByUsername(String username) {
+    UserProfile getByData(UserProfile.UPFields fieldName, String searchData) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        Query<UserProfile> query = session.createQuery("from UserProfile u where u.username = :userNameParam");
-        query.setParameter("userNameParam", username);
-        UserProfile userProfile = null;
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<UserProfile> criteria = builder.createQuery(UserProfile.class);
+        Root<UserProfile> from = criteria.from(UserProfile.class);
+        criteria.select(from);
+        criteria.where(builder.equal(from.get(fieldName.toString()), searchData));
+        TypedQuery<UserProfile> typed = session.createQuery(criteria);
+        UserProfile profile;
         try {
-            userProfile = query.getSingleResult();
+            profile = typed.getSingleResult();
         } catch (NoResultException e) {
-            System.out.println(e.getMessage());
+            return null;
         }
 
         session.getTransaction().commit();
 
-        return userProfile;
+        return profile;
     }
 
     List<UserProfile> get() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        List<UserProfile> list = (List<UserProfile>) session.createQuery("FROM UserProfile").list();
+        List<UserProfile> list = (List<UserProfile>) session.createQuery("FROM "
+                + UserProfile.class.getSimpleName() + "").list();
 
         session.getTransaction().commit();
 
         return list;
     }
 
-    List<Long> getColumnOfData(String fieldName) {
+    List<String> getColumnOfData(UserProfile.UPFields fieldName) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        List<Long> list = (List<Long>) session.createQuery("select t." + fieldName + " FROM UserProfile as t").list();
+        List<String> list = (List<String>) session.createQuery("select t." + fieldName
+                + " FROM " + UserProfile.class.getSimpleName() + " as t").list();
 
         session.getTransaction().commit();
 
         return list;
-    }
-
-    void close(){
-        HibernateUtil.shutdown();
     }
 }

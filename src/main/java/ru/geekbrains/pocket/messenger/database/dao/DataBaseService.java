@@ -1,12 +1,10 @@
 package ru.geekbrains.pocket.messenger.database.dao;
 
-import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import ru.geekbrains.pocket.messenger.database.HibernateUtil;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 import ru.geekbrains.pocket.messenger.database.entity.UserProfile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,14 +33,15 @@ public class DataBaseService {
     }
 
     public void setUserDB(User user) {
-        HibernateUtil.setUsername(user.getAccount_name());
+        HibernateUtil.setUsername(user.getUserName());
     }
 
     public void insertUser(User user) {
-        UserProfile userProfile = new UserProfile(user.getProfile());
-        usersProfileDao.insert(userProfile);
-        userProfile = usersProfileDao.getByUsername(userProfile.getUsername());
-        user.setProfile(userProfile);
+//        UserProfile userProfile = new UserProfile(user.getProfile());
+//        usersProfileDao.insert(userProfile);
+//        userProfile = usersProfileDao.getByData(UserProfile.Fields.userName, 
+//                userProfile.getUserName());
+//        user.setProfile(userProfile);
         usersDao.insert(user);
     }
 
@@ -54,20 +53,18 @@ public class DataBaseService {
         usersDao.update(user);
     }
 
-    public User getUser(long id) {
+    public User getUserById(String id) {
         return usersDao.get(id);
     }
 
     public User getUserByEmail(String email) {
-        return usersDao.getByEmail(email);
+        //todo: часть email закрыта звёздочками, обдумать...
+        return usersDao.getByData(User.UFields.email, email); 
     }
 
-    public User getUser(String username) {
-        return usersDao.getByUsername(username);
-    }
-
-    public User getUserbyUid(String uid) {
-        return usersDao.getByUid(uid);
+    public User getUserByName(String userName) {
+        UserProfile prof = usersProfileDao.getByData(UserProfile.UPFields.userName, userName);
+        return prof == null ? null : usersDao.getByData(User.UFields.id, prof.getId());
     }
 
     public List<User> getAllUsers() {
@@ -75,25 +72,24 @@ public class DataBaseService {
     }
 
     public List<String> getAllUserNames() {
-        List<String> names = new ArrayList<>();
-        for (User user : usersDao.get()) {
-            names.add(user.getAccount_name());
-        }
-        return names;
+        return usersProfileDao.getColumnOfData(UserProfile.UPFields.userName);
     }
 
-    public List<Long> getAllUserId() {
-        return usersDao.getColumnOfData("id");
+    public List<String> getAllUserId() {
+        return usersDao.getColumnOfData(User.UFields.id);
     }
 
-    public List<String> getAllUserUid() {
-        return usersDao.getColumnOfDataAsStringList("uid");
-    }
-
-    public void addMessage(Long receiverId, Long senderID, Message message) {
-        messageDao.addSentMessage(senderID, message);
+    public void addMessage(String receiverId, String senderId, Message message) {
+        messageDao.addSentMessage(senderId, message);
         messageDao.addReceivedMessage(receiverId, message);
-        System.out.println("BD addMessage "+ receiverId+" "+senderID+" "+message);
+        System.out.println("BD addMessage "+ receiverId+" "+senderId+" "+message);
+    }
+
+
+    public void addMessage(Message message) {
+        //todo: проверить работоспособность
+        if (message.getSender() == null || message.getReceiver() == null) return;
+        messageDao.insert(message);
     }
 
     public List<Message> getChat(User user1, User user2){
@@ -104,12 +100,14 @@ public class DataBaseService {
         messageDao.delete(user1, user2);
     }
 
-    public Message findMessageById(long id) {
+    public Message findMessageById(String id) {
         return messageDao.findMessageById(id);
     }
 
     public void close(){
-        usersDao.close();
-        messageDao.close();
+        usersDao = null;
+        usersProfileDao = null;
+        messageDao = null;
+        HibernateUtil.shutdown();
     }
 }

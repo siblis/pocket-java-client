@@ -3,10 +3,13 @@ package ru.geekbrains.pocket.messenger.database.dao;
 import ru.geekbrains.pocket.messenger.database.HibernateUtil;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 
-import javax.persistence.NoResultException;
 import java.util.List;
+import javax.persistence.TypedQuery;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * DAO (data access object) - один из наиболее распространенных паттернов
@@ -45,7 +48,7 @@ class UserDAO {
         session.getTransaction().commit();
     }
 
-    User get(long id) {
+    User get(String id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -56,53 +59,21 @@ class UserDAO {
         return user;
     }
 
-    User getByEmail(String email) {
+    User getByData(User.UFields fieldName, String searchData) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        User user = null;
-        Query<User> query = session.createQuery("from User u where u.email = :email");
-        query.setParameter("email", email);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<User> criteria = builder.createQuery(User.class);
+        Root<User> from = criteria.from(User.class);
+        criteria.select(from);
+        criteria.where(builder.equal(from.get(fieldName.toString()), searchData));
+        TypedQuery<User> typed = session.createQuery(criteria);
+        User user;
         try {
-            user = query.getSingleResult();
-        } catch (NoResultException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        session.getTransaction().commit();
-
-        return user;
-    }
-
-    User getByUid(String uid) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        User user = null;
-        Query<User> query = session.createQuery("from User u where u.uid = :uid");
-        query.setParameter("uid", uid);
-        try {
-            user = query.getSingleResult();
-        } catch (NoResultException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        session.getTransaction().commit();
-
-        return user;
-    }
-
-    User getByUsername(String userName) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        User user = null;
-        Query<User> query = session.createQuery("from User u where u.profile.username = :userNameParam");
-        query.setParameter("userNameParam", userName);
-        try {
-            user = query.getSingleResult();
-        } catch (NoResultException ex) {
-            System.out.println(ex.getMessage());
+            user = typed.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
         }
 
         session.getTransaction().commit();
@@ -114,36 +85,23 @@ class UserDAO {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        List<User> list = (List<User>) session.createQuery("FROM User").list();
+        List<User> list = (List<User>) session.createQuery("FROM "
+                + User.class.getSimpleName()).list();
 
         session.getTransaction().commit();
 
         return list;
     }
 
-    List<Long> getColumnOfData(String fieldName) {
+    List<String> getColumnOfData(User.UFields fieldName) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
-        List<Long> list = (List<Long>) session.createQuery("select t." + fieldName + " FROM User as t").list();
+        List<String> list = (List<String>) session.createQuery("select t." + 
+                fieldName + " FROM " + User.class.getSimpleName() + " as t").list();
 
         session.getTransaction().commit();
 
         return list;
-    }
-
-    List<String> getColumnOfDataAsStringList(String fieldName) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.getTransaction().begin();
-
-        List<String> list = (List<String>) session.createQuery("select t." + fieldName + " FROM User as t").list();
-
-        session.getTransaction().commit();
-
-        return list;
-    }
-
-    void close(){
-        HibernateUtil.shutdown();
     }
 }

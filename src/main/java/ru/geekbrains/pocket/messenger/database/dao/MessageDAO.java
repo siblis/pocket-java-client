@@ -28,7 +28,7 @@ public class MessageDAO {
         session.getTransaction().commit();
     }
 
-    public void delete(int id) {
+    public void delete(String id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -81,7 +81,7 @@ public class MessageDAO {
         session.getTransaction().commit();
     }
 
-    Message findMessageById(long id) {
+    Message findMessageById(String id) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -91,7 +91,7 @@ public class MessageDAO {
         return message;
     }
 
-    void addSentMessage(long senderID, Message message) {
+    void addSentMessage(String senderID, Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -102,7 +102,7 @@ public class MessageDAO {
         session.getTransaction().commit();
     }
 
-    void addReceivedMessage(long receiverId, Message message) {
+    void addReceivedMessage(String receiverId, Message message) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.getTransaction().begin();
 
@@ -111,9 +111,5 @@ public class MessageDAO {
         session.saveOrUpdate(user);
 
         session.getTransaction().commit();
-    }
-
-    void close(){
-        HibernateUtil.shutdown();
     }
 }
