@@ -31,6 +31,9 @@ public class AlarmDeleteProfile extends AnchorPane {
 
     public AlarmDeleteProfile(ProfileType prof, User user) {
 
+        this.prof = prof;
+        this.user = user;
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client/fxml/AlarmWindowDeleteProfile.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
