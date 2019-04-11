@@ -106,30 +106,33 @@ public class MessageController {
             clientCtrllr.dbService.deleteChat(clientCtrllr.myUser, contact);
     }
 
-    public void getMessagesWithUser(String contactId) {
+    public void getChatWithUser(String contactId) {
         try {
-//            List<User> contactsToRemoveFromDb = clientCtrllr.dbService.getAllUsers();
-//            contactsToRemoveFromDb.remove(clientCtrllr.myUser);
+            User contact = clientCtrllr.dbService.getUserById(contactId);
+            List<Message> messageListFromDb = clientCtrllr.dbService.getChat(clientCtrllr.myUser, contact);
             int pageOfMessages = 0;
             while (true) {
                 ServerResponse response = HTTPSRequest.getUserMessages(token, contactId, pageOfMessages++);
                 if (response.getResponseCode() != 200) break;
                 MessageListFromServer mlfs = Converter.toJavaObject(response.getResponseJson(), MessageListFromServer.class);
                 if (mlfs.getData().length == 0) break;
-//                todo синхронизация сообщений
-                MessageFromServer[] messages = mlfs.getData();
-                for (MessageFromServer entry : messages) {
-                    Message mess = entry.toMessageWithoutUsers();
-                    mess.setSender(clientCtrllr.dbService.getUserById(entry.getSender()));
-                    mess.setReceiver(clientCtrllr.dbService.getUserById(entry.getRecipient()));
-                    clientCtrllr.chatViewController.showMessage(mess, true);
-                    clientCtrllr.dbService.addMessage(mess);
-                }
+                synchronizeMessageListFromServ(mlfs.getData(), messageListFromDb);
             }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getContacts_error", e);
         }
     }
 
-
+    private void synchronizeMessageListFromServ(MessageFromServer[] messages, List<Message> messageListFromDb) {
+        clientCtrllr.chatViewController.clearMessageWebView();
+        for (MessageFromServer entry : messages) {
+            Message mess = entry.toMessageWithoutUsers();
+            if (!messageListFromDb.contains(mess.getId())) {
+                mess.setSender(clientCtrllr.dbService.getUserById(entry.getSender()));
+                mess.setReceiver(clientCtrllr.dbService.getUserById(entry.getRecipient()));
+                clientCtrllr.dbService.addMessage(mess);
+                clientCtrllr.chatViewController.showMessage(mess, false);
+            }
+        }
+    }
 }

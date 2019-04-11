@@ -591,7 +591,7 @@ public class ChatViewController implements Initializable {
     @FXML
     private void handleClientChoice(MouseEvent event) {
         String receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getId();
-        clientController.getMessageService().getMessagesWithUser(receiver);
+        clientController.getMessageService().getChatWithUser(receiver);
         if (event.getClickCount() == 1) {
             //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
             clientController.setReceiver(receiver);
@@ -755,6 +755,7 @@ public class ChatViewController implements Initializable {
     @FXML
     public void handleOnChatSelected() {
         chatsImage.setImage(new Image("/client/images/chat/chatsActive.png"));
+
         if (contacts != null) {
             contactsImage.setImage(new Image("/client/images/chat/contacts.png"));
             contacts.setStyle("-fx-border-width: 0 0 5 0; " +
