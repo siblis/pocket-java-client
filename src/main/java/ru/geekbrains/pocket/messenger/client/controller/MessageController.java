@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageFromServer;
+import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageListFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageToServer;
 import ru.geekbrains.pocket.messenger.client.utils.Converter;
 import ru.geekbrains.pocket.messenger.client.utils.HTTPSRequest;
@@ -109,15 +110,21 @@ public class MessageController {
         try {
 //            List<User> contactsToRemoveFromDb = clientCtrllr.dbService.getAllUsers();
 //            contactsToRemoveFromDb.remove(clientCtrllr.myUser);
-            ServerResponse response;
             int pageOfMessages = 0;
             while (true) {
-                response = HTTPSRequest.getUserMessages(token, contactId, pageOfMessages++);
+                ServerResponse response = HTTPSRequest.getUserMessages(token, contactId, pageOfMessages++);
                 if (response.getResponseCode() != 200) break;
-                MessageFromServer mfs = Converter.toJavaObject(response.getResponseJson(), MessageFromServer.class);
-                if (mfs.getText() == null) break;
-                System.out.println(mfs.getText());
-//                synchronizePageOfContListFromServ(clfs.getData(), contactsToRemoveFromDb);
+                MessageListFromServer mlfs = Converter.toJavaObject(response.getResponseJson(), MessageListFromServer.class);
+                if (mlfs.getData().length == 0) break;
+//                todo синхронизация сообщений
+                MessageFromServer[] messages = mlfs.getData();
+                for (MessageFromServer entry : messages) {
+                    Message mess = entry.toMessageWithoutUsers();
+                    mess.setSender(clientCtrllr.dbService.getUserById(entry.getSender()));
+                    mess.setReceiver(clientCtrllr.dbService.getUserById(entry.getRecipient()));
+                    clientCtrllr.chatViewController.showMessage(mess, true);
+                    clientCtrllr.dbService.addMessage(mess);
+                }
             }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getContacts_error", e);
