@@ -1,18 +1,23 @@
 package ru.geekbrains.pocket.messenger.client.controller;
 
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.List;
 import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageToServer;
-import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
 import ru.geekbrains.pocket.messenger.client.utils.Converter;
+import ru.geekbrains.pocket.messenger.client.utils.HTTPSRequest;
 import ru.geekbrains.pocket.messenger.client.utils.Sound;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.List;
+
+import static ru.geekbrains.pocket.messenger.client.controller.ClientController.token;
+import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
 
 //for api:
 //User messages
@@ -35,7 +40,6 @@ public class MessageController {
     void loadChat() {
         List<Message> converstation = clientCtrllr.dbService.getChat(clientCtrllr.myUser, clientCtrllr.receiver);
         clientCtrllr.chatViewController.clearMessageWebView();
-
         for (Message message : converstation) {
             clientCtrllr.chatViewController.showMessage(message, false);
         }
@@ -100,4 +104,25 @@ public class MessageController {
         if (!clientCtrllr.dbService.getChat(clientCtrllr.myUser, contact).isEmpty())
             clientCtrllr.dbService.deleteChat(clientCtrllr.myUser, contact);
     }
+
+    public void getMessagesWithUser(String contactId) {
+        try {
+//            List<User> contactsToRemoveFromDb = clientCtrllr.dbService.getAllUsers();
+//            contactsToRemoveFromDb.remove(clientCtrllr.myUser);
+            ServerResponse response;
+            int pageOfMessages = 0;
+            while (true) {
+                response = HTTPSRequest.getUserMessages(token, contactId, pageOfMessages++);
+                if (response.getResponseCode() != 200) break;
+                MessageFromServer mfs = Converter.toJavaObject(response.getResponseJson(), MessageFromServer.class);
+                if (mfs.getText() == null) break;
+                System.out.println(mfs.getText());
+//                synchronizePageOfContListFromServ(clfs.getData(), contactsToRemoveFromDb);
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getContacts_error", e);
+        }
+    }
+
+
 }

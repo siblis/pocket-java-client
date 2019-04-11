@@ -1,9 +1,5 @@
 package ru.geekbrains.pocket.messenger.client.view;
 
-import ru.geekbrains.pocket.messenger.client.Main;
-import ru.geekbrains.pocket.messenger.client.controller.ClientController;
-import ru.geekbrains.pocket.messenger.client.utils.Common;
-import ru.geekbrains.pocket.messenger.client.utils.CustomTextArea;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
@@ -35,6 +31,10 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import ru.geekbrains.pocket.messenger.client.Main;
+import ru.geekbrains.pocket.messenger.client.controller.ClientController;
+import ru.geekbrains.pocket.messenger.client.utils.Common;
+import ru.geekbrains.pocket.messenger.client.utils.CustomTextArea;
 import ru.geekbrains.pocket.messenger.client.view.customFX.*;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 
@@ -591,6 +591,7 @@ public class ChatViewController implements Initializable {
     @FXML
     private void handleClientChoice(MouseEvent event) {
         String receiver = contactListView.getSelectionModel().getSelectedItem().getUser().getId();
+        clientController.getMessageService().getMessagesWithUser(receiver);
         if (event.getClickCount() == 1) {
             //showAlert("Сообщения будут отправляться контакту " + receiver, Alert.AlertType.INFORMATION);
             clientController.setReceiver(receiver);

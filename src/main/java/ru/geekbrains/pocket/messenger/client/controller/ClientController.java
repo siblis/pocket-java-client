@@ -112,6 +112,10 @@ public class ClientController {
         messageService.loadChat();
     }
 
+    public MessageController getMessageService() {
+        return messageService;
+    }
+
     public void setReceiver(User receiver) {
         if (!contactList.contains(receiver.getId()))
             contactService.addContactToDbAndChat(receiver); // todo поправить логику получения сообщений?
