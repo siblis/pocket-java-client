@@ -193,7 +193,7 @@ public class ContactController {
     CFXListElement findContact(String contact) {
         User finded = getFromServerUserByEmail(contact);
         CFXListElement le = finded == null ? null : new CFXListElement(finded);
-        le.setBody(finded.getEmail());
+        if (le != null) le.setBody(finded.getEmail());
         return le;
     }
 
