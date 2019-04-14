@@ -27,7 +27,7 @@ public class AuthController {
         String jsonRegData = Converter.toJson(new RegistrationToServer(email, password, name));
         try {
             AuthFromServer authFromServer = Converter.toJavaObject(
-                    jsonRegData, AuthFromServer.class);
+                    HTTPSRequest.registration(jsonRegData), AuthFromServer.class);
             if (authFromServer != null) {
                 UserFromServer registered = authFromServer.getUser();
                 token = authFromServer.getToken();
