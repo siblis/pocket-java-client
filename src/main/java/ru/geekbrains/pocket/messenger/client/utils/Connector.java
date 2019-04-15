@@ -10,7 +10,10 @@ import java.net.URI;
 
 public class Connector {
     private static final Logger connectorLogger = LogManager.getLogger(Connector.class.getName());
-    static final String connectTo = "pocket-java-backend.herokuapp.com";
+    //резервный сервер при простое (30 мин) засыпает и просыпается пару минут
+//    static final String connectTo = "pocket-java-backend.herokuapp.com"; //rezerv
+    static final String connectTo = "java-api.pocketmsg.ru"; //java backend on product server
+//    static final String connectTo = "api.pocketmsg.ru"; //node backend on product server
     private WebSocketChatClient chatClient;
 
     public Connector(String token, ClientController controller){
