@@ -55,8 +55,12 @@ public class HTTPSRequest {
             case 201: {
                 return answerRequest(con);
             }
-            case 429: //todo: обработать другие ошибки
+            case 429: 
+                showAlert("Отправлено слишком много запросов...", Alert.AlertType.WARNING);
+                break;
             case 409:
+                showAlert("Указанный E-mail уже используется", Alert.AlertType.INFORMATION);
+                break;
             case 400:
                 showAlert("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);
         }
