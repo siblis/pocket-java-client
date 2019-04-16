@@ -56,7 +56,7 @@ public class MessageController {
         }
     }
 
-    public void receiveMessage(MessageFromServer mfs) {
+    void receiveMessage(MessageFromServer mfs) {
         //todo: доделать логику на получение уведомлений о прочтении отправленного сообщения!?
         //todo: доработать логику получения сообщения из группы
         //Проверяем, что осообщение пришло не от клиента в списке

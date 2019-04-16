@@ -20,7 +20,7 @@ public class ChatStompSessionHandler extends StompSessionHandlerAdapter {
 
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-        clientCtrllr.setSession(session);
+        clientCtrllr.setMessageSession(session);
         sessionLogger.info("websocket connection established");
 
         session.subscribe("/user/queue/new", new StompFrameHandler() {

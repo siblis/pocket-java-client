@@ -127,7 +127,7 @@ public class ClientController {
         return dbService.getUserById(receiverId) != null;
     }
 
-    public void setSession(StompSession session) {
+    public void setMessageSession(StompSession session) {
         messageService.setSession(session);
     }
 
