@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.messaging.simp.stomp.StompSession;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageToServer;
 import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
@@ -24,12 +25,26 @@ import ru.geekbrains.pocket.messenger.database.entity.User;
 
 public class MessageController {
 
-    static final Logger controllerLogger = LogManager.getLogger(AuthController.class);
+    static final Logger controllerLogger = LogManager.getLogger(MessageController.class);
     
     ClientController clientCtrllr;
+    private StompSession session;
+    private MessageToServer waitForConfirm;
 
     MessageController(ClientController cc) {
         clientCtrllr = cc;
+    }
+
+    public StompSession getSession() {
+        return session;
+    }
+
+    public void setSession(StompSession session) {
+        this.session = session;
+    }
+
+    public void resetWaitForConfirm() {
+        this.waitForConfirm = null;
     }
 
     void loadChat() {
@@ -41,8 +56,7 @@ public class MessageController {
         }
     }
 
-    void receiveMessage(String message) {
-        MessageFromServer mfs = Converter.toJavaObject(message, MessageFromServer.class);
+    void receiveMessage(MessageFromServer mfs) {
         //todo: доделать логику на получение уведомлений о прочтении отправленного сообщения!?
         //todo: доработать логику получения сообщения из группы
         //Проверяем, что осообщение пришло не от клиента в списке
@@ -52,7 +66,7 @@ public class MessageController {
                 clientCtrllr.contactService.addContact(newCont);
             else
                 controllerLogger.error("Получено сообщение от пользователя, данных которого " +
-                        "нет на сервере. Сообщение:\n" + message);
+                        "нет на сервере. Сообщение:\n" + mfs);
         }
         //Проверяем что у нас чат именно с этим пользователем, иначе сообщение не выводится
         if (clientCtrllr.receiver.getId().equals(mfs.getSender())) {
@@ -72,28 +86,23 @@ public class MessageController {
             showAlert("Выберите контакт для отправки сообщения", Alert.AlertType.ERROR);
             return;
         }
-        
-        String jsonMessage = Converter.toJson(
-                new MessageToServer(message, null, clientCtrllr.receiver.getId(), null));
-        try {
-            clientCtrllr.conn.getChatClient().send(jsonMessage);
-            //todo допилить получение Success/Error и MessageId из ответа
 
+        MessageToServer mts = new MessageToServer(message, null, clientCtrllr.receiver.getId(), null);
+        session.send("/v1/send", mts);
+        waitForConfirm = mts;
+    }
+
+    public void saveToDBAndShowMessage(String messageId) {
             Message mess = new Message();
+            mess.setId(messageId);
             mess.setReceiver(clientCtrllr.receiver);
             mess.setSender(clientCtrllr.myUser);
-            mess.setText(message);
+            mess.setText(waitForConfirm.getText());
             mess.setTime(new Timestamp(System.currentTimeMillis()));
 
             clientCtrllr.dbService.addMessage(mess);
 
             clientCtrllr.chatViewController.showMessage(mess, false);
-
-        } catch (IOException ex) {
-            showAlert("Потеряно соединение с сервером", Alert.AlertType.ERROR);
-            controllerLogger.error(ex);
-        }
-
     }
 
     void clearMessagesWithUser(User contact) {
