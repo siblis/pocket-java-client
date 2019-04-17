@@ -39,7 +39,7 @@ public class Connector {
 
         SockJsClient sockJsClient = new SockJsClient(transports);
 
-        String url = "wss://" + connectTo + "/v1/socket?token=" + token;
+        String url = "wss://" + connectTo + "/socket?token=" + token;
         stompClient = new WebSocketStompClient(sockJsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
         StompSessionHandler sessionHandler = new ChatStompSessionHandler(clientCtrllr);

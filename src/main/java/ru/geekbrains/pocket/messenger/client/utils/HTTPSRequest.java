@@ -46,7 +46,7 @@ public class HTTPSRequest {
 
     public static String registration(String requestJSON) throws Exception {
 
-        URL obj = new URL(serverURL + "/v1/auth/registration/");
+        URL obj = new URL(serverURL + "/auth/registration/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
 
@@ -68,7 +68,7 @@ public class HTTPSRequest {
     }
 
     public static String authorization(String requestJSON) throws Exception {
-        URL obj = new URL(serverURL + "/v1/auth/login/");
+        URL obj = new URL(serverURL + "/auth/login/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
 
@@ -92,23 +92,23 @@ public class HTTPSRequest {
             query = id;
         else
             query = "?email=" + email;
-        HttpsURLConnection connection = getConnection("/v1/users/" + query, "GET", token);
+        HttpsURLConnection connection = getConnection("users/" + query, "GET", token);
         return getServerResponse(connection, null);
     }
 
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/account/contacts/", "POST", token);
+        HttpsURLConnection connection = getConnection("account/contacts/", "POST", token);
         return getServerResponse(connection, requestJSON);
     }
 
     public static ServerResponse deleteContact(String userId, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/account/contacts/" + userId, "DELETE", token);
+        HttpsURLConnection connection = getConnection("/account/contacts/" + userId, "DELETE", token);
         return getServerResponse(connection, null);
     }
 
     public static ServerResponse getContacts(String token, int offset) throws Exception {
         HttpsURLConnection connection = 
-                getConnection("/v1/account/contacts/?offset=" + offset, "GET", token);
+                getConnection("/account/contacts/?offset=" + offset, "GET", token);
         return getServerResponse(connection, null);
     }
 
