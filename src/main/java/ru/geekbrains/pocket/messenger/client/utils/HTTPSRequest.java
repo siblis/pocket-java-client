@@ -17,6 +17,50 @@ import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
 public class HTTPSRequest {
     private static final Logger requestLogger = LogManager.getLogger(HTTPSRequest.class.getName());
     private static String serverURL = "https://" + Connector.connectTo;
+    private static HttpsURLConnection con;
+
+    public static int sendRequest(String path, String method, String requestJSON) throws Exception {
+        URL obj = new URL(serverURL + path);
+        con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod(method);
+        if (requestJSON != null) {
+            con.setRequestProperty("content-type", "application/json");
+            con.setDoOutput(true);
+
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(requestJSON);
+            wr.flush();
+            wr.close();
+        }
+
+        int responseCode = con.getResponseCode();
+        requestLogger.info("\nSending " + con.getRequestMethod() + 
+                " request to URL : " + con.getURL() + "\nPut parameters : " + 
+                requestJSON + "\nResponse Code : " + responseCode);
+
+        return responseCode;
+    }
+
+    public static String getResponse() throws Exception {
+        StringBuilder response = new StringBuilder();
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()))) {
+
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            requestLogger.info(response.toString());
+        } catch (IOException e) {
+            requestLogger.error("answerRequest_error", e);
+            throw e;
+        }
+        return response.toString();
+    }
+
+    public static <T> T getResponse(Class<T> valueType) throws Exception {
+        return Converter.toJavaObject(getResponse(), valueType);
+    }
 
     public static String restorePassword(String requestJSON) throws Exception {
         //TODO нужен API на сервере
@@ -40,38 +84,6 @@ public class HTTPSRequest {
         URL obj = new URL(serverURL + "/v1/pass/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
-        sendRequest(con, requestJSON);
-        return answerRequest(con);
-    }
-
-    public static String registration(String requestJSON) throws Exception {
-
-        URL obj = new URL(serverURL + "/auth/registration/");
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("POST");
-
-        int responseCode = sendRequest(con, requestJSON);
-        switch (responseCode) {
-            case 201: {
-                return answerRequest(con);
-            }
-            case 429: 
-                showAlert("Отправлено слишком много запросов...", Alert.AlertType.WARNING);
-                break;
-            case 409:
-                showAlert("Указанный E-mail уже используется", Alert.AlertType.INFORMATION);
-                break;
-            case 400:
-                showAlert("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);
-        }
-        return null;
-    }
-
-    public static String authorization(String requestJSON) throws Exception {
-        URL obj = new URL(serverURL + "/auth/login/");
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("POST");
-
         sendRequest(con, requestJSON);
         return answerRequest(con);
     }
