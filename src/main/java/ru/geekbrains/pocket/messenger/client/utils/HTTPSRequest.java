@@ -59,20 +59,7 @@ public class HTTPSRequest {
     }
 
     public static <T> T getResponse(Class<T> valueType) throws Exception {
-        StringBuilder response = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()))) {
-
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            requestLogger.info(response.toString());
-        } catch (IOException e) {
-            requestLogger.error("answerRequest_error", e);
-            throw e;
-        }
-        return Converter.toJavaObject(response.toString(), valueType);
+        return Converter.toJavaObject(getResponse(), valueType);
     }
 
     public static String restorePassword(String requestJSON) throws Exception {
