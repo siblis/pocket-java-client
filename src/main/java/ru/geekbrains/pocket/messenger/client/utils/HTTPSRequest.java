@@ -41,7 +41,7 @@ public class HTTPSRequest {
         return responseCode;
     }
 
-    public static String getResponse() throws Exception {
+    public static String getResponse() {
         StringBuilder response = new StringBuilder();
         try (BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()))) {
@@ -53,7 +53,6 @@ public class HTTPSRequest {
             requestLogger.info(response.toString());
         } catch (IOException e) {
             requestLogger.error("answerRequest_error", e);
-            throw e;
         }
         return response.toString();
     }

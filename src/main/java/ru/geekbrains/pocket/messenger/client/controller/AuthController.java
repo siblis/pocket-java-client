@@ -58,7 +58,7 @@ public class AuthController {
                     showAlert("Ошибка регистрации, код: " + regStatus, Alert.AlertType.ERROR);
                 }
         } catch (Exception e) {
-            controllerLogger.error("HTTPSRequest.registration", e);
+            controllerLogger.error("HTTPSRequest.registration_error", e);
         }
         return null;
     }
