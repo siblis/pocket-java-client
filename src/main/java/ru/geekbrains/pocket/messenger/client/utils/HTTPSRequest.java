@@ -20,7 +20,7 @@ public class HTTPSRequest {
     private static HttpsURLConnection con;
 
     public static int sendRequest(String path, String method, String requestJSON) throws Exception {
-        URL obj = new URL(serverURL + "/" + path);
+        URL obj = new URL(serverURL + path);
         con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod(method);
         if (requestJSON != null) {
@@ -84,15 +84,6 @@ public class HTTPSRequest {
         URL obj = new URL(serverURL + "/v1/pass/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
-        sendRequest(con, requestJSON);
-        return answerRequest(con);
-    }
-
-    public static String authorization(String requestJSON) throws Exception {
-        URL obj = new URL(serverURL + "/auth/login/");
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("POST");
-
         sendRequest(con, requestJSON);
         return answerRequest(con);
     }

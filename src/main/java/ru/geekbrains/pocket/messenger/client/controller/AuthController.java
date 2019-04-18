@@ -28,7 +28,7 @@ public class AuthController {
     boolean registration(String name, String password, String email) {
         String jsonRegData = Converter.toJson(new RegistrationToServer(email, password, name));
         try {
-            int regStatus = HTTPSRequest.sendRequest("auth/registration", "POST", jsonRegData);
+            int regStatus = HTTPSRequest.sendRequest("/auth/registration", "POST", jsonRegData);
             AuthFromServer authFromServer = HTTPSRequest.getResponse(AuthFromServer.class);
             if (authFromServer != null) {
                 switch (regStatus) {
@@ -61,38 +61,46 @@ public class AuthController {
     boolean login(String login, String password) {
         if (!login.isEmpty() && !password.isEmpty()) {
             String jsonLoginData = Converter.toJson(new AuthToServer(login, password));
-            String answer = "0";
+            int regStatus = 0;
+            AuthFromServer authFromServer = null;
             try {
-                answer = HTTPSRequest.authorization(jsonLoginData);
+                regStatus = HTTPSRequest.sendRequest("/auth/login", "POST", jsonLoginData);
+                authFromServer = HTTPSRequest.getResponse(AuthFromServer.class);
             } catch (Exception e) {
                 controllerLogger.error("HTTPSRequest.authorization_error", e);
             }
-            if (answer.contains("token")) {
-                AuthFromServer authFromServer = Converter.toJavaObject(answer, AuthFromServer.class);
-                token = authFromServer.getToken();
-                User myUser = authFromServer.getUser().toUser();
-                if (myUser != null) {
-                    System.out.println("answer server " + token + "\n" + myUser);
-                    clientCtrllr.dbService.setUserDB(myUser);
-                    clientCtrllr.myUser = clientCtrllr.dbService.getUserById(myUser.getId());
-                    if (clientCtrllr.myUser == null) {
+            switch (regStatus) {
+                case 200:
+                    if (authFromServer != null && authFromServer.getUser() != null) {
+                        token = authFromServer.getToken();
+                        User myUser = authFromServer.getUser().toUser();
+                        System.out.println("answer server " + token + "\n" + myUser);
+                        clientCtrllr.dbService.setUserDB(myUser);
+                        clientCtrllr.myUser = clientCtrllr.dbService.getUserById(myUser.getId());
+                        if (clientCtrllr.myUser == null) {
+                            clientCtrllr.dbService.insertUser(myUser);
+                        } else {
+                            clientCtrllr.dbService.updateUser(myUser);
+                        }
                         clientCtrllr.myUser = myUser;
-                        clientCtrllr.dbService.insertUser(myUser);
-                    } else {
-                        clientCtrllr.dbService.updateUser(myUser);
-                    }
-                    clientCtrllr.myUser = myUser;
-                    clientCtrllr.conn = new Connector(token, clientCtrllr);
-                    clientCtrllr.contactService.synchronizeContactList();
+                        clientCtrllr.conn = new Connector(token, clientCtrllr);
+                        clientCtrllr.contactService.synchronizeContactList();
 
-                    return true;
-                }
-            } else {
-//                showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
-                controllerLogger.error("Ошибка авторизации!");
+                        return true;
+                    }
+                    break;
+                case 429:
+                    showAlert("Слишком много запросов!", Alert.AlertType.WARNING);
+                    break;
+                case 404:
+                    showAlert("Неверные учётные данные!", Alert.AlertType.ERROR);
+                    break;
+                default:
+                    showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
+                    controllerLogger.error("Ошибка авторизации!");
             }
         } else {
-//            showAlert("Неполные данные для авторизации!", Alert.AlertType.ERROR);
+            showAlert("Неполные данные для авторизации!", Alert.AlertType.ERROR);
             controllerLogger.error("Неполные данные для авторизации!");
         }
         return false;
