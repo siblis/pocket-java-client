@@ -48,9 +48,10 @@ public class ContactController {
         
         if (!clientCtrllr.contactList.isEmpty()) {
             clientCtrllr.dbService.getAllUsers().forEach(user -> {
-                clientCtrllr.contactListOfCards.add(new CFXListElement(user));
+                if (!user.equals(clientCtrllr.myUser)) clientCtrllr.contactListOfCards.add(new CFXListElement(user));
+//               clientCtrllr.contactListOfCards.add(new CFXListElement(user));
             });
-            clientCtrllr.contactListOfCards.remove(clientCtrllr.myUser);
+//            clientCtrllr.contactListOfCards.remove(clientCtrllr.myUser);
         }
 
         try {
