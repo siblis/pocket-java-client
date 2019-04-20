@@ -3,9 +3,11 @@ package ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer;
 import java.sql.Timestamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class MessageFromServer {
 

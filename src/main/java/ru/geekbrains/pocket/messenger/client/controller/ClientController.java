@@ -3,7 +3,9 @@ package ru.geekbrains.pocket.messenger.client.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.messaging.simp.stomp.StompSession;
 import ru.geekbrains.pocket.messenger.client.model.Group;
+import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageFromServer;
 import ru.geekbrains.pocket.messenger.client.utils.Connector;
 import ru.geekbrains.pocket.messenger.client.view.ChatViewController;
 import ru.geekbrains.pocket.messenger.client.view.customFX.CFXListElement;
@@ -71,6 +73,7 @@ public class ClientController {
 
     public void disconnect() {
         if (conn != null) {
+            messageService.getSession().disconnect();
             conn.disconnect();
             conn = null;
         }
@@ -128,6 +131,10 @@ public class ClientController {
         return dbService.getUserById(receiverId) != null;
     }
 
+    public void setMessageSession(StompSession session) {
+        messageService.setSession(session);
+    }
+
     public List<CFXListElement> getContactListOfCards() {
         return contactListOfCards;
     }
@@ -144,7 +151,7 @@ public class ClientController {
         return contactService.removeContact(user);
     }
 
-    public void receiveMessage(String message) {
+    public void receiveMessage(MessageFromServer message) {
         messageService.receiveMessage(message);
     }
 
@@ -170,5 +177,13 @@ public class ClientController {
 
     public void addUserGroup(String group_id, String new_user_id) {
         groupService.addUserGroup(group_id, new_user_id);
+    }
+
+    public void resetWaitForConfirm() {
+        messageService.resetWaitForConfirm();
+    }
+
+    public void saveToDBAndShowMessage(String s) {
+        messageService.saveToDBAndShowMessage(s);
     }
 }
