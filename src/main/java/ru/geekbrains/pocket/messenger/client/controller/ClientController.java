@@ -124,7 +124,11 @@ public class ClientController {
     }
 
     public boolean hasReceiver(String receiverId) {
-        return dbService.getUserById(receiverId) != null;
+        return hasUserInLocalDB(receiverId);
+    }
+
+    boolean hasUserInLocalDB(String userId) {
+        return dbService.getUserById(userId) != null;
     }
 
     public void setMessageSession(StompSession session) {

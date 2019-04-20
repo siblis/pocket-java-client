@@ -27,15 +27,12 @@ public class AuthController {
 
     boolean registration(String name, String password, String email) {
         AuthFromServer responseFromServer = sendRegRequest(name, password, email);
-        if (responseFromServer != null) {
-            UserFromServer registered = responseFromServer.getUser();
-            if (registered != null) {
-                User regUser = registered.toUser();
+        if (responseFromServer.getUser() != null) {
+                User regUser = responseFromServer.getUser().toUser();
                 cc.dbService.setUserDB(regUser);
                 cc.dbService.insertUser(regUser);
                 return true;
             }
-        }
         return false;
     }
 
@@ -68,7 +65,8 @@ public class AuthController {
         if (authFromServer != null && authFromServer.getUser() != null) {
             token = authFromServer.getToken();
             User authUser = authFromServer.getUser().toUser();
-            if (isNotInLocalDB(authUser)) {
+            cc.dbService.setUserDB(authUser);
+            if (!cc.hasUserInLocalDB(authUser.getId())) {
                 cc.dbService.insertUser(authUser);
             } else {
                 cc.dbService.updateUser(authUser);
@@ -79,11 +77,6 @@ public class AuthController {
             return true;
         }
         return false;
-    }
-
-    private boolean isNotInLocalDB(User authUser) {
-        cc.dbService.setUserDB(authUser);
-        return cc.dbService.getUserById(authUser.getId()) == null;
     }
 
     private AuthFromServer sendAuthRequest(String login, String password) {
