@@ -123,11 +123,7 @@ public class ClientController {
         messageService.loadChat();
     }
 
-    public boolean hasReceiver(String receiverId) {
-        return hasUserInLocalDB(receiverId);
-    }
-
-    boolean hasUserInLocalDB(String userId) {
+    public boolean hasUserInLocalDB(String userId) {
         return dbService.getUserById(userId) != null;
     }
 

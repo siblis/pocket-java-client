@@ -609,7 +609,7 @@ public class ChatViewController implements Initializable {
     private void handleFindedClientChoice(MouseEvent event) {
         String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getId();
         if (event.getClickCount() == 1) {
-            if (clientController.hasReceiver(receiver)) {
+            if (clientController.hasUserInLocalDB(receiver)) {
                 btnContactSearchInvite.setVisible(false);
                 clientController.setReceiver(receiver);
                 messageField.requestFocus();
@@ -621,7 +621,7 @@ public class ChatViewController implements Initializable {
         } else if (event.getClickCount() == 2) {
             othersProfile.setUser(
                     searchListView.getSelectionModel().getSelectedItem().getUser());
-            othersProfile.setIfFriendly(clientController.hasReceiver(receiver));
+            othersProfile.setIfFriendly(clientController.hasUserInLocalDB(receiver));
             PaneProvider.setProfileScrollPane(otherProfileScrollPane);
             paneProvidersProfScrollPaneVisChange(true);
         }

@@ -27,12 +27,14 @@ public class AuthController {
 
     boolean registration(String name, String password, String email) {
         AuthFromServer responseFromServer = sendRegRequest(name, password, email);
-        if (responseFromServer.getUser() != null) {
+        if (responseFromServer != null) {
+            if (responseFromServer.getUser() != null) {
                 User regUser = responseFromServer.getUser().toUser();
                 cc.dbService.setUserDB(regUser);
                 cc.dbService.insertUser(regUser);
                 return true;
             }
+        }
         return false;
     }
 
