@@ -50,7 +50,7 @@ public class ContactController {
             clientCtrllr.dbService.getAllUsers().forEach(user -> {
                 clientCtrllr.contactListOfCards.add(new CFXListElement(user));
             });
-            clientCtrllr.contactListOfCards.remove(clientCtrllr.myUser);
+            clientCtrllr.contactListOfCards.remove(new CFXListElement(clientCtrllr.myUser));
         }
 
         try {

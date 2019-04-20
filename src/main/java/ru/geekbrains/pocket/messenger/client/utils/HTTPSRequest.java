@@ -103,12 +103,12 @@ public class HTTPSRequest {
             query = id;
         else
             query = "?email=" + email;
-        HttpsURLConnection connection = getConnection("users/" + query, "GET", token);
+        HttpsURLConnection connection = getConnection("/users/" + query, "GET", token);
         return getServerResponse(connection, null);
     }
 
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("account/contacts/", "POST", token);
+        HttpsURLConnection connection = getConnection("/account/contacts/", "POST", token);
         return getServerResponse(connection, requestJSON);
     }
 
