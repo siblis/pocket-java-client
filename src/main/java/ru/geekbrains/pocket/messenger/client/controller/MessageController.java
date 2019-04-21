@@ -3,8 +3,8 @@ package ru.geekbrains.pocket.messenger.client.controller;
 import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import org.springframework.messaging.simp.stomp.StompSession;
+import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageListFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.MessageToServer;
@@ -14,8 +14,8 @@ import ru.geekbrains.pocket.messenger.client.utils.Sound;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 
-import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.geekbrains.pocket.messenger.client.controller.ClientController.token;
@@ -54,9 +54,10 @@ public class MessageController {
     }
 
     void loadChat() {
-        List<Message> converstation = clientCtrllr.dbService.getChat(clientCtrllr.myUser, clientCtrllr.receiver);
+        clientCtrllr.conversation = clientCtrllr.dbService.getChat(clientCtrllr.myUser, clientCtrllr.receiver);
+        getChatWithUser();
         clientCtrllr.chatViewController.clearMessageWebView();
-        for (Message message : converstation) {
+        for (Message message : clientCtrllr.conversation) {
             clientCtrllr.chatViewController.showMessage(message, false);
         }
     }
@@ -115,33 +116,34 @@ public class MessageController {
             clientCtrllr.dbService.deleteChat(clientCtrllr.myUser, contact);
     }
 
-    public void getChatWithUser(String contactId) {
+    private void getChatWithUser() {
         try {
-            User contact = clientCtrllr.dbService.getUserById(contactId);
-            List<Message> messageListFromDb = clientCtrllr.dbService.getChat(clientCtrllr.myUser, contact);
             int pageOfMessages = 0;
             while (true) {
-                ServerResponse response = HTTPSRequest.getUserMessages(token, contactId, pageOfMessages++);
+                ServerResponse response = HTTPSRequest.getUserMessages(token, clientCtrllr.receiver.getId(), pageOfMessages++);
                 if (response.getResponseCode() != 200) break;
                 MessageListFromServer mlfs = Converter.toJavaObject(response.getResponseJson(), MessageListFromServer.class);
                 if (mlfs.getData().length == 0) break;
-                synchronizeMessageListFromServ(mlfs.getData(), messageListFromDb);
+                synchronizeMessageListFromServ(mlfs.getData());
             }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getContacts_error", e);
         }
     }
 
-    private void synchronizeMessageListFromServ(MessageFromServer[] messages, List<Message> messageListFromDb) {
-        clientCtrllr.chatViewController.clearMessageWebView();
+    private void synchronizeMessageListFromServ(MessageFromServer[] messages) {
+        List<String> messageListFromDbId = new ArrayList<>();
+        for (Message message : clientCtrllr.conversation) {
+            messageListFromDbId.add(message.getId());
+        }
         for (MessageFromServer entry : messages) {
             Message mess = entry.toMessageWithoutUsers();
-            if (!messageListFromDb.contains(mess.getId())) {
+            if (!messageListFromDbId.contains(mess.getId())) {
                 mess.setSender(clientCtrllr.dbService.getUserById(entry.getSender()));
                 mess.setReceiver(clientCtrllr.dbService.getUserById(entry.getRecipient()));
                 clientCtrllr.dbService.addMessage(mess);
-                clientCtrllr.chatViewController.showMessage(mess, false);
             }
         }
+        clientCtrllr.conversation = clientCtrllr.dbService.getChat(clientCtrllr.myUser, clientCtrllr.receiver);
     }
 }

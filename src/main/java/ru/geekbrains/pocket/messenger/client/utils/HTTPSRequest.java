@@ -146,7 +146,7 @@ public class HTTPSRequest {
     }
 
     public static ServerResponse getUserMessages(String token, String userId, int offset) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/user/" + userId +
+        HttpsURLConnection connection = getConnection("/user/" + userId +
                 "/messages/?offset=" + offset, "GET", token);
         return getServerResponse(connection, null);
     }
