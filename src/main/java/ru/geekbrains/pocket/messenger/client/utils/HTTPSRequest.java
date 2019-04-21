@@ -145,6 +145,12 @@ public class HTTPSRequest {
         return getServerResponse(connection, requestJSON);
     }
 
+    public static ServerResponse getUserMessages(String token, String userId, int offset) throws Exception {
+        HttpsURLConnection connection = getConnection("/user/" + userId +
+                "/messages/?offset=" + offset, "GET", token);
+        return getServerResponse(connection, null);
+    }
+
     public static ServerResponse getGroupInfo(String id, String token) throws Exception {
         HttpsURLConnection connection = getConnection("/v1/chats/" + id, "GET", token);
         return getServerResponse(connection, null);

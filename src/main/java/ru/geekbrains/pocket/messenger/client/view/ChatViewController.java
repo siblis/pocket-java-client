@@ -1,9 +1,5 @@
 package ru.geekbrains.pocket.messenger.client.view;
 
-import ru.geekbrains.pocket.messenger.client.Main;
-import ru.geekbrains.pocket.messenger.client.controller.ClientController;
-import ru.geekbrains.pocket.messenger.client.utils.Common;
-import ru.geekbrains.pocket.messenger.client.utils.CustomTextArea;
 import com.jfoenix.controls.*;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import com.jfoenix.transitions.hamburger.HamburgerBasicCloseTransition;
@@ -35,6 +31,10 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import ru.geekbrains.pocket.messenger.client.Main;
+import ru.geekbrains.pocket.messenger.client.controller.ClientController;
+import ru.geekbrains.pocket.messenger.client.utils.Common;
+import ru.geekbrains.pocket.messenger.client.utils.CustomTextArea;
 import ru.geekbrains.pocket.messenger.client.view.customFX.*;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 
@@ -754,6 +754,7 @@ public class ChatViewController implements Initializable {
     @FXML
     public void handleOnChatSelected() {
         chatsImage.setImage(new Image("/client/images/chat/chatsActive.png"));
+
         if (contacts != null) {
             contactsImage.setImage(new Image("/client/images/chat/contacts.png"));
             contacts.setStyle("-fx-border-width: 0 0 5 0; " +
