@@ -10,6 +10,7 @@ import ru.geekbrains.pocket.messenger.client.utils.Connector;
 import ru.geekbrains.pocket.messenger.client.view.ChatViewController;
 import ru.geekbrains.pocket.messenger.client.view.customFX.CFXListElement;
 import ru.geekbrains.pocket.messenger.database.dao.DataBaseService;
+import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class ClientController {
     Connector conn;
     List<String> contactList;
     List<CFXListElement> contactListOfCards;
+    List<Message> conversation;
 
     DataBaseService dbService;
     
@@ -84,6 +86,7 @@ public class ClientController {
         instance = null;
         contactList = null;
         contactListOfCards = null;
+        conversation = null;
         authService = null;
         contactService = null;
         groupService = null;
