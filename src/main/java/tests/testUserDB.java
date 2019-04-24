@@ -13,7 +13,7 @@ public class testUserDB {
     private DataBaseService dbs = new DataBaseService();
     private UserProfile up;
     private User user;
-    String Id;
+    private String Id;
 
     @Before
     public void start() {
