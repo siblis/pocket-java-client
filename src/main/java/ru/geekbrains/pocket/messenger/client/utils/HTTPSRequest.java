@@ -104,12 +104,12 @@ public class HTTPSRequest {
             query = id;
         else
             query = "?email=" + email;
-        HttpsURLConnection connection = getConnection("users/" + query, "GET", token);
+        HttpsURLConnection connection = getConnection("/users/" + query, "GET", token);
         return getServerResponse(connection, null);
     }
 
     public static ServerResponse addContact(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("account/contacts/", "POST", token);
+        HttpsURLConnection connection = getConnection("/account/contacts/", "POST", token);
         return getServerResponse(connection, requestJSON);
     }
 
@@ -143,6 +143,12 @@ public class HTTPSRequest {
     public static ServerResponse addMessageGroup(String requestJSON, String token) throws Exception {
         HttpsURLConnection connection = getConnection("/v1/chats/messages/", "POST", token);
         return getServerResponse(connection, requestJSON);
+    }
+
+    public static ServerResponse getUserMessages(String token, String userId, int offset) throws Exception {
+        HttpsURLConnection connection = getConnection("/user/" + userId +
+                "/messages/?offset=" + offset, "GET", token);
+        return getServerResponse(connection, null);
     }
 
     public static ServerResponse getGroupInfo(String id, String token) throws Exception {
