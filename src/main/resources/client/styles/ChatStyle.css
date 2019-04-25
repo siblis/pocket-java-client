@@ -1,5 +1,4 @@
-
-#menu {
+﻿#menu {
     -fx-background-color: #3498DB;
 
     -fx-background-repeat: no-repeat;
@@ -97,4 +96,100 @@
 .btnCreateGroup {
     -fx-background-color: #3498DB;
     -fx-background-radius: 25px;
+}
+
+.body {
+    margin: 0;
+    padding: 10px;
+    background-image: url(" + backgroundImage + ");
+    background-attachment: fixed;
+}
+
+/*общие стили*/
+/*time day*/
+.timeStampDay {
+    display: inline-block;
+    text-align: center;
+    /*width: 80px;*/
+    margin: 0 38%;
+    margin-top: 10px;
+    color: #55635A;
+    background: #BCDCC9;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+/**/
+.message {
+    display: flex;
+    width: 0px;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+/*div text --> div msg*/
+.msg {
+    width: auto;
+    word-wrap: break-word; /*<!--Перенос слов-->*/
+}
+
+/*div Logo*/
+.msgLogo {
+    flex: none;
+    align-self: start;
+    width: 33px;
+    height: 33px;
+    background: lightgrey;
+    border-radius: 50%;
+}
+
+/*div text, 1->2*/
+.msgTxt {
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+    max-width: 400px;
+    min-width: 200px;
+    width: 300px;
+    border-radius: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 16px;
+    box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, 0.15);
+}
+
+/*div time*/
+.msgTime {
+    flex: auto;
+}
+
+/*div msgTxt --> sender*/
+.myUserClass {
+    background: #C6FCFF;
+}
+
+.senderUserClass {
+    background: #FFFFFF;
+}
+
+/*div text --> div sender*/
+.myUserClassS{
+    display: none; /*Отправителя себя не отображаем*/
+}
+
+.senderUserClassS{
+    word-wrap: break-word; /*<!--Перенос слов-->*/
+    color: #1EA362;
+}
+
+/*div time -->sender*/
+.myUserClassT {
+    color: #757575;
+}
+
+.senderUserClassT {
+    color: #4285F4;
 }

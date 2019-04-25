@@ -264,104 +264,7 @@ public class ChatViewController implements Initializable {
 
     // инициализация только HTML в WebView.
     private void initWebView() {
-        webEngine.loadContent(
-                "<!DOCTYPE html> \n"+
-                "<html lang=\"en\"> \n"+
-                  "<head> \n"+
-                    "<meta charset=UTF-8> \n"+
-                    "<style> \n"+
-                        "body { \n" +
-                            "margin: 0; \n"+
-                            "padding: 10px; \n"+
-                            "background-image: url(" + backgroundImage + "); \n"+
-                            "background-attachment: fixed; \n"+
-                        "} \n"+
-                        //общие стили
-                        //time day
-                        ".timeStampDay { \n" +
-                            "display: inline-block; \n"+
-                            "text-align: center; \n"+
-                            //"width: 80px; \n"+
-                            "margin: 0 38%;  \n"+
-                            "margin-top: 10px;  \n"+
-                            "color: #55635A; \n"+
-                            "background: #BCDCC9; \n"+
-                            "border-radius: 10px; \n"+
-                            "padding: 5px 10px; \n"+
-                        "} \n"+
-                        //
-                        ".message { \n"+
-                            "display: flex; \n"+
-                            "width: 0px; \n"+
-                            "align-items: center; \n"+
-                            "margin-left: 10px; \n"+
-                            "margin-right: 10px; \n"+
-                            "margin-top: 10px; \n"+
-                            "margin-bottom: 30px; \n"+
-                        "} \n"+
-                        //div Logo
-                        ".msgLogo { \n"+
-                            "flex: none; \n"+
-                            "align-self: start; \n"+
-                            "width: 33px; \n"+
-                            "height: 33px; \n"+
-                            "background: lightgrey; \n"+
-                            "border-radius: 50%; \n"+
-                        "} \n"+
-                        //div text, 1->2
-                        ".msgTxt { \n"+
-                            "display: flex \n"+
-                            "flex-direction: column; \n"+
-                            "flex: auto; \n"+
-                            "max-width: 400px; \n"+
-                            "min-width: 200px; \n"+
-                            "width: 300px; \n"+
-                            "border-radius: 20px; \n"+
-                            "margin-left: 10px; \n"+
-                            "margin-right: 10px; \n"+
-                            "padding: 16px; \n"+
-                            "box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15); \n"+
-                        "} \n"+
-                        //div time
-                        ".msgTime { \n"+
-                            "flex: auto; \n"+
-                        "} \n"+
-
-                        //div msgTxt --> sender
-                        ".myUserClass { \n"+
-                            "background: #C6FCFF; \n"+
-                        "} \n"+"" +
-                        ".senderUserClass { \n"+
-                            "background: #FFFFFF; \n"+
-                        "} \n"+
-
-                        //div text --> div sender
-                        ".myUserClassS{ \n"+
-                            "display: none; \n"+ //Отправителя себя не отображаем
-                        "} \n"+
-
-                        ".senderUserClassS{ \n"+
-                            "word-wrap: break-word; \n"+    //<!--Перенос слов-->
-                            "color: #1EA362; \n"+
-                        "} \n"+
-
-                        //div text --> div msg
-                        ".msg { \n"+
-                            "width: auto; \n"+
-                            "word-wrap: break-word; \n"+    //<!--Перенос слов-->
-                        "} \n"+
-
-                        //div time -->sender
-                        ".myUserClassT { \n"+
-                            "color: #757575; \n"+
-                        "} \n"+
-                        ".senderUserClassT { \n"+
-                            "color: #4285F4; \n"+
-                        "} \n"+
-                    "</style> \n"+
-                  "</head> \n"+
-                  "<body></body> \n"+
-                "</html> \n");
+        webEngine.load(getClass().getClassLoader().getResource("client/html/Chat.html").toString());
     }
 
     private void fillContactListView() {
@@ -450,6 +353,8 @@ public class ChatViewController implements Initializable {
         message = message.replaceAll("\n", "<br/>");
         //Парсим ссылки, получаем строку вида <a href="message">message</a>
         message = Common.urlToHyperlink(message);
+        message = message.replace("\\", "\\\\")
+                .replace("'", "\\'");
 
         boolean visibleDateDay=false;
         if (tsOld == null) {
@@ -474,20 +379,20 @@ public class ChatViewController implements Initializable {
         Element divTxtSender = DOMdocument.createElement("div");
         Element divTxtMsg = DOMdocument.createElement("div");
         Element divTime = DOMdocument.createElement("div");
-        div.setAttribute("class", "message");
         divLogo.setAttribute("class", "msgLogo");
         divLogo.setAttribute("style", styleStr);
-        divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxtSender.setAttribute("class", attrClass+"S sender");
+        divTxtSender.setTextContent(senderName);
         divTxtMsg.setAttribute("class", attrClass+"M msg");
         divTxtMsg.setAttribute("id", String.valueOf(idMsg)); //id
-        divTime.setAttribute("class", attrClass+"T msgTime");
-        divTxtSender.setTextContent(senderName);
         divTxtMsg.setTextContent(message);
+        divTime.setAttribute("class", attrClass+"T msgTime");
         divTime.setTextContent(dateFormat.format(timestamp));
-        div.appendChild(divLogo);
+        divTxt.setAttribute("class", attrClass+" msgTxt");
         divTxt.appendChild(divTxtSender);
         divTxt.appendChild(divTxtMsg);
+        div.setAttribute("class", "message");
+        div.appendChild(divLogo);
         div.appendChild(divTxt);
         div.appendChild(divTime);
         body.appendChild(div);
