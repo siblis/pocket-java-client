@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.AuthFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.AuthToServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationToServer;
-import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.UserFromServer;
 import ru.geekbrains.pocket.messenger.client.utils.Connector;
 import ru.geekbrains.pocket.messenger.client.utils.Converter;
 import ru.geekbrains.pocket.messenger.client.utils.HTTPSRequest;
@@ -40,24 +39,26 @@ public class AuthController {
 
     private AuthFromServer sendRegRequest(String name, String password, String email) {
         String jsonRegData = Converter.toJson(new RegistrationToServer(email, password, name));
+        int responseCode = 0;
+        AuthFromServer responseFromServer = null;
         try {
-            int regStatus = HTTPSRequest.sendRequest("/auth/registration", "POST", jsonRegData);
-            AuthFromServer responseFromServer = HTTPSRequest.getResponse(AuthFromServer.class);
-            switch (regStatus) {
-                case 201:
-                    return responseFromServer;
-                case 429:
-                    showAlert("Отправлено слишком много запросов...", Alert.AlertType.WARNING);
-                    break;
-                case 409:
-                    showAlert("Указанный E-mail уже используется", Alert.AlertType.INFORMATION);
-                    break;
-                case 400:
-                    //todo: извлечение информации из ValidationError
-                    showAlert("Ошибка регистрации, код: " + regStatus, Alert.AlertType.ERROR);
-                }
+            responseCode = HTTPSRequest.sendRequest("/auth/registration", "POST", jsonRegData, null);
+            responseFromServer = HTTPSRequest.getResponse(AuthFromServer.class);
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.registration_error", e);
+        }
+        switch (responseCode) {
+            case 201:
+                return responseFromServer;
+            case 429:
+                showAlert("Отправлено слишком много запросов...", Alert.AlertType.WARNING);
+                break;
+            case 409:
+                showAlert("Указанный E-mail уже используется", Alert.AlertType.INFORMATION);
+                break;
+            case 400:
+                //todo: извлечение информации из ValidationError
+                showAlert("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);
         }
         return null;
     }
@@ -84,24 +85,23 @@ public class AuthController {
     private AuthFromServer sendAuthRequest(String login, String password) {
         if (!login.isEmpty() && !password.isEmpty()) {
             String jsonLoginData = Converter.toJson(new AuthToServer(login, password));
+            int responseCode = 0;
+            AuthFromServer authFromServer = null;
             try {
-                int regStatus = HTTPSRequest.sendRequest("/auth/login", "POST", jsonLoginData);
-                AuthFromServer authFromServer = HTTPSRequest.getResponse(AuthFromServer.class);
-                switch (regStatus) {
-                    case 200:
-                        return authFromServer;
-                    case 429:
-                        showAlert("Слишком много запросов!", Alert.AlertType.WARNING);
-                        break;
-                    case 404:
-                        showAlert("Неверные учётные данные!", Alert.AlertType.ERROR);
-                        break;
-                    default:
-                        showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
-                        controllerLogger.error("Ошибка авторизации!");
-                }
+                responseCode = HTTPSRequest.sendRequest("/auth/login", "POST", jsonLoginData, null);
+                authFromServer = HTTPSRequest.getResponse(AuthFromServer.class);
             } catch (Exception e) {
                 controllerLogger.error("HTTPSRequest.authorization_error", e);
+            }
+            switch (responseCode) {
+                case 200:
+                    return authFromServer;
+                case 429:
+                    showAlert("Слишком много запросов!", Alert.AlertType.WARNING);
+                    break;
+                case 404:
+                    showAlert("Неверные учётные данные!", Alert.AlertType.ERROR);
+                    break;
             }
         } else {
             showAlert("Неполные данные для авторизации!", Alert.AlertType.ERROR);
