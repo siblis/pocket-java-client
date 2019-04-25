@@ -353,6 +353,8 @@ public class ChatViewController implements Initializable {
         message = message.replaceAll("\n", "<br/>");
         //Парсим ссылки, получаем строку вида <a href="message">message</a>
         message = Common.urlToHyperlink(message);
+        message = message.replace("\\", "\\\\")
+                .replace("'", "\\'");
 
         boolean visibleDateDay=false;
         if (tsOld == null) {
