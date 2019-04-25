@@ -36,8 +36,6 @@ public class CFXOtherProfile extends AnchorPane {
     @FXML
     private Label labelEmailOtherProfile;
     @FXML
-    private Label labelStatus;
-    @FXML
     private Label labelName;
     @FXML
     private JFXTextArea textareaInfo;
@@ -55,19 +53,14 @@ public class CFXOtherProfile extends AnchorPane {
     private JFXButton removeUserBtn;
 
     public void onlineStatusChange(boolean newIsOnlineStatus){
-        if (!newIsOnlineStatus) {
-            circleOnline.setVisible(false);
-            labelStatus.setVisible(false);
-        } else {
-            circleOnline.setVisible(isFriend);
-            labelStatus.setVisible(!isFriend);
-        }
+            circleOnline.setVisible(newIsOnlineStatus);
     }
 
     public void setUser(User user){
         this.user = user;
         labelEmailOtherProfile.setText(user.getEmail());
         labelName.setText(user.getUserName());
+        onlineStatusChange(false);
     }
 
     public CFXOtherProfile() {
@@ -82,7 +75,6 @@ public class CFXOtherProfile extends AnchorPane {
             throw new RuntimeException(exception);
         }
         initListeners();
-        onlineStatusChange(false);
     }
 
     public CFXOtherProfile(User user) {
@@ -110,8 +102,6 @@ public class CFXOtherProfile extends AnchorPane {
         // true для контактов отсутствующих в адресной книге:
         btnCloseRight.setVisible(!isFriend);
         btnInvite.setVisible(!isFriend);
-        //отображение онлайн-статуса
-        onlineStatusChange(false);
     }
 
     public void setIfFriendly(boolean isFriend){
