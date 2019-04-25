@@ -19,6 +19,7 @@ public class testUserDB {
     public void start() {
         Integer id = 111;
         Id = id.toString();
+        dbs.setUserDB("t"); // создается тестовая БД с именем "t.db", т.к. имя пользователя не может состоять из 1 символа.
         User w = dbs.getUserById(Id);
         while (!(w==null)) {
             Id = (++id).toString();
