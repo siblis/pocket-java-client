@@ -56,9 +56,8 @@ public class ContactController {
             }
 
             //удаляем из локальной базы контакты, которых нет в списке контактов на сервере
-            if (!contactsToRemoveFromDb.isEmpty()) 
-                contactsToRemoveFromDb.forEach(entry -> 
-                        cc.contactService.removeContactFromDb(entry));
+            if (!contactsToRemoveFromDb.isEmpty())
+                contactsToRemoveFromDb.forEach(entry -> removeContactFromDb(entry));
 
             cc.contactListOfCards = new ArrayList<>();
             cc.contactList = getAllContactId();
@@ -76,7 +75,17 @@ public class ContactController {
             User curUser = entry.toUser();
             if (!cc.contactList.contains(curUser.getId())) {
                 cc.dbService.insertUser(curUser);
-            } else contactsToRemoveFromDb.remove(curUser);
+            } else if (contactsToRemoveFromDb.contains(curUser)) {
+                contactsToRemoveFromDb.remove(curUser);
+            } else {
+                cc.dbService.updateUser(curUser);
+                for (int i = 0; i < contactsToRemoveFromDb.size(); i++) {
+                    if (contactsToRemoveFromDb.get(i).getId().equals(curUser.getId())) {
+                        contactsToRemoveFromDb.remove(i);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -189,15 +198,15 @@ public class ContactController {
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.addContact_error", e);
         }
-            switch (responseCode) {
-                case 200:
-                    showAlert("Контакт " + user.getUserName() + " успешно добавлен", Alert.AlertType.INFORMATION);
-                    if (addContactToDbAndChat(newCont.toUser()))
-                        return true;
-                    break;
-                default:
-                    //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
-            }
+        switch (responseCode) {
+            case 200:
+                showAlert("Контакт " + user.getUserName() + " успешно добавлен", Alert.AlertType.INFORMATION);
+                if (addContactToDbAndChat(newCont.toUser()))
+                    return true;
+                break;
+            default:
+                //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+        }
         return false;
     }
 

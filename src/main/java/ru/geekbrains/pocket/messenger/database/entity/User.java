@@ -110,9 +110,9 @@ public class User {
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-//        if (!Objects.equals(this.profile, other.profile)) {
-//            return false;
-//        }
+        if (!Objects.equals(this.profile, other.profile)) {
+            return false;
+        }
         //email последний, т.к. данные (на 06.04.2019) могут быть не полными
         //(на 06.04.2019) для всех (кроме текущего аккаунта), часть адреса закрыта звёздочками
         return Objects.equals(this.email, other.email);
