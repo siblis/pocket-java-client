@@ -60,7 +60,6 @@ public class ContactController {
                 contactsToRemoveFromDb.forEach(entry -> removeContactFromDb(entry));
 
             cc.contactListOfCards = new ArrayList<>();
-            cc.contactList = getAllContactId();
             if (!cc.contactList.isEmpty()) {
                 getAllContacts().forEach(
                         user -> cc.contactListOfCards.add(new CFXListElement(user)));
@@ -75,6 +74,7 @@ public class ContactController {
             User curUser = entry.toUser();
             if (!cc.contactList.contains(curUser.getId())) {
                 cc.dbService.insertUser(curUser);
+                cc.contactList.add(curUser.getId());
             } else if (contactsToRemoveFromDb.contains(curUser)) {
                 contactsToRemoveFromDb.remove(curUser);
             } else {
@@ -115,11 +115,11 @@ public class ContactController {
     void removeContactFromDb(User contact) {
         cc.messageService.clearMessagesWithUser(contact);
         cc.dbService.deleteUser(contact);
+        cc.contactList.remove(contact.getId());
     }
 
     void removeContactFromDbAndChat(User contact) {
         removeContactFromDb(contact);
-        cc.contactList.remove(contact.getId());
         cc.contactListOfCards.remove(new CFXListElement(contact));
         if (cc.chatViewController != null) {
             cc.chatViewController.updateContactListView();
