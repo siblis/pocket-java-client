@@ -139,20 +139,9 @@ public class ContactController {
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getUserByEmail_error", e);
         }
-        //todo: если от сервера ответ только с кодом 200, то убрать ненужное
-        switch (responseCode) {
-            case 200:
-                if (finded != null && !finded.isEmpty())
-                    return new User(email, finded.toUserProfile());
-                break;
-            case 404:
-                // showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
-                break;
-            case 409:
-                //  showAlert("Пользователь " + contact + " уже есть в списке ваших контактов", Alert.AlertType.ERROR);
-                break;
-            default:
-                //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+        if (responseCode == 200) {
+            if (finded != null && !finded.isEmpty())
+                return new User(email, finded.toUserProfile());
         }
         return null;
     }
@@ -166,16 +155,9 @@ public class ContactController {
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getUserById_error", e);
         }
-        switch (responseCode) {
-            case 200:
-                if (finded != null && !finded.isEmpty())
-                    return new User(null, finded.toUserProfile());
-                break;
-            case 404:
-//                    showAlert("Пользователь с email: " + contact + " не найден", Alert.AlertType.ERROR);
-                break;
-            default:
-//                    showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+        if (responseCode == 200) {
+            if (finded != null && !finded.isEmpty())
+                return new User(null, finded.toUserProfile());
         }
         return null;
     }
@@ -198,14 +180,10 @@ public class ContactController {
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.addContact_error", e);
         }
-        switch (responseCode) {
-            case 200:
-                showAlert("Контакт " + user.getUserName() + " успешно добавлен", Alert.AlertType.INFORMATION);
-                if (addContactToDbAndChat(newCont.toUser()))
-                    return true;
-                break;
-            default:
-                //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
+        if (responseCode == 200) {
+            showAlert("Контакт " + user.getUserName() + " успешно добавлен", Alert.AlertType.INFORMATION);
+            if (addContactToDbAndChat(newCont.toUser()))
+                return true;
         }
         return false;
     }
@@ -218,14 +196,10 @@ public class ContactController {
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.addContact_error", e);
         }
-        switch (responseCode) {
-            case 200:
-                removeContactFromDbAndChat(user);
-                showAlert("Контакт " + user.getUserName() + " успешно удалён",
-                        Alert.AlertType.INFORMATION);
+        if (responseCode == 200) {
+            removeContactFromDbAndChat(user);
+            showAlert("Контакт " + user.getUserName() + " успешно удалён", Alert.AlertType.INFORMATION);
                 return true;
-            default:
-                //showAlert("Общая ошибка!", Alert.AlertType.ERROR);
         }
         return false;
     }
