@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.AuthFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.AuthToServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.RegistrationToServer;
-import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.UserFromServer;
 import ru.geekbrains.pocket.messenger.client.utils.Connector;
 import ru.geekbrains.pocket.messenger.client.utils.Converter;
 import ru.geekbrains.pocket.messenger.client.utils.HTTPSRequest;
@@ -19,91 +18,96 @@ public class AuthController {
 
     static final Logger controllerLogger = LogManager.getLogger(AuthController.class);
     
-    ClientController clientCtrllr;
+    ClientController cc;
 
     AuthController(ClientController cc) {
-        clientCtrllr = cc;
+        this.cc = cc;
     }
 
     boolean registration(String name, String password, String email) {
-        String jsonRegData = Converter.toJson(new RegistrationToServer(email, password, name));
-        try {
-            int regStatus = HTTPSRequest.sendRequest("/auth/registration", "POST", jsonRegData);
-            AuthFromServer authFromServer = HTTPSRequest.getResponse(AuthFromServer.class);
-            if (authFromServer != null) {
-                switch (regStatus) {
-                    case 201:
-                        UserFromServer registered = authFromServer.getUser();
-                        token = authFromServer.getToken();
-                        if (registered != null && token != null) {
-                            clientCtrllr.myUser = registered.toUser();
-                            clientCtrllr.dbService.setUserDB(clientCtrllr.myUser);
-                            clientCtrllr.dbService.insertUser(clientCtrllr.myUser);
-                            return true;
-                        }
-                    case 429: 
-                        showAlert("Отправлено слишком много запросов...", Alert.AlertType.WARNING);
-                        break;
-                    case 409:
-                        showAlert("Указанный E-mail уже используется", Alert.AlertType.INFORMATION);
-                        break;
-                    case 400:
-                        //todo: извлечение информации из ValidationError
-                        showAlert("Ошибка регистрации, код: " + regStatus, Alert.AlertType.ERROR);
-                }
+        AuthFromServer responseFromServer = sendRegRequest(name, password, email);
+        if (responseFromServer != null) {
+            if (responseFromServer.getUser() != null) {
+                User regUser = responseFromServer.getUser().toUser();
+                cc.dbService.setUserDB(regUser);
+                cc.dbService.insertUser(regUser);
+                return true;
             }
-        } catch (Exception e) {
-            controllerLogger.error("HTTPSRequest.registration", e);
         }
         return false;
     }
 
+    private AuthFromServer sendRegRequest(String name, String password, String email) {
+        String jsonRegData = Converter.toJson(new RegistrationToServer(email, password, name));
+        int responseCode = 0;
+        AuthFromServer responseFromServer = null;
+        try {
+            responseCode = HTTPSRequest.sendRequest("/auth/registration", "POST", jsonRegData, null);
+            responseFromServer = HTTPSRequest.getResponse(AuthFromServer.class);
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.registration_error", e);
+        }
+        switch (responseCode) {
+            case 201:
+                return responseFromServer;
+            case 429:
+                showAlert("Отправлено слишком много запросов...", Alert.AlertType.WARNING);
+                break;
+            case 409:
+                showAlert("Указанный E-mail уже используется", Alert.AlertType.INFORMATION);
+                break;
+            case 400:
+                //todo: извлечение информации из ValidationError
+                showAlert("Ошибка регистрации, код: " + responseCode, Alert.AlertType.ERROR);
+        }
+        return null;
+    }
+
     boolean login(String login, String password) {
+        AuthFromServer authFromServer = sendAuthRequest(login, password);
+        if (authFromServer != null && authFromServer.getUser() != null) {
+            token = authFromServer.getToken();
+            User authUser = authFromServer.getUser().toUser();
+            cc.dbService.setUserDB(authUser);
+            if (!cc.hasUserInLocalDB(authUser.getId())) {
+                cc.dbService.insertUser(authUser);
+            } else {
+                cc.dbService.updateUser(authUser);
+            }
+            cc.myUser = authUser;
+            cc.conn = new Connector(token, cc);
+            cc.contactService.synchronizeContactList();
+            return true;
+        }
+        return false;
+    }
+
+    private AuthFromServer sendAuthRequest(String login, String password) {
         if (!login.isEmpty() && !password.isEmpty()) {
             String jsonLoginData = Converter.toJson(new AuthToServer(login, password));
-            int regStatus = 0;
+            int responseCode = 0;
             AuthFromServer authFromServer = null;
             try {
-                regStatus = HTTPSRequest.sendRequest("/auth/login", "POST", jsonLoginData);
+                responseCode = HTTPSRequest.sendRequest("/auth/login", "POST", jsonLoginData, null);
                 authFromServer = HTTPSRequest.getResponse(AuthFromServer.class);
             } catch (Exception e) {
                 controllerLogger.error("HTTPSRequest.authorization_error", e);
             }
-            switch (regStatus) {
+            switch (responseCode) {
                 case 200:
-                    if (authFromServer != null && authFromServer.getUser() != null) {
-                        token = authFromServer.getToken();
-                        User myUser = authFromServer.getUser().toUser();
-                        System.out.println("answer server " + token + "\n" + myUser);
-                        clientCtrllr.dbService.setUserDB(myUser);
-                        clientCtrllr.myUser = clientCtrllr.dbService.getUserById(myUser.getId());
-                        if (clientCtrllr.myUser == null) {
-                            clientCtrllr.dbService.insertUser(myUser);
-                        } else {
-                            clientCtrllr.dbService.updateUser(myUser);
-                        }
-                        clientCtrllr.myUser = myUser;
-                        clientCtrllr.conn = new Connector(token, clientCtrllr);
-                        clientCtrllr.contactService.synchronizeContactList();
-
-                        return true;
-                    }
-                    break;
+                    return authFromServer;
                 case 429:
                     showAlert("Слишком много запросов!", Alert.AlertType.WARNING);
                     break;
                 case 404:
                     showAlert("Неверные учётные данные!", Alert.AlertType.ERROR);
                     break;
-                default:
-                    showAlert("Ошибка авторизации!", Alert.AlertType.ERROR);
-                    controllerLogger.error("Ошибка авторизации!");
             }
         } else {
             showAlert("Неполные данные для авторизации!", Alert.AlertType.ERROR);
             controllerLogger.error("Неполные данные для авторизации!");
         }
-        return false;
+        return null;
     }
 
     String changePassword(String email, String codeRecovery, String password) {

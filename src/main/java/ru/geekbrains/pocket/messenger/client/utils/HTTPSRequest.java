@@ -1,6 +1,5 @@
 package ru.geekbrains.pocket.messenger.client.utils;
 
-import javafx.scene.control.Alert;
 import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,17 +12,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
 
 public class HTTPSRequest {
     private static final Logger requestLogger = LogManager.getLogger(HTTPSRequest.class.getName());
     private static String serverURL = "https://" + Connector.connectTo;
     private static HttpsURLConnection con;
 
-    public static int sendRequest(String path, String method, String requestJSON) throws Exception {
-        URL obj = new URL(serverURL + path);
-        con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod(method);
+    public static int sendRequest(String path, String method, String requestJSON, String token) throws Exception {
+        con = getConnection(path, method, token);
         if (requestJSON != null) {
             con.setRequestProperty("content-type", "application/json");
             con.setDoOutput(true);
@@ -45,7 +41,7 @@ public class HTTPSRequest {
     public static String getResponse() throws Exception {
         StringBuilder response = new StringBuilder();
         try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()))) {
+                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
@@ -53,7 +49,6 @@ public class HTTPSRequest {
             }
             requestLogger.info(response.toString());
         } catch (IOException e) {
-            requestLogger.error("answerRequest_error", e);
             throw e;
         }
         return response.toString();
@@ -87,42 +82,6 @@ public class HTTPSRequest {
         con.setRequestMethod("POST");
         sendRequest(con, requestJSON);
         return answerRequest(con);
-    }
-
-    /**
-     * Получение пользователя по {@code id != null} ({@code email == null}), 
-     * либо по {@code email} ({@code id == null}).
-     *
-     * @param id id пользователя для поиска (приоритетно)
-     * @param email email пользователя для поиска (при {@code id == null})
-     * @param token
-     * @return
-     * @throws Exception
-     */
-    public static ServerResponse getUser(String id, String email, String token) throws Exception {
-        String query;
-        if (id != null)
-            query = id;
-        else
-            query = "?email=" + email;
-        HttpsURLConnection connection = getConnection("/users/" + query, "GET", token);
-        return getServerResponse(connection, null);
-    }
-
-    public static ServerResponse addContact(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/account/contacts/", "POST", token);
-        return getServerResponse(connection, requestJSON);
-    }
-
-    public static ServerResponse deleteContact(String userId, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/account/contacts/" + userId, "DELETE", token);
-        return getServerResponse(connection, null);
-    }
-
-    public static ServerResponse getContacts(String token, int offset) throws Exception {
-        HttpsURLConnection connection = 
-                getConnection("/account/contacts/?offset=" + offset, "GET", token);
-        return getServerResponse(connection, null);
     }
 
     public static ServerResponse getMySelf(String token) throws Exception {
@@ -161,7 +120,8 @@ public class HTTPSRequest {
         URL url = new URL(serverURL + urlPath);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod(method);
-        connection.setRequestProperty("Authorization", "Bearer " + token);
+        if (token != null)
+            connection.setRequestProperty("Authorization", "Bearer " + token);
         return connection;
     }
 
