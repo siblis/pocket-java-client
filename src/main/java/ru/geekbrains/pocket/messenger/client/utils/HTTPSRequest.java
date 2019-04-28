@@ -154,7 +154,7 @@ public class HTTPSRequest {
     private static String answerRequest(HttpsURLConnection con) throws Exception {
         StringBuilder response = new StringBuilder();
         try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()))) {
+                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
