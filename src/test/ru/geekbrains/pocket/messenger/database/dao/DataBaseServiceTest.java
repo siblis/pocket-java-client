@@ -28,7 +28,7 @@ public class DataBaseServiceTest {
             Id = (++id).toString();
             w = dbs.getUserById(Id);
         }
-        up = new UserProfile(Id, "User", "Userov", new Timestamp(0l));
+        up = new UserProfile(Id, "U", "U", new Timestamp(0l));
         user = new User("u@u.uu", up);
     }
 
@@ -39,6 +39,7 @@ public class DataBaseServiceTest {
 
     @Test
     public void insertUser() {
+        Assert.assertEquals(null, dbs.getUserById(Id));
         dbs.insertUser(user);
         Assert.assertEquals(user, dbs.getUserById(Id));
         dbs.deleteUser(user);
@@ -47,7 +48,8 @@ public class DataBaseServiceTest {
     @Test
     public void deleteUser() {
         dbs.insertUser(user);
+        Assert.assertEquals(user, dbs.getUserById(Id));
         dbs.deleteUser(user);
-        Assert.assertNotEquals(user, dbs.getUserById(Id));
+        Assert.assertEquals(null, dbs.getUserById(Id));
     }
 }
