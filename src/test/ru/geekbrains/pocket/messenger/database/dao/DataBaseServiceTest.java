@@ -39,7 +39,7 @@ public class DataBaseServiceTest {
 
     @Test
     public void insertUser() {
-        Assert.assertEquals(null, dbs.getUserById(Id));
+        Assert.assertNull( dbs.getUserById(Id));
         dbs.insertUser(user);
         Assert.assertEquals(user, dbs.getUserById(Id));
         dbs.deleteUser(user);
@@ -50,6 +50,6 @@ public class DataBaseServiceTest {
         dbs.insertUser(user);
         Assert.assertEquals(user, dbs.getUserById(Id));
         dbs.deleteUser(user);
-        Assert.assertEquals(null, dbs.getUserById(Id));
+        Assert.assertNull(dbs.getUserById(Id));
     }
 }
