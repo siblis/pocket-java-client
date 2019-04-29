@@ -208,7 +208,6 @@ public class ChatViewController implements Initializable {
         idMsg = 0; //присваивание ID
 
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
-        initBackgroundWebView();
         initWebView();
 
         clientController = ClientController.getInstance();
@@ -246,20 +245,6 @@ public class ChatViewController implements Initializable {
          CFXMenuLeft.setParentController(instance);
          PaneProvider.setBorderPaneMain(borderPaneMain);
 
-    }
-
-
-    //  инициализация картинки backgrounda
-    private void initBackgroundWebView() {
-        String path = "client/images/chat-bg.jpg"; //картинка фона
-        ClassLoader cl = this.getClass().getClassLoader();
-        backgroundImage = "";
-        try {
-            backgroundImage = cl.getResource(path).toURI().toString();
-        }catch (Exception e) {
-            //todo перенести в логирование
-            e.printStackTrace();
-        }
     }
 
     // инициализация только HTML в WebView.
@@ -514,7 +499,7 @@ public class ChatViewController implements Initializable {
     private void handleFindedClientChoice(MouseEvent event) {
         String receiver = searchListView.getSelectionModel().getSelectedItem().getUser().getId();
         if (event.getClickCount() == 1) {
-            if (clientController.hasReceiver(receiver)) {
+            if (clientController.hasUserInLocalDB(receiver)) {
                 btnContactSearchInvite.setVisible(false);
                 clientController.setReceiver(receiver);
                 messageField.requestFocus();
@@ -526,7 +511,7 @@ public class ChatViewController implements Initializable {
         } else if (event.getClickCount() == 2) {
             othersProfile.setUser(
                     searchListView.getSelectionModel().getSelectedItem().getUser());
-            othersProfile.setIfFriendly(clientController.hasReceiver(receiver));
+            othersProfile.setIfFriendly(clientController.hasUserInLocalDB(receiver));
             PaneProvider.setProfileScrollPane(otherProfileScrollPane);
             paneProvidersProfScrollPaneVisChange(true);
         }

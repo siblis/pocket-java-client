@@ -126,8 +126,8 @@ public class ClientController {
         messageService.loadChat();
     }
 
-    public boolean hasReceiver(String receiverId) {
-        return dbService.getUserById(receiverId) != null;
+    public boolean hasUserInLocalDB(String userId) {
+        return dbService.getUserById(userId) != null;
     }
 
     public void setMessageSession(StompSession session) {

@@ -66,7 +66,7 @@ public class HibernateUtil {
                             if (sqlEx.contains(DATABASE_DIR + "' does not exist")) {
                                 System.err.println("Отсутствует каталог " + WORK_DIR + File.separator + DATABASE_DIR);
                             } else if (sqlEx.contains("opening db:")) {
-                                System.err.println("Отсутствует доступ к БД " + WORK_DIR + File.separator + DATABASE_DIR + username + ".db");
+                                System.err.println("Отсутствует доступ к БД " + WORK_DIR + File.separator + DATABASE_DIR + File.separator + username + ".db");
                             }
                         }
                     } else if (t instanceof org.hibernate.exception.JDBCConnectionException)
@@ -82,6 +82,12 @@ public class HibernateUtil {
             }
         }
         return sessionFactory;
+    }
+
+    public static boolean deleteDBFile() {
+        shutdown();
+        File fileDB = new File(WORK_DIR + File.separator + DATABASE_DIR + File.separator + username + ".db");
+        return fileDB.delete();
     }
 
     public static void shutdown() {
