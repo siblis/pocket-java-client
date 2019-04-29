@@ -1,14 +1,11 @@
 package ru.geekbrains.pocket.messenger.database.dao;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 
 import ru.geekbrains.pocket.messenger.database.HibernateUtil;
-import ru.geekbrains.pocket.messenger.database.dao.DataBaseService;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 import ru.geekbrains.pocket.messenger.database.entity.UserProfile;
 
-import java.io.File;
 import java.sql.Timestamp;
 
 public class DataBaseServiceTest {
@@ -34,7 +31,7 @@ public class DataBaseServiceTest {
 
     @After
     public void tearDown() throws Exception {
-            HibernateUtil.delDB();
+            HibernateUtil.deleteDBFile();
     }
 
     @Test

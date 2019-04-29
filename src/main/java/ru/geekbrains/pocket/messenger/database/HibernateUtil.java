@@ -84,7 +84,7 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
-    public static boolean delDB () {
+    public static boolean deleteDBFile() {
         shutdown();
         File fileDB = new File(WORK_DIR + File.separator + DATABASE_DIR + File.separator + username + ".db");
         return fileDB.delete();
