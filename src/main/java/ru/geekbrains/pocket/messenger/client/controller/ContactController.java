@@ -32,7 +32,7 @@ import static ru.geekbrains.pocket.messenger.client.utils.Common.showAlert;
 
 public class ContactController {
 
-    static final Logger controllerLogger = LogManager.getLogger(AuthController.class);
+    static final Logger controllerLogger = LogManager.getLogger(ContactController.class);
 
     ClientController cc;
 
@@ -69,22 +69,16 @@ public class ContactController {
         }
     }
 
-    void synchronizePageOfContListFromServ(ContactFromServer[] contacts, List<User> contactsToRemoveFromDb) {
+    private void synchronizePageOfContListFromServ(ContactFromServer[] contacts, List<User> contactsToRemoveFromDb) {
         for (ContactFromServer entry : contacts) {
             User curUser = entry.toUser();
             if (!cc.contactList.contains(curUser.getId())) {
-                cc.dbService.insertUser(curUser);
-                cc.contactList.add(curUser.getId());
+                addContactToDb(curUser);
             } else if (contactsToRemoveFromDb.contains(curUser)) {
                 contactsToRemoveFromDb.remove(curUser);
             } else {
+                contactsToRemoveFromDb.remove(cc.dbService.getUserById(curUser.getId()));
                 cc.dbService.updateUser(curUser);
-                for (int i = 0; i < contactsToRemoveFromDb.size(); i++) {
-                    if (contactsToRemoveFromDb.get(i).getId().equals(curUser.getId())) {
-                        contactsToRemoveFromDb.remove(i);
-                        break;
-                    }
-                }
             }
         }
     }
@@ -101,10 +95,14 @@ public class ContactController {
         return contacts;
     }
 
-
-    boolean addContactToDbAndChat(User contact) {
+    boolean addContactToDb(User contact) {
         cc.dbService.insertUser(contact);
         cc.contactList.add(contact.getId());
+        return true;
+    }
+
+    boolean addContactToDbAndChat(User contact) {
+        addContactToDb(contact);
         cc.contactListOfCards.add(new CFXListElement(contact));
         if (cc.chatViewController != null) {
             cc.chatViewController.updateContactListView();
@@ -134,7 +132,7 @@ public class ContactController {
         int responseCode = 0;
         UserProfileFromServer finded = null;
         try {
-            responseCode = HTTPSRequest.sendRequest("/users/?email=" + email, "GET", null, token);
+            responseCode = HTTPSRequest.sendRequest("/users?email=" + email, "GET", null, token);
             finded = HTTPSRequest.getResponse(UserProfileFromServer.class);
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getUserByEmail_error", e);
@@ -182,7 +180,7 @@ public class ContactController {
         }
         if (responseCode == 200) {
             showAlert("Контакт " + user.getUserName() + " успешно добавлен", Alert.AlertType.INFORMATION);
-            if (addContactToDbAndChat(newCont.toUser()))
+            if (newCont != null && addContactToDbAndChat(newCont.toUser()))
                 return true;
         }
         return false;

@@ -39,18 +39,19 @@ public class HTTPSRequest {
     }
 
     public static String getResponse() throws Exception {
+        if (con == null || con.getResponseCode() == 404 ||
+                con.getInputStream() == null || con.getInputStream().available() == 0)
+            return "{}";
         StringBuilder response = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
 
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            requestLogger.info(response.toString());
-        } catch (IOException e) {
-            throw e;
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
         }
+        requestLogger.info(response.toString());
+        
         return response.toString();
     }
 
