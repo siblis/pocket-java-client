@@ -74,7 +74,7 @@
                                                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="35.0" layoutX="10.0" stroke="#3498db" strokeType="INSIDE" strokeWidth="3.0" width="388.0" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="12.0" />
                                                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="35.0" layoutX="20.0" layoutY="415.0" stroke="#3498db" strokeType="INSIDE" strokeWidth="3.0" width="388.0" AnchorPane.bottomAnchor="110.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="12.0" />
                                                     <JFXTextField fx:id="creategroupName" layoutX="17.0" layoutY="241.0" onAction="#handleGroupCreateButton" prefHeight="9.0" prefWidth="374.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="115.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="19.0" />
-                                                    <JFXTextField layoutX="17.0" layoutY="409.0" prefHeight="9.0" prefWidth="374.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="19.0" />
+                                                    <JFXTextField fx:id="creategroupDescription" layoutX="17.0" layoutY="409.0" prefHeight="9.0" prefWidth="374.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="19.0" />
                                                 </children>
                                             </AnchorPane>
                                         </children>

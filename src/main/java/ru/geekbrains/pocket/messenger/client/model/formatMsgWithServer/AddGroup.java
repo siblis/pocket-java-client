@@ -1,11 +1,22 @@
 package ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer;
 
+import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddGroup {
-    public String group_name;
+    private String name;
+    private String description;
 
-    public AddGroup() {}
+    @SerializedName("public")
+    private boolean isPublic;
 
-    public AddGroup(String group_name) {
-        this.group_name = group_name;
+
+
+    public AddGroup(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 }
