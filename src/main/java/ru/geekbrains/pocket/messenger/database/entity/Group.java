@@ -56,13 +56,9 @@ public class Group {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return isPublic == group.isPublic &&
-                id.equals(group.id) &&
+        return id.equals(group.id) &&
                 creatorId.equals(group.creatorId) &&
-                Objects.equals(space, group.space) &&
-                name.equals(group.name) &&
-                Objects.equals(description, group.description) &&
-                Objects.equals(invitationCode, group.invitationCode);
+                name.equals(group.name);
     }
 
     @Override

@@ -85,13 +85,12 @@ public class GroupController {
                     break;
                 case 400:
                     ValidationErrorCollection validationError = HTTPSRequest.getResponse(ValidationErrorCollection.class);
-                    showAlert("Ошибка запроса\n" + validationError.getMessage() + ":\n" +
+                    showAlert("Ошибка создания группы\n" + validationError.getMessage() + ":\n" +
                             validationError.getErrors(), Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.addGroup_error", e);
         }
-
     }
 
     void addUserGroup(String group_id, String new_user_id) {
