@@ -10,6 +10,7 @@ import ru.geekbrains.pocket.messenger.client.model.ServerResponse;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.AddGroup;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.AddUserGroup;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.GroupFromServer;
+import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.ValidationErrorCollection;
 import ru.geekbrains.pocket.messenger.client.utils.Converter;
 import ru.geekbrains.pocket.messenger.client.utils.HTTPSRequest;
 
@@ -72,23 +73,23 @@ public class GroupController {
 
     void addGroup(String group_name, String group_desc){
         String jsonAddGroupData = Converter.toJson(new AddGroup(group_name, group_desc));
-        int responseCode = 0;
-        GroupFromServer groupFromServer = null;
         try {
-            responseCode = HTTPSRequest.sendRequest("/groups", "POST", jsonAddGroupData, token);
-            groupFromServer = HTTPSRequest.getResponse(GroupFromServer.class);
+            int responseCode = HTTPSRequest.sendRequest("/groups", "POST", jsonAddGroupData, token);
+            switch (responseCode) {
+                case 200:
+                    showAlert("Группа " + group_name + " успешно создана", Alert.AlertType.INFORMATION);
+                    GroupFromServer groupFromServer = HTTPSRequest.getResponse(GroupFromServer.class);
+                    cc.dbService.addGroup(groupFromServer.toGroup());
+                    //addContactToDB(convertJSONToUser(response.getResponseJson()));
+                    //if (chatViewController != null) chatViewController.fillContactListView();
+                    break;
+                case 400:
+                    ValidationErrorCollection validationError = HTTPSRequest.getResponse(ValidationErrorCollection.class);
+                    showAlert("Ошибка запроса\n" + validationError.getMessage() + ":\n" +
+                            validationError.getErrors(), Alert.AlertType.ERROR);
+            }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.addGroup_error", e);
-        }
-        switch (responseCode) {
-            case 200:
-                showAlert("Группа " + group_name + " успешно создана", Alert.AlertType.INFORMATION);
-                cc.dbService.addGroup(groupFromServer.toGroup());
-                //addContactToDB(convertJSONToUser(response.getResponseJson()));
-                //if (chatViewController != null) chatViewController.fillContactListView();
-                break;
-            case 400:
-                showAlert("Ошибка запроса", Alert.AlertType.ERROR);
         }
 
     }
