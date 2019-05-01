@@ -37,10 +37,6 @@ public class HTTPSRequest {
 
     public static String getResponse() throws Exception {
         int responseCode = con.getResponseCode();
-        if (con == null || responseCode == 404)
-//            ||
-//                con.getInputStream() == null || con.getInputStream().available() == 0)
-            return "{}";
         StringBuilder response = new StringBuilder();
         InputStream stream = (responseCode == 200 || responseCode == 201) ?
                 con.getInputStream() : con.getErrorStream();
