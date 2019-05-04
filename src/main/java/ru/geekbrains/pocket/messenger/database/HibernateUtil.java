@@ -45,7 +45,8 @@ public class HibernateUtil {
                         .setProperty("hibernate.hbm2ddl.auto", "update")
                         .addAnnotatedClass(ru.geekbrains.pocket.messenger.database.entity.UserProfile.class)
                         .addAnnotatedClass(ru.geekbrains.pocket.messenger.database.entity.User.class)
-                        .addAnnotatedClass(ru.geekbrains.pocket.messenger.database.entity.Message.class);
+                        .addAnnotatedClass(ru.geekbrains.pocket.messenger.database.entity.Message.class)
+                        .addAnnotatedClass(ru.geekbrains.pocket.messenger.database.entity.Group.class);
                 sessionFactory = configuration.buildSessionFactory();
             }
             //https://docs.jboss.org/hibernate/orm/3.2/api/org/hibernate/class-use/HibernateException.html

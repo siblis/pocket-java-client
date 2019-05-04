@@ -127,6 +127,9 @@ public class ChatViewController implements Initializable {
     private JFXTextField creategroupName;
 
     @FXML
+    private JFXTextField creategroupDescription;
+
+    @FXML
     private CFXMyProfile myProfile;
 
     @FXML
@@ -758,7 +761,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     public void handleGroupCreateButton(){
-        clientController.addGroup(creategroupName.getText());
+        clientController.addGroup(creategroupName.getText(), creategroupDescription.getText());
     }
 
     @FXML

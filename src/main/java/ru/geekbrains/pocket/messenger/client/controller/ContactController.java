@@ -129,33 +129,29 @@ public class ContactController {
     }
 
     User getFromServerUserByEmail(String email) {
-        int responseCode = 0;
-        UserProfileFromServer finded = null;
         try {
-            responseCode = HTTPSRequest.sendRequest("/users?email=" + email, "GET", null, token);
-            finded = HTTPSRequest.getResponse(UserProfileFromServer.class);
+            int responseCode = HTTPSRequest.sendRequest("/users?email=" + email, "GET", null, token);
+            if (responseCode == 200) {
+                UserProfileFromServer finded = HTTPSRequest.getResponse(UserProfileFromServer.class);
+                if (finded != null && !finded.isEmpty())
+                    return new User(email, finded.toUserProfile());
+            }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getUserByEmail_error", e);
-        }
-        if (responseCode == 200) {
-            if (finded != null && !finded.isEmpty())
-                return new User(email, finded.toUserProfile());
         }
         return null;
     }
 
     User getFromServerUserById(String id) {
-        int responseCode = 0;
-        UserProfileFromServer finded = null;
         try {
-            responseCode = HTTPSRequest.sendRequest("/users/" + id, "GET", null, token);
-            finded = HTTPSRequest.getResponse(UserProfileFromServer.class);
+            int responseCode = HTTPSRequest.sendRequest("/users/" + id, "GET", null, token);
+            if (responseCode == 200) {
+                UserProfileFromServer finded = HTTPSRequest.getResponse(UserProfileFromServer.class);
+                if (finded != null && !finded.isEmpty())
+                    return new User(null, finded.toUserProfile());
+            }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.getUserById_error", e);
-        }
-        if (responseCode == 200) {
-            if (finded != null && !finded.isEmpty())
-                return new User(null, finded.toUserProfile());
         }
         return null;
     }
@@ -169,19 +165,17 @@ public class ContactController {
 
     boolean addContact(User user) {
         //todo ответа сервера не предусмотрено => убрать return и добавить проброс ошибок
-        int responseCode = 0;
-        ContactFromServer newCont = null;
         UserToServer uts = new UserToServer(user.getId(), user.getUserName());
         try {
-            responseCode = HTTPSRequest.sendRequest("/account/contacts/", "POST", uts.toJson(), token);
-            newCont = HTTPSRequest.getResponse(ContactFromServer.class);
+            int responseCode = HTTPSRequest.sendRequest("/account/contacts/", "POST", uts.toJson(), token);
+            if (responseCode == 200) {
+                showAlert("Контакт " + user.getUserName() + " успешно добавлен", Alert.AlertType.INFORMATION);
+                ContactFromServer newCont = HTTPSRequest.getResponse(ContactFromServer.class);
+                if (newCont != null && addContactToDbAndChat(newCont.toUser()))
+                    return true;
+            }
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.addContact_error", e);
-        }
-        if (responseCode == 200) {
-            showAlert("Контакт " + user.getUserName() + " успешно добавлен", Alert.AlertType.INFORMATION);
-            if (newCont != null && addContactToDbAndChat(newCont.toUser()))
-                return true;
         }
         return false;
     }
