@@ -75,7 +75,7 @@ public class MessageController {
                         "нет на сервере. Сообщение:\n" + mfs);
         }
         //Проверяем что у нас чат именно с этим пользователем, иначе сообщение не выводится
-        if (clientCtrllr.receiver.getId().equals(mfs.getSender())) {
+        if (clientCtrllr.receiver != null && clientCtrllr.receiver.getId().equals(mfs.getSender())) {
             Message mess = mfs.toMessageWithoutUsers();
             mess.setSender(clientCtrllr.dbService.getUserById(mfs.getSender()));
             mess.setReceiver(clientCtrllr.dbService.getUserById(mfs.getRecipient()));
