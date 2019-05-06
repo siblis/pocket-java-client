@@ -74,15 +74,17 @@ public class MessageController {
                 controllerLogger.error("Получено сообщение от пользователя, данных которого " +
                         "нет на сервере. Сообщение:\n" + mfs);
         }
+        Message mess = mfs.toMessageWithoutUsers();
+        mess.setSender(clientCtrllr.dbService.getUserById(mfs.getSender()));
+        mess.setReceiver(clientCtrllr.dbService.getUserById(mfs.getRecipient()));
+        clientCtrllr.dbService.addMessage(mess);
         //Проверяем что у нас чат именно с этим пользователем, иначе сообщение не выводится
         if (clientCtrllr.receiver != null && clientCtrllr.receiver.getId().equals(mfs.getSender())) {
-            Message mess = mfs.toMessageWithoutUsers();
-            mess.setSender(clientCtrllr.dbService.getUserById(mfs.getSender()));
-            mess.setReceiver(clientCtrllr.dbService.getUserById(mfs.getRecipient()));
             clientCtrllr.chatViewController.showMessage(mess, true);
-            clientCtrllr.dbService.addMessage(mess);
+        } else {
+            //todo: превью и счётчик непрочитанных для контакта / группы, от которых пришло сообщение
         }
-        if (mfs.getSender() != null) { //отключаем звук для служебных сообщений
+        if (mfs.getSender() != null || mfs.getGroup() != null) { //отключаем звук для служебных сообщений
             Sound.playSoundNewMessage().join(); //Звук нового сообщения должен быть в любом случае
         }
     }
