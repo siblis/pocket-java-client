@@ -33,6 +33,8 @@ public class CFXListElement extends AnchorPane {
     @FXML
     private Circle circleUnreadMessages;
 
+    private int unreadMessagesCounter = 0;
+    
     @FXML
     private MaterialDesignIconView unreadGlyph;
 
@@ -58,7 +60,7 @@ public class CFXListElement extends AnchorPane {
             throw new RuntimeException(exception);
         }
         
-        setUnreadMessages("0");
+        unreadMessagesReadAll();
         setBody("");
         setOnlineStatus(false);
     }
@@ -100,22 +102,28 @@ public class CFXListElement extends AnchorPane {
 
     }
 
-    public String getUnreadMessages() {
-        return unreadMessages.getText();
+    public void unreadMessagesIncrease() {
+        circleUnreadMessages.setVisible(true);
+        unreadGlyph.setVisible(true);
+        unreadMessages.setText(Objects.toString(++unreadMessagesCounter));
+        unreadMessages.setVisible(true);
     }
 
-    public void setUnreadMessages(String unreadMessages) {
-        if (unreadMessages.equals("0")){
-            circleUnreadMessages.setVisible(false);
-            unreadGlyph.setVisible(false);
-            this.unreadMessages.setVisible(false);
-        } else
-        {
+    public void unreadMessagesDecrease() {
+        if (unreadMessagesCounter > 1){
             circleUnreadMessages.setVisible(true);
             unreadGlyph.setVisible(true);
-            this.unreadMessages.setText("+"+unreadMessages);
-            this.unreadMessages.setVisible(true);
+            unreadMessages.setText(Objects.toString(--unreadMessagesCounter));
+            unreadMessages.setVisible(true);
+        } else {
+            unreadMessagesReadAll();
         }
+    }
+
+    public void unreadMessagesReadAll() {
+        circleUnreadMessages.setVisible(false);
+        unreadGlyph.setVisible(false);
+        unreadMessages.setVisible(false);
     }
 
     public User getUser(){
