@@ -1,11 +1,13 @@
 package ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserFromServer {
     private String id;
     private String email;

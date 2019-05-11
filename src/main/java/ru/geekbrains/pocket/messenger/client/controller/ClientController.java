@@ -39,7 +39,7 @@ public class ClientController {
         this.chatViewController = chatViewController;
     }
 
-    private ClientController() {
+    ClientController() {
         receiver = null;
         myUser = null;
         conn = null;

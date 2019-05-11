@@ -2,12 +2,15 @@ package ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer;
 
 import java.sql.Timestamp;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.geekbrains.pocket.messenger.database.entity.UserProfile;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserProfileFromServer {
     private String id;
 
