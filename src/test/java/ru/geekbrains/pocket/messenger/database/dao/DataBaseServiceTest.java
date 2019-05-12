@@ -34,7 +34,7 @@ public class DataBaseServiceTest {
     }
 
     @Test
-    public void insertUser() {
+    public void insertUserTest() {
         Assert.assertNull( dbs.getUserById(Id));
         dbs.insertUser(user);
         Assert.assertEquals(user, dbs.getUserById(Id));
@@ -42,7 +42,7 @@ public class DataBaseServiceTest {
     }
 
     @Test
-    public void deleteUser() {
+    public void deleteUserTest() {
         dbs.insertUser(user);
         Assert.assertEquals(user, dbs.getUserById(Id));
         dbs.deleteUser(user);
@@ -50,7 +50,7 @@ public class DataBaseServiceTest {
     }
 
     @Test
-    public void addMessage() {
+    public void addMessageTest() {
 
         dbs.insertUser(user);
         User userComm = new User("q@q.qq", new UserProfile("222", "His", "His", new Timestamp(01)));
