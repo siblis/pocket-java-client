@@ -6,6 +6,7 @@ import ru.geekbrains.pocket.messenger.database.HibernateUtil;
 import ru.geekbrains.pocket.messenger.database.entity.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseServiceTest {
@@ -29,11 +30,10 @@ public class DataBaseServiceTest {
 
     @After
     public void tearDown() throws Exception {
-            HibernateUtil.deleteDBFile();
+            HibernateUtil.deleteDBFile(); // удалятеся тестовая БД
     }
 
     @Test
-//    @Ignore
     public void insertUser() {
         Assert.assertNull( dbs.getUserById(Id));
         dbs.insertUser(user);
@@ -42,7 +42,6 @@ public class DataBaseServiceTest {
     }
 
     @Test
-//    @Ignore
     public void deleteUser() {
         dbs.insertUser(user);
         Assert.assertEquals(user, dbs.getUserById(Id));
@@ -52,23 +51,32 @@ public class DataBaseServiceTest {
 
     @Test
     public void addMessage() {
+
         dbs.insertUser(user);
         User userComm = new User("q@q.qq", new UserProfile("222", "His", "His", new Timestamp(01)));
         dbs.insertUser(userComm);
 
+        List<Message> messages = new ArrayList<>();
+        messages.add(generateMessage(user, userComm, "Тест", "1"));
+        messages.add(generateMessage(user, userComm, "Ок!", "2"));
+        messages.add(generateMessage(user, userComm, "", "3"));
+        messages.add(generateMessage(user, userComm, "wefrkncjerEf egtrg wgRW trhg vrbgrwbth rgt...", "4"));
+        messages.add(generateMessage(user, userComm, "Привет, друг! Как дела? ты где сейчас?", "5"));
+        messages.add(generateMessage(userComm, user,"И тебе привет! Всё отлично!!! Я тут,  а ты где?", "6"));
+        messages.add(generateMessage(user, userComm,"И я тут... ", "7"));
 
-        Assert.assertTrue(okMessageInDB(user, userComm, "Тест", "1"));
-        Assert.assertTrue(okMessageInDB(user, userComm, "Ок!", "2"));
-        Assert.assertTrue(okMessageInDB(user, userComm, "", "3"));
-        Assert.assertTrue(okMessageInDB(user, userComm, "wefrkncjerEf egtrg wgRW trhg vrbgrwbth rgt...", "4"));
-        Assert.assertTrue(okMessageInDB(user, userComm, "Привет, друг! Как дела? ты где сейчас?", "5"));
-        Assert.assertTrue(okMessageInDB(userComm, user,"И тебе привет! Всё отлично!!! Я тут,  а ты где?", "6"));
-        Assert.assertTrue(okMessageInDB(user, userComm,"И я тут... ", "7"));
+        for (Message mess : messages) {
+            dbs.addMessage(mess);
+        }
 
+        List<Message> messages1 = dbs.getChat(user, userComm);
 
+        for (int i=0; i<messages.size(); i++) {
+            Assert.assertEquals(messages.get(i), messages1.get(i));
+        }
     }
 
-    private Boolean okMessageInDB(User user1, User user2, String mess, String id) {
+    private Message generateMessage (User user1, User user2, String mess, String id) {
         Message message = new Message();
         message.setSender(user2);
         message.setReceiver(user1);
@@ -76,15 +84,6 @@ public class DataBaseServiceTest {
         message.setId(id);
         message.setTime(new Timestamp(01));
 
-        dbs.addMessage(message);
-
-        List<Message> spMess = dbs.getChat(message.getSender(), message.getReceiver());
-        Message tmpMess = null;
-        Boolean found = false;
-        for (int i = 0; i<spMess.size(); i++) {
-            tmpMess = spMess.get(i);
-            if ((message.getId().equals(tmpMess.getId())) & (message.getText().equals(tmpMess.getText()))) found = true;
-        }
-        return found;
+        return message;
     }
 }
