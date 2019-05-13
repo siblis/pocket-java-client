@@ -30,7 +30,7 @@ public class DataBaseServiceTest {
 
     @After
     public void tearDown() throws Exception {
-            HibernateUtil.deleteDBFile(); // удалятеся тестовая БД
+            HibernateUtil.deleteDBFile(); // удаляется тестовая БД
     }
 
     @Test
@@ -71,9 +71,8 @@ public class DataBaseServiceTest {
 
         List<Message> messages1 = dbs.getChat(user, userComm);
 
-        for (int i=0; i<messages.size(); i++) {
-            Assert.assertEquals(messages.get(i), messages1.get(i));
-        }
+        Assert.assertEquals(messages, messages1);
+
     }
 
     private Message generateMessage (User user1, User user2, String mess, String id) {
