@@ -170,8 +170,8 @@ public class ClientController {
         groupService.joinGroup(groupName);
     }
 
-    public void addGroup(String group_name){
-        groupService.addGroup(group_name);
+    public void addGroup(String group_name, String group_desc){
+        groupService.addGroup(group_name, group_desc);
     }
 
     public void addUserGroup(String group_id, String new_user_id) {

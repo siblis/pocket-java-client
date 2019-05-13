@@ -2,6 +2,7 @@ package ru.geekbrains.pocket.messenger.client.utils;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.Region;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,6 +33,7 @@ public class Common {
             alert.setTitle(title);
             alert.setHeaderText(null);
             alert.setContentText(message);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.showAndWait();
         });
     }

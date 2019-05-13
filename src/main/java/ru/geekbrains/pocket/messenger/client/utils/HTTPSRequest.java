@@ -5,10 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.DataOutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -39,12 +36,11 @@ public class HTTPSRequest {
     }
 
     public static String getResponse() throws Exception {
-        if (con == null || con.getResponseCode() == 404 ||
-                con.getInputStream() == null || con.getInputStream().available() == 0)
-            return "{}";
+        int responseCode = con.getResponseCode();
         StringBuilder response = new StringBuilder();
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+        InputStream stream = (responseCode == 200 || responseCode == 201) ?
+                con.getInputStream() : con.getErrorStream();
+        BufferedReader in = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 
         String inputLine;
         while ((inputLine = in.readLine()) != null) {

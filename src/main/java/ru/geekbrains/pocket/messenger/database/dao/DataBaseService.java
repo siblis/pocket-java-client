@@ -1,6 +1,7 @@
 package ru.geekbrains.pocket.messenger.database.dao;
 
 import ru.geekbrains.pocket.messenger.database.HibernateUtil;
+import ru.geekbrains.pocket.messenger.database.entity.Group;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 import ru.geekbrains.pocket.messenger.database.entity.UserProfile;
@@ -21,11 +22,13 @@ public class DataBaseService {
     private UserDAO usersDao;
     private UserProfileDAO usersProfileDao;
     private MessageDAO messageDao;
+    private GroupDAO groupsDao;
 
     public DataBaseService() {
         usersDao = new UserDAO();
         usersProfileDao = new UserProfileDAO();
         messageDao = new MessageDAO();
+        groupsDao = new GroupDAO();
     }
 
     public void setUserDB(String username) {
@@ -104,10 +107,15 @@ public class DataBaseService {
         return messageDao.findMessageById(id);
     }
 
+    public void addGroup(Group group) {
+        groupsDao.insert(group);
+    }
+
     public void close(){
         usersDao = null;
         usersProfileDao = null;
         messageDao = null;
+        groupsDao = null;
         HibernateUtil.shutdown();
     }
 }
