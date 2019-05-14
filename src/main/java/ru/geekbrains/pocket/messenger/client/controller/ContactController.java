@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.ContactFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.ContactListFromServer;
+import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.UserFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.UserProfileFromServer;
 import ru.geekbrains.pocket.messenger.client.model.formatMsgWithServer.UserToServer;
 import ru.geekbrains.pocket.messenger.client.utils.HTTPSRequest;
@@ -126,6 +127,20 @@ public class ContactController {
                 cc.receiver = null;
             }
         }
+    }
+
+    User getMyUserFromServer() {
+        try {
+            int responseCode = HTTPSRequest.sendRequest("/account", "GET", null, token);
+            if (responseCode == 200) {
+                UserFromServer updated = HTTPSRequest.getResponse(UserFromServer.class);
+                if (updated != null && !updated.isEmpty())
+                    return updated.toUser();
+            }
+        } catch (Exception e) {
+            controllerLogger.error("HTTPSRequest.getMyUserFromServer_error", e);
+        }
+        return null;
     }
 
     User getFromServerUserByEmail(String email) {

@@ -98,6 +98,12 @@ public class ClientController {
     }
 
     public User getMyUser() {
+        User updateFromServer = contactService.getMyUserFromServer();
+        if (updateFromServer != null && !updateFromServer.equals(myUser)) {
+            controllerLogger.info("MyUser data updated from server:\nFrom:\t" + myUser + "\nTo:\t" + updateFromServer);
+            myUser = updateFromServer;
+            dbService.updateUser(myUser);
+        }
         return myUser;
     }
 

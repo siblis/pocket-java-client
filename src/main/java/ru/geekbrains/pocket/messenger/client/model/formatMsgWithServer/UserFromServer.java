@@ -11,6 +11,10 @@ public class UserFromServer {
     private String email;
     private UserProfileFromServer profile;
     
+    public boolean isEmpty() {
+        return (id + email).isEmpty() && profile.isEmpty();
+    }
+    
     public User toUser() {
         return new User(email, profile.toUserProfile());
     }
