@@ -3,6 +3,8 @@ package ru.geekbrains.pocket.messenger.database.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,5 +49,23 @@ public class Message {
     public String toString() {
         return "Message{" + "id=" + id + ", text=" + text + ", time=" + time + 
                 ", sender=" + sender + ", receiver=" + receiver + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message = (Message) o;
+        return Objects.equals(id, message.id) &&
+                Objects.equals(text, message.text) &&
+                Objects.equals(time, message.time) &&
+                Objects.equals(sender, message.sender) &&
+                Objects.equals(receiver, message.receiver);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, text, time, sender, receiver);
     }
 }
