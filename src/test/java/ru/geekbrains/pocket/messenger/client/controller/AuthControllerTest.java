@@ -31,7 +31,7 @@ public class AuthControllerTest  {
     }
 
     @Test
-    public void testRegistration() throws HibernateException {
+    public void registrationTest() throws HibernateException {
         // тестовые данные
         String email = "mail@mail.ru";
         String name = "testUser";
