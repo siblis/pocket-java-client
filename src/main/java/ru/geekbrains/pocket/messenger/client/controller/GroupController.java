@@ -33,7 +33,7 @@ public class GroupController {
     
     ClientController cc;
 
-    GroupController(ClientController cc) {
+    public GroupController(ClientController cc) {
         this.cc = cc;
     }
 
@@ -120,5 +120,14 @@ public class GroupController {
         } catch (Exception e) {
             controllerLogger.error("HTTPSRequest.addUserGroup_error", e);
         }
+    }
+
+    public Group findGroup (String name) {
+        Group group = new Group();
+        group.setGid("5cc5c1284149c400016581d7");
+//        group.setGid("5cc5c3392d833c1640e24a5e");
+        group.setGroup_name(name);
+        System.out.println(group.toString());
+        return group;
     }
 }
