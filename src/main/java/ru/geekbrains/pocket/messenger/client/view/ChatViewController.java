@@ -2,6 +2,7 @@ package ru.geekbrains.pocket.messenger.client.view;
 
 import ru.geekbrains.pocket.messenger.client.Main;
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
+import ru.geekbrains.pocket.messenger.client.controller.GroupController;
 import ru.geekbrains.pocket.messenger.client.utils.Common;
 import ru.geekbrains.pocket.messenger.client.utils.CustomTextArea;
 import com.jfoenix.controls.*;
@@ -36,7 +37,9 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import ru.geekbrains.pocket.messenger.client.view.customFX.*;
+import ru.geekbrains.pocket.messenger.client.model.Group;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
+import ru.geekbrains.pocket.messenger.database.entity.User;
 
 import java.awt.*;
 import java.io.File;
@@ -112,7 +115,7 @@ public class ChatViewController implements Initializable {
     private JFXListView<?> groupListView;
 
     @FXML
-    private JFXListView<?> groupSearchListView;
+    private JFXListView<CFXListElement> groupSearchListView;
 
     @FXML
     private JFXListView<CFXListElement> listViewAddToGroup;
@@ -152,6 +155,8 @@ public class ChatViewController implements Initializable {
     private ObservableList<CFXListElement> contactsObservList;
 
     private ClientController clientController;
+
+    private GroupController groupService;
 
     private String backgroundImage;
 
@@ -769,6 +774,18 @@ public class ChatViewController implements Initializable {
 
     @FXML
     public void findContact(KeyEvent keyEvent) {
+        if (chats.isSelected()) {
+            groupSearchListView.getItems().clear();
+            groupService = new GroupController(clientController);
+            Group findGroup = groupService.findGroup(tfSearchInput.getText());
+            CFXListElement temp = new CFXListElement();
+            User us = new User();
+            us.setId(findGroup.getGid());
+            us.setUserName(findGroup.getGroup_name());
+            temp.setUser(us);
+            groupSearchListView.getItems().add(temp);
+            return;
+        }
         if (tfSearchInput.getText().length()>0) {
             searchObsList.clear();
             contactsViewPane.setVisible(false);
