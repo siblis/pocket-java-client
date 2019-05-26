@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import org.apache.logging.log4j.LogManager;
 
 @Getter
 @Setter
@@ -118,4 +119,13 @@ public class User {
         return Objects.equals(this.email, other.email);
     }
 
+    public boolean updateUserInfo(User updated) {
+        if (equals(updated)) return false;
+        boolean result = false;
+        LogManager.getLogger(getClass()).info("MyUser data updated:\nFrom:\t" + this + "\nTo:\t" + updated);
+        if (!id.equals(updated.id)) { id = updated.id; result = true; }
+        if (!email.equals(updated.email)) { email = updated.email; result = true; }
+        if (!createdAt.equals(updated.createdAt)) { createdAt = updated.createdAt; result = true; }
+        return result && profile.updateProfileInfo(updated.profile);
+    }
 }
