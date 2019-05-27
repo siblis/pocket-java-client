@@ -1,5 +1,6 @@
 package ru.geekbrains.pocket.messenger.client.view;
 
+import javafx.scene.input.ScrollEvent;
 import ru.geekbrains.pocket.messenger.client.Main;
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import ru.geekbrains.pocket.messenger.client.utils.Common;
@@ -157,11 +158,15 @@ public class ChatViewController implements Initializable {
 
     private Document DOMdocument;
 
-    private String tsOld;
+    private String tsOldOfBottom;
+    private String tsOldOfTop;
 
-    private int idDivMsg;
+    private boolean isTopOfConversation;
 
     private int idMsg;
+
+    private SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
+    private SimpleDateFormat dateFormat = initDateFormat("HH:mm");
 
     @FXML
     private  JFXButton btnContactSearchCancel;
@@ -181,6 +186,7 @@ public class ChatViewController implements Initializable {
 
     @FXML
     private JFXButton btnRightMenu;
+
 
     public static ChatViewController getInstance() {
         return instance;
@@ -204,11 +210,12 @@ public class ChatViewController implements Initializable {
         this.idMsg = idMsg;
     }
 
+    public void setTopOfConversation(boolean isTop) {
+        isTopOfConversation = isTop;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        DOMdocument = null;
-        tsOld = null; //чистка даты
-        idMsg = 0; //присваивание ID
 
         webEngine = messageWebView.getEngine(); //инициализация WebEngine
         initWebView();
@@ -253,6 +260,15 @@ public class ChatViewController implements Initializable {
     // инициализация только HTML в WebView.
     private void initWebView() {
         webEngine.load(getClass().getClassLoader().getResource("client/html/Chat.html").toString());
+        if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
+            DOMdocument = webEngine.getDocument();
+        }else {
+            webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
+                if (newState == Worker.State.SUCCEEDED) {
+                    DOMdocument = webEngine.getDocument();
+                }
+            });
+        }
     }
 
     private void fillContactListView() {
@@ -319,48 +335,52 @@ public class ChatViewController implements Initializable {
      * Style create in initWebView
      *
      */
-    private void createMessageDiv(Message mess, String attrClass){
-
-        String message = mess.getText();
-        String senderName = mess.getSender().getUserName();
-        Timestamp timestamp = mess.getTime();
+    private void showMessageDiv(Message mess, String attrClass){
 
         //ID требуется для скрипта вставки тегов
-        idMsg+=1;
-        setIdMsg(idMsg);
-        //получаем аватар
-        //тут по идеи подбор по полу. Оставляю чтобы было понятно куда вставляется и настроить стили
-        String avatar = initAvatar(false); //man
-        String styleStr = "background-image: url(" + avatar + "); background-size: cover";
-        //
+        idMsg++;
 
-        SimpleDateFormat dateFormatDay = initDateFormat("d MMMM");
-        SimpleDateFormat dateFormat = initDateFormat("HH:mm");
-
-        //Заменяем Enter на перенос строки, для отображения
-        message = message.replaceAll("\n", "<br/>");
-        //Парсим ссылки, получаем строку вида <a href="message">message</a>
-        message = Common.urlToHyperlink(message);
-        message = message.replace("\\", "\\\\")
-                .replace("'", "\\'");
-
-        boolean visibleDateDay=false;
-        if (tsOld == null) {
-            tsOld = dateFormatDay.format(timestamp);
-            visibleDateDay = true;
-        }else if (!tsOld.equals(dateFormatDay.format(timestamp))) {
-            tsOld = dateFormatDay.format(timestamp);
-            visibleDateDay = true;
+        Timestamp timestamp = mess.getTime();
+        boolean isNewDateHasCome = false;
+        if (tsOldOfBottom == null) {
+            tsOldOfBottom = tsOldOfTop = dateFormatDay.format(timestamp);
+            isNewDateHasCome = true;
         }
+        if (!tsOldOfBottom.equals(dateFormatDay.format(timestamp))) {
+            tsOldOfBottom = dateFormatDay.format(timestamp);
+            isNewDateHasCome = true;
+        }
+
+
+        String message = prepareMessageText(mess);
 
         Node body = DOMdocument.getElementsByTagName("body").item(0);
 
-        if (visibleDateDay) {
+        if (isNewDateHasCome) {
             Element divTimeDay = DOMdocument.createElement("div");
             divTimeDay.setAttribute("class", "timeStampDay");
             divTimeDay.setTextContent(dateFormatDay.format(timestamp));
             body.appendChild(divTimeDay);
         }
+        Element messageDiv = createMessageDiv(mess, attrClass, message);
+        body.appendChild(messageDiv);
+        //Scripts
+        //вставляем текст с тегами
+        webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + message +"'");
+        //Сдвигаем страницу на последний элемент
+        webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
+    }
+
+    private Element createMessageDiv(Message mess, String attrClass, String message) {
+        //получаем аватар
+        //тут по идеи подбор по полу. Оставляю чтобы было понятно куда вставляется и настроить стили
+        String avatar = initAvatar(false); //man
+        String styleStr = "background-image: url(" + avatar + "); background-size: cover";
+
+        String senderName = mess.getSender().getUserName();
+
+        Timestamp timestamp = mess.getTime();
+
         Element div = DOMdocument.createElement("div");
         Element divLogo = DOMdocument.createElement("div");
         Element divTxt = DOMdocument.createElement("div");
@@ -383,16 +403,25 @@ public class ChatViewController implements Initializable {
         div.appendChild(divLogo);
         div.appendChild(divTxt);
         div.appendChild(divTime);
-        body.appendChild(div);
-        //Scripts
-        //вставляем текст с тегами
-        webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + message+"'");
-        //Сдвигаем страницу на последний элемент
-        webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
+
         //Подписка на событие по открытию ссылки
         addListenerLinkExternalBrowser(divTxtMsg);
         //проверяет, есть ли у нас в сообщениях картинки
         addImageMessageListener(divTxtMsg);
+
+        return div;
+    }
+
+    private String prepareMessageText(Message mess) {
+        String message = mess.getText();
+
+        //Заменяем Enter на перенос строки, для отображения
+        message = message.replaceAll("\n", "<br/>");
+        //Парсим ссылки, получаем строку вида <a href="message">message</a>
+        message = Common.urlToHyperlink(message);
+        message = message.replace("\\", "\\\\")
+                .replace("'", "\\'");
+        return message;
     }
 
     public void showMessage(Message mess, boolean isNew) {
@@ -400,6 +429,20 @@ public class ChatViewController implements Initializable {
             Sound.playSoundNewMessage().join();
         }*/
 
+        String attrClass = getSenderUserClass(mess);
+
+        while (DOMdocument == null) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+            showMessageDiv(mess, attrClass);
+            updateLastMessageInCardsBody(mess);
+    }
+
+    private String getSenderUserClass(Message mess) {
         String senderName = mess.getSender().getUserName();
 
         String attrClass;
@@ -408,28 +451,7 @@ public class ChatViewController implements Initializable {
         } else {
             attrClass = "senderUserClass";
         }
-
-        //todo по хорошему надо переместить подписку на событие в другое место
-        //Подписка на событие загрузки документа HTML in WebView
-        if (DOMdocument == null) {
-            //если пользователь только запустил клиента и локально нет ни одного сообщения
-            if (webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
-                DOMdocument = webEngine.getDocument();
-                createMessageDiv(mess, attrClass);
-                updateLastMessageInCardsBody(mess);
-            }else {
-                webEngine.getLoadWorker().stateProperty().addListener((observable, oldState, newState) -> {
-                    if (newState == Worker.State.SUCCEEDED) {
-                        DOMdocument = webEngine.getDocument(); // Должен быть здесь т.к. загрузка WebEngine только произошла
-                        createMessageDiv(mess, attrClass);
-                        updateLastMessageInCardsBody(mess);
-                    }
-                });
-            }
-        }else {
-            createMessageDiv(mess, attrClass);
-            updateLastMessageInCardsBody(mess);
-        }
+        return attrClass;
     }
 
     private void updateLastMessageInCardsBody(Message mess){
@@ -626,7 +648,7 @@ public class ChatViewController implements Initializable {
     /**
      * Вызывается для чистки документа внутри WebEngine
      * при первом вызове чистки нет, т.к. DOMdocument == null
-     * так де обнуляем дату для группировки (tsOld) и ID для DIV
+     * также обнуляем дату для группировки (tsOldOfBottom) и ID для DIV
      */
     public void clearMessageWebView() {
         if (DOMdocument != null) {
@@ -639,8 +661,10 @@ public class ChatViewController implements Initializable {
             }
         }
 
-        tsOld = null; //чистка даты
-        idDivMsg =0; //присваивание ID
+        tsOldOfBottom = null; //чистка даты
+        tsOldOfTop = null; //чистка даты
+        idMsg = 0;
+        isTopOfConversation = false;
     }
 
     //метод смены иконки
@@ -858,5 +882,58 @@ public class ChatViewController implements Initializable {
     }
     public void alarmExitProfileExecute(){
         new AlarmExitProfile();
+    }
+
+    public void onScrollLoadPage(ScrollEvent event) {
+        int scrollTop = (Integer) webEngine.executeScript("document.body.scrollTop");
+        if (idMsg != 0 && scrollTop < 10 && !isTopOfConversation) {
+            clientController.loadPreviousPageOfMessages();
+        }
+    }
+
+    public void showMessageOnTop(Message mess) {
+        String attrClass = getSenderUserClass(mess);
+
+        idMsg++;
+
+        String message = prepareMessageText(mess);
+
+        Node body = DOMdocument.getElementsByTagName("body").item(0);
+
+        Timestamp timestamp = mess.getTime();
+
+        if (!tsOldOfTop.equals(dateFormatDay.format(timestamp))) {
+            Element divTimeDay = getCurrentDateDiv();
+            body.insertBefore(divTimeDay, body.getFirstChild());
+            tsOldOfTop = dateFormatDay.format(timestamp);
+        }
+        Element messageDiv = createMessageDiv(mess, attrClass, message);
+        int oldScrollHeight = (Integer) webEngine.executeScript("document.body.scrollHeight");
+        body.insertBefore(messageDiv, body.getFirstChild());
+
+        webEngine.executeScript("document.body.scrollTop += document.body.scrollHeight - " + oldScrollHeight);
+        webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + message +"'");
+
+    }
+
+    private Element getCurrentDateDiv() {
+        Element divTimeDay = DOMdocument.createElement("div");
+        divTimeDay.setAttribute("class", "timeStampDay");
+        divTimeDay.setTextContent(tsOldOfTop);
+        return divTimeDay;
+    }
+
+    public void showDateOnTop() {
+        Node body = DOMdocument.getElementsByTagName("body").item(0);
+        Element el = (Element) body.getFirstChild();
+        if (!el.getAttribute("class").equals("timeStampDay")) {
+            Element divTimeDay = getCurrentDateDiv();
+            body.insertBefore(divTimeDay, body.getFirstChild());
+        }
+    }
+
+    public void removeDateOnTop() {
+        Node body = DOMdocument.getElementsByTagName("body").item(0);
+        body.removeChild(body.getFirstChild());
     }
 }

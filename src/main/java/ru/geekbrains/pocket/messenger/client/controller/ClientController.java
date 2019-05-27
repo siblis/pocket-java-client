@@ -13,7 +13,9 @@ import ru.geekbrains.pocket.messenger.database.dao.DataBaseService;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ClientController {
     static final Logger controllerLogger = LogManager.getLogger(ClientController.class);
@@ -27,6 +29,7 @@ public class ClientController {
     List<String> contactList;
     List<CFXListElement> contactListOfCards;
     List<Message> conversation;
+    Set<String> isChatUpdated;
 
     DataBaseService dbService;
     
@@ -44,6 +47,7 @@ public class ClientController {
         myUser = null;
         conn = null;
         dbService = new DataBaseService();
+        isChatUpdated = new HashSet<>();
         authService = new AuthController(this);
         contactService = new ContactController(this);
         groupService = new GroupController(this);
@@ -184,5 +188,13 @@ public class ClientController {
 
     public void saveToDBAndShowMessage(String s) {
         messageService.saveToDBAndShowMessage(s);
+    }
+
+    public void loadPreviousPageOfMessages() {
+        messageService.loadPreviousPageOfMessages();
+    }
+
+    public void clearIsChatUpdatedSet() {
+        isChatUpdated.clear();
     }
 }

@@ -99,6 +99,10 @@ public class DataBaseService {
         return messageDao.get(user1, user2);
     }
 
+    public List<Message> getChat(User user1, User user2, int pageNumber){
+        return messageDao.get(user1, user2, pageNumber);
+    }
+
     public void deleteChat(User user1, User user2){
         messageDao.delete(user1, user2);
     }

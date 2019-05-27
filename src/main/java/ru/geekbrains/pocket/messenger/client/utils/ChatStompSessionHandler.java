@@ -22,6 +22,7 @@ public class ChatStompSessionHandler extends StompSessionHandlerAdapter {
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         clientCtrllr.setMessageSession(session);
         sessionLogger.info("websocket connection established");
+        clientCtrllr.clearIsChatUpdatedSet();
 
         session.subscribe("/user/queue/new", new StompFrameHandler() {
 
