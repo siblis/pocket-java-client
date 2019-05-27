@@ -91,4 +91,13 @@ public class UserProfile {
                 ", fullName=" + fullName + ", lastSeen=" + lastSeen + '}';
     }
 
+    public boolean updateProfileInfo(UserProfile updated) {
+        if (equals(updated)) return false;
+        boolean result = false;
+        if (!id.equals(updated.id)) { id = updated.id; result = true; }
+        if (!userName.equals(updated.userName)) { userName = updated.userName; result = true; }
+        if (!fullName.equals(updated.fullName)) { fullName = updated.fullName; result = true; }
+        if (!lastSeen.equals(updated.lastSeen)) { lastSeen = updated.lastSeen; result = true; }
+        return result;
+    }
 }
