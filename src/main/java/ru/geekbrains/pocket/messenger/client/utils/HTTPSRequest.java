@@ -14,8 +14,31 @@ public class HTTPSRequest {
     private static final Logger requestLogger = LogManager.getLogger(HTTPSRequest.class.getName());
     private static String serverURL = "https://" + Connector.connectTo;
     private static HttpsURLConnection con;
+    private static boolean isTestMode = false;
+    private static int testResponseCode;
+    private static String testResponseString;
+    
+    static void testModeInit(int forTestResponseCode, String forTestResponseString) {
+        isTestMode = true;
+        testResponseCode = forTestResponseCode;
+        testResponseString = forTestResponseString;
+    }
+
+    static void testModeEnd() {
+        isTestMode = false;
+    }
 
     public static int sendRequest(String path, String method, String requestJSON, String token) throws Exception {
+        if (isTestMode) { return testResponseCode; }
+        else { return sendRequestToServer(path, method, token, requestJSON); }
+    }
+
+    public static String getResponse() throws Exception {
+        if (isTestMode) { return testResponseString; }
+        else { return getResponseFromServer(); }
+    }
+
+    private static int sendRequestToServer(String path, String method, String token, String requestJSON) throws IOException, Exception {
         con = getConnection(path, method, token);
         if (requestJSON != null) {
             con.setRequestProperty("content-type", "application/json");
@@ -35,7 +58,7 @@ public class HTTPSRequest {
         return responseCode;
     }
 
-    public static String getResponse() throws Exception {
+    private static String getResponseFromServer() throws IOException {
         int responseCode = con.getResponseCode();
         StringBuilder response = new StringBuilder();
         InputStream stream = (responseCode == 200 || responseCode == 201) ?
@@ -56,7 +79,7 @@ public class HTTPSRequest {
     }
 
     public static String restorePassword(String requestJSON) throws Exception {
-        //TODO нужен API на сервере
+        //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
         URL obj = new URL(serverURL + "/v1/email/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
@@ -73,7 +96,7 @@ public class HTTPSRequest {
     }
 
     public static String changePassword(String requestJSON) throws Exception {
-        //TODO нужен API на сервере
+        //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
         URL obj = new URL(serverURL + "/v1/pass/");
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
@@ -81,33 +104,32 @@ public class HTTPSRequest {
         return answerRequest(con);
     }
 
+    //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
     public static ServerResponse getMySelf(String token) throws Exception {
         HttpsURLConnection connection = getConnection("/v1/account/", "GET", token);
         return getServerResponse(connection, null);
     }
 
+    //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
     public static ServerResponse addGroup(String requestJSON, String token) throws Exception {
         HttpsURLConnection connection = getConnection("/v1/chats/", "POST", token);
         return getServerResponse(connection, requestJSON);
     }
 
+    //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
     public static ServerResponse addUserGroup(String requestJSON, String token) throws Exception {
         HttpsURLConnection connection = getConnection("/v1/chats/", "PUT", token);
         return getServerResponse(connection, requestJSON);
     }
 
-    // я вообще поражаюсь зачем этот метод в АПИ сделали. ведь в вебсокете должнеы быть все сообщения
-    public static ServerResponse addMessageGroup(String requestJSON, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/chats/messages/", "POST", token);
-        return getServerResponse(connection, requestJSON);
-    }
-
+    //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
     public static ServerResponse getUserMessages(String token, String userId, int offset) throws Exception {
         HttpsURLConnection connection = getConnection("/user/" + userId +
                 "/messages/?offset=" + offset, "GET", token);
         return getServerResponse(connection, null);
     }
 
+    //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
     public static ServerResponse getGroupInfo(String id, String token) throws Exception {
         HttpsURLConnection connection = getConnection("/v1/chats/" + id, "GET", token);
         return getServerResponse(connection, null);
@@ -122,6 +144,7 @@ public class HTTPSRequest {
         return connection;
     }
 
+    //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
     private static ServerResponse getServerResponse(HttpsURLConnection con, String requestJSON) throws Exception {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setResponseCode(sendRequest(con, requestJSON));
@@ -129,6 +152,7 @@ public class HTTPSRequest {
         return serverResponse;
     }
 
+    //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
     private static int sendRequest(HttpsURLConnection con, String requestJSON) throws Exception {
         if (requestJSON != null) {
             con.setRequestProperty("content-type", "application/json");
@@ -148,6 +172,7 @@ public class HTTPSRequest {
         return responseCode;
     }
 
+    //TODO удалить после рефакторинга (этот методы был к старому бэкенду)
     private static String answerRequest(HttpsURLConnection con) throws Exception {
         StringBuilder response = new StringBuilder();
         try (BufferedReader in = new BufferedReader(
