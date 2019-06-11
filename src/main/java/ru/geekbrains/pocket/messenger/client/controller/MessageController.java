@@ -64,6 +64,7 @@ public class MessageController {
         for (Message message : cc.conversation) {
             cc.chatViewController.showMessage(message, false);
         }
+        cc.chatViewController.addJSBridgeToWebView();
     }
 
     synchronized void receiveMessage(MessageFromServer mfs) {

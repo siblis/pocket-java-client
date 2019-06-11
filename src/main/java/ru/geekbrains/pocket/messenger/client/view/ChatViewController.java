@@ -1,6 +1,7 @@
 package ru.geekbrains.pocket.messenger.client.view;
 
 import javafx.scene.input.ScrollEvent;
+import netscape.javascript.JSObject;
 import ru.geekbrains.pocket.messenger.client.Main;
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
 import ru.geekbrains.pocket.messenger.client.utils.Common;
@@ -884,9 +885,8 @@ public class ChatViewController implements Initializable {
         new AlarmExitProfile();
     }
 
-    public void onScrollLoadPage(ScrollEvent event) {
-        int scrollTop = (Integer) webEngine.executeScript("document.body.scrollTop");
-        if (idMsg != 0 && scrollTop < 10 && !isTopOfConversation) {
+    public void loadPreviousPageOfMessages() {
+        if (idMsg != 0 && !isTopOfConversation) {
             clientController.loadPreviousPageOfMessages();
         }
     }
@@ -935,5 +935,10 @@ public class ChatViewController implements Initializable {
     public void removeDateOnTop() {
         Node body = DOMdocument.getElementsByTagName("body").item(0);
         body.removeChild(body.getFirstChild());
+    }
+
+    public void addJSBridgeToWebView() {
+        JSObject window = (JSObject) webEngine.executeScript("window");
+        window.setMember("chatViewController", this);
     }
 }
