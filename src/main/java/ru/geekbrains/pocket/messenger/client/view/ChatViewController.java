@@ -750,7 +750,7 @@ public class ChatViewController implements Initializable {
         PaneProvider.setProfileScrollPane(myProfileScrollPane);
         cfxMenuLeft.setVisible(false);
         menuLeft.hide();
-        myProfile.setUser(clientController.getMyUser());
+        myProfile.setUser(clientController.getMyUserUpdatedFromServer());
         paneProvidersProfScrollPaneVisChange(true);
 
         PaneProvider.getTransitionBack().setRate(1);

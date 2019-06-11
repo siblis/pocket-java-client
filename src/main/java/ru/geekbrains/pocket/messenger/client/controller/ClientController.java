@@ -102,13 +102,32 @@ public class ClientController {
     }
 
     public User getMyUser() {
-        User updateFromServer = contactService.getMyUserFromServer();
-        if (updateFromServer != null) {
-            if (myUser.updateUserInfo(updateFromServer))
-                controllerLogger.info("MyUser data updated:\n\t" + dbService.getUserById(myUser.getId()));
-//            dbService.updateUser(myUser); //обновление должно выполниться за счёт Hibernate
-        }
         return myUser;
+    }
+
+    public User getMyUserUpdatedFromServer() {
+        return getUserUpdatedFromServer(myUser);
+    }
+
+    public User getUserUpdatedFromServer(String id) {
+        if (receiver.getId().equals(id)) {
+            return getUserUpdatedFromServer(receiver);
+        } else {
+            return getUserUpdatedFromServer(dbService.getUserById(id));
+        }
+    }
+
+    private User getUserUpdatedFromServer(User toUpdate) {
+        User updateFromServer;
+        if (myUser.getId().equals(toUpdate.getId())) {
+            updateFromServer = contactService.getMyUserFromServer();
+        } else {
+            updateFromServer = contactService.getFromServerUserById(toUpdate.getId());
+        }
+        if (updateFromServer != null && toUpdate.updateUserInfo(updateFromServer)) {
+            controllerLogger.info("User data updated:\n\t" + dbService.getUserById(toUpdate.getId()));
+        }
+        return toUpdate;
     }
 
     public User getReciever() {
