@@ -1,6 +1,7 @@
 package ru.geekbrains.pocket.messenger.client.controller;
 
 
+import javafx.application.HostServices;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -37,6 +38,16 @@ public class ClientController {
     ContactController contactService;
     GroupController groupService;
     MessageController messageService;
+
+    private HostServices hostServices;
+
+    public HostServices getHostServices() {
+        return hostServices;
+    }
+
+    public void setHostServices(HostServices hostServices) {
+        this.hostServices = hostServices;
+    }
 
     public void setChatViewController(ChatViewController chatViewController) {
         this.chatViewController = chatViewController;

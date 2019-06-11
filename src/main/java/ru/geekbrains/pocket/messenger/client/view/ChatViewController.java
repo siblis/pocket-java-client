@@ -1,6 +1,5 @@
 package ru.geekbrains.pocket.messenger.client.view;
 
-import javafx.scene.input.ScrollEvent;
 import netscape.javascript.JSObject;
 import ru.geekbrains.pocket.messenger.client.Main;
 import ru.geekbrains.pocket.messenger.client.controller.ClientController;
@@ -370,6 +369,17 @@ public class ChatViewController implements Initializable {
         webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + message +"'");
         //Сдвигаем страницу на последний элемент
         webEngine.executeScript("document.body.scrollTop = document.body.scrollHeight");
+
+        addListenersToMsgDiv();
+
+    }
+
+    private void addListenersToMsgDiv() {
+        Element divTxtMsg = DOMdocument.getElementById(String.valueOf(idMsg));
+        //Подписка на событие по открытию ссылки
+        addListenerLinkExternalBrowser(divTxtMsg);
+        //проверяет, есть ли у нас в сообщениях картинки
+        addImageMessageListener(divTxtMsg);
     }
 
     private Element createMessageDiv(Message mess, String attrClass, String message) {
@@ -404,11 +414,6 @@ public class ChatViewController implements Initializable {
         div.appendChild(divLogo);
         div.appendChild(divTxt);
         div.appendChild(divTime);
-
-        //Подписка на событие по открытию ссылки
-        addListenerLinkExternalBrowser(divTxtMsg);
-        //проверяет, есть ли у нас в сообщениях картинки
-        addImageMessageListener(divTxtMsg);
 
         return div;
     }
@@ -575,16 +580,18 @@ public class ChatViewController implements Initializable {
                 String domEventType = evt.getType();
                 if ("click".equals(domEventType)) {
                     String href = ((Element) evt.getTarget()).getAttribute("href");
+                    String url = href.contains("://") ? href : "http://" + href + "/";
                     try {
                         // Open URL in Browser:
                         //ну удалил, т.к. не много не понятно пока зачем
-                        //if (desktop.isSupported(Desktop.Action.BROWSE)) {
-                            desktop.browse(new URI(href.contains("://") ? href : "http://" + href + "/"));
-                            //отменяем событие, чтобы ссылка не открывалась в самом webView
-                            evt.preventDefault();
-                        /*} else {
-                            System.out.println("Could not load URL: " + href);
-                        }*/
+                        if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                            desktop.browse(new URI(url));
+                        } else {
+                            clientController.getHostServices().showDocument(url);
+                            System.out.println("Desktop API is not supported. URL loaded by HostServices: " + href);
+                        }
+                        //отменяем событие, чтобы ссылка не открывалась в самом webView
+                        evt.preventDefault();
                     } catch (IOException | URISyntaxException e) {
                         //todo logger
                         e.printStackTrace();
@@ -914,6 +921,7 @@ public class ChatViewController implements Initializable {
         webEngine.executeScript("document.body.scrollTop += document.body.scrollHeight - " + oldScrollHeight);
         webEngine.executeScript("document.getElementById(\"" + idMsg + "\").innerHTML = '" + message +"'");
 
+        addListenersToMsgDiv();
     }
 
     private Element getCurrentDateDiv() {

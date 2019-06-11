@@ -11,6 +11,10 @@ public class RootLayoutController implements Initializable {
 
     private ClientController controller;
 
+    public ClientController getController() {
+        return controller;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         controller = ClientController.getInstance();
