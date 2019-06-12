@@ -33,14 +33,15 @@ public class GroupController {
     
     ClientController cc;
 
-    public GroupController(ClientController cc) {
+    GroupController(ClientController cc) {
         this.cc = cc;
     }
 
-    Group getGroupInfo(String groupName){
+    Group getGroupInfo(String groupId){
         Group group = new Group();
         try {
-            ServerResponse response = HTTPSRequest.getGroupInfo(groupName, token);
+
+            ServerResponse response = HTTPSRequest.getGroupInfo(groupId, token);
             switch (response.getResponseCode()){
                 case 200:
                     System.out.println("получение информации о группе");
@@ -122,12 +123,15 @@ public class GroupController {
         }
     }
 
-    public Group findGroup (String name) {
-        Group group = new Group();
-        group.setGid("5cc5c1284149c400016581d7");
-//        group.setGid("5cc5c3392d833c1640e24a5e");
-        group.setGroup_name(name);
+    Group findGroup (String name) {
+        Group group;
+        String groupId;
+        groupId = "5cc5c1284149c400016581d7"; //java
+//        groupId = "5cc5c3392d833c1640e24a5e"; //nodejs
+        group = getGroupInfo(groupId);
+        if (group == null) group.setGroup_name(name);  //заглушка до реализации поиска групп на сервере
         System.out.println(group.toString());
         return group;
     }
+
 }
