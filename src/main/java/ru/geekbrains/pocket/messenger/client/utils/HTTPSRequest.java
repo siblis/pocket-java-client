@@ -109,7 +109,7 @@ public class HTTPSRequest {
     }
 
     public static ServerResponse getGroupInfo(String id, String token) throws Exception {
-        HttpsURLConnection connection = getConnection("/v1/chats/" + id, "GET", token);
+        HttpsURLConnection connection = getConnection("/groups/%id=" + id, "GET", token);
         return getServerResponse(connection, null);
     }
 

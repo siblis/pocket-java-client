@@ -40,6 +40,7 @@ import ru.geekbrains.pocket.messenger.client.view.customFX.*;
 import ru.geekbrains.pocket.messenger.client.model.Group;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
+import ru.geekbrains.pocket.messenger.database.entity.UserProfile;
 
 import java.awt.*;
 import java.io.File;
@@ -155,8 +156,6 @@ public class ChatViewController implements Initializable {
     private ObservableList<CFXListElement> contactsObservList;
 
     private ClientController clientController;
-
-    private GroupController groupService;
 
     private String backgroundImage;
 
@@ -776,13 +775,10 @@ public class ChatViewController implements Initializable {
     public void findContact(KeyEvent keyEvent) {
         if (chats.isSelected()) {
             groupSearchListView.getItems().clear();
-            groupService = new GroupController(clientController);
-            Group findGroup = groupService.findGroup(tfSearchInput.getText());
+            Group findGroup = clientController.getGroupInfo(tfSearchInput.getText());
+            findGroup.setGroup_name(tfSearchInput.getText());
             CFXListElement temp = new CFXListElement();
-            User us = new User();
-            us.setId(findGroup.getGid());
-            us.setUserName(findGroup.getGroup_name());
-            temp.setUser(us);
+            temp.setUser(new User (null, new UserProfile(findGroup.getGid(), findGroup.getGroup_name(), null, null)));
             groupSearchListView.getItems().add(temp);
             return;
         }
