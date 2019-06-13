@@ -1,6 +1,7 @@
 package ru.geekbrains.pocket.messenger.client.controller;
 
 
+import javafx.application.HostServices;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -13,7 +14,9 @@ import ru.geekbrains.pocket.messenger.database.dao.DataBaseService;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ClientController {
     static final Logger controllerLogger = LogManager.getLogger(ClientController.class);
@@ -27,6 +30,7 @@ public class ClientController {
     List<String> contactList;
     List<CFXListElement> contactListOfCards;
     List<Message> conversation;
+    Set<String> isChatUpdated;
 
     DataBaseService dbService;
     
@@ -34,6 +38,16 @@ public class ClientController {
     ContactController contactService;
     GroupController groupService;
     MessageController messageService;
+
+    private HostServices hostServices;
+
+    public HostServices getHostServices() {
+        return hostServices;
+    }
+
+    public void setHostServices(HostServices hostServices) {
+        this.hostServices = hostServices;
+    }
 
     public void setChatViewController(ChatViewController chatViewController) {
         this.chatViewController = chatViewController;
@@ -44,6 +58,7 @@ public class ClientController {
         myUser = null;
         conn = null;
         dbService = new DataBaseService();
+        isChatUpdated = new HashSet<>();
         authService = new AuthController(this);
         contactService = new ContactController(this);
         groupService = new GroupController(this);
@@ -209,5 +224,13 @@ public class ClientController {
 
     public void saveToDBAndShowMessage(String s) {
         messageService.saveToDBAndShowMessage(s);
+    }
+
+    public void loadPreviousPageOfMessages() {
+        messageService.loadPreviousPageOfMessages();
+    }
+
+    public void clearIsChatUpdatedSet() {
+        isChatUpdated.clear();
     }
 }

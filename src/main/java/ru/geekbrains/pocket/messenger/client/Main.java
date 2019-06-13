@@ -1,5 +1,7 @@
 package ru.geekbrains.pocket.messenger.client;
 
+import javafx.application.HostServices;
+import ru.geekbrains.pocket.messenger.client.view.RootLayoutController;
 import ru.geekbrains.pocket.messenger.client.view.Tray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -18,10 +20,12 @@ public class Main extends Application {
 
     public static Stage primaryStage;
     private static BorderPane rootLayout;
+    private static HostServices hostServices;
     private static final Logger mainLogger = LogManager.getLogger(Main.class);
 
     @Override
     public void start(Stage stage) {
+        hostServices = getHostServices();
         primaryStage = stage;
         primaryStage.setTitle("Pocket desktop ru.geekbrains.pocket.messenger.client");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/images/icon.png")));
@@ -48,6 +52,9 @@ public class Main extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("/client/fxml/RootLayout.fxml"));
             rootLayout = loader.load();
+
+            RootLayoutController rlc = loader.getController();
+            rlc.getController().setHostServices(hostServices);
 
             Scene scene = new Scene(rootLayout);
 

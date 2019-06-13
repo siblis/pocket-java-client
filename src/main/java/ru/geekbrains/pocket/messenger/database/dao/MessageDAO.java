@@ -1,5 +1,6 @@
 package ru.geekbrains.pocket.messenger.database.dao;
 
+import ru.geekbrains.pocket.messenger.client.controller.MessageController;
 import ru.geekbrains.pocket.messenger.database.HibernateUtil;
 import ru.geekbrains.pocket.messenger.database.entity.Message;
 import ru.geekbrains.pocket.messenger.database.entity.User;
@@ -59,6 +60,27 @@ public class MessageDAO {
                 "(m.receiver = :id1Param and m.sender = :id2Param)");
         query.setParameter("id1Param", agent1id);
         query.setParameter("id2Param", agent2id);
+        List<Message> messages = query.list();
+
+        session.getTransaction().commit();
+
+        return messages;
+    }
+
+    List<Message> get(User agent1id, User agent2id, int pageNumber){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.getTransaction().begin();
+
+        Query<Message> query = session.createQuery("FROM Message m where " +
+                "(m.sender = :id1Param and m.receiver = :id2Param) " +
+                "or " +
+                "(m.receiver = :id1Param and m.sender = :id2Param)" +
+                "order by m.id desc");
+        query.setParameter("id1Param", agent1id);
+        query.setParameter("id2Param", agent2id);
+        int pageSize = MessageController.PAGE_SIZE;
+        query.setFirstResult(pageNumber * pageSize);
+        query.setMaxResults(pageSize);
         List<Message> messages = query.list();
 
         session.getTransaction().commit();
