@@ -124,13 +124,17 @@ public class GroupController {
     }
 
     Group findGroup (String name) {
+
+        //заглушка до реализации поиска групп на сервере
         Group group;
         String groupId;
         groupId = "5cc5c1284149c400016581d7"; //java
 //        groupId = "5cc5c3392d833c1640e24a5e"; //nodejs
         group = getGroupInfo(groupId);
-        if (group == null) group.setGroup_name(name);  //заглушка до реализации поиска групп на сервере
+        if (group == null) group.setGroup_name(name);
         System.out.println(group.toString());
+        //конец заглушки
+
         return group;
     }
 
