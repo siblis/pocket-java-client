@@ -210,4 +210,6 @@ public class ClientController {
     public void saveToDBAndShowMessage(String s) {
         messageService.saveToDBAndShowMessage(s);
     }
+
+    public Group findGroup (String name) { return groupService.findGroup(name); }
 }

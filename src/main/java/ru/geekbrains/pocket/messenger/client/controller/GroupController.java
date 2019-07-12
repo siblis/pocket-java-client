@@ -37,10 +37,11 @@ public class GroupController {
         this.cc = cc;
     }
 
-    Group getGroupInfo(String groupName){
+    Group getGroupInfo(String groupId){
         Group group = new Group();
         try {
-            ServerResponse response = HTTPSRequest.getGroupInfo(groupName, token);
+
+            ServerResponse response = HTTPSRequest.getGroupInfo(groupId, token);
             switch (response.getResponseCode()){
                 case 200:
                     System.out.println("получение информации о группе");
@@ -121,4 +122,20 @@ public class GroupController {
             controllerLogger.error("HTTPSRequest.addUserGroup_error", e);
         }
     }
+
+    Group findGroup (String name) {
+
+        //заглушка до реализации поиска групп на сервере
+        Group group;
+        String groupId;
+        groupId = "5cc5c1284149c400016581d7"; //java
+//        groupId = "5cc5c3392d833c1640e24a5e"; //nodejs
+        group = getGroupInfo(groupId);
+        if (group == null) group.setGroup_name(name);
+        System.out.println(group.toString());
+        //конец заглушки
+
+        return group;
+    }
+
 }
